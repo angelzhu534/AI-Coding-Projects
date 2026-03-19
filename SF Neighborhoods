@@ -1,1 +1,1025 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#e8e0c8">
+<title>SF Neighborhoods</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400;1,600&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#f5edd8;--paper2:#ede0c0;--paper3:#e4d4a8;
+  --ink:#2a2010;--ink2:#5a4a28;--ink3:#9a8660;
+  --border:rgba(90,70,20,0.13);--border2:rgba(90,70,20,0.22);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;overflow:hidden;}
+body{font-family:'Nunito',sans-serif;color:var(--ink);}
 
+#map{position:fixed;inset:0;z-index:0;}
+.leaflet-tile-pane{filter:sepia(14%) brightness(0.97) saturate(0.9);transition:filter .4s;}
+.leaflet-control-attribution{font-size:8px;opacity:0.4;background:rgba(245,237,216,0.7)!important;}
+.leaflet-control-zoom{display:none;}
+
+.leaflet-tooltip.nh-label{
+  background:rgba(245,237,216,0.94)!important;
+  border:1px solid rgba(90,70,20,0.18)!important;
+  border-radius:5px!important;
+  font-family:'Lora',Georgia,serif!important;
+  font-style:italic!important;
+  font-size:10px!important;
+  color:#2a2010!important;
+  padding:2px 7px!important;
+  box-shadow:0 1px 8px rgba(0,0,0,0.14)!important;
+  white-space:nowrap!important;
+  pointer-events:none!important;
+}
+.leaflet-tooltip.nh-label::before{display:none!important;}
+
+/* FILTER BAR */
+#filter-bar{
+  position:fixed;top:0;left:0;right:0;z-index:600;
+  padding:calc(env(safe-area-inset-top,0px) + 8px) 12px 10px;
+  background:linear-gradient(to bottom,var(--paper) 60%,transparent);
+  pointer-events:none;
+}
+#filter-scroll{
+  display:flex;gap:7px;overflow-x:auto;pointer-events:all;
+  scrollbar-width:none;padding-bottom:2px;padding-right:58px;
+}
+#filter-scroll::-webkit-scrollbar{display:none;}
+.fp{
+  flex-shrink:0;padding:7px 14px;border-radius:20px;
+  font-size:12px;font-weight:700;font-family:'Nunito',sans-serif;
+  border:1.5px solid var(--border2);background:var(--paper);
+  color:var(--ink2);white-space:nowrap;cursor:pointer;
+  box-shadow:0 2px 8px rgba(60,40,0,0.14);transition:all .16s;
+}
+.fp.on{color:#fff;border-color:transparent;box-shadow:0 2px 12px rgba(0,0,0,0.22);}
+
+/* LAYER SWITCHER */
+#layer-btn{
+  position:fixed;top:calc(env(safe-area-inset-top,0px) + 8px);right:12px;
+  z-index:650;width:42px;height:42px;border-radius:11px;
+  background:var(--paper);border:1.5px solid var(--border2);
+  box-shadow:0 2px 10px rgba(60,40,0,0.2);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;font-size:18px;
+}
+#layer-panel{
+  position:fixed;top:calc(env(safe-area-inset-top,0px) + 58px);right:12px;
+  z-index:650;background:var(--paper);border-radius:14px;
+  padding:8px;box-shadow:0 4px 24px rgba(60,40,0,0.22);
+  border:1.5px solid var(--border2);
+  opacity:0;pointer-events:none;
+  transform:translateY(-8px) scale(0.96);
+  transition:opacity .18s,transform .18s;
+  display:flex;flex-direction:column;gap:3px;min-width:140px;
+}
+#layer-panel.open{opacity:1;pointer-events:all;transform:none;}
+.layer-lbl{font-size:9px;text-transform:uppercase;letter-spacing:.09em;color:var(--ink3);padding:4px 10px 2px;}
+.lopt{
+  display:flex;align-items:center;gap:9px;
+  padding:8px 10px;border-radius:8px;cursor:pointer;
+  font-size:12px;font-weight:700;color:var(--ink2);transition:background .12s;
+}
+.lopt:hover{background:var(--paper2);}
+.lopt.on{background:var(--paper3);color:var(--ink);}
+.lopt .li{font-size:15px;line-height:1;}
+
+/* ── BOTTOM SHEET ──────────────────────────────────────────────────────
+   Positioned at top:0 so translateY is measured from top of viewport.
+   Peak (72px showing) = translateY(sheetHeight - 72)
+   Half (~48% viewport) = translateY(sheetHeight - 0.48*vh)
+   Full (~90% viewport) = translateY(sheetHeight - 0.90*vh)          */
+#sheet{
+  position:fixed;top:0;left:0;right:0;
+  height:92vh;z-index:700;
+  background:var(--paper);
+  border-radius:22px 22px 0 0;
+  box-shadow:0 -6px 40px rgba(60,40,0,0.18),0 -1px 0 var(--border2);
+  display:flex;flex-direction:column;
+  will-change:transform;overflow:hidden;
+  touch-action:none;
+}
+#handle-area{
+  padding:14px 0 8px;min-height:44px;
+  display:flex;justify-content:center;align-items:center;
+  flex-shrink:0;cursor:pointer;user-select:none;
+}
+.handle-bar{width:38px;height:4px;border-radius:2px;background:var(--border2);transition:background .2s;}
+#handle-area:hover .handle-bar{background:var(--ink3);}
+
+#sheet-placeholder{padding:0 20px 20px;flex-shrink:0;text-align:center;}
+#sheet-placeholder p{font-family:'Lora',serif;font-style:italic;font-size:13px;color:var(--ink3);line-height:1.85;}
+
+#sheet-content{display:none;flex-direction:column;flex:1;overflow:hidden;}
+
+.sheet-header{
+  padding:0 20px 14px;flex-shrink:0;
+  border-bottom:1.5px solid var(--border);
+  overflow-y:auto;max-height:50vh;
+  -webkit-overflow-scrolling:touch;scrollbar-width:none;
+}
+.sheet-header::-webkit-scrollbar{display:none;}
+.color-strip{height:4px;border-radius:2px;margin-bottom:12px;}
+.s-name{font-family:'Lora',serif;font-size:22px;font-weight:600;color:var(--ink);margin-bottom:2px;letter-spacing:-0.3px;}
+.s-vibe{font-size:10px;color:var(--ink3);letter-spacing:.09em;text-transform:uppercase;margin-bottom:10px;}
+#s-desc{font-family:'Lora',serif;font-style:italic;font-size:13.5px;line-height:1.85;color:var(--ink2);margin-bottom:12px;}
+.scores-wrap{margin-bottom:4px;}
+.score-row{display:flex;align-items:center;gap:8px;margin-bottom:5px;}
+.score-lbl{font-size:9px;color:var(--ink3);width:56px;flex-shrink:0;text-transform:uppercase;letter-spacing:.05em;}
+.score-track{flex:1;height:3px;border-radius:2px;background:var(--border);}
+.score-fill{height:100%;border-radius:2px;transition:width .4s;}
+.score-val{font-size:9px;color:var(--ink3);width:10px;text-align:right;}
+
+.tabs-row{display:flex;border-bottom:1.5px solid var(--border);padding:0 14px;flex-shrink:0;overflow-x:auto;scrollbar-width:none;background:var(--paper);}
+.tabs-row::-webkit-scrollbar{display:none;}
+.tb{flex-shrink:0;padding:9px 11px;font-size:12px;font-weight:700;color:var(--ink3);border:none;background:transparent;border-bottom:2.5px solid transparent;white-space:nowrap;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .12s;}
+.tb.on{color:var(--ink);border-bottom-color:var(--ink);}
+
+#tab-body{flex:1;overflow-y:auto;padding:14px 20px 40px;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+#tab-body::-webkit-scrollbar{display:none;}
+.tab-panel{display:none;}
+.tab-panel.on{display:block;}
+.t-head{font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--ink3);margin:4px 0 8px;}
+.tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:14px;}
+.tag{font-size:11px;padding:5px 11px;border-radius:7px;background:var(--paper2);border:1px solid var(--border2);color:var(--ink2);line-height:1.5;}
+.tab-note{font-size:12px;line-height:1.78;color:var(--ink2);font-family:'Lora',serif;font-style:italic;}
+
+#title-card{position:fixed;bottom:84px;left:16px;z-index:600;pointer-events:none;transition:opacity .3s;}
+#title-card h1{font-family:'Lora',serif;font-size:22px;font-weight:600;color:var(--ink);letter-spacing:-0.5px;text-shadow:0 1px 6px rgba(240,220,160,0.9);}
+#title-card p{font-family:'Lora',serif;font-style:italic;font-size:11px;color:var(--ink3);}
+</style>
+</head>
+<body>
+
+<div id="map"></div>
+
+<div id="filter-bar">
+  <div id="filter-scroll">
+    <button class="fp on" onclick="setFilter(this,'all','#7a6840')">All</button>
+    <button class="fp" onclick="setFilter(this,'q','#2c9878')">Quiet</button>
+    <button class="fp" onclick="setFilter(this,'na','#4a8c28')">Nature</button>
+    <button class="fp" onclick="setFilter(this,'ca','#c47828')">Cafes</button>
+    <button class="fp" onclick="setFilter(this,'tr','#3a84bc')">Transit</button>
+    <button class="fp" onclick="setFilter(this,'fo','#c03848')">Food</button>
+    <button class="fp" onclick="setFilter(this,'cl','#7a50b0')">City Life</button>
+  </div>
+</div>
+
+<div id="layer-btn" title="Map layers">🗺️</div>
+<div id="layer-panel">
+  <div class="layer-lbl">Map Style</div>
+  <div class="lopt on" data-layer="street" onclick="setLayer('street')"><span class="li">🗺️</span>Street</div>
+  <div class="lopt" data-layer="terrain" onclick="setLayer('terrain')"><span class="li">⛰️</span>Terrain</div>
+  <div class="lopt" data-layer="satellite" onclick="setLayer('satellite')"><span class="li">🛰️</span>Satellite</div>
+</div>
+
+<div id="title-card">
+  <h1>San Francisco</h1>
+  <p id="tc-count">40 neighborhoods · tap to explore</p>
+</div>
+
+<div id="sheet">
+  <div id="handle-area">
+    <div class="handle-bar"></div>
+  </div>
+  <div id="sheet-placeholder">
+    <p>Tap a dot on the map<br>to explore the neighborhood</p>
+  </div>
+  <div id="sheet-content">
+    <div class="sheet-header">
+      <div id="color-strip" class="color-strip"></div>
+      <div id="s-name" class="s-name"></div>
+      <div id="s-vibe" class="s-vibe"></div>
+      <div id="s-desc"></div>
+      <div id="scores" class="scores-wrap"></div>
+    </div>
+    <div class="tabs-row">
+      <button class="tb on" onclick="showTab('lm',this)">Landmarks</button>
+      <button class="tb" onclick="showTab('na',this)">Nature</button>
+      <button class="tb" onclick="showTab('ca',this)">Cafes</button>
+      <button class="tb" onclick="showTab('fo',this)">Food</button>
+      <button class="tb" onclick="showTab('tr',this)">Transit</button>
+    </div>
+    <div id="tab-body">
+      <div id="tab-lm" class="tab-panel on"></div>
+      <div id="tab-na" class="tab-panel"></div>
+      <div id="tab-ca" class="tab-panel"></div>
+      <div id="tab-fo" class="tab-panel"></div>
+      <div id="tab-tr" class="tab-panel"></div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+// ═══════════════════════════════════════════════════════
+//  NEIGHBORHOOD DATA — 40 neighborhoods
+// ═══════════════════════════════════════════════════════
+const ND=[
+  // ── NORTHEAST / WATERFRONT ─────────────────────────
+  {id:'north-beach',name:'North Beach',lat:37.806,lng:-122.410,color:'#c47828',
+   vibe:'Literary · Italian · Lively',s:{q:2,na:2,ca:5,tr:3,fo:5,cl:5},
+   desc:"The beating heart of SF's Italian heritage and birthplace of the Beat Generation. Dense, spirited, full of life at all hours — morning espresso at the bar, afternoon bookshops, late-night jazz.",
+   lm:['City Lights Bookstore','Coit Tower','Washington Square Park','Vesuvio Café','Telegraph Hill'],
+   nat:{p:['Washington Square Park','Telegraph Hill – Filbert Steps trail','Coit Tower hilltop views'],note:"Telegraph Hill's Filbert Steps trail winds up through wild parrots in the trees."},
+   caf:{s:['Caffè Trieste (Beat Generation institution)','Caffè Greco (old-school espresso)','Caffe Roma'],note:"Historic Italian espresso culture. Caffè Trieste has been pouring since 1956."},
+   fod:{s:["Tony's Pizza Napoletana (world champion)","Sotto Mare (fresh seafood)",'Liguria Bakery (focaccia, cash only)','Molinari Deli'],note:"Exceptional Italian food and some of SF's best fresh pasta."},
+   trn:{l:['Muni 30 (Stockton)','Muni 39 (Coit Tower)','Cable Car – Powell-Hyde (nearby)'],note:"No BART. Multiple Muni lines. Powell-Hyde Cable Car is a short walk."}},
+
+  {id:'chinatown',name:'Chinatown',lat:37.795,lng:-122.407,color:'#c82828',
+   vibe:'Historic · Dense · Authentic',s:{q:1,na:1,ca:2,tr:5,fo:5,cl:5},
+   desc:"America's oldest Chinatown, continuously inhabited since 1848. Grant Avenue is touristy but Stockton Street is the real neighborhood — packed with grocers, live seafood markets, and restaurants serving the local community.",
+   lm:['Grant Avenue','Dragon Gate (entrance arch)','Tin How Temple (1852)','Fortune Cookie Factory','Portsmouth Square'],
+   nat:{p:['Portsmouth Square (community plaza)','Embarcadero waterfront (short walk)'],note:"Very limited green space. Portsmouth Square is the neighborhood plaza — always busy with card games."},
+   caf:{s:['Eastern Bakery (since 1924)','Red Blossom Tea Company','Golden Gate Bakery (egg tarts, cash only)'],note:"Community-oriented tea houses and bakeries rather than modern cafes."},
+   fod:{s:['City View Restaurant (dim sum)','Great Eastern (local institution)','Z & Y Restaurant (Sichuan)','Golden Gate Bakery'],note:"Stockton Street is the real food market — fresh seafood, live crabs, imported goods."},
+   trn:{l:['BART – Montgomery St (2-min walk)','BART – Powell St (3-min walk)','Cable Car – Powell-Hyde','Muni 30 (Stockton)'],note:"Two BART stations within blocks — among the best transit access in the entire city."}},
+
+  {id:'jackson-sq',name:'Jackson Square',lat:37.798,lng:-122.403,color:'#8858a8',
+   vibe:'Historic · Antique · Intimate',s:{q:3,na:2,ca:3,tr:4,fo:4,cl:3},
+   desc:"SF's best-preserved Gold Rush-era commercial district. Gorgeous brick warehouses from the 1850s, antique dealers, architecture firms, and some genuinely exceptional restaurants.",
+   lm:['Gold Rush-era brick warehouses','Hotaling Place (preserved alley)','Transamerica Pyramid (1 block)'],
+   nat:{p:['Embarcadero waterfront (short walk east)','Washington Square Park (nearby)'],note:"Very limited nature. A short walk to the Embarcadero waterfront is the best nearby option."},
+   caf:{s:['Caffe Greco (nearby North Beach)','Blue Bottle Coffee (FiDi, short walk)'],note:"A handful of quality spots hidden among design and antique showrooms."},
+   fod:{s:['Cotogna (rustic Italian, exceptional)','Quince (Michelin 3-star)','Wayfare Tavern (Tyler Florence)','Perbacco (upscale Italian)'],note:"Cotogna and Quince are among SF's finest restaurants — reserve well in advance."},
+   trn:{l:['BART – Embarcadero (5-min walk)','BART – Montgomery St (5-min walk)','Cable Car – Powell-Hyde (nearby)'],note:"BART at both Embarcadero and Montgomery are a short walk."}},
+
+  {id:'fidi',name:'Financial District',lat:37.794,lng:-122.397,color:'#4868a8',
+   vibe:'Corporate · Waterfront · Historic',s:{q:2,na:3,ca:3,tr:5,fo:4,cl:4},
+   desc:"SF's business core, anchored by the iconic Ferry Building on the Embarcadero. The waterfront is genuinely beautiful and the farmers market is among the best in the US.",
+   lm:['Ferry Building (farmers market Tue/Thu/Sat)','Embarcadero waterfront','Transamerica Pyramid'],
+   nat:{p:['Embarcadero Promenade (bay waterfront walk)','Ferry Building plaza + pier','Rincon Park (sculpture + bay views)'],note:"The Embarcadero is one of the great urban waterfront walks — bay views, sea breeze, Bay Bridge framing."},
+   caf:{s:['Blue Bottle Coffee (Ferry Building – iconic setting)','Equator Coffees','Philz Coffee'],note:"Blue Bottle's Ferry Building location is one of the best cafe settings in all of SF."},
+   fod:{s:['Ferry Building marketplace (essential)','Hog Island Oyster Co.','Perbacco','Wayfare Tavern'],note:"The Ferry Building alone is worth the trip — Hog Island Oyster and the Saturday farmers market."},
+   trn:{l:['BART – Embarcadero Station','BART – Montgomery St Station','Ferry – Marin, Oakland, Vallejo','Muni F (Embarcadero)'],note:"Unmatched transit. Multiple BART lines, ferries to the Bay, and the F streetcar along the waterfront."}},
+
+  // ── HILLS / CENTRAL ─────────────────────────────────
+  {id:'russian-hill',name:'Russian Hill',lat:37.800,lng:-122.419,color:'#5898d0',
+   vibe:'Quiet · Residential · Charming',s:{q:4,na:3,ca:3,tr:3,fo:3,cl:3},
+   desc:"One of SF's most picturesque hills. Quiet, steep streets with incredible views, Lombard Street, and secret garden stairways draped in flowers.",
+   lm:['Lombard Street (crookedest block)','Macondray Lane (secret garden path)','Ina Coolbrith Park'],
+   nat:{p:['Ina Coolbrith Park (hilltop, bay views)','Macondray Lane (hidden garden path)','Vallejo St Stairway'],note:"Macondray Lane inspired Tales of the City — a wooden walkway through overhanging gardens."},
+   caf:{s:['Caffe Delucchi','Swensen\'s Ice Cream (1948 original)','Boba Guys (Polk St)'],note:"Small cafe footprint. Neighborhood spots rather than destination cafes."},
+   fod:{s:['Zarzuela (Spanish tapas)','Gary Danko (Michelin, special occasion)','Swan Oyster Depot (Polk, cash only)'],note:"A handful of excellent restaurants. Polk Street nearby has strong options at every price point."},
+   trn:{l:['Cable Car – Powell-Hyde (through neighborhood)','Cable Car – Powell-Mason','Muni 19 (Polk)'],note:"Cable cars run right through the neighborhood."}},
+
+  {id:'nob-hill',name:'Nob Hill',lat:37.792,lng:-122.416,color:'#7a50b0',
+   vibe:'Historic · Elevated · Prestigious',s:{q:3,na:2,ca:3,tr:5,fo:3,cl:4},
+   desc:"Classic SF prestige atop a hill. Grand hotels, Grace Cathedral, sweeping city and bay views. Three cable car lines converge here — the best transit access in SF.",
+   lm:['Grace Cathedral','Huntington Park','Fairmont Hotel','Mark Hopkins – Top of the Mark'],
+   nat:{p:['Huntington Park (elegant central square)','Ina Coolbrith Park (adjacent)','Views from California St ridge'],note:"Huntington Park is an elegant hilltop square. Limited greenery but stunning urban vistas."},
+   caf:{s:['The Fairmont lobby café','Big 4 Restaurant bar','Nob Hill Café'],note:"More grand hotel lobbies and afternoon tea than indie cafes."},
+   fod:{s:['Acquerello (upscale Italian, Michelin)','Big 4 Restaurant (historic)','Swan Oyster Depot (Polk St)'],note:"Acquerello is one of the best Italian restaurants in SF."},
+   trn:{l:['Cable Car – California Street','Cable Car – Powell-Hyde','Cable Car – Powell-Mason','BART – Powell (short walk down)'],note:"Best transit hub in SF. Three cable car lines converge at the summit."}},
+
+  {id:'tenderloin',name:'Tenderloin',lat:37.785,lng:-122.413,color:'#888040',
+   vibe:'Dense · Gritty · Culturally Rich',s:{q:1,na:1,ca:2,tr:5,fo:4,cl:4},
+   desc:"SF's most misunderstood neighborhood — genuinely gritty, but one of the most culturally layered. Exceptional Southeast Asian food and right in the center of everything.",
+   lm:['Glide Memorial Church','Tenderloin National Forest','Boedekker Park'],
+   nat:{p:['Boedekker Park (renovated, community-focused)','Tenderloin National Forest (micro garden)'],note:"Very limited green space. Boedekker Park was recently renovated as a real community resource."},
+   caf:{s:['The Pinch (neighborhood coffee)','Willow Cafe'],note:"Limited independent cafe culture but a few hidden gems exist."},
+   fod:{s:['Saigon Sandwich (banh mi, ~$5, essential)','Turtle Tower (pho, excellent)','Shalimar (Pakistani/Indian)','Mensho Tokyo (ramen, world-class)'],note:"Outstanding Vietnamese and Southeast Asian food — some of the best and most affordable in the city."},
+   trn:{l:['BART – Powell St Station (1 block)','BART – Civic Center Station','Muni all Metro lines (Market)'],note:"Exceptional transit. Surrounded by BART stations and all Muni Metro lines."}},
+
+  {id:'civic-center',name:'Civic Center',lat:37.779,lng:-122.419,color:'#9070a0',
+   vibe:'Institutional · Arts · Transitional',s:{q:2,na:2,ca:3,tr:5,fo:3,cl:3},
+   desc:"SF's civic and cultural hub — City Hall, the main library, Davies Symphony Hall, and the War Memorial Opera House. Mid-Market is rapidly changing.",
+   lm:['SF City Hall (Beaux-Arts masterpiece)','Davies Symphony Hall','War Memorial Opera House','SF Public Library'],
+   nat:{p:['Civic Center Plaza','UN Plaza (farmers market Wed/Sun)','Patricia\'s Green (Hayes Valley, short walk)'],note:"Civic Center Plaza is a large open space. Patricia's Green in Hayes Valley is a short walk."},
+   caf:{s:['Sightglass Coffee (nearby)','Ritual Coffee (nearby)','The Grove'],note:"Cafe options improving with Mid-Market development."},
+   fod:{s:['Monsieur Benjamin (French, Hayes Valley)','Absinthe (French brasserie)','Jardiniere (pre-show)'],note:"Mid-Market and Hayes Valley are where the food action is — both steps away."},
+   trn:{l:['BART – Civic Center Station','Muni all Metro lines (Market)','Muni Van Ness BRT'],note:"Civic Center BART is one of the busiest stations in SF."}},
+
+  // ── NORTH / WATERFRONT ──────────────────────────────
+  {id:'marina',name:'Marina',lat:37.800,lng:-122.437,color:'#3a84bc',
+   vibe:'Sporty · Scenic · Social',s:{q:2,na:4,ca:3,tr:2,fo:4,cl:4},
+   desc:"Flat, immaculate streets along the bay. Strong brunch culture, active crowd. Crissy Field is one of the great urban walks in the US — bay shoreline with Golden Gate views the whole way.",
+   lm:['Palace of Fine Arts','Crissy Field','Fort Mason','Marina Green','Wave Organ'],
+   nat:{p:['Crissy Field (bay shoreline trail)','Marina Green (grassy waterfront)','Fort Mason meadows','Baker Beach (short walk)'],note:"Exceptional waterfront access. Crissy Field is a national treasure for runs and walks."},
+   caf:{s:['Equator Coffees (Fort Mason)','Blue Bottle Coffee (Fort Mason)','Peet\'s Coffee'],note:"Solid but functional rather than destination-worthy."},
+   fod:{s:['A16 (Southern Italian, exceptional)','Delarosa (Neapolitan pizza)','Mamacita (Mexican)','Isa (French bistro)'],note:"Good dining strip on Chestnut and Union Street."},
+   trn:{l:['Muni 28 (19th Ave)','Muni 30 (Stockton)','Muni 43 (Masonic)'],note:"No BART. Bus lines can be infrequent. Car or bike recommended."}},
+
+  {id:'cow-hollow',name:'Cow Hollow',lat:37.797,lng:-122.430,color:'#6898c8',
+   vibe:'Young · Social · Walkable',s:{q:2,na:3,ca:3,tr:2,fo:4,cl:4},
+   desc:"The lively younger sibling to Pacific Heights. Union Street is lined with boutiques, brunch spots, and bars. Crissy Field and the Marina are minutes away.",
+   lm:['Union Street commercial corridor','Octagon House (1861 historic home)','Vedanta Temple'],
+   nat:{p:['Crissy Field (bay walk, GG Bridge views)','Marina Green (waterfront park)','The Presidio (short walk)'],note:"Crissy Field and the Marina waterfront are a short walk north."},
+   caf:{s:['Peet\'s Coffee (Union St)','The Grove','Réveille Coffee'],note:"Good brunch and cafe culture concentrated on Union Street."},
+   fod:{s:['Delarosa (Neapolitan pizza, excellent)','Betelnut (Pan-Asian)','Rose\'s Café (Italian)','Roam Artisan Burgers'],note:"Strong brunch and dinner scene on Union Street."},
+   trn:{l:['Muni 41 (Union)','Muni 45 (Union-Stockton)','Muni 22 (Fillmore)'],note:"No BART. Infrequent bus service. Best with a bike or car."}},
+
+  // ── WESTERN / RESIDENTIAL ────────────────────────────
+  {id:'pac-heights',name:'Pac Heights',lat:37.793,lng:-122.434,color:'#8848c8',
+   vibe:'Refined · Residential · Views',s:{q:4,na:3,ca:4,tr:3,fo:4,cl:3},
+   desc:"SF's most prestigious residential neighborhood. Victorian mansions, quiet streets, sweeping bay views. Fillmore Street is one of SF's best neighborhood dining and cafe corridors.",
+   lm:['Alta Plaza Park','Lafayette Park','Fillmore Street corridor','Spreckels Mansion'],
+   nat:{p:['Alta Plaza Park (terraced hillside, bay views)','Lafayette Park (off-leash, great lawns)','The Presidio (short walk west)'],note:"Alta Plaza has elegant stepped terraces with bay views. Lafayette Park is great for off-leash dogs."},
+   caf:{s:['Jane on Fillmore (essential neighbourhood café)','Réveille Coffee','Equator Coffees'],note:"Fillmore Street has a strong cafe strip. Jane is a particular standout."},
+   fod:{s:['State Bird Provisions (James Beard Award)','SPQR (Roman-inspired)','Spruce (Californian)','Octavia (seasonal)'],note:"State Bird Provisions is one of the most beloved restaurants in all of SF."},
+   trn:{l:['Muni 1 (California)','Muni 22 (Fillmore)','Muni 3 (Jackson)'],note:"No BART. Good Muni coverage on Fillmore and California corridors."}},
+
+  {id:'anza-vista',name:'Anza Vista',lat:37.783,lng:-122.442,color:'#709850',
+   vibe:'Quiet · Residential · Underrated',s:{q:5,na:3,ca:2,tr:3,fo:2,cl:2},
+   desc:"A quiet, hilly residential neighborhood tucked between Alamo Square and the Inner Richmond. Largely overlooked by tourists and newcomers alike, which is precisely the appeal — genuine SF neighborhood life without the hype.",
+   lm:['Kimbell Playground','McAllister Street corridor','St. Mary\'s Medical Center (nearby)'],
+   nat:{p:['Alamo Square Park (short walk east)','Buena Vista Park (short walk)','Panhandle (nearby)'],note:"Close to several of SF's best parks. Alamo Square with its Painted Ladies backdrop is minutes away."},
+   caf:{s:['Sightglass Coffee (nearby Hayes Valley)','Java Beach Café','Matching Half Café (nearby Haight)'],note:"Limited neighborhood cafes — nearby Hayes Valley and Haight are better options."},
+   fod:{s:['Local spots on McAllister St','Rich Table (Hayes Valley, short walk)','Nopa (Divisadero, short walk)'],note:"Dining is sparse in the neighborhood itself — Hayes Valley and Divisadero are the go-to corridors."},
+   trn:{l:['Muni 5 (Fulton)','Muni 21 (Hayes)','Muni 38 (Geary, nearby)'],note:"Decent Muni coverage. Walkable to Hayes Valley and Alamo Square."}},
+
+  {id:'inner-richmond',name:'Inner Richmond',lat:37.780,lng:-122.470,color:'#2c9898',
+   vibe:'Diverse · Foggy · Underrated',s:{q:4,na:4,ca:4,tr:4,fo:5,cl:3},
+   desc:"Arguably SF's most underrated neighborhood. Incredible Asian food scene on Clement Street, direct Golden Gate Park access, genuine diversity, and real community character.",
+   lm:['Clement Street ("New Chinatown")','Golden Gate Park north entrance','Green Apple Books'],
+   nat:{p:['Golden Gate Park (north entrance, immediate)','Lands End Trail (coastal bluffs, stunning)','Baker Beach (GG Bridge views)','Lincoln Park'],note:"Lands End is one of the most dramatic coastal walks in SF — rugged bluffs with Golden Gate Bridge framing."},
+   caf:{s:['Green Apple Books + Café (SF institution)','Cinderella Russian Bakery (historic)','Canvas Café'],note:"A mix of local community cafes. Green Apple Books has a beloved in-store café."},
+   fod:{s:['Hong Kong Lounge (dim sum)','Burma Superstar (samosa soup essential)','Nopalito (Mexican)','Chapeau! (French bistro)','PPQ Dungeness Island'],note:"Clement Street is one of the best food streets in SF."},
+   trn:{l:['Muni 1 (California)','Muni 2 (Clement)','Muni 28 (19th Ave)','Muni 38 (Geary)'],note:"No BART but strong Muni bus coverage."}},
+
+  {id:'outer-richmond',name:'Outer Richmond',lat:37.778,lng:-122.494,color:'#4a8898',
+   vibe:'Foggy · Coastal · Residential',s:{q:5,na:5,ca:3,tr:3,fo:3,cl:1},
+   desc:"The fog capital of SF — reliably overcast, locals love it for that. Direct access to Lands End, Ocean Beach, and Baker Beach. A deeply residential neighborhood with a strong Russian and Chinese immigrant community.",
+   lm:['Lands End Trail','Lincoln Park','Sutro Baths ruins','Baker Beach'],
+   nat:{p:['Lands End Trail (dramatic coastal bluffs)','Baker Beach (GG Bridge backdrop)','Lincoln Park (golf + coastal views)','Ocean Beach (short ride south)'],note:"Among the best coastal access of any San Francisco neighborhood. Lands End is truly spectacular."},
+   caf:{s:['Java Beach Café','Cinderella Russian Bakery (historic)','Andytown Coffee (nearby Sunset)'],note:"Small neighborhood cafes with an old-world, lived-in feel."},
+   fod:{s:['Burma Superstar (Clement St, nearby)','PPQ Dungeness Island','Ton Kiang (dim sum)'],note:"Clement Street is the main draw — one of the best food corridors in the entire city."},
+   trn:{l:['Muni 38 (Geary – frequent)','Muni 1 (California)','Muni 18 (46th Ave, nearby)'],note:"Muni 38 Geary runs frequently to downtown. No BART."}},
+
+  {id:'haight',name:'Haight-Ashbury',lat:37.769,lng:-122.447,color:'#b03868',
+   vibe:'Countercultural · Eclectic · Historic',s:{q:3,na:4,ca:4,tr:3,fo:3,cl:4},
+   desc:"The 1960s Summer of Love neighborhood, still vibrant with vintage shops, record stores, and free-spirited energy. GGP's east entrance is steps away.",
+   lm:['Golden Gate Park east entrance','Hippie Hill','Grateful Dead House','Buena Vista Park','The Panhandle'],
+   nat:{p:['Buena Vista Park (hilltop, city views)','The Panhandle (linear park corridor)','Golden Gate Park (east entrance)'],note:"The Panhandle is perfect for morning walks. Buena Vista Park has quiet trails and great views."},
+   caf:{s:['Coffee to the People (neighborhood institution)','Matching Half Café','Haight Street Café'],note:"Strong neighborhood cafe scene with real personality."},
+   fod:{s:['Magnolia Brewing (burgers + craft beer)','Pork Store Café (hearty breakfast)','Rosamunde Sausage Grill','Cha Cha Cha (Caribbean tapas)'],note:"More bar-food and casual dining than fine dining."},
+   trn:{l:['Muni N-Judah (Haight/Cole, nearby)','Muni 6 (Haight-Parnassus)','Muni 7 (Haight-Noriega)'],note:"Good Muni coverage. N-Judah Metro stops nearby."}},
+
+  {id:'cole-valley',name:'Cole Valley',lat:37.766,lng:-122.450,color:'#e0782c',
+   vibe:'Tiny · Cozy · Village-like',s:{q:5,na:4,ca:4,tr:3,fo:3,cl:2},
+   desc:"One of SF's smallest and most beloved neighborhoods — essentially one block of Cole Street. Supremely quiet, steps from GGP and Buena Vista Park.",
+   lm:['Cole Street (entire neighborhood)','Buena Vista Park (immediately adjacent)','Sutro Tower'],
+   nat:{p:['Buena Vista Park (directly adjacent)','Golden Gate Park (short walk)','Corona Heights Park (nearby)'],note:"Buena Vista Park is essentially the backyard — winding trails and city views."},
+   caf:{s:['Reverie Café (neighborhood gem, excellent coffee)','Cole Valley Bakery'],note:"Small but excellent. Reverie Café is a genuine standout."},
+   fod:{s:['Zazie (French brunch, SF institution)','Eos Restaurant & Wine Bar','Ragazza (Neapolitan pizza)'],note:"Zazie is famous for its French-inspired brunch — expect weekend waits."},
+   trn:{l:['Muni N-Judah (Cole & Carl stop)','Muni 37 (Corbett)'],note:"N-Judah Metro runs right through on Carl Street."}},
+
+  {id:'hayes-valley',name:'Hayes Valley',lat:37.776,lng:-122.424,color:'#889018',
+   vibe:'Curated · Stylish · Central',s:{q:3,na:3,ca:5,tr:4,fo:5,cl:4},
+   desc:"SF's most design-forward neighborhood at street level. Boutiques, Alamo Square for daily walks, and top-tier restaurants. Central, walkable, curated without feeling artificial.",
+   lm:['Alamo Square (Painted Ladies)','Patricia\'s Green','SF Jazz Center','Davies Symphony Hall'],
+   nat:{p:['Alamo Square (Victorian backdrop, great lawns)','Patricia\'s Green (arts + community plaza)','Buena Vista Park (short walk)'],note:"Alamo Square is one of SF's most iconic parks. Patricia's Green is a great small arts plaza."},
+   caf:{s:['Sightglass Coffee (beautiful flagship)','Ritual Coffee Roasters','Réveille Coffee','Mojo Bicycle Café'],note:"Excellent cafe concentration. Multiple top-tier SF roasters have flagships here."},
+   fod:{s:['Rich Table (California creative, essential)','Souvla (Greek fast-casual)','Absinthe (French brasserie)','Monsieur Benjamin','Nightbird (Michelin)'],note:"One of SF's best restaurant streets. Rich Table is essential SF dining."},
+   trn:{l:['Muni F (Market Street Historic)','Muni 21 (Hayes)','Muni Van Ness BRT','BART (Civic Center, short walk)'],note:"Excellent transit. Multiple Muni lines plus Van Ness BRT."}},
+
+  {id:'duboce',name:'Duboce Triangle',lat:37.769,lng:-122.432,color:'#d0a020',
+   vibe:'Calm · Central · Connected',s:{q:4,na:4,ca:4,tr:5,fo:3,cl:4},
+   desc:"A small, exceptionally livable triangle between Castro, Lower Haight, and Mission. Duboce Park anchors it — minimal chaos, maximum convenience to everywhere in SF.",
+   lm:['Duboce Park','F-Market Historic Streetcar','Divisadero corridor'],
+   nat:{p:['Duboce Park (dog-friendly, neighbourhood park)','Buena Vista Park (short walk)','Dolores Park (short bike ride)'],note:"Duboce Park is a lovely everyday park — well-used, social, with an off-leash dog area."},
+   caf:{s:['Linea Caffe (excellent espresso)','Duboce Park Café (neighbourhood classic)','Ritual Coffee (nearby)'],note:"Good cafe density. Linea Caffe is one of the better espresso spots in the city."},
+   fod:{s:['Uva Enoteca (Italian wine bar)','Straw (carnival food, fun)','Nopa (Divisadero — SF institution)'],note:"Extremely close to Divisadero and Hayes Valley — great options 5 minutes in any direction."},
+   trn:{l:['Muni N-Judah (Duboce & Church)','Muni J-Church','Muni K/L/M (Church & Market)','Muni F (Market St)'],note:"Best transit in this part of the city. Multiple Muni Metro lines converge at Church & Market."}},
+
+  {id:'castro',name:'Castro',lat:37.762,lng:-122.435,color:'#d05820',
+   vibe:'Iconic · Vibrant · Walkable',s:{q:3,na:3,ca:4,tr:4,fo:4,cl:5},
+   desc:"The world's most celebrated LGBTQ+ neighborhood. Vibrant street life without being chaotic. The Castro Theatre is an Art Deco landmark. Corona Heights above has spectacular city views.",
+   lm:['Harvey Milk Plaza','Castro Theatre (1922 Art Deco)','Corona Heights Park','Twin Peaks'],
+   nat:{p:['Corona Heights Park (volcanic hill, great views)','Kite Hill (open grassy views)','Dolores Park (short walk)','Twin Peaks (panoramic 360°)'],note:"Corona Heights is outstanding — a rocky volcanic hill with fantastic views and actual trails."},
+   caf:{s:['Philz Coffee (custom pour-over, beloved)','Verve Coffee Roasters','Castro Coffee Company'],note:"Good cafe scene on Castro and 18th Street."},
+   fod:{s:['Frances (exceptional, reserve early)','Anchor Oyster Bar (SF seafood institution)','Poesia (Italian)','Starbelly (neighbourhood gastropub)'],note:"Frances is one of the best restaurants in SF. 18th Street has a genuinely excellent food scene."},
+   trn:{l:['Muni Castro Station – K/L/M/T Metro','Muni F (Market & Castro)','Muni 24 (Divisadero)'],note:"Castro Station is a full Muni Metro underground stop with multiple lines."}},
+
+  // ── CENTRAL / SOMA ──────────────────────────────────
+  {id:'soma',name:'SoMa',lat:37.781,lng:-122.401,color:'#6060a8',
+   vibe:'Tech · Dense · Urban Core',s:{q:1,na:2,ca:3,tr:5,fo:4,cl:5},
+   desc:"South of Market — the backbone of SF's tech industry. Dense and often gritty. Excellent museums, nightlife, and unbeatable transit access to the entire Bay Area.",
+   lm:['SF MoMA','Yerba Buena Gardens','Oracle Park','Moscone Center','South Park'],
+   nat:{p:['Yerba Buena Gardens (urban oasis, waterfalls)','South Park (hidden oval, charming)','Oracle Park bayfront area'],note:"South Park is a lovely hidden oval park. Yerba Buena Gardens is good for a midday reset."},
+   caf:{s:['Sightglass Coffee (original SoMa flagship)','Blue Bottle Coffee','Equator Coffees','Stumptown Coffee'],note:"Strong third-wave coffee presence. Multiple excellent roasters."},
+   fod:{s:['Benu (Michelin 3-star, world-class)','Bix (classic SF supper club)','Burma Superstar','The Bird (SF chicken sandwich institution)'],note:"Excellent range from street food to Michelin stars. Benu is one of the most celebrated restaurants in the US."},
+   trn:{l:['BART – Montgomery St Station','BART – Civic Center Station','Caltrain – 4th & King (Peninsula)','Muni all Metro lines'],note:"Best transit access in SF. Two BART stations, all Muni Metro lines, and Caltrain to Silicon Valley."}},
+
+  {id:'south-beach',name:'South Beach',lat:37.783,lng:-122.389,color:'#3878b8',
+   vibe:'Waterfront · High-rise · New',s:{q:3,na:3,ca:3,tr:4,fo:3,cl:3},
+   desc:"A waterfront neighborhood of modern high-rises right on the bay next to Oracle Park. Spectacular bay and bridge views.",
+   lm:['Oracle Park (Giants games + bay views)','The Embarcadero South','Rincon Park'],
+   nat:{p:['Embarcadero South (waterfront walk, quiet)','Rincon Park (art + bay views)','Oracle Park waterfront'],note:"The Embarcadero here is quiet and scenic — bay views, the Bay Bridge, and almost nobody around outside of game days."},
+   caf:{s:['Blue Bottle Coffee (nearby SoMa)','Sightglass (short walk)','Oracle Park concessions (game days)'],note:"Limited independent cafe culture."},
+   fod:{s:['MoMo\'s (Oracle Park adjacent)','Waterbar (seafood + bay views)','Epic Steak (Embarcadero views)'],note:"Game day dining is strong around Oracle Park. Otherwise limited."},
+   trn:{l:['Muni T-Third Street Metro','Caltrain – 4th & King (steps away)'],note:"Muni T-Third Metro runs through. Caltrain is steps away."}},
+
+  // ── INNER NEIGHBORHOODS ─────────────────────────────
+  {id:'inner-sunset',name:'Inner Sunset',lat:37.763,lng:-122.465,color:'#2c9878',
+   vibe:'Foggy · Cozy · Local',s:{q:4,na:5,ca:5,tr:4,fo:4,cl:3},
+   desc:"A beloved neighborhood with genuine local character. Reliably foggy, deeply cozy — excellent Asian food, direct GGP access, and some of SF's best everyday cafes.",
+   lm:['9th & Irving commercial strip','UCSF Campus','Stow Lake','Golden Gate Park south edge'],
+   nat:{p:['Golden Gate Park (direct access, entire south side)','Stow Lake (rowing + walking loops)','Ocean Beach (short bike ride west)'],note:"Golden Gate Park is essentially the backyard. Stow Lake offers peaceful rowboat rentals."},
+   caf:{s:['Andytown Coffee Roasters (exceptional)','Trouble Coffee (cult status — the original)','Hollow (beautiful space)'],note:"One of the best cafe cultures in SF. Andytown is beloved citywide."},
+   fod:{s:['San Tung (always a wait, worth it)','Outerlands (coastal-rustic, essential)','Thanh Long (dungeness crab)','Gialina (Neapolitan pizza)'],note:"Excellent and diverse food scene. One of SF's best for everyday eating."},
+   trn:{l:['Muni N-Judah (multiple stops on Irving St)','Muni 7 (Haight-Judah)','Muni 44 (O\'Shaughnessy)'],note:"N-Judah Metro is the backbone — direct to downtown and Castro in ~25 min."}},
+
+  {id:'outer-sunset',name:'Outer Sunset',lat:37.757,lng:-122.501,color:'#4878a8',
+   vibe:'Remote · Surf · Pacific Edge',s:{q:5,na:5,ca:4,tr:3,fo:3,cl:1},
+   desc:"The fog-belt edge of SF, right on the Pacific. Surf culture, Vietnamese food, and miles of wild beach. Slow-paced and deeply underrated.",
+   lm:['Ocean Beach (miles of Pacific coastline)','Sutro Baths ruins','Cliff House','Fort Funston'],
+   nat:{p:['Ocean Beach (miles of Pacific coastline)','Fort Funston (hang gliding + dog beach)','Sutro Baths ruins + coastal trail','Lands End (short ride north)'],note:"Extraordinary nature access. Ocean Beach is one of the most dramatic urban beaches in the US."},
+   caf:{s:['Andytown Coffee (original Noriega St)','Devil\'s Teeth Baking Co. (legendary egg sandwiches)','Java Beach Café (right by Ocean Beach)'],note:"A surprisingly strong cafe culture. Devil's Teeth is legendary for egg sandwiches."},
+   fod:{s:['PPQ Dungeness Island (Vietnamese seafood)','Thanh Long (dungeness crab, original)','Outerlands (weekend brunch)','Dumpling Kitchen'],note:"Outstanding Vietnamese and Asian food along Irving and Noriega."},
+   trn:{l:['Muni N-Judah (western terminus)','Muni L-Taraval (western terminus)','Muni 18 (46th Ave)'],note:"N-Judah and L-Taraval both terminate here. Getting downtown takes 35-45 min."}},
+
+  {id:'noe-valley',name:'Noe Valley',lat:37.751,lng:-122.433,color:'#c07820',
+   vibe:'Sunny · Relaxed · Neighbourhood',s:{q:5,na:3,ca:5,tr:3,fo:4,cl:3},
+   desc:"SF's sunniest neighborhood — a microclimate pocket that often escapes the fog. 24th Street is a perfect walkable strip: indie cafes, bookshops, and good food without pretension.",
+   lm:['24th Street corridor','Noe Valley Town Square','Upper Noe Rec Center'],
+   nat:{p:['Upper Noe Rec Center & Park','Douglass Park (small, dog-friendly)','Glen Canyon Park (uphill, worth the walk)'],note:"Quiet neighborhood parks. Glen Canyon is just up the hill for more substantial nature."},
+   caf:{s:['Martha & Bros Coffee (neighbourhood institution)','Folio Books + Café (coffee + bookshop)','Noe Valley Bakery'],note:"One of SF's most consistently praised everyday cafe cultures. Martha & Bros is a beloved institution."},
+   fod:{s:['Contigo (Spanish, exceptional)','Firefly (New American seasonal)','Noe Valley Bakery (pastries)','Chez Maman (French casual)'],note:"24th Street has an excellent concentration of neighbourhood restaurants."},
+   trn:{l:['Muni J-Church (Church & 24th, nearby)','Muni 48 (Quintara-24th)','BART – 24th St (15-min walk)'],note:"J-Church Metro runs along Church Street. Walkable to Castro's better transit."}},
+
+  {id:'mission',name:'The Mission',lat:37.759,lng:-122.415,color:'#c02828',
+   vibe:'Energetic · Cultural · Dense',s:{q:2,na:3,ca:5,tr:5,fo:5,cl:5},
+   desc:"SF's most dynamic neighborhood. Latino roots, extraordinary food, vibrant street art, and Dolores Park as the city's backyard. Valencia Street is one of the best blocks in SF.",
+   lm:['Dolores Park','Mission Dolores Basilica (1776)','Valencia Street','Clarion Alley murals'],
+   nat:{p:['Dolores Park (SF\'s living room — essential)','Precita Park (quieter, neighbourhood gem)'],note:"Dolores Park is an institution — sun traps, downtown views, and basically the city's communal living room on weekends."},
+   caf:{s:['Sightglass Coffee','Ritual Coffee (Valencia — the original)','Linea Caffe','Dandelion Chocolate (café + factory)','Tartine (bakery-café, legendary)'],note:"One of SF's best cafe cultures. Multiple top-tier roasters, dense concentration."},
+   fod:{s:['Tartine Bakery (legendary — long lines)','Flour + Water (pasta, essential)','La Palma Mexicatessen','Bi-Rite Creamery','Foreign Cinema (dinner + film)'],note:"One of the best food neighborhoods in SF. From legendary taquerías to Michelin-starred restaurants."},
+   trn:{l:['BART – 16th St Mission Station','BART – 24th St Mission Station','Muni 14 (Mission)','Muni J-Church'],note:"Two BART stations make this one of the most transit-accessible neighborhoods in SF."}},
+
+  {id:'mission-bay',name:'Mission Bay',lat:37.771,lng:-122.393,color:'#3890c0',
+   vibe:'New · Clean · Campus-like',s:{q:3,na:3,ca:2,tr:4,fo:2,cl:2},
+   desc:"A modern development zone — clean and well-designed but lacking neighbourhood soul. UCSF Mission Bay is a major research campus. Chase Center brings event energy.",
+   lm:['Chase Center (Warriors arena)','UCSF Mission Bay Campus','Mission Creek Park'],
+   nat:{p:['Mission Creek Park (waterway + walking path)','China Basin Park (bayfront)','The Bay Trail (connects south to Dogpatch)'],note:"Mission Creek is a pleasant waterway running through the neighbourhood."},
+   caf:{s:['Blue Bottle Coffee','Equator Coffees (UCSF campus)','Philz Coffee (nearby)'],note:"Limited indie cafe scene — mostly chain and campus options."},
+   fod:{s:['Chase Center dining options','The Yard','Hard Knox Cafe (adjacent Dogpatch)'],note:"Limited outside of the Chase Center dining complex. Growing slowly."},
+   trn:{l:['Muni T-Third Street Metro','Caltrain – 4th & King (short ride)'],note:"T-Third Metro serves the neighbourhood. Close to Caltrain."}},
+
+  {id:'design-district',name:'Design District',lat:37.769,lng:-122.404,color:'#688868',
+   vibe:'Trade · Creative · Emerging',s:{q:3,na:2,ca:2,tr:3,fo:3,cl:2},
+   desc:"SF's Showplace Square and Design District — a trade and showroom corridor of furniture, interior design, and architecture firms. Not a traditional residential neighborhood but increasingly walkable.",
+   lm:['Showplace Square (design showrooms)','Heath Ceramics','RH San Francisco flagship'],
+   nat:{p:['Crane Cove Park (Dogpatch, short walk east)','Potrero Hill Rec Center (short walk)'],note:"Very limited green space. The Dogpatch waterfront is a short walk east for your nature fix."},
+   caf:{s:['Sightglass Coffee (SoMa, nearby)','Farley\'s Coffee (Potrero, short walk)','Piccino (also café, Dogpatch adjacent)'],note:"Growing slowly as the neighbourhood becomes more mixed-use."},
+   fod:{s:['Piccino (pizza + Italian, nearby)','Plow (Potrero, short walk)','Hard Knox Cafe (Dogpatch)'],note:"More food options than you'd expect for a trade district."},
+   trn:{l:['Muni T-Third Street (Dogpatch, short walk)','Muni 10 (Townsend)','Muni 22 (Fillmore)'],note:"Moderately served. T-Third Metro nearby. Best with a bike or car."}},
+
+  {id:'potrero-hill',name:'Potrero Hill',lat:37.762,lng:-122.401,color:'#c05838',
+   vibe:'Sunny · Views · Emerging',s:{q:4,na:3,ca:3,tr:3,fo:3,cl:3},
+   desc:"A sunny hill above the Mission and SoMa with great panoramic views. Quieter than surrounding neighborhoods, creative community, and good local spots.",
+   lm:['McKinley Square (summit views)','18th Street commercial strip','Jackson Playground'],
+   nat:{p:['McKinley Square (hilltop views)','Jackson Playground','Potrero Hill Rec Center & Park'],note:"The hilltop views are Potrero's highlight — on clear days you see the bay, downtown, and Marin."},
+   caf:{s:['Farley\'s Coffee (neighbourhood classic since 1989)','Piccino (also a café)'],note:"Small but genuine. Farley's is a long-standing neighbourhood institution."},
+   fod:{s:['Piccino (Italian, excellent)','Plow (brunch institution, weekend waits)','Chez Maman East (French casual)'],note:"Plow is famous for its brunch — expect waits on weekends."},
+   trn:{l:['Muni T-Third Street (nearby in Dogpatch)','Muni 10 (Townsend)','Muni 22 (Fillmore)'],note:"T-Third Metro is nearby in Dogpatch. Best with a bike or car."}},
+
+  {id:'dogpatch',name:'Dogpatch',lat:37.759,lng:-122.388,color:'#5898c0',
+   vibe:'Industrial · Artsy · Waterfront',s:{q:4,na:4,ca:3,tr:3,fo:3,cl:3},
+   desc:"Former industrial district turned low-key creative neighborhood. Quiet streets, beautiful waterfront trail, genuine character. Great for deep work and long bay walks.",
+   lm:['Crane Cove Park (new waterfront)','Minnesota Street Project (galleries)','Pier 70','Illinois St waterfront trail'],
+   nat:{p:['Crane Cove Park (new waterfront park + swimming beach)','Illinois St waterfront trail','Pier 70 meadows + bay views'],note:"The waterfront here is genuinely special. Crane Cove Park has a designated swimming beach on the bay."},
+   caf:{s:['Réveille Coffee (excellent roaster)','Sandbox Bakery (excellent pastries)'],note:"Small but solid. Réveille is one of SF's better roasters."},
+   fod:{s:['Piccino (pizza + Italian, standout)','Hard Knox Cafe (Southern comfort)','Serpentine (American)','The Ramp (waterfront bar + food)'],note:"Good neighbourhood dining. Piccino is a consistent standout."},
+   trn:{l:['Muni T-Third Street Metro (through neighbourhood)','Muni 10 (Townsend)','Muni 22 (Fillmore)'],note:"T-Third Metro runs through to downtown."}},
+
+  // ── SOUTHERN NEIGHBORHOODS ───────────────────────────
+  {id:'bernal-heights',name:'Bernal Heights',lat:37.741,lng:-122.416,color:'#288840',
+   vibe:'Community · Quirky · Views',s:{q:4,na:4,ca:4,tr:3,fo:4,cl:3},
+   desc:"One of SF's most beloved community neighborhoods. Bernal Hill Park is a gem — open hilltop with 360° views. Cortland Avenue is a charming walkable main street.",
+   lm:['Bernal Heights Park (summit)','Cortland Ave commercial strip','Holly Park'],
+   nat:{p:['Bernal Heights Park (open summit, 360° views)','Holly Park (quiet gem)','Glen Canyon Park (adjacent)'],note:"Bernal Hill is outstanding — an open grassy summit with panoramic views of SF, the bay, and beyond."},
+   caf:{s:['Pinhole Coffee (neighbourhood institution)','Red Door Coffee','Sweetheart Café (Cortland)'],note:"Excellent and dense cafe culture on Cortland. Pinhole Coffee is a neighbourhood institution."},
+   fod:{s:['Hillside Supper Club','Sycamore (bar + kitchen)','Broken Record (craft beer + kitchen)','Little Bird SF'],note:"Cortland Avenue has a solid neighbourhood dining scene."},
+   trn:{l:['Muni 67 (Bernal Heights loop)','Muni 14 (Mission Street)','BART – 24th St (short Muni hop)'],note:"24th St BART is close via Muni or a 15-min walk."}},
+
+  {id:'glen-park',name:'Glen Park',lat:37.734,lng:-122.434,color:'#28a828',
+   vibe:'Village · Quiet · Nature',s:{q:5,na:5,ca:3,tr:4,fo:3,cl:2},
+   desc:"SF's best-kept secret — a genuine village within the city. One cozy commercial strip, BART access, and Glen Canyon Park with real wilderness trails.",
+   lm:['Glen Canyon Park','Glen Park BART Station','Diamond Street strip','Billy Goat Hill'],
+   nat:{p:['Glen Canyon Park (wild canyon trails + creek)','Billy Goat Hill (panoramic views + rope swings)','Fairmount Park'],note:"Glen Canyon is the hidden nature gem of SF — a wild, undeveloped canyon with creek trails and genuine wilderness inside the city."},
+   caf:{s:['Glen Park Coffee','Destination: Unknown Café','Canyon Market (deli + coffee)'],note:"Small but friendly. A neighbourhood bakery-café culture that fits the village feel perfectly."},
+   fod:{s:['Gialina Pizzeria (excellent Neapolitan)','Chenery Park (neighbourhood classic)','Glen Park Station (gastropub)'],note:"Gialina is one of the better Neapolitan pizzas in SF."},
+   trn:{l:['BART – Glen Park Station (direct to downtown + Oakland)','Muni 36 (Teresita)','Muni 44 (O\'Shaughnessy)'],note:"Glen Park BART is a significant advantage — direct to downtown, Mission, Oakland, and the Peninsula."}},
+
+  {id:'excelsior',name:'Excelsior',lat:37.724,lng:-122.431,color:'#8878c0',
+   vibe:'Working-class · Diverse · Authentic',s:{q:4,na:3,ca:2,tr:3,fo:4,cl:2},
+   desc:"One of SF's largest and most genuinely diverse neighborhoods. Largely residential, with Mission Street as the commercial spine — exceptional Filipino, Mexican, and El Salvadoran food.",
+   lm:['McLaren Park (largest park after GGP)','Mission Street corridor','Crocker Amazon Playground'],
+   nat:{p:['McLaren Park (huge, underused gem)','Balboa Park (recreation complex)','John McLaren Park trails'],note:"McLaren Park is SF's second-largest park — massive, underutilized, and genuinely peaceful."},
+   caf:{s:['Andytown Coffee (nearby Outer Sunset)','Local panaderías on Mission St','Philz Coffee (nearby)'],note:"Limited specialty cafe scene. Neighbourhood panaderías and Filipino bakeries are the local tradition."},
+   fod:{s:['Tselogs (Filipino, exceptional)','Karri\'s Kitchen (Filipino-American)','La Oaxaqueña (Oaxacan)','El Farolito (Mission, short drive)'],note:"Filipino food is a particular strength. Mission Street has one of the most authentic and diverse food corridors in the city."},
+   trn:{l:['Muni 14 (Mission)','Muni 49 (Van Ness/Mission)','BART – Balboa Park Station'],note:"BART at Balboa Park plus strong Muni bus coverage."}},
+
+  {id:'outer-mission',name:'Outer Mission',lat:37.729,lng:-122.422,color:'#c08038',
+   vibe:'Residential · Latino · Quiet',s:{q:4,na:3,ca:2,tr:3,fo:3,cl:2},
+   desc:"A quiet, primarily residential neighborhood extending south of the Inner Mission. Strong Latino community roots, family-oriented, with Balboa Park a short walk away.",
+   lm:['Balboa Park Recreation Center','Outer Mission commercial strip','The Good Luck Lounge'],
+   nat:{p:['Balboa Park (rec complex + swimming pool)','McLaren Park (short distance south)','Cayuga Park (neighbourhood green)'],note:"Balboa Park has a good recreation center. McLaren Park is the real nature destination nearby."},
+   caf:{s:['Local taquerías and panaderías','Philz Coffee (nearby BART)'],note:"Very limited specialty cafes — a neighbourhood of family restaurants and practical spots."},
+   fod:{s:['El Burrito Express (neighbourhood institution)','Tacos El Patron (standout taco spot)','Little Lucca (sandwiches)'],note:"Good taquerías and family-run spots. The Inner Mission and Excelsior are nearby for more variety."},
+   trn:{l:['Muni 14 (Mission)','Muni J-Church (nearby)','BART – Balboa Park'],note:"BART at Balboa Park is the anchor. Decent Muni coverage."}},
+
+  {id:'bayview',name:'Bayview',lat:37.735,lng:-122.384,color:'#d08030',
+   vibe:'Industrial · Historic · Emerging',s:{q:3,na:4,ca:2,tr:3,fo:3,cl:2},
+   desc:"One of SF's oldest and most historically significant Black neighborhoods, anchored by the Caltrain corridor and the bay waterfront. Industrial heritage is giving way to arts spaces and community investment.",
+   lm:['Third Street corridor','Candlestick Point State Recreation Area','Islais Creek','Old Shipyard Row'],
+   nat:{p:['Candlestick Point State Recreation Area (bay + wind)','Islais Creek (restored waterway)','India Basin Shoreline Park','India Basin Open Space (emerging)'],note:"The bay shoreline here is underused and genuinely beautiful — wind-swept, with views across the bay to the East Bay hills."},
+   caf:{s:['Mr. Espresso (wholesale roastery)','Double Dutch SF','The Bayview Bistro'],note:"Growing cafe scene. The neighborhood is undergoing significant cultural investment."},
+   fod:{s:['Hard Knox Cafe (soul food institution)','Auntie April\'s Chicken & Waffles (SF institution)','Old Clam House (oldest restaurant in SF, since 1861)'],note:"Old Clam House is a piece of SF history. Hard Knox Cafe is beloved citywide for soul food."},
+   trn:{l:['Muni T-Third Street Metro (main spine)','Muni 15 (Bayview)','Caltrain – Bayshore Station'],note:"Muni T-Third runs right through on Third Street."}},
+
+  {id:'visitacion-valley',name:'Visitacion Valley',lat:37.716,lng:-122.411,color:'#a06050',
+   vibe:'Residential · Community · Quiet',s:{q:4,na:4,ca:1,tr:3,fo:2,cl:2},
+   desc:"A quiet, community-oriented neighborhood at the southern edge of SF, bordering Daly City. Strong Asian and Pacific Islander community. McLaren Park is the neighborhood's backyard.",
+   lm:['McLaren Park (immediately adjacent)','Visitacion Valley Greenway','Leland Avenue commercial strip'],
+   nat:{p:['McLaren Park (large, directly adjacent)','Visitacion Valley Greenway (community gardens)','Sunnydale Park'],note:"McLaren Park is essentially the neighborhood's front yard — SF's second-largest park, with real trails and space."},
+   caf:{s:['Local spots on Leland Ave','Neighborhood bakeries and tea shops'],note:"Very limited specialty cafes. A deeply residential neighborhood."},
+   fod:{s:['Leland Avenue local spots','Nearby Excelsior Mission St (short drive)'],note:"Quiet neighborhood for dining — Excelsior and Outer Mission are the nearby options for more choice."},
+   trn:{l:['Muni 8 (Bayshore)','Muni 9 (San Bruno)','Caltrain – Bayshore (nearby)'],note:"Limited Muni coverage. Caltrain at Bayshore is the fastest connection to downtown."}},
+
+  {id:'portola',name:'Portola',lat:37.730,lng:-122.405,color:'#b08848',
+   vibe:'Hidden · Residential · Quiet',s:{q:5,na:3,ca:2,tr:3,fo:3,cl:1},
+   desc:"One of SF's most overlooked neighborhoods — a quiet, residential district that genuinely feels like a small town. The corridor along San Bruno Avenue has a loyal local following.",
+   lm:['San Bruno Avenue commercial strip','Amatista Park','McLaren Park (nearby)'],
+   nat:{p:['McLaren Park (short walk)','Islais Creek (nearby)','Silver Terrace Park'],note:"McLaren Park is the go-to nature destination — just minutes away on foot."},
+   caf:{s:['Andytown Coffee (Portola location)','Snowbird Coffee (neighborhood gem)'],note:"Andytown Coffee opened a Portola location, helping put this quiet neighborhood on the cafe map."},
+   fod:{s:['Piccolo Forno (Italian, underrated)','Cafe Josephine (neighborhood staple)','Andytown (also serves food)'],note:"A growing dining scene. San Bruno Avenue has more going on than most visitors realize."},
+   trn:{l:['Muni 9 (San Bruno)','Muni 23 (Monterey)','Caltrain – Bayshore (nearby)'],note:"Limited Muni coverage. Best with a bike or car."}},
+
+  // ── OCEAN + WEST ─────────────────────────────────────
+  {id:'inner-parkside',name:'Inner Parkside',lat:37.762,lng:-122.480,color:'#609860',
+   vibe:'Quiet · Family · Parkside',s:{q:5,na:5,ca:3,tr:3,fo:3,cl:1},
+   desc:"A quiet, family-oriented neighborhood directly south of Golden Gate Park. Sunny stretches alternate with fog. Very residential but with a great walkable strip on Irving Street.",
+   lm:['Golden Gate Park (immediate south border)','Irving Street shops','West Portal commercial strip (nearby)'],
+   nat:{p:['Golden Gate Park (directly adjacent)','Ocean Beach (short bike ride west)','Twin Peaks (short drive)'],note:"Golden Gate Park is essentially in the backyard — a few steps north to the entire park system."},
+   caf:{s:['Hollow (Inner Sunset, nearby)','Hugo\'s Coffee (nearby Irving)','Andytown Coffee (Sunset locations)'],note:"Close enough to the Inner Sunset cafe scene to benefit without the crowds."},
+   fod:{s:['Outerlands (Inner Sunset, short walk)','San Tung (Inner Sunset, short walk)','West Portal spots (short drive)'],note:"Irving Street has good options, and the Inner Sunset is a short walk for expanded choice."},
+   trn:{l:['Muni N-Judah (Irving St)','Muni L-Taraval (Taraval St)','Muni 28 (19th Ave)'],note:"Two Metro lines run through — N-Judah and L-Taraval both connect to downtown."}},
+
+  {id:'west-portal',name:'West Portal',lat:37.740,lng:-122.463,color:'#50a070',
+   vibe:'Village · Calm · Connected',s:{q:5,na:4,ca:4,tr:4,fo:4,cl:2},
+   desc:"A charming village neighborhood clustered around the western mouth of the Twin Peaks tunnel. One of SF's best main streets — short, walkable, and with genuinely good restaurants.",
+   lm:['West Portal Avenue (main street)','West Portal Station (tunnel portal)','Forest Hill Station'],
+   nat:{p:['Mount Davidson Park (highest point in SF)','Glen Canyon Park (short drive)','Twin Peaks (short drive)'],note:"Mount Davidson is the highest natural point in SF — a quiet forested summit often missed by visitors."},
+   caf:{s:['Peet\'s Coffee (West Portal Ave)','Boulangerie (French café + bakery)','Starbucks (reliable)'],note:"Good cafe strip on West Portal Avenue. Boulangerie is a neighborhood staple."},
+   fod:{s:['Fresca (Peruvian, outstanding)','Squat & Gobble (brunch)','Chouquet\'s (French bistro)','Thailand Restaurant'],note:"West Portal Avenue punches above its size for dining."},
+   trn:{l:['Muni K-Ingleside (West Portal Station)','Muni L-Taraval (West Portal Station)','Muni M-Ocean View (West Portal Station)'],note:"Three Muni Metro lines converge at West Portal Station — a real transit hub."}},
+
+  {id:'forest-hill',name:'Forest Hill',lat:37.745,lng:-122.456,color:'#608850',
+   vibe:'Serene · Historic · Residential',s:{q:5,na:4,ca:1,tr:3,fo:1,cl:1},
+   desc:"One of SF's most architecturally significant neighborhoods — a planned community from 1912 with stately homes, curving streets, and a private residents' clubhouse. Deeply quiet.",
+   lm:['Forest Hill Clubhouse (private, 1919)','Forest Hill Station','Edgewood Avenue architecture'],
+   nat:{p:['Mount Davidson Park (forested summit, short walk)','Glen Canyon Park (nearby)','Twin Peaks (short drive)'],note:"Mount Davidson's forested summit is minutes away — a remarkably peaceful escape."},
+   caf:{s:['West Portal Ave cafes (5-min walk)','Boulangerie (West Portal)'],note:"No cafes in the neighborhood itself — West Portal Avenue is the go-to, a short walk away."},
+   fod:{s:['West Portal Avenue restaurants (5-min walk)','Fresca (Peruvian, West Portal)'],note:"Dining is sparse in Forest Hill — West Portal Avenue and the Inner Sunset are nearby."},
+   trn:{l:['Muni M-Ocean View (Forest Hill Station)','Muni K-Ingleside (nearby)'],note:"Forest Hill BART-like station is one of the most beautiful in the Muni Metro system."}},
+
+  {id:'diamond-heights',name:'Diamond Heights',lat:37.748,lng:-122.440,color:'#60a858',
+   vibe:'Views · Breezy · Residential',s:{q:5,na:4,ca:2,tr:2,fo:2,cl:1},
+   desc:"A 1960s planned community perched above Glen Canyon, with sweeping views of downtown, the bay, and the peninsula. More suburban in character, with spectacular hilltop vantage points.",
+   lm:['Diamond Heights Blvd panorama','Glen Canyon Park (below)','Billy Goat Hill'],
+   nat:{p:['Glen Canyon Park (directly below)','Billy Goat Hill (views + rope swings)','Twin Peaks (short drive)'],note:"Glen Canyon is dramatically visible from the hilltop — a wild canyon in the middle of the city."},
+   caf:{s:['Diamond Heights Village shops','Nearby Noe Valley cafes (short drive)'],note:"Limited cafes in the neighborhood. Noe Valley is the closest good cafe scene."},
+   fod:{s:['Diamond Heights Village restaurants','Glen Park Station (short drive)','Nearby Noe Valley options'],note:"Very limited neighborhood dining. Glen Park and Noe Valley are nearby alternatives."},
+   trn:{l:['Muni 52 (Excelsior)','Muni 44 (O\'Shaughnessy)'],note:"Limited Muni coverage. Best with a car — the hilltop location makes bus access difficult."}},
+
+  {id:'twin-peaks',name:'Twin Peaks',lat:37.753,lng:-122.448,color:'#78a840',
+   vibe:'Views · Breezy · Minimal',s:{q:5,na:4,ca:1,tr:2,fo:1,cl:1},
+   desc:"More landmark than neighborhood — Twin Peaks is the iconic hilltop summit that defines SF's skyline. A few residential streets surround it, but the main draw is the 360° panoramic view from the top.",
+   lm:['Twin Peaks Summit (360° panoramic views)','Corona Heights Park (adjacent)','Christmas Tree Point (viewpoint)'],
+   nat:{p:['Twin Peaks Summit (most iconic 360° view in SF)','Corona Heights Park (volcanic rock, trails)','Glen Canyon Park (short drive)'],note:"The views from Twin Peaks on a clear day are simply the best in SF — Bay Bridge, GG Bridge, and the entire city."},
+   caf:{s:['Castro cafes (short drive down)','Cole Valley (short drive)'],note:"No cafes at the summit. The Castro neighborhood cafes are minutes away."},
+   fod:{s:['Castro dining (short drive)','Cole Valley restaurants (short drive)'],note:"No dining at Twin Peaks — head down to Castro or Cole Valley."},
+   trn:{l:['Muni 37 (Corbett)','Muni 36 (Teresita)'],note:"Limited bus access. Most visitors drive or bike up."}},
+
+  {id:'ingleside',name:'Ingleside / Ocean View',lat:37.728,lng:-122.447,color:'#9888b0',
+   vibe:'Residential · Diverse · Quiet',s:{q:4,na:3,ca:2,tr:3,fo:3,cl:2},
+   desc:"A quiet, diverse residential district in the southwest of SF. Broad boulevards and a relaxed pace. Ocean Ave has a modest but genuine commercial strip, and the Muni Metro runs right through.",
+   lm:['Ocean Avenue commercial strip','City College of SF (campus)','Balboa Park Recreation Center'],
+   nat:{p:['McLaren Park (nearby)','Balboa Park (recreation complex)','Lake Merced (short drive)'],note:"Lake Merced is a short drive — a peaceful freshwater lake with walking trails."},
+   caf:{s:['Rewind SF','Local coffee spots on Ocean Ave','Peet\'s (Stonestown Galleria, nearby)'],note:"A modest cafe scene. Ocean Avenue has a few neighborhood options."},
+   fod:{s:['La Lengua (modern Mexican, Ocean Ave)','Java Restaurant (American diner)','SF State and City College area spots'],note:"Ocean Avenue is the main dining strip. Growing slowly."},
+   trn:{l:['Muni K-Ingleside (Ocean Ave stops)','Muni M-Ocean View','BART – Balboa Park (nearby)'],note:"Two Muni Metro lines run through, making this more connected than it seems."}}
+];
+
+// ═══════════════════════════════════════════════════════
+//  SCORE KEYS
+// ═══════════════════════════════════════════════════════
+const SK={q:'Quiet',na:'Nature',ca:'Cafes',tr:'Transit',fo:'Food',cl:'City Life'};
+
+// ═══════════════════════════════════════════════════════
+//  MAP SETUP — Leaflet
+// ═══════════════════════════════════════════════════════
+const map = L.map('map', {
+  center: [37.765, -122.430],
+  zoom: 13,
+  zoomControl: false,
+  attributionControl: true,
+  preferCanvas: true
+});
+
+// Tile providers
+// --- TILE PROVIDER CANDIDATES (tried in order until one loads) ---
+// Each entry: [urlTemplate, options]
+const TILE_CANDIDATES = {
+  street: [
+    ['https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+     {attribution:'&copy; OpenStreetMap', subdomains:'abc', maxZoom:19}],
+    ['https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+     {attribution:'&copy; OpenStreetMap', maxZoom:19}]
+  ],
+  terrain: [
+    ['https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}',
+     {attribution:'&copy; Esri', maxZoom:19}],
+    ['https://tile.opentopomap.org/{z}/{x}/{y}.png',
+     {attribution:'&copy; OpenTopoMap', maxZoom:17}],
+    ['https://tiles.wmflabs.org/hillshading/{z}/{x}/{y}.png',
+     {attribution:'SRTM hillshade', maxZoom:17}]
+  ],
+  satellite: [
+    ['https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+     {attribution:'&copy; Esri', maxZoom:19}],
+    ['https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+     {attribution:'&copy; Esri', maxZoom:19}]
+  ]
+};
+
+// Probe a tile URL by actually fetching one tile for SF
+function probeTileUrl(urlTemplate, cb){
+  const url = urlTemplate
+    .replace('{z}','13').replace('{y}','3290').replace('{x}','1311')
+    .replace('{s}','a').replace(/\{s\}/g,'0');
+  const img = new Image();
+  let done = false;
+  const finish = (ok) => { if(!done){ done=true; cb(ok); } };
+  img.onload  = () => finish(true);
+  img.onerror = () => finish(false);
+  setTimeout(() => finish(false), 6000);
+  img.src = url;
+}
+
+// Build a working layer by probing candidates in order
+function buildLayer(key, onReady){
+  const candidates = TILE_CANDIDATES[key];
+  let i = 0;
+  function tryNext(){
+    if(i >= candidates.length){
+      // All failed — return a blank placeholder layer
+      onReady(null, key);
+      return;
+    }
+    const [url, opts] = candidates[i++];
+    probeTileUrl(url, ok => {
+      if(ok){
+        onReady(L.tileLayer(url, opts), key);
+      } else {
+        tryNext();
+      }
+    });
+  }
+  tryNext();
+}
+
+const TILES = { street: null, terrain: null, satellite: null };
+let currentLayer = 'street';
+let layersReady = 0;
+
+// Build street layer first (show map immediately), then build terrain+satellite in background
+buildLayer('street', (layer, key) => {
+  TILES.street = layer || L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+    {attribution:'&copy; OpenStreetMap',maxZoom:19});
+  TILES.street.addTo(map);
+  layersReady++;
+});
+
+buildLayer('terrain', (layer, key) => {
+  TILES.terrain = layer;
+  layersReady++;
+  const btn = document.querySelector('[data-layer="terrain"]');
+  if(!layer && btn) btn.style.opacity = '0.4';
+});
+
+buildLayer('satellite', (layer, key) => {
+  TILES.satellite = layer;
+  layersReady++;
+  const btn = document.querySelector('[data-layer="satellite"]');
+  if(!layer && btn) btn.style.opacity = '0.4';
+});
+
+// Layer switcher
+document.getElementById('layer-btn').addEventListener('click', e => {
+  e.stopPropagation();
+  document.getElementById('layer-panel').classList.toggle('open');
+});
+
+document.addEventListener('click', e => {
+  const panel = document.getElementById('layer-panel');
+  if(!panel.contains(e.target)) panel.classList.remove('open');
+});
+
+function showToast(msg){
+  let t = document.getElementById('map-toast');
+  if(!t){
+    t = document.createElement('div');
+    t.id = 'map-toast';
+    t.style.cssText = 'position:fixed;bottom:90px;left:50%;transform:translateX(-50%);'+
+      'background:rgba(42,32,16,0.88);color:#f5edd8;padding:8px 18px;border-radius:20px;'+
+      'font-size:12px;font-family:Nunito,sans-serif;z-index:800;pointer-events:none;'+
+      'transition:opacity .4s;white-space:nowrap;';
+    document.body.appendChild(t);
+  }
+  t.textContent = msg;
+  t.style.opacity = '1';
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.style.opacity='0', 3000);
+}
+
+function setLayer(name){
+  document.getElementById('layer-panel').classList.remove('open');
+  if(name === currentLayer) return;
+  if(!TILES[name]){
+    showToast('This layer isn\'t available in the preview — try downloading the file.');
+    return;
+  }
+  if(TILES[currentLayer]) map.removeLayer(TILES[currentLayer]);
+  TILES[name].addTo(map);
+  currentLayer = name;
+  document.querySelectorAll('.lopt').forEach(o => {
+    o.classList.toggle('on', o.dataset.layer === name);
+  });
+  const pane = document.querySelector('.leaflet-tile-pane');
+  if(pane){
+    if(name === 'satellite') pane.style.filter = 'none';
+    else if(name === 'terrain') pane.style.filter = 'sepia(6%) brightness(0.97) saturate(0.88)';
+    else pane.style.filter = 'sepia(14%) brightness(0.97) saturate(0.9)';
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+//  MARKERS
+// ═══════════════════════════════════════════════════════
+let CF = 'all';
+let CN = null;
+const markerMap = {};
+
+function dotSize(n, filterKey){
+  if(filterKey === 'all') return {r:6, glow:10, op:1};
+  const v = n.s[filterKey] || 1;
+  const sz = [null, {r:3,glow:5,op:0.35}, {r:4,glow:7,op:0.55}, {r:5,glow:9,op:0.75}, {r:6,glow:11,op:0.9}, {r:8,glow:14,op:1}];
+  return sz[v] || sz[1];
+}
+
+function makeDotSVG(color, size, selected){
+  const {r, glow} = size;
+  const gr = selected ? r*2.2 : glow;
+  const svgSize = 60;
+  const c = svgSize/2;
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${svgSize}" height="${svgSize}" viewBox="0 0 ${svgSize} ${svgSize}">
+    <circle cx="${c}" cy="${c}" r="${gr}" fill="${color}" opacity="${selected ? 0.38 : 0.18}"/>
+    <circle cx="${c}" cy="${c}" r="${r}" fill="${color}" stroke="#f8f0dc" stroke-width="1.5" opacity="${size.op}"/>
+    ${selected ? `<circle cx="${c}" cy="${c}" r="${r*0.45}" fill="#fff" opacity="0.6"/>` : ''}
+  </svg>`;
+}
+
+function createIcon(color, size, selected){
+  const svgSize = 60;
+  return L.divIcon({
+    html: makeDotSVG(color, size, selected),
+    className: '',
+    iconSize: [svgSize, svgSize],
+    iconAnchor: [svgSize/2, svgSize/2],
+    tooltipAnchor: [svgSize/2 - 4, 0]
+  });
+}
+
+ND.forEach(n => {
+  const size = dotSize(n, CF);
+  const marker = L.marker([n.lat, n.lng], {
+    icon: createIcon(n.color, size, false),
+    zIndexOffset: 0
+  });
+  marker.addTo(map);
+  marker.bindTooltip(n.name, {
+    permanent: false,
+    direction: 'right',
+    className: 'nh-label',
+    offset: [16, 0]
+  });
+  marker.on('click', () => selectNeighbourhood(n));
+  markerMap[n.id] = { marker, n };
+});
+
+function refreshMarkers(){
+  Object.values(markerMap).forEach(({marker, n}) => {
+    const selected = CN && CN.id === n.id;
+    const size = dotSize(n, CF);
+    marker.setIcon(createIcon(n.color, size, selected));
+    marker.setZIndexOffset(selected ? 1000 : 0);
+  });
+}
+
+// ═══════════════════════════════════════════════════════
+//  FILTER
+// ═══════════════════════════════════════════════════════
+function setFilter(btn, key, color){
+  document.querySelectorAll('.fp').forEach(b=>{
+    b.classList.remove('on'); b.style.background=''; b.style.color=''; b.style.borderColor='';
+  });
+  btn.classList.add('on'); btn.style.background = color; btn.style.borderColor = color;
+  CF = key;
+  refreshMarkers();
+}
+
+// ═══════════════════════════════════════════════════════
+//  SHEET SNAP LOGIC  (top:0 positioning)
+// ═══════════════════════════════════════════════════════
+const sheet = document.getElementById('sheet');
+const handleArea = document.getElementById('handle-area');
+const placeholder = document.getElementById('sheet-placeholder');
+const sheetContent = document.getElementById('sheet-content');
+
+const PEEK_PX = 72;         // how many px peek from bottom when collapsed
+const HALF_FRAC = 0.48;     // fraction of viewport when "half open"
+const FULL_FRAC = 0.90;     // fraction of viewport when "full open"
+
+let currentSnap = 'peek';
+let isDragging = false;
+let startY = 0;
+let startTranslateY = 0;
+
+function getSheetH(){ return sheet.offsetHeight; }
+
+function snapToPx(snap){
+  const wH = window.innerHeight;
+  const sH = getSheetH();
+  if(snap === 'peek') return sH - PEEK_PX;
+  if(snap === 'half') return sH - Math.round(wH * HALF_FRAC);
+  if(snap === 'full') return sH - Math.round(wH * FULL_FRAC);
+  return sH - PEEK_PX;
+}
+
+function applyTranslate(y, animate){
+  sheet.style.transition = animate ? 'transform .32s cubic-bezier(.32,.72,0,1)' : 'none';
+  sheet.style.transform = `translateY(${y}px)`;
+}
+
+function snapSheet(snap, animate=true){
+  currentSnap = snap;
+  applyTranslate(snapToPx(snap), animate);
+}
+
+// Start at peek
+snapSheet('peek', false);
+
+// Click on handle — cycle through snaps
+handleArea.addEventListener('click', e => {
+  if(isDragging) return;
+  if(currentSnap === 'peek'){
+    // If no neighbourhood selected yet, snap to half just to show prompt
+    snapSheet(CN ? 'full' : 'half');
+  } else if(currentSnap === 'half'){
+    snapSheet(CN ? 'full' : 'peek');
+  } else {
+    snapSheet('peek');
+  }
+});
+
+// Touch drag on handle
+handleArea.addEventListener('touchstart', e => {
+  isDragging = false;
+  const touch = e.touches[0];
+  startY = touch.clientY;
+  const mat = new DOMMatrixReadOnly(getComputedStyle(sheet).transform);
+  startTranslateY = mat.m42;
+  sheet.style.transition = 'none';
+}, {passive:true});
+
+handleArea.addEventListener('touchmove', e => {
+  const dy = e.touches[0].clientY - startY;
+  if(Math.abs(dy) > 4) isDragging = true;
+  if(!isDragging) return;
+  const sH = getSheetH();
+  const minY = sH - Math.round(window.innerHeight * FULL_FRAC);
+  const maxY = sH - PEEK_PX;
+  const newY = Math.max(minY, Math.min(maxY, startTranslateY + dy));
+  applyTranslate(newY, false);
+}, {passive:true});
+
+handleArea.addEventListener('touchend', e => {
+  if(!isDragging){ isDragging=false; return; }
+  isDragging = false;
+  const mat = new DOMMatrixReadOnly(getComputedStyle(sheet).transform);
+  const curY = mat.m42;
+  const vel = e.changedTouches[0].clientY - startY;
+  const sH = getSheetH();
+  const peekY = sH - PEEK_PX;
+  const halfY = sH - Math.round(window.innerHeight * HALF_FRAC);
+  const fullY = sH - Math.round(window.innerHeight * FULL_FRAC);
+
+  let target;
+  if(vel < -50){
+    target = currentSnap === 'peek' ? 'half' : 'full';
+  } else if(vel > 50){
+    target = currentSnap === 'full' ? 'half' : 'peek';
+  } else {
+    const dists = {
+      peek: Math.abs(curY - peekY),
+      half: Math.abs(curY - halfY),
+      full: Math.abs(curY - fullY)
+    };
+    target = Object.entries(dists).sort((a,b)=>a[1]-b[1])[0][0];
+  }
+  snapSheet(target);
+});
+
+window.addEventListener('resize', () => snapSheet(currentSnap, false));
+
+// ═══════════════════════════════════════════════════════
+//  NEIGHBOURHOOD SELECTION
+// ═══════════════════════════════════════════════════════
+function tags(arr){ return arr.map(s=>`<span class="tag">${s}</span>`).join(''); }
+
+function scoreHTML(n){
+  return Object.keys(SK).map(k=>`
+    <div class="score-row">
+      <span class="score-lbl">${SK[k]}</span>
+      <div class="score-track"><div class="score-fill" style="width:${n.s[k]*20}%;background:${n.color}"></div></div>
+      <span class="score-val">${n.s[k]}</span>
+    </div>`).join('');
+}
+
+function selectNeighbourhood(n){
+  CN = n;
+  refreshMarkers();
+
+  // Fly map to neighbourhood
+  map.panTo([n.lat, n.lng], {animate:true, duration:0.5});
+
+  // Populate sheet header
+  document.getElementById('color-strip').style.background = n.color;
+  document.getElementById('s-name').textContent = n.name;
+  document.getElementById('s-vibe').textContent = n.vibe;
+  document.getElementById('s-desc').textContent = n.desc;
+  document.getElementById('scores').innerHTML = scoreHTML(n);
+
+  // Populate tabs
+  document.getElementById('tab-lm').innerHTML =
+    `<div class="t-head">Landmarks & Points of Interest</div><div class="tags">${tags(n.lm)}</div>`;
+  document.getElementById('tab-na').innerHTML =
+    `<div class="t-head">Parks & Trails</div><div class="tags">${tags(n.nat.p)}</div>
+     <div class="t-head">Nature Notes</div><p class="tab-note">${n.nat.note}</p>`;
+  document.getElementById('tab-ca').innerHTML =
+    `<div class="t-head">Cafe Spots</div><div class="tags">${tags(n.caf.s)}</div>
+     <div class="t-head">Cafe Culture</div><p class="tab-note">${n.caf.note}</p>`;
+  document.getElementById('tab-fo').innerHTML =
+    `<div class="t-head">Restaurants</div><div class="tags">${tags(n.fod.s)}</div>
+     <div class="t-head">Food Scene</div><p class="tab-note">${n.fod.note}</p>`;
+  document.getElementById('tab-tr').innerHTML =
+    `<div class="t-head">Lines & Stations</div><div class="tags">${tags(n.trn.l)}</div>
+     <div class="t-head">Transit Notes</div><p class="tab-note">${n.trn.note}</p>`;
+
+  // Reset to first tab
+  showTab('lm', null, true);
+
+  // Show content
+  placeholder.style.display = 'none';
+  sheetContent.style.display = 'flex';
+  document.getElementById('title-card').style.opacity = '0';
+  document.getElementById('tab-body').scrollTop = 0;
+  document.querySelector('.sheet-header').scrollTop = 0;
+
+  // Snap sheet open
+  snapSheet('full');
+}
+
+function showTab(tid, btn, reset){
+  ['lm','na','ca','fo','tr'].forEach(t => {
+    const el = document.getElementById('tab-'+t);
+    if(el) el.classList.toggle('on', t===tid);
+  });
+  if(reset){
+    document.querySelectorAll('.tb').forEach((b,i)=>
+      b.classList.toggle('on', ['lm','na','ca','fo','tr'][i]===tid));
+  } else if(btn){
+    document.querySelectorAll('.tb').forEach(b=>b.classList.remove('on'));
+    btn.classList.add('on');
+  }
+}
+
+// Tap map to dismiss sheet
+map.on('click', () => {
+  if(currentSnap !== 'peek') snapSheet('peek');
+});
+
+// Update count
+document.getElementById('tc-count').textContent = `${ND.length} neighborhoods · tap to explore`;
+</script>
+</body>
+</html>
