@@ -153,11 +153,236 @@ body{font-family:'Nunito',sans-serif;color:var(--ink);}
 #title-card{position:fixed;bottom:84px;left:16px;z-index:600;pointer-events:none;transition:opacity .3s;}
 #title-card h1{font-family:'Lora',serif;font-size:22px;font-weight:600;color:var(--ink);letter-spacing:-0.5px;text-shadow:0 1px 6px rgba(240,220,160,0.9);}
 #title-card p{font-family:'Lora',serif;font-style:italic;font-size:11px;color:var(--ink3);}
+/* Illustrated layer overlay */
+#illustrated-overlay{
+  position:fixed;inset:0;z-index:1;
+  display:none;pointer-events:none;
+  background:var(--paper3);
+}
+#illustrated-overlay svg{
+  width:100%;height:100%;
+  display:block;
+}
 </style>
 </head>
 <body>
 
 <div id="map"></div>
+<div id="illustrated-overlay">
+<svg viewBox="0 0 400 560" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+<!-- WATER -->
+<rect width="400" height="560" fill="#78b8d0"/>
+<rect x="0" y="0" width="68" height="560" fill="#68a8c0" opacity="0.6"/>
+<!-- Ocean waves -->
+<g stroke="#82bdd0" stroke-width="1.2" fill="none" opacity="0.5">
+  <path d="M30,240 Q37,236 44,240 Q51,244 57,240"/>
+  <path d="M30,260 Q37,256 43,260 Q49,264 55,260"/>
+  <path d="M30,280 Q36,276 42,280 Q48,284 53,280"/>
+  <path d="M30,300 Q36,296 41,300 Q46,304 51,300"/>
+  <path d="M30,320 Q35,316 40,320 Q45,324 49,320"/>
+  <path d="M30,340 Q35,336 40,340 Q44,344 48,340"/>
+  <path d="M30,360 Q34,356 38,360 Q42,364 46,360"/>
+  <path d="M30,380 Q34,376 38,380 Q42,384 45,380"/>
+  <path d="M30,400 Q33,396 37,400 Q41,404 44,400"/>
+  <path d="M30,420 Q33,416 37,420 Q40,424 43,420"/>
+</g>
+<!-- Bay ripples -->
+<g stroke="#92cce0" stroke-width="1" fill="none" opacity="0.4">
+  <path d="M260,120 Q276,116 292,120"/>
+  <path d="M262,148 Q278,144 294,148"/>
+  <path d="M264,176 Q280,172 296,176"/>
+  <path d="M264,204 Q279,200 294,204"/>
+  <path d="M262,232 Q276,228 290,232"/>
+  <path d="M258,260 Q272,256 286,260"/>
+</g>
+<!-- LAND -->
+<path d="M80,24 C96,16 120,13 146,17 C168,20 188,32 204,48 C218,62 228,80 236,100 C244,120 248,144 248,170 C248,196 244,222 237,250 C228,280 217,308 203,336 C189,362 173,388 153,406 C133,422 110,432 86,432 C64,432 44,420 34,402 C26,388 24,366 24,340 L24,260 L24,180 L24,108 C24,84 36,50 56,32 Z" fill="#82bc4c" stroke="#6aa03a" stroke-width="0.6"/>
+<!-- Hill shading -->
+<path d="M80,40 C95,32 115,30 130,42 C145,54 150,76 146,100 C140,124 122,138 104,140 C82,142 64,126 60,104 C56,80 62,56 80,40 Z" fill="#78b044" opacity="0.28"/>
+<path d="M196,68 C204,60 218,62 224,74 C230,86 226,104 218,112 C208,120 196,118 188,108 C182,96 184,80 196,68 Z" fill="#78b044" opacity="0.22"/>
+<!-- PRESIDIO -->
+<ellipse cx="78" cy="74" rx="42" ry="30" fill="#4a9428" opacity="0.92"/>
+<ellipse cx="65" cy="80" rx="22" ry="14" fill="#3a8018" opacity="0.22"/>
+<!-- GOLDEN GATE PARK -->
+<rect x="30" y="162" width="100" height="38" rx="4" fill="#4e9c28" opacity="0.95"/>
+<rect x="30" y="178" width="100" height="22" fill="#3e8820" opacity="0.2"/>
+<!-- Glen Canyon -->
+<ellipse cx="148" cy="298" rx="12" ry="9" fill="#4a9428" opacity="0.65"/>
+<!-- Dolores Park -->
+<rect x="158" y="228" width="14" height="10" rx="2" fill="#4a9428" opacity="0.58"/>
+<!-- STREET GRID -->
+<g fill="none" stroke="#ede4c4" stroke-linecap="round" opacity="0.75">
+  <path d="M238,96 Q196,140 165,183 Q140,218 112,258" stroke-width="5.5"/>
+  <path d="M200,82 Q196,136 190,184 Q185,220 180,268" stroke-width="4"/>
+  <path d="M202,118 Q164,121 126,122 Q90,122 62,120" stroke-width="3.5"/>
+  <path d="M108,108 Q105,162 100,216 Q95,268 86,350" stroke-width="3.5"/>
+  <path d="M185,196 Q180,230 172,266 Q162,308 150,358" stroke-width="3.5"/>
+  <path d="M218,60 Q228,80 236,102 Q244,128 247,160 Q250,190 248,220" stroke-width="4"/>
+  <path d="M146,90 Q145,136 143,180 Q140,222 136,268" stroke-width="3"/>
+  <path d="M88,330 Q120,326 156,326 Q192,326 222,328" stroke-width="3"/>
+</g>
+<!-- GOLDEN GATE BRIDGE -->
+<rect x="24" y="10" width="116" height="22" fill="#68a8c0" opacity="0.85"/>
+<line x1="24" y1="26" x2="128" y2="26" stroke="#ddd0a8" stroke-width="3.5"/>
+<rect x="50" y="10" width="7" height="20" fill="#e05828" rx="1.5"/>
+<rect x="47" y="15" width="13" height="3" fill="#e05828"/>
+<rect x="47" y="20" width="13" height="2.5" fill="#e05828"/>
+<rect x="86" y="10" width="7" height="20" fill="#e05828" rx="1.5"/>
+<rect x="83" y="15" width="13" height="3" fill="#e05828"/>
+<rect x="83" y="20" width="13" height="2.5" fill="#e05828"/>
+<path d="M24,26 Q76,10 128,26" fill="none" stroke="#e05828" stroke-width="2"/>
+<g stroke="#e05828" stroke-width="1" opacity="0.7">
+  <line x1="54" y1="17" x2="54" y2="26"/>
+  <line x1="63" y1="13" x2="63" y2="26"/>
+  <line x1="72" y1="11" x2="72" y2="26"/>
+  <line x1="81" y1="11" x2="81" y2="26"/>
+  <line x1="90" y1="13" x2="90" y2="26"/>
+  <line x1="99" y1="16" x2="99" y2="26"/>
+  <line x1="108" y1="19" x2="108" y2="26"/>
+</g>
+<rect x="28" y="3" width="72" height="10" rx="2" fill="#faf4e0" opacity="0.9"/>
+<text font-family="Georgia,serif" font-style="italic" font-size="5.8" fill="#4a2810" x="64" y="10" text-anchor="middle">Golden Gate Bridge</text>
+<!-- ALCATRAZ -->
+<ellipse cx="310" cy="92" rx="20" ry="11" fill="#b8b090" opacity="0.92"/>
+<ellipse cx="310" cy="90" rx="15" ry="8" fill="#ccc098"/>
+<rect x="302" y="80" width="16" height="10" fill="#dcd0a0" rx="1"/>
+<rect x="307" y="76" width="6" height="7" fill="#ccc090" rx="1"/>
+<rect x="309" y="74" width="2" height="4" fill="#a8a080"/>
+<text font-family="Georgia,serif" font-style="italic" font-size="6" fill="#4a5860" x="310" y="108" text-anchor="middle">Alcatraz</text>
+<!-- COIT TOWER -->
+<g transform="translate(210,42)">
+  <ellipse cx="14" cy="26" rx="18" ry="11" fill="#5aa830"/>
+  <rect x="9" y="4" width="10" height="23" fill="#e8dab0" rx="2"/>
+  <rect x="8" y="0" width="12" height="8" fill="#d8ca98" rx="3"/>
+  <rect x="10" y="-2" width="8" height="3" fill="#c8ba80" rx="1"/>
+  <rect x="10.5" y="8" width="3.5" height="3.5" fill="#a0c8d8" opacity="0.7"/>
+  <rect x="10.5" y="15" width="3.5" height="3.5" fill="#a0c8d8" opacity="0.7"/>
+  <text font-family="Georgia,serif" font-style="italic" font-size="6" fill="#3a2c10" x="14" y="40" text-anchor="middle">Coit Tower</text>
+</g>
+<!-- CABLE CAR -->
+<g transform="translate(192,90)">
+  <line x1="-4" y1="14" x2="28" y2="14" stroke="#a89878" stroke-width="1.3"/>
+  <rect x="0" y="2" width="24" height="13" fill="#c83838" rx="2"/>
+  <rect x="0" y="0" width="24" height="4" fill="#b02828" rx="1.5"/>
+  <rect x="2" y="4" width="4" height="5" fill="#a0c8d8" rx="0.5" opacity="0.8"/>
+  <rect x="9" y="4" width="4" height="5" fill="#a0c8d8" rx="0.5" opacity="0.8"/>
+  <rect x="16" y="4" width="4" height="5" fill="#a0c8d8" rx="0.5" opacity="0.8"/>
+  <circle cx="6" cy="15" r="2.5" fill="#2a2018"/>
+  <circle cx="18" cy="15" r="2.5" fill="#2a2018"/>
+  <text font-family="Georgia,serif" font-style="italic" font-size="5.5" fill="#3a2c10" x="12" y="24" text-anchor="middle">Cable Car</text>
+</g>
+<!-- FERRY BUILDING -->
+<g transform="translate(248,98)">
+  <rect x="0" y="9" width="26" height="15" fill="#e8d8a8" rx="1"/>
+  <path d="M3,24 Q3,18 7,18 Q11,18 11,24" fill="#b09848"/>
+  <path d="M11,24 Q11,18 15,18 Q19,18 19,24" fill="#b09848"/>
+  <path d="M19,24 Q19,18 23,18 Q26,18 26,24" fill="#b09848"/>
+  <rect x="9" y="0" width="8" height="16" fill="#d4c090" rx="1"/>
+  <circle cx="13" cy="7" r="3.5" fill="#f0e4c0" stroke="#a08840" stroke-width="0.7"/>
+  <line x1="13" y1="7" x2="13" y2="5" stroke="#3a2810" stroke-width="0.8"/>
+  <line x1="13" y1="7" x2="15" y2="7" stroke="#3a2810" stroke-width="0.8"/>
+  <polygon points="9,0 13,-5 17,0" fill="#c0a870"/>
+  <text font-family="Georgia,serif" font-style="italic" font-size="5.5" fill="#3a2c10" x="13" y="30" text-anchor="middle">Ferry Building</text>
+</g>
+<!-- PAINTED LADIES -->
+<g transform="translate(134,150)">
+  <rect x="0" y="10" width="13" height="16" fill="#9078c0"/>
+  <polygon points="0,10 6.5,2 13,10" fill="#7058a8"/>
+  <rect x="2" y="14" width="4" height="5" fill="#a8d4e8"/>
+  <rect x="7" y="14" width="4" height="5" fill="#a8d4e8"/>
+  <rect x="15" y="8" width="13" height="18" fill="#d87040"/>
+  <polygon points="15,8 21.5,0 28,8" fill="#bc5828"/>
+  <rect x="17" y="12" width="4" height="5" fill="#a8d4e8"/>
+  <rect x="22" y="12" width="4" height="5" fill="#a8d4e8"/>
+  <rect x="30" y="10" width="13" height="16" fill="#4890a0"/>
+  <polygon points="30,10 36.5,2 43,10" fill="#307888"/>
+  <rect x="32" y="14" width="4" height="5" fill="#a8d4e8"/>
+  <rect x="37" y="14" width="4" height="5" fill="#a8d4e8"/>
+  <text font-family="Georgia,serif" font-style="italic" font-size="5.5" fill="#3a2c10" x="21" y="33" text-anchor="middle">Painted Ladies</text>
+</g>
+<!-- SUTRO TOWER -->
+<g transform="translate(116,170)">
+  <ellipse cx="8" cy="26" rx="12" ry="8" fill="#5aa830" opacity="0.55"/>
+  <rect x="6.5" y="5" width="3" height="24" fill="#8a8090" rx="0.5"/>
+  <line x1="8" y1="7" x2="1" y2="1" stroke="#8a8090" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="8" y1="7" x2="8" y2="1" stroke="#8a8090" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="8" y1="7" x2="15" y2="1" stroke="#8a8090" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="3" y1="11" x2="13" y2="11" stroke="#8a8090" stroke-width="1.2"/>
+  <line x1="4" y1="16" x2="12" y2="16" stroke="#8a8090" stroke-width="1.1"/>
+  <line x1="5" y1="21" x2="11" y2="21" stroke="#8a8090" stroke-width="0.9"/>
+  <text font-family="Georgia,serif" font-style="italic" font-size="5.5" fill="#3a2c10" x="8" y="38" text-anchor="middle">Sutro Tower</text>
+</g>
+<!-- GGP TREES -->
+<g>
+  <g transform="translate(36,166)"><rect x="3" y="9" width="2" height="5" fill="#8a6a30"/><circle cx="4" cy="7" r="5" fill="#72a438"/></g>
+  <g transform="translate(52,168)"><rect x="3" y="8" width="2" height="4" fill="#8a6a30"/><circle cx="4" cy="6" r="4.5" fill="#80ac40"/></g>
+  <g transform="translate(68,164)"><rect x="3" y="9" width="2" height="5" fill="#8a6a30"/><circle cx="4" cy="7" r="5" fill="#68a030"/></g>
+  <g transform="translate(84,167)"><rect x="3" y="8" width="2" height="4" fill="#8a6a30"/><circle cx="4" cy="6" r="4.5" fill="#78a838"/></g>
+  <g transform="translate(100,165)"><rect x="3" y="8" width="2" height="4" fill="#8a6a30"/><circle cx="4" cy="6" r="5" fill="#70a030"/></g>
+  <g transform="translate(116,166)"><rect x="3" y="8" width="2" height="4" fill="#8a6a30"/><circle cx="4" cy="6" r="4.5" fill="#82b040"/></g>
+  <g transform="translate(44,173)"><rect x="2.5" y="11" width="2" height="4" fill="#8a6a30"/><polygon points="3.5,2 0,11 7,11" fill="#5a8c28"/></g>
+  <g transform="translate(76,172)"><rect x="2.5" y="11" width="2" height="4" fill="#8a6a30"/><polygon points="3.5,2 0,11 7,11" fill="#4e8824"/></g>
+  <g transform="translate(108,170)"><rect x="2.5" y="11" width="2" height="4" fill="#8a6a30"/><polygon points="3.5,2 0,11 7,11" fill="#589030"/></g>
+</g>
+<!-- PRESIDIO TREES -->
+<g>
+  <g transform="translate(44,52)"><rect x="3" y="9" width="2" height="5" fill="#7a5a28"/><circle cx="4" cy="7" r="5" fill="#3e8028"/></g>
+  <g transform="translate(58,60)"><rect x="3" y="8" width="2" height="4" fill="#7a5a28"/><circle cx="4" cy="6" r="5" fill="#3a7c24"/></g>
+  <g transform="translate(72,54)"><rect x="2.5" y="11" width="2" height="4" fill="#7a5a28"/><polygon points="3.5,2 0,11 7,11" fill="#387820"/></g>
+  <g transform="translate(86,62)"><rect x="3" y="8" width="2" height="4" fill="#7a5a28"/><circle cx="4" cy="6" r="4.5" fill="#408428"/></g>
+  <g transform="translate(98,52)"><rect x="2.5" y="11" width="2" height="4" fill="#7a5a28"/><polygon points="3.5,2 0,11 7,11" fill="#388020"/></g>
+  <g transform="translate(50,78)"><rect x="3" y="9" width="2" height="5" fill="#7a5a28"/><circle cx="4" cy="7" r="5" fill="#3c8428"/></g>
+  <g transform="translate(66,84)"><rect x="3" y="8" width="2" height="4" fill="#7a5a28"/><circle cx="4" cy="6" r="4.5" fill="#408824"/></g>
+  <g transform="translate(82,76)"><rect x="2.5" y="12" width="2" height="4" fill="#7a5a28"/><polygon points="3.5,2 0,12 7,12" fill="#348018"/></g>
+  <g transform="translate(52,96)"><rect x="3" y="8" width="2" height="4" fill="#7a5a28"/><circle cx="4" cy="6" r="4.5" fill="#3a8020"/></g>
+  <g transform="translate(68,98)"><rect x="2.5" y="10" width="2" height="3" fill="#7a5a28"/><polygon points="3.5,2 0,10 7,10" fill="#387818"/></g>
+</g>
+<!-- OCEAN BEACH SURFER -->
+<g transform="translate(26,316)">
+  <path d="M0,12 Q9,4 18,10 Q22,14 15,16 Q6,18 0,12 Z" fill="#6aacc4" opacity="0.7"/>
+  <rect x="5" y="9" width="9" height="2.5" fill="#d4c898" rx="0.5"/>
+  <circle cx="9.5" cy="7" r="2.2" fill="#c89060"/>
+  <text font-family="Georgia,serif" font-style="italic" font-size="5.5" fill="#3a4860" x="9" y="24" text-anchor="middle">Ocean Beach</text>
+</g>
+<!-- MISSION MURAL -->
+<g transform="translate(172,228)">
+  <rect x="0" y="0" width="16" height="12" fill="#d87840" rx="1"/>
+  <rect x="2" y="2" width="4" height="4" fill="#e05828" rx="0.5"/>
+  <rect x="8" y="2" width="4" height="4" fill="#5898c8" rx="0.5"/>
+  <rect x="2" y="7" width="5" height="3" fill="#e8c830" rx="0.5"/>
+  <rect x="9" y="7" width="3" height="3" fill="#68b848" rx="0.5"/>
+</g>
+<!-- DOLORES PARK PEOPLE -->
+<g transform="translate(160,237)">
+  <ellipse cx="5" cy="5" rx="5" ry="3" fill="#68b040" opacity="0.7"/>
+  <ellipse cx="15" cy="4" rx="5" ry="3" fill="#e8c830" opacity="0.6"/>
+  <circle cx="5" cy="2" r="1.5" fill="#c89060"/>
+  <circle cx="15" cy="1" r="1.5" fill="#d4a870"/>
+  <text font-family="Georgia,serif" font-style="italic" font-size="5.2" fill="#3a2c10" x="10" y="14" text-anchor="middle">Dolores Park</text>
+</g>
+<!-- BAY BRIDGE -->
+<g transform="translate(290,150)" opacity="0.6">
+  <line x1="0" y1="10" x2="76" y2="10" stroke="#c8c0a8" stroke-width="2.2"/>
+  <line x1="20" y1="0" x2="20" y2="20" stroke="#b0a890" stroke-width="2.5"/>
+  <line x1="40" y1="0" x2="40" y2="20" stroke="#b0a890" stroke-width="2.5"/>
+  <path d="M0,10 Q20,2 40,10" fill="none" stroke="#b0a890" stroke-width="1.2"/>
+  <path d="M40,10 Q58,2 76,10" fill="none" stroke="#b0a890" stroke-width="1.2"/>
+  <text font-family="Georgia,serif" font-style="italic" font-size="5" fill="#5a6870" x="38" y="28" text-anchor="middle">Bay Bridge</text>
+</g>
+<!-- LABEL STICKERS -->
+<g transform="translate(40,178)">
+  <rect x="-2" y="-2" width="90" height="13" rx="3" fill="#faf4e0" opacity="0.92"/>
+  <text font-family="Georgia,serif" font-style="italic" font-size="7" fill="#3a2c10" x="43" y="8" text-anchor="middle">Golden Gate Park</text>
+</g>
+<g transform="translate(48,108)">
+  <rect x="-2" y="-2" width="60" height="12" rx="3" fill="#faf4e0" opacity="0.9"/>
+  <text font-family="Georgia,serif" font-style="italic" font-size="6.5" fill="#3a2c10" x="28" y="8" text-anchor="middle">The Presidio</text>
+</g>
+<!-- AREA LABELS -->
+<text font-family="Georgia,serif" font-style="italic" font-size="12" fill="#4a7898" x="340" y="210" text-anchor="middle" opacity="0.6">the Bay</text>
+<text font-family="Georgia,serif" font-style="italic" font-size="8" fill="#3a6880" x="14" y="316" text-anchor="middle" opacity="0.55" transform="rotate(-90 14 316)">Pacific Ocean</text>
+</svg>
+</div>
 
 <div id="filter-bar">
   <div id="filter-scroll">
@@ -177,6 +402,7 @@ body{font-family:'Nunito',sans-serif;color:var(--ink);}
   <div class="lopt on" data-layer="street" onclick="setLayer('street')"><span class="li">🗺️</span>Street</div>
   <div class="lopt" data-layer="terrain" onclick="setLayer('terrain')"><span class="li">⛰️</span>Terrain</div>
   <div class="lopt" data-layer="satellite" onclick="setLayer('satellite')"><span class="li">🛰️</span>Satellite</div>
+  <div class="lopt" data-layer="illustrated" onclick="setLayer('illustrated')"><span class="li">🎨</span>Illustrated</div>
 </div>
 
 <div id="title-card">
@@ -625,103 +851,191 @@ const map = L.map('map', {
   preferCanvas: true
 });
 
-// Tile providers
-// --- TILE PROVIDER CANDIDATES (tried in order until one loads) ---
-// Each entry: [urlTemplate, options]
+// ─── SVG ILLUSTRATED LAYER ────────────────────────────────────────────────
+// Bounds mapping: SVG viewBox 0 0 400 560 → SF lat/lng extents
+// Land x:24-248, y:24-432 maps to lng:-122.516 to -122.355, lat:37.706 to 37.832
+const ILLUS_BOUNDS = [[37.661, -122.538], [37.843, -122.238]];
+
+function buildIllustratedLayer(){
+  const svgNS = 'http://www.w3.org/2000/svg';
+  const svg = document.createElementNS(svgNS, 'svg');
+  svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+  svg.setAttribute('viewBox', '0 0 400 560');
+  svg.setAttribute('preserveAspectRatio', 'none');
+  svg.innerHTML = `
+<rect width="400" height="560" fill="#78b8d0"/>
+<rect x="0" y="0" width="68" height="560" fill="#68a8c0" opacity="0.6"/>
+<g stroke="#82bdd0" stroke-width="1.2" fill="none" opacity="0.5">
+  <path d="M30,240 Q37,236 44,240 Q51,244 57,240"/>
+  <path d="M30,260 Q37,256 43,260 Q49,264 55,260"/>
+  <path d="M30,280 Q36,276 42,280 Q48,284 53,280"/>
+  <path d="M30,300 Q36,296 41,300 Q46,304 51,300"/>
+  <path d="M30,320 Q35,316 40,320 Q45,324 49,320"/>
+  <path d="M30,340 Q35,336 40,340 Q44,344 48,340"/>
+  <path d="M30,360 Q34,356 38,360 Q42,364 46,360"/>
+  <path d="M30,380 Q34,376 38,380 Q42,384 45,380"/>
+  <path d="M30,400 Q33,396 37,400 Q41,404 44,400"/>
+  <path d="M30,420 Q33,416 37,420 Q40,424 43,420"/>
+</g>
+<g stroke="#92cce0" stroke-width="1" fill="none" opacity="0.4">
+  <path d="M260,120 Q276,116 292,120"/>
+  <path d="M262,148 Q278,144 294,148"/>
+  <path d="M264,176 Q280,172 296,176"/>
+  <path d="M264,204 Q279,200 294,204"/>
+  <path d="M262,232 Q276,228 290,232"/>
+  <path d="M258,260 Q272,256 286,260"/>
+</g>
+<path d="M80,24 C96,16 120,13 146,17 C168,20 188,32 204,48 C218,62 228,80 236,100 C244,120 248,144 248,170 C248,196 244,222 237,250 C228,280 217,308 203,336 C189,362 173,388 153,406 C133,422 110,432 86,432 C64,432 44,420 34,402 C26,388 24,366 24,340 L24,260 L24,180 L24,108 C24,84 36,50 56,32 Z" fill="#82bc4c" stroke="#6aa03a" stroke-width="0.6"/>
+<path d="M80,40 C95,32 115,30 130,42 C145,54 150,76 146,100 C140,124 122,138 104,140 C82,142 64,126 60,104 C56,80 62,56 80,40 Z" fill="#78b044" opacity="0.28"/>
+<path d="M196,68 C204,60 218,62 224,74 C230,86 226,104 218,112 C208,120 196,118 188,108 C182,96 184,80 196,68 Z" fill="#78b044" opacity="0.22"/>
+<ellipse cx="78" cy="74" rx="42" ry="30" fill="#4a9428" opacity="0.92"/>
+<ellipse cx="65" cy="80" rx="22" ry="14" fill="#3a8018" opacity="0.22"/>
+<rect x="30" y="162" width="100" height="38" rx="4" fill="#4e9c28" opacity="0.95"/>
+<rect x="30" y="178" width="100" height="22" rx="0 0 4 4" fill="#3e8820" opacity="0.2"/>
+<ellipse cx="148" cy="298" rx="12" ry="9" fill="#4a9428" opacity="0.65"/>
+<rect x="158" y="228" width="14" height="10" rx="2" fill="#4a9428" opacity="0.58"/>
+<g fill="none" stroke="#ede4c4" stroke-linecap="round" opacity="0.75">
+  <path d="M238,96 Q196,140 165,183 Q140,218 112,258" stroke-width="5.5"/>
+  <path d="M200,82 Q196,136 190,184 Q185,220 180,268" stroke-width="4"/>
+  <path d="M202,118 Q164,121 126,122 Q90,122 62,120" stroke-width="3.5"/>
+  <path d="M108,108 Q105,162 100,216 Q95,268 86,350" stroke-width="3.5"/>
+  <path d="M185,196 Q180,230 172,266 Q162,308 150,358" stroke-width="3.5"/>
+  <path d="M218,60 Q228,80 236,102 Q244,128 247,160 Q250,190 248,220" stroke-width="4"/>
+  <path d="M146,90 Q145,136 143,180 Q140,222 136,268" stroke-width="3"/>
+  <path d="M88,330 Q120,326 156,326 Q192,326 222,328" stroke-width="3"/>
+</g>
+<rect x="24" y="10" width="116" height="22" fill="#68a8c0" opacity="0.85"/>
+<line x1="24" y1="26" x2="128" y2="26" stroke="#ddd0a8" stroke-width="3.5"/>
+<rect x="50" y="10" width="7" height="20" fill="#e05828" rx="1.5"/>
+<rect x="47" y="15" width="13" height="3" fill="#e05828"/>
+<rect x="47" y="20" width="13" height="2.5" fill="#e05828"/>
+<rect x="86" y="10" width="7" height="20" fill="#e05828" rx="1.5"/>
+<rect x="83" y="15" width="13" height="3" fill="#e05828"/>
+<rect x="83" y="20" width="13" height="2.5" fill="#e05828"/>
+<path d="M24,26 Q76,10 128,26" fill="none" stroke="#e05828" stroke-width="2"/>
+<g stroke="#e05828" stroke-width="1" opacity="0.7">
+  <line x1="54" y1="17" x2="54" y2="26"/>
+  <line x1="63" y1="13" x2="63" y2="26"/>
+  <line x1="72" y1="11" x2="72" y2="26"/>
+  <line x1="81" y1="11" x2="81" y2="26"/>
+  <line x1="90" y1="13" x2="90" y2="26"/>
+  <line x1="99" y1="16" x2="99" y2="26"/>
+  <line x1="108" y1="19" x2="108" y2="26"/>
+</g>
+<rect x="28" y="3" width="72" height="10" rx="2" fill="#faf4e0" opacity="0.9"/>
+<text font-family="Georgia,serif" font-style="italic" font-size="5.8" fill="#4a2810" x="64" y="10" text-anchor="middle">Golden Gate Bridge</text>
+<ellipse cx="310" cy="92" rx="20" ry="11" fill="#b8b090" opacity="0.92"/>
+<ellipse cx="310" cy="90" rx="15" ry="8" fill="#ccc098"/>
+<rect x="302" y="80" width="16" height="10" fill="#dcd0a0" rx="1"/>
+<rect x="307" y="76" width="6" height="7" fill="#ccc090" rx="1"/>
+<rect x="309" y="74" width="2" height="4" fill="#a8a080"/>
+<text font-family="Georgia,serif" font-style="italic" font-size="6" fill="#4a5860" x="310" y="108" text-anchor="middle">Alcatraz</text>
+<g transform="translate(210,42)">
+  <ellipse cx="14" cy="26" rx="18" ry="11" fill="#5aa830"/>
+  <rect x="9" y="4" width="10" height="23" fill="#e8dab0" rx="2"/>
+  <rect x="8" y="0" width="12" height="8" fill="#d8ca98" rx="3"/>
+  <rect x="10" y="-2" width="8" height="3" fill="#c8ba80" rx="1"/>
+  <text font-family="Georgia,serif" font-style="italic" font-size="6" fill="#3a2c10" x="14" y="40" text-anchor="middle">Coit Tower</text>
+</g>
+<g transform="translate(134,150)">
+  <rect x="0" y="10" width="13" height="16" fill="#9078c0"/>
+  <polygon points="0,10 6.5,2 13,10" fill="#7058a8"/>
+  <rect x="15" y="8" width="13" height="18" fill="#d87040"/>
+  <polygon points="15,8 21.5,0 28,8" fill="#bc5828"/>
+  <rect x="30" y="10" width="13" height="16" fill="#4890a0"/>
+  <polygon points="30,10 36.5,2 43,10" fill="#307888"/>
+  <text font-family="Georgia,serif" font-style="italic" font-size="5.5" fill="#3a2c10" x="21" y="33" text-anchor="middle">Painted Ladies</text>
+</g>
+<g transform="translate(116,170)">
+  <ellipse cx="8" cy="26" rx="12" ry="8" fill="#5aa830" opacity="0.55"/>
+  <rect x="6.5" y="5" width="3" height="24" fill="#8a8090" rx="0.5"/>
+  <line x1="8" y1="7" x2="1" y2="1" stroke="#8a8090" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="8" y1="7" x2="8" y2="1" stroke="#8a8090" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="8" y1="7" x2="15" y2="1" stroke="#8a8090" stroke-width="2.5" stroke-linecap="round"/>
+  <text font-family="Georgia,serif" font-style="italic" font-size="5.5" fill="#3a2c10" x="8" y="38" text-anchor="middle">Sutro Tower</text>
+</g>
+<g transform="translate(40,178)">
+  <rect x="-2" y="-2" width="90" height="13" rx="3" fill="#faf4e0" opacity="0.92"/>
+  <text font-family="Georgia,serif" font-style="italic" font-size="7" fill="#3a2c10" x="43" y="8" text-anchor="middle">Golden Gate Park</text>
+</g>
+<g transform="translate(48,108)">
+  <rect x="-2" y="-2" width="60" height="12" rx="3" fill="#faf4e0" opacity="0.9"/>
+  <text font-family="Georgia,serif" font-style="italic" font-size="6.5" fill="#3a2c10" x="28" y="8" text-anchor="middle">The Presidio</text>
+</g>
+<text font-family="Georgia,serif" font-style="italic" font-size="12" fill="#4a7898" x="340" y="210" text-anchor="middle" opacity="0.6">the Bay</text>
+<text font-family="Georgia,serif" font-style="italic" font-size="8" fill="#3a6880" x="14" y="316" text-anchor="middle" opacity="0.55" transform="rotate(-90 14 316)">Pacific Ocean</text>
+`;
+  return L.svgOverlay(svg, ILLUS_BOUNDS, {opacity:1, interactive:false});
+}
+
+// ─── TILE PROVIDER CANDIDATES ─────────────────────────────────────────────
 const TILE_CANDIDATES = {
   street: [
     ['https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-     {attribution:'&copy; OpenStreetMap', subdomains:'abc', maxZoom:19}],
-    ['https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-     {attribution:'&copy; OpenStreetMap', maxZoom:19}]
+     {attribution:'&copy; OpenStreetMap', subdomains:'abc', maxZoom:19}]
   ],
   terrain: [
     ['https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}',
      {attribution:'&copy; Esri', maxZoom:19}],
     ['https://tile.opentopomap.org/{z}/{x}/{y}.png',
-     {attribution:'&copy; OpenTopoMap', maxZoom:17}],
-    ['https://tiles.wmflabs.org/hillshading/{z}/{x}/{y}.png',
-     {attribution:'SRTM hillshade', maxZoom:17}]
+     {attribution:'&copy; OpenTopoMap', maxZoom:17}]
   ],
   satellite: [
     ['https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-     {attribution:'&copy; Esri', maxZoom:19}],
-    ['https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
      {attribution:'&copy; Esri', maxZoom:19}]
   ]
 };
 
-// Probe a tile URL by actually fetching one tile for SF
 function probeTileUrl(urlTemplate, cb){
   const url = urlTemplate
     .replace('{z}','13').replace('{y}','3290').replace('{x}','1311')
-    .replace('{s}','a').replace(/\{s\}/g,'0');
+    .replace(/\{s\}/g,'a');
   const img = new Image();
   let done = false;
-  const finish = (ok) => { if(!done){ done=true; cb(ok); } };
+  const finish = ok => { if(!done){ done=true; cb(ok); } };
   img.onload  = () => finish(true);
   img.onerror = () => finish(false);
   setTimeout(() => finish(false), 6000);
   img.src = url;
 }
 
-// Build a working layer by probing candidates in order
 function buildLayer(key, onReady){
-  const candidates = TILE_CANDIDATES[key];
+  if(key === 'illustrated'){ onReady(buildIllustratedLayer(), key); return; }
+  const candidates = TILE_CANDIDATES[key] || [];
   let i = 0;
   function tryNext(){
-    if(i >= candidates.length){
-      // All failed — return a blank placeholder layer
-      onReady(null, key);
-      return;
-    }
+    if(i >= candidates.length){ onReady(null, key); return; }
     const [url, opts] = candidates[i++];
-    probeTileUrl(url, ok => {
-      if(ok){
-        onReady(L.tileLayer(url, opts), key);
-      } else {
-        tryNext();
-      }
-    });
+    probeTileUrl(url, ok => ok ? onReady(L.tileLayer(url, opts), key) : tryNext());
   }
   tryNext();
 }
 
-const TILES = { street: null, terrain: null, satellite: null };
+const TILES = {street:null, terrain:null, satellite:null, illustrated:null};
 let currentLayer = 'street';
-let layersReady = 0;
 
-// Build street layer first (show map immediately), then build terrain+satellite in background
 buildLayer('street', (layer, key) => {
   TILES.street = layer || L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-    {attribution:'&copy; OpenStreetMap',maxZoom:19});
+    {attribution:'&copy; OpenStreetMap', maxZoom:19});
   TILES.street.addTo(map);
-  layersReady++;
 });
+buildLayer('terrain',    (layer, key) => { TILES.terrain    = layer; _markBtn(key, !!layer); });
+buildLayer('satellite',  (layer, key) => { TILES.satellite  = layer; _markBtn(key, !!layer); });
+buildLayer('illustrated',(layer, key) => { TILES.illustrated= layer; _markBtn(key, !!layer); });
 
-buildLayer('terrain', (layer, key) => {
-  TILES.terrain = layer;
-  layersReady++;
-  const btn = document.querySelector('[data-layer="terrain"]');
-  if(!layer && btn) btn.style.opacity = '0.4';
-});
+function _markBtn(key, ok){
+  const btn = document.querySelector(`[data-layer="${key}"]`);
+  if(btn && !ok) btn.style.opacity = '0.4';
+}
 
-buildLayer('satellite', (layer, key) => {
-  TILES.satellite = layer;
-  layersReady++;
-  const btn = document.querySelector('[data-layer="satellite"]');
-  if(!layer && btn) btn.style.opacity = '0.4';
-});
-
-// Layer switcher
+// ─── LAYER SWITCHER EVENTS ────────────────────────────────────────────────
 document.getElementById('layer-btn').addEventListener('click', e => {
   e.stopPropagation();
   document.getElementById('layer-panel').classList.toggle('open');
 });
-
 document.addEventListener('click', e => {
-  const panel = document.getElementById('layer-panel');
-  if(!panel.contains(e.target)) panel.classList.remove('open');
+  if(!document.getElementById('layer-panel').contains(e.target))
+    document.getElementById('layer-panel').classList.remove('open');
 });
 
 function showToast(msg){
@@ -735,30 +1049,33 @@ function showToast(msg){
       'transition:opacity .4s;white-space:nowrap;';
     document.body.appendChild(t);
   }
-  t.textContent = msg;
-  t.style.opacity = '1';
+  t.textContent = msg; t.style.opacity='1';
   clearTimeout(t._timer);
-  t._timer = setTimeout(() => t.style.opacity='0', 3000);
+  t._timer = setTimeout(()=>t.style.opacity='0', 3000);
 }
 
 function setLayer(name){
   document.getElementById('layer-panel').classList.remove('open');
   if(name === currentLayer) return;
-  if(!TILES[name]){
-    showToast('This layer isn\'t available in the preview — try downloading the file.');
-    return;
+  if(!TILES[name]){ showToast('Layer unavailable in preview — download file to use offline'); return; }
+  // Remove old layer
+  if(TILES[currentLayer]){
+    if(currentLayer === 'illustrated') map.removeLayer(TILES[currentLayer]);
+    else map.removeLayer(TILES[currentLayer]);
   }
-  if(TILES[currentLayer]) map.removeLayer(TILES[currentLayer]);
+  // Set bg colour for illustrated so no grey tiles show
+  document.getElementById('map').style.background =
+    name === 'illustrated' ? '#78b8d0' : '#e8e0c8';
   TILES[name].addTo(map);
   currentLayer = name;
-  document.querySelectorAll('.lopt').forEach(o => {
-    o.classList.toggle('on', o.dataset.layer === name);
-  });
+  document.querySelectorAll('.lopt').forEach(o =>
+    o.classList.toggle('on', o.dataset.layer === name));
   const pane = document.querySelector('.leaflet-tile-pane');
   if(pane){
-    if(name === 'satellite') pane.style.filter = 'none';
+    if(name === 'satellite')    pane.style.filter = 'none';
+    else if(name === 'illustrated') pane.style.filter = 'none';
     else if(name === 'terrain') pane.style.filter = 'sepia(6%) brightness(0.97) saturate(0.88)';
-    else pane.style.filter = 'sepia(14%) brightness(0.97) saturate(0.9)';
+    else                        pane.style.filter = 'sepia(14%) brightness(0.97) saturate(0.9)';
   }
 }
 
@@ -859,9 +1176,10 @@ function getSheetH(){ return sheet.offsetHeight; }
 function snapToPx(snap){
   const wH = window.innerHeight;
   const sH = getSheetH();
-  if(snap === 'peek') return sH - PEEK_PX;
-  if(snap === 'half') return sH - Math.round(wH * HALF_FRAC);
-  if(snap === 'full') return sH - Math.round(wH * FULL_FRAC);
+  if(snap === 'hidden') return sH;
+  if(snap === 'peek')   return sH - PEEK_PX;
+  if(snap === 'half')   return sH - Math.round(wH * HALF_FRAC);
+  if(snap === 'full')   return sH - Math.round(wH * FULL_FRAC);
   return sH - PEEK_PX;
 }
 
@@ -875,19 +1193,17 @@ function snapSheet(snap, animate=true){
   applyTranslate(snapToPx(snap), animate);
 }
 
-// Start at peek
-snapSheet('peek', false);
+snapSheet('hidden', false);
 
 // Click on handle — cycle through snaps
 handleArea.addEventListener('click', e => {
   if(isDragging) return;
-  if(currentSnap === 'peek'){
-    // If no neighbourhood selected yet, snap to half just to show prompt
-    snapSheet(CN ? 'full' : 'half');
-  } else if(currentSnap === 'half'){
+  if(currentSnap === 'hidden' || currentSnap === 'peek'){
     snapSheet(CN ? 'full' : 'peek');
+  } else if(currentSnap === 'half'){
+    snapSheet('full');
   } else {
-    snapSheet('peek');
+    snapSheet('hidden');
   }
 });
 
@@ -923,17 +1239,14 @@ handleArea.addEventListener('touchend', e => {
   const halfY = sH - Math.round(window.innerHeight * HALF_FRAC);
   const fullY = sH - Math.round(window.innerHeight * FULL_FRAC);
 
+  const hiddenY = snapToPx('hidden');
   let target;
   if(vel < -50){
-    target = currentSnap === 'peek' ? 'half' : 'full';
+    target = currentSnap==='hidden'?'peek': currentSnap==='peek'?'half':'full';
   } else if(vel > 50){
-    target = currentSnap === 'full' ? 'half' : 'peek';
+    target = currentSnap==='full'?'half': currentSnap==='half'?'peek':'hidden';
   } else {
-    const dists = {
-      peek: Math.abs(curY - peekY),
-      half: Math.abs(curY - halfY),
-      full: Math.abs(curY - fullY)
-    };
+    const dists = {hidden:Math.abs(curY-hiddenY), peek:Math.abs(curY-peekY), half:Math.abs(curY-halfY), full:Math.abs(curY-fullY)};
     target = Object.entries(dists).sort((a,b)=>a[1]-b[1])[0][0];
   }
   snapSheet(target);
@@ -956,6 +1269,9 @@ function scoreHTML(n){
 }
 
 function selectNeighbourhood(n){
+  if(CN && CN.id === n.id){
+    CN=null; refreshMarkers(); sheetContent.style.display='none'; placeholder.style.display=''; document.getElementById('title-card').style.opacity='1'; snapSheet('hidden'); return;
+  }
   CN = n;
   refreshMarkers();
 
@@ -1013,9 +1329,9 @@ function showTab(tid, btn, reset){
   }
 }
 
-// Tap map to dismiss sheet
 map.on('click', () => {
-  if(currentSnap !== 'peek') snapSheet('peek');
+  if(CN){ CN=null; refreshMarkers(); sheetContent.style.display='none'; placeholder.style.display=''; document.getElementById('title-card').style.opacity='1'; }
+  snapSheet('hidden');
 });
 
 // Update count
