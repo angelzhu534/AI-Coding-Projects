@@ -1,0 +1,341 @@
+import { useState, useEffect } from "react";
+
+const fmt = (n) =>
+  n < 0
+    ? `(${Math.abs(n).toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 })})`
+    : n.toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 });
+
+const fmtN = (n, dec = 1) => n.toFixed(dec);
+const fmtP = (n) => (n * 100).toFixed(1) + "%";
+
+const PRESETS = [
+  { label: "Lean Launch", monthly: 12000, color: "#2C4A2E" },
+  { label: "Realistic Solo", monthly: 15000, color: "#1D7A8A" },
+  { label: "Stretch Solo", monthly: 20000, color: "#B8922A" },
+  { label: "Heavy Build", monthly: 28000, color: "#C4687A" },
+  { label: "Current Model", monthly: 38000, color: "#8B2635" },
+];
+
+export default function App() {
+  const [monthly, setMonthly] = useState(15000);
+  const [gmPct, setGmPct] = useState(65);
+  const [avgTicket, setAvgTicket] = useState(285);
+  const [availHrs, setAvailHrs] = useState(45);
+  const [capitalRequired, setCapitalRequired] = useState(400000);
+  const [annualTarget, setAnnualTarget] = useState(250000);
+
+  const annual = monthly * 12;
+  const beRevenue = annual / (gmPct / 100);
+  const beMonthly = beRevenue / 12;
+  const beApptMonth = beMonthly / avgTicket;
+  const beApptWeek = beApptMonth / 4.33;
+  const beHrsWeek = beApptWeek;
+  const beOccupancy = beHrsWeek / availHrs;
+
+  const revenueGap = annualTarget - beRevenue;
+  const isFeasible = beOccupancy <= 0.75;
+  const isComfortable = beOccupancy <= 0.60;
+
+  const annualRevenue = annualTarget;
+  const grossProfit = annualRevenue * (gmPct / 100);
+  const noi = grossProfit - annual;
+  const noiMargin = noi / annualRevenue;
+
+  // Capital recovery
+  const annualFCF = noi > 0 ? noi : 0;
+  const recoveryYears = annualFCF > 0 ? capitalRequired / annualFCF : 999;
+
+  // Scenario table
+  const scenarios = [12000, 15000, 20000, 28000, 38000];
+
+  const getStatus = (occ) => {
+    if (occ > 1.0) return { label: "✗ Impossible", color: "#8B2635", bg: "#FDF0F2" };
+    if (occ > 0.80) return { label: "✗ Very Difficult", color: "#C4687A", bg: "#FDF3F5" };
+    if (occ > 0.65) return { label: "⚠ Stretch", color: "#B8922A", bg: "#FDF6E3" };
+    if (occ > 0.50) return { label: "✓ Achievable", color: "#1D7A8A", bg: "#EBF6F8" };
+    return { label: "✓ Comfortable", color: "#2C4A2E", bg: "#EEF4EE" };
+  };
+
+  const currentStatus = getStatus(beOccupancy);
+
+  return (
+    <div style={{
+      fontFamily: "'Georgia', 'Times New Roman', serif",
+      background: "#FAF7F2",
+      minHeight: "100vh",
+      padding: "0",
+      color: "#1C2B4A",
+    }}>
+      {/* Header */}
+      <div style={{
+        background: "#1C2B4A",
+        padding: "32px 40px 24px",
+        borderBottom: "4px solid #B8922A",
+      }}>
+        <div style={{ fontSize: 11, letterSpacing: "0.2em", color: "#B8922A", textTransform: "uppercase", marginBottom: 8 }}>
+          Mobile Medi-Spa · Financial Model
+        </div>
+        <div style={{ fontSize: 28, fontWeight: "bold", color: "#FAF7F2", letterSpacing: "-0.5px" }}>
+          Break-Even Cost Structure Calculator
+        </div>
+        <div style={{ fontSize: 13, color: "#8899BB", marginTop: 6, fontStyle: "italic" }}>
+          Drag the slider to find the monthly cost structure that makes your business viable
+        </div>
+      </div>
+
+      <div style={{ padding: "32px 40px", maxWidth: 1100 }}>
+
+        {/* Main Slider */}
+        <div style={{
+          background: "#1C2B4A",
+          borderRadius: 12,
+          padding: "28px 32px",
+          marginBottom: 28,
+          border: `3px solid ${currentStatus.color}`,
+          transition: "border-color 0.3s",
+        }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 16 }}>
+            <div>
+              <div style={{ fontSize: 11, color: "#8899BB", letterSpacing: "0.15em", textTransform: "uppercase" }}>Monthly Operating Costs</div>
+              <div style={{ fontSize: 48, fontWeight: "bold", color: "#FAF7F2", lineHeight: 1, marginTop: 4 }}>
+                {fmt(monthly)}
+                <span style={{ fontSize: 16, color: "#8899BB", marginLeft: 8 }}>/month</span>
+              </div>
+            </div>
+            <div style={{
+              background: currentStatus.bg,
+              border: `2px solid ${currentStatus.color}`,
+              borderRadius: 8,
+              padding: "10px 20px",
+              fontSize: 15,
+              fontWeight: "bold",
+              color: currentStatus.color,
+            }}>
+              {currentStatus.label}
+            </div>
+          </div>
+
+          <input
+            type="range" min={8000} max={45000} step={500}
+            value={monthly}
+            onChange={e => setMonthly(+e.target.value)}
+            style={{ width: "100%", height: 8, accentColor: "#B8922A", cursor: "pointer" }}
+          />
+
+          {/* Preset buttons */}
+          <div style={{ display: "flex", gap: 8, marginTop: 14, flexWrap: "wrap" }}>
+            {PRESETS.map(p => (
+              <button key={p.label} onClick={() => setMonthly(p.monthly)}
+                style={{
+                  background: monthly === p.monthly ? p.color : "transparent",
+                  border: `1px solid ${p.color}`,
+                  borderRadius: 6,
+                  padding: "6px 14px",
+                  fontSize: 12,
+                  color: monthly === p.monthly ? "#FAF7F2" : p.color,
+                  cursor: "pointer",
+                  fontFamily: "inherit",
+                  transition: "all 0.2s",
+                }}>
+                {p.label} · {fmt(p.monthly)}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Key Outputs — 4 big numbers */}
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16, marginBottom: 28 }}>
+          {[
+            { label: "Annual Cost Burden", value: fmt(annual), sub: "Monthly × 12", color: "#C4687A", bg: "#FDF0F2" },
+            { label: "Break-Even Revenue", value: fmt(beRevenue), sub: "Annual costs ÷ GM%", color: "#B8922A", bg: "#FDF6E3" },
+            { label: "Break-Even Monthly", value: fmt(beMonthly), sub: "Minimum per month", color: "#1D7A8A", bg: "#EBF6F8" },
+            { label: "Required Occupancy", value: fmtP(beOccupancy), sub: `of ${availHrs} hrs/week available`, color: beOccupancy > 0.75 ? "#C4687A" : "#2C4A2E", bg: beOccupancy > 0.75 ? "#FDF0F2" : "#EEF4EE" },
+          ].map(({ label, value, sub, color, bg }) => (
+            <div key={label} style={{ background: bg, border: `1px solid ${color}30`, borderRadius: 10, padding: "20px 22px" }}>
+              <div style={{ fontSize: 10, letterSpacing: "0.12em", textTransform: "uppercase", color: "#777", marginBottom: 6 }}>{label}</div>
+              <div style={{ fontSize: 26, fontWeight: "bold", color, lineHeight: 1 }}>{value}</div>
+              <div style={{ fontSize: 11, color: "#999", marginTop: 6, fontStyle: "italic" }}>{sub}</div>
+            </div>
+          ))}
+        </div>
+
+        {/* Two columns — P&L + Operational */}
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20, marginBottom: 28 }}>
+
+          {/* P&L at target revenue */}
+          <div style={{ background: "#FFFFFF", borderRadius: 10, border: "1px solid #E0DDD5", overflow: "hidden" }}>
+            <div style={{ background: "#1C2B4A", padding: "14px 20px" }}>
+              <div style={{ fontSize: 11, letterSpacing: "0.15em", color: "#B8922A", textTransform: "uppercase" }}>
+                P&L at ${(annualTarget/1000).toFixed(0)}K Revenue Target
+              </div>
+            </div>
+            <div style={{ padding: "16px 20px" }}>
+              {[
+                { label: "Annual Revenue", value: fmt(annualRevenue), color: "#1C2B4A", border: false },
+                { label: `COGS (${100-gmPct}%)`, value: fmt(-annualRevenue*(1-gmPct/100)), color: "#C4687A", border: false },
+                { label: "Gross Profit", value: fmt(grossProfit), color: "#2C4A2E", border: true, bold: true },
+                { label: `GM% = ${fmtP(gmPct/100)}`, value: "", color: "#777", border: false, italic: true },
+                { label: "Operating Costs", value: fmt(-annual), color: "#C4687A", border: false },
+                { label: "Net Operating Income", value: fmt(noi), color: noi >= 0 ? "#2C4A2E" : "#C4687A", border: true, bold: true, big: true },
+                { label: `Net Margin = ${fmtP(noiMargin)}`, value: "", color: "#777", border: false, italic: true },
+              ].map(({ label, value, color, border, bold, italic, big }) => (
+                <div key={label} style={{
+                  display: "flex", justifyContent: "space-between", alignItems: "center",
+                  padding: "8px 0",
+                  borderTop: border ? "1px solid #E0DDD5" : "none",
+                  marginTop: border ? 4 : 0,
+                }}>
+                  <span style={{ fontSize: italic ? 11 : 13, fontStyle: italic ? "italic" : "normal", color: "#555", fontWeight: bold ? "bold" : "normal" }}>{label}</span>
+                  <span style={{ fontSize: big ? 17 : 13, fontWeight: bold ? "bold" : "normal", color }}>{value}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Operational requirements */}
+          <div style={{ background: "#FFFFFF", borderRadius: 10, border: "1px solid #E0DDD5", overflow: "hidden" }}>
+            <div style={{ background: "#1C2B4A", padding: "14px 20px" }}>
+              <div style={{ fontSize: 11, letterSpacing: "0.15em", color: "#B8922A", textTransform: "uppercase" }}>
+                Operational Requirements at Break-Even
+              </div>
+            </div>
+            <div style={{ padding: "16px 20px" }}>
+              {[
+                { label: "Appointments / Month", value: fmtN(beApptMonth, 0), note: `at ${fmt(avgTicket)} avg ticket` },
+                { label: "Appointments / Week", value: fmtN(beApptWeek, 1), note: "÷ 4.33 weeks" },
+                { label: "Occupied Hours / Week", value: fmtN(beHrsWeek, 1), note: `of ${availHrs} available` },
+                { label: "Required Occupancy", value: fmtP(beOccupancy), note: beOccupancy > 1 ? "⚠ Over 100% — impossible" : beOccupancy > 0.75 ? "⚠ Above healthy range" : "✓ Within range" },
+                { label: "Revenue Gap vs $250K", value: fmt(revenueGap), note: revenueGap >= 0 ? "Target exceeds break-even ✓" : "Target below break-even ✗" },
+                { label: "Capital Recovery", value: recoveryYears > 50 ? "N/A (loss)" : `${fmtN(recoveryYears, 1)} years`, note: `at ${fmt(annualFCF)}/yr FCF` },
+              ].map(({ label, value, note }) => (
+                <div key={label} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "9px 0", borderBottom: "1px solid #F0EEE9" }}>
+                  <div>
+                    <div style={{ fontSize: 13, color: "#333" }}>{label}</div>
+                    <div style={{ fontSize: 10, color: "#999", fontStyle: "italic", marginTop: 2 }}>{note}</div>
+                  </div>
+                  <div style={{ fontSize: 16, fontWeight: "bold", color: "#1C2B4A" }}>{value}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Assumption sliders */}
+        <div style={{ background: "#FFFFFF", borderRadius: 10, border: "1px solid #E0DDD5", overflow: "hidden", marginBottom: 28 }}>
+          <div style={{ background: "#1C2B4A", padding: "14px 20px" }}>
+            <div style={{ fontSize: 11, letterSpacing: "0.15em", color: "#B8922A", textTransform: "uppercase" }}>Other Assumptions — Adjust to Your Model</div>
+          </div>
+          <div style={{ padding: "20px 24px", display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px 40px" }}>
+            {[
+              { label: "Gross Margin %", value: gmPct, set: setGmPct, min: 40, max: 80, step: 1, fmt: v => v + "%" },
+              { label: "Average Ticket ($)", value: avgTicket, set: setAvgTicket, min: 150, max: 600, step: 5, fmt: v => "$" + v },
+              { label: "Available Hours / Week", value: availHrs, set: setAvailHrs, min: 15, max: 60, step: 1, fmt: v => v + " hrs" },
+              { label: "Capital Required ($)", value: capitalRequired, set: setCapitalRequired, min: 100000, max: 600000, step: 5000, fmt: v => "$" + (v/1000).toFixed(0) + "K" },
+            ].map(({ label, value, set, min, max, step, fmt: fmtFn }) => (
+              <div key={label}>
+                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
+                  <span style={{ fontSize: 12, color: "#555" }}>{label}</span>
+                  <span style={{ fontSize: 13, fontWeight: "bold", color: "#1C2B4A" }}>{fmtFn(value)}</span>
+                </div>
+                <input type="range" min={min} max={max} step={step} value={value}
+                  onChange={e => set(+e.target.value)}
+                  style={{ width: "100%", accentColor: "#B8922A", cursor: "pointer" }} />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Scenario comparison table */}
+        <div style={{ background: "#FFFFFF", borderRadius: 10, border: "1px solid #E0DDD5", overflow: "hidden" }}>
+          <div style={{ background: "#1C2B4A", padding: "14px 20px" }}>
+            <div style={{ fontSize: 11, letterSpacing: "0.15em", color: "#B8922A", textTransform: "uppercase" }}>
+              All Scenarios — Side by Side
+            </div>
+          </div>
+          <div style={{ overflowX: "auto" }}>
+            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12 }}>
+              <thead>
+                <tr style={{ background: "#F5F3EF" }}>
+                  {["Monthly Costs", "Annual Burden", "Break-Even Revenue", "Monthly Break-Even", "Required Occupancy", "NOI at $250K", "Feasibility"].map(h => (
+                    <th key={h} style={{ padding: "10px 14px", textAlign: "right", fontSize: 10, letterSpacing: "0.1em", textTransform: "uppercase", color: "#777", borderBottom: "1px solid #E0DDD5", whiteSpace: "nowrap" }}>
+                      {h}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {scenarios.map((mc, i) => {
+                  const ac = mc * 12;
+                  const ber = ac / (gmPct / 100);
+                  const bem = ber / 12;
+                  const occ = (ber / 12) / avgTicket / 4.33 / availHrs;
+                  const noiVal = (250000 * gmPct / 100) - ac;
+                  const st = getStatus(occ);
+                  const isActive = mc === monthly;
+                  return (
+                    <tr key={mc}
+                      onClick={() => setMonthly(mc)}
+                      style={{
+                        background: isActive ? "#1C2B4A" : i % 2 === 0 ? "#FAF7F2" : "#FFFFFF",
+                        cursor: "pointer",
+                        transition: "background 0.2s",
+                      }}>
+                      {[
+                        { v: fmt(mc), bold: true },
+                        { v: fmt(ac) },
+                        { v: fmt(ber) },
+                        { v: fmt(bem) },
+                        { v: fmtP(occ), color: occ > 0.75 ? "#C4687A" : "#2C4A2E" },
+                        { v: fmt(noiVal), color: noiVal >= 0 ? "#2C4A2E" : "#C4687A" },
+                        { v: st.label, color: st.color },
+                      ].map(({ v, bold, color }, ci) => (
+                        <td key={ci} style={{
+                          padding: "12px 14px",
+                          textAlign: "right",
+                          fontWeight: bold || isActive ? "bold" : "normal",
+                          color: isActive ? "#FAF7F2" : (color || "#333"),
+                          borderBottom: "1px solid #E0DDD5",
+                          whiteSpace: "nowrap",
+                        }}>{v}</td>
+                      ))}
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+          <div style={{ padding: "10px 16px", fontSize: 11, color: "#999", fontStyle: "italic", borderTop: "1px solid #E0DDD5" }}>
+            Click any row to select that cost scenario. Highlighted row = current selection.
+          </div>
+        </div>
+
+        {/* Bottom insight */}
+        <div style={{
+          marginTop: 24,
+          padding: "18px 24px",
+          background: "#1C2B4A",
+          borderRadius: 10,
+          borderLeft: `4px solid ${currentStatus.color}`,
+        }}>
+          <div style={{ fontSize: 11, color: "#B8922A", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 8 }}>
+            Current Reading
+          </div>
+          <div style={{ fontSize: 14, color: "#FAF7F2", lineHeight: 1.7 }}>
+            At <strong style={{ color: "#B8922A" }}>{fmt(monthly)}/month</strong> in operating costs,
+            your annual cost burden is <strong style={{ color: "#B8922A" }}>{fmt(annual)}</strong>.
+            To break even you need <strong style={{ color: "#B8922A" }}>{fmt(beRevenue)}</strong> in annual revenue
+            — <strong style={{ color: beRevenue > annualTarget ? "#C4687A" : "#4CAF50" }}>
+              {beRevenue > annualTarget
+                ? `${fmt(beRevenue - annualTarget)} above your $${(annualTarget/1000).toFixed(0)}K target`
+                : `${fmt(annualTarget - beRevenue)} below your $${(annualTarget/1000).toFixed(0)}K target — target exceeds break-even ✓`}
+            </strong>.
+            {" "}This requires <strong style={{ color: beOccupancy > 0.75 ? "#C4687A" : "#4CAF50" }}>
+              {fmtP(beOccupancy)} occupancy
+            </strong> — {beOccupancy > 1 ? "physically impossible with one van." : beOccupancy > 0.75 ? "above the healthy range for a solo mobile practice." : "within achievable range."}
+          </div>
+        </div>
+
+      </div>
+    </div>
+  );
+}
