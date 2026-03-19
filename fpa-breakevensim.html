@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mobile Medi-Spa · Break-Even Calculator</title>
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,700;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'EB Garamond', Georgia, serif;
+      background: #FAF7F2;
+      color: #1C2B4A;
+      min-height: 100vh;
+    }
+
+    /* ── Header ── */
+    .header {
+      background: #1C2B4A;
+      padding: 32px 40px 24px;
+      border-bottom: 4px solid #B8922A;
+    }
+    .header-eyebrow {
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      color: #B8922A;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+      font-family: 'DM Mono', monospace;
+    }
+    .header h1 {
+      font-size: clamp(22px, 4vw, 28px);
+      font-weight: 700;
+      color: #FAF7F2;
+      letter-spacing: -0.5px;
+    }
+    .header-sub {
+      font-size: 13px;
+      color: #8899BB;
+      margin-top: 6px;
+      font-style: italic;
+    }
+
+    /* ── Main layout ── */
+    .main { padding: 32px 40px; max-width: 1100px; }
+
+    /* ── Cost slider card ── */
+    .slider-card {
+      border-radius: 12px;
+      padding: 28px 32px;
+      margin-bottom: 28px;
+      border: 3px solid #1D7A8A;
+      background: #1C2B4A;
+      transition: border-color 0.3s;
+    }
+    .slider-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .slider-label {
+      font-size: 11px;
+      color: #8899BB;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      font-family: 'DM Mono', monospace;
+    }
+    .slider-value {
+      font-size: clamp(32px, 6vw, 48px);
+      font-weight: 700;
+      color: #FAF7F2;
+      line-height: 1;
+      margin-top: 4px;
+      font-family: 'DM Mono', monospace;
+    }
+    .slider-value span { font-size: 16px; color: #8899BB; margin-left: 8px; }
+    .status-badge {
+      border-radius: 8px;
+      padding: 10px 20px;
+      font-size: 15px;
+      font-weight: 700;
+      border: 2px solid;
+      white-space: nowrap;
+    }
+    input[type=range] {
+      width: 100%;
+      height: 8px;
+      accent-color: #B8922A;
+      cursor: pointer;
+    }
+    .presets {
+      display: flex;
+      gap: 8px;
+      margin-top: 14px;
+      flex-wrap: wrap;
+    }
+    .preset-btn {
+      border-radius: 6px;
+      padding: 6px 14px;
+      font-size: 12px;
+      cursor: pointer;
+      font-family: 'EB Garamond', serif;
+      transition: all 0.2s;
+      border: 1px solid;
+    }
+
+    /* ── KPI grid ── */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+    .kpi-card {
+      border-radius: 10px;
+      padding: 20px 22px;
+      border: 1px solid;
+    }
+    .kpi-label {
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #777;
+      margin-bottom: 6px;
+      font-family: 'DM Mono', monospace;
+    }
+    .kpi-value {
+      font-size: clamp(18px, 2.5vw, 26px);
+      font-weight: 700;
+      line-height: 1;
+      font-family: 'DM Mono', monospace;
+    }
+    .kpi-sub {
+      font-size: 11px;
+      color: #999;
+      margin-top: 6px;
+      font-style: italic;
+    }
+
+    /* ── Two column panels ── */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 28px; }
+    .panel { background: #fff; border-radius: 10px; border: 1px solid #E0DDD5; overflow: hidden; }
+    .panel-header { background: #1C2B4A; padding: 14px 20px; }
+    .panel-title { font-size: 11px; letter-spacing: 0.15em; color: #B8922A; text-transform: uppercase; font-family: 'DM Mono', monospace; }
+    .panel-body { padding: 16px 20px; }
+
+    .pl-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+    }
+    .pl-row.border-top { border-top: 1px solid #E0DDD5; margin-top: 4px; }
+    .pl-row-label { font-size: 13px; color: #555; }
+    .pl-row-label.bold { font-weight: 700; }
+    .pl-row-label.italic { font-style: italic; font-size: 11px; color: #777; }
+    .pl-row-value { font-size: 13px; font-family: 'DM Mono', monospace; }
+    .pl-row-value.bold { font-weight: 700; }
+    .pl-row-value.big { font-size: 17px; font-weight: 700; font-family: 'DM Mono', monospace; }
+
+    .op-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 9px 0;
+      border-bottom: 1px solid #F0EEE9;
+    }
+    .op-row-left .op-label { font-size: 13px; color: #333; }
+    .op-row-left .op-note { font-size: 10px; color: #999; font-style: italic; margin-top: 2px; }
+    .op-row-value { font-size: 16px; font-weight: 700; color: #1C2B4A; font-family: 'DM Mono', monospace; }
+
+    /* ── Assumption sliders ── */
+    .assumptions-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px 40px; padding: 20px 24px; }
+    .assump-row { }
+    .assump-top { display: flex; justify-content: space-between; margin-bottom: 6px; }
+    .assump-label { font-size: 12px; color: #555; }
+    .assump-value { font-size: 13px; font-weight: 700; color: #1C2B4A; font-family: 'DM Mono', monospace; }
+
+    /* ── Scenario table ── */
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    th {
+      padding: 10px 14px;
+      text-align: right;
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #777;
+      border-bottom: 1px solid #E0DDD5;
+      background: #F5F3EF;
+      white-space: nowrap;
+      font-family: 'DM Mono', monospace;
+      font-weight: 400;
+    }
+    td {
+      padding: 12px 14px;
+      text-align: right;
+      border-bottom: 1px solid #E0DDD5;
+      white-space: nowrap;
+      font-family: 'DM Mono', monospace;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .table-note { padding: 10px 16px; font-size: 11px; color: #999; font-style: italic; border-top: 1px solid #E0DDD5; }
+
+    /* ── Insight bar ── */
+    .insight {
+      margin-top: 24px;
+      padding: 18px 24px;
+      background: #1C2B4A;
+      border-radius: 10px;
+      border-left: 4px solid #1D7A8A;
+    }
+    .insight-label { font-size: 11px; color: #B8922A; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 8px; font-family: 'DM Mono', monospace; }
+    .insight-text { font-size: 14px; color: #FAF7F2; line-height: 1.7; }
+    .insight-text strong { color: #B8922A; }
+
+    @media (max-width: 700px) {
+      .main, .header { padding-left: 16px; padding-right: 16px; }
+      .kpi-grid { grid-template-columns: 1fr 1fr; }
+      .two-col { grid-template-columns: 1fr; }
+      .assumptions-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 400px) {
+      .kpi-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-eyebrow">Mobile Medi-Spa · Financial Model</div>
+  <h1>Break-Even Cost Structure Calculator</h1>
+  <div class="header-sub">Drag the slider to find the monthly cost structure that makes your business viable</div>
+</div>
+
+<div class="main">
+
+  <!-- Main slider -->
+  <div class="slider-card" id="sliderCard">
+    <div class="slider-top">
+      <div>
+        <div class="slider-label">Monthly Operating Costs</div>
+        <div class="slider-value" id="sliderDisplay">$15,000<span>/month</span></div>
+      </div>
+      <div class="status-badge" id="statusBadge">✓ Achievable</div>
+    </div>
+    <input type="range" id="mainSlider" min="8000" max="45000" step="500" value="15000">
+    <div class="presets" id="presets"></div>
+  </div>
+
+  <!-- KPIs -->
+  <div class="kpi-grid" id="kpiGrid"></div>
+
+  <!-- Two columns -->
+  <div class="two-col">
+    <div class="panel">
+      <div class="panel-header"><div class="panel-title" id="plTitle">P&L at $250K Revenue Target</div></div>
+      <div class="panel-body" id="plBody"></div>
+    </div>
+    <div class="panel">
+      <div class="panel-header"><div class="panel-title">Operational Requirements at Break-Even</div></div>
+      <div class="panel-body" id="opBody"></div>
+    </div>
+  </div>
+
+  <!-- Assumption sliders -->
+  <div class="panel" style="margin-bottom:28px;">
+    <div class="panel-header"><div class="panel-title">Other Assumptions — Adjust to Your Model</div></div>
+    <div class="assumptions-grid" id="assumptionsGrid"></div>
+  </div>
+
+  <!-- Scenario table -->
+  <div class="panel">
+    <div class="panel-header"><div class="panel-title">All Scenarios — Side by Side</div></div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Monthly Costs</th>
+            <th>Annual Burden</th>
+            <th>Break-Even Revenue</th>
+            <th>Monthly Break-Even</th>
+            <th>Required Occupancy</th>
+            <th>NOI at $250K</th>
+            <th>Feasibility</th>
+          </tr>
+        </thead>
+        <tbody id="scenarioBody"></tbody>
+      </table>
+    </div>
+    <div class="table-note">Click any row to select that cost scenario. Highlighted row = current selection.</div>
+  </div>
+
+  <!-- Insight -->
+  <div class="insight" id="insightBar">
+    <div class="insight-label">Current Reading</div>
+    <div class="insight-text" id="insightText"></div>
+  </div>
+
+</div>
+
+<script>
+  // ── State ──────────────────────────────────────────────────────────────────
+  let state = {
+    monthly: 15000,
+    gmPct: 65,
+    avgTicket: 285,
+    availHrs: 45,
+    capitalRequired: 400000,
+    annualTarget: 250000,
+  };
+
+  const PRESETS = [
+    { label: "Lean Launch",     monthly: 12000, color: "#2C4A2E" },
+    { label: "Realistic Solo",  monthly: 15000, color: "#1D7A8A" },
+    { label: "Stretch Solo",    monthly: 20000, color: "#B8922A" },
+    { label: "Heavy Build",     monthly: 28000, color: "#C4687A" },
+    { label: "Current Model",   monthly: 38000, color: "#8B2635" },
+  ];
+
+  const SCENARIOS = [12000, 15000, 20000, 28000, 38000];
+
+  // ── Formatters ─────────────────────────────────────────────────────────────
+  const fmt = n => {
+    const abs = Math.abs(n).toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 });
+    return n < 0 ? `(${abs})` : abs;
+  };
+  const fmtN = (n, dec = 1) => n.toFixed(dec);
+  const fmtP = n => (n * 100).toFixed(1) + "%";
+
+  // ── Derived calcs ──────────────────────────────────────────────────────────
+  function calc(s) {
+    const { monthly, gmPct, avgTicket, availHrs, capitalRequired, annualTarget } = s;
+    const annual       = monthly * 12;
+    const beRevenue    = annual / (gmPct / 100);
+    const beMonthly    = beRevenue / 12;
+    const beApptMonth  = beMonthly / avgTicket;
+    const beApptWeek   = beApptMonth / 4.33;
+    const beOccupancy  = beApptWeek / availHrs;
+    const revenueGap   = annualTarget - beRevenue;
+    const annualRev    = annualTarget;
+    const grossProfit  = annualRev * (gmPct / 100);
+    const noi          = grossProfit - annual;
+    const noiMargin    = noi / annualRev;
+    const annualFCF    = noi > 0 ? noi : 0;
+    const recoveryYears = annualFCF > 0 ? capitalRequired / annualFCF : 999;
+    return { annual, beRevenue, beMonthly, beApptMonth, beApptWeek, beOccupancy,
+             revenueGap, annualRev, grossProfit, noi, noiMargin, annualFCF, recoveryYears };
+  }
+
+  function getStatus(occ) {
+    if (occ > 1.0)  return { label: "✗ Impossible",      color: "#8B2635", bg: "#FDF0F2" };
+    if (occ > 0.80) return { label: "✗ Very Difficult",   color: "#C4687A", bg: "#FDF3F5" };
+    if (occ > 0.65) return { label: "⚠ Stretch",          color: "#B8922A", bg: "#FDF6E3" };
+    if (occ > 0.50) return { label: "✓ Achievable",       color: "#1D7A8A", bg: "#EBF6F8" };
+    return            { label: "✓ Comfortable",           color: "#2C4A2E", bg: "#EEF4EE" };
+  }
+
+  // ── Render ─────────────────────────────────────────────────────────────────
+  function render() {
+    const s  = state;
+    const d  = calc(s);
+    const st = getStatus(d.beOccupancy);
+
+    // Slider card
+    document.getElementById("sliderCard").style.borderColor = st.color;
+    document.getElementById("sliderDisplay").innerHTML = `${fmt(s.monthly)}<span>/month</span>`;
+    const badge = document.getElementById("statusBadge");
+    badge.textContent = st.label;
+    badge.style.color = st.color;
+    badge.style.background = st.bg;
+    badge.style.borderColor = st.color;
+
+    // Presets
+    const presetsEl = document.getElementById("presets");
+    presetsEl.innerHTML = "";
+    PRESETS.forEach(p => {
+      const btn = document.createElement("button");
+      btn.className = "preset-btn";
+      btn.textContent = `${p.label} · ${fmt(p.monthly)}`;
+      btn.style.borderColor = p.color;
+      btn.style.color = s.monthly === p.monthly ? "#FAF7F2" : p.color;
+      btn.style.background = s.monthly === p.monthly ? p.color : "transparent";
+      btn.addEventListener("click", () => { state.monthly = p.monthly; document.getElementById("mainSlider").value = p.monthly; render(); });
+      presetsEl.appendChild(btn);
+    });
+
+    // KPIs
+    const kpis = [
+      { label: "Annual Cost Burden",    value: fmt(d.annual),       sub: "Monthly × 12",              color: "#C4687A", bg: "#FDF0F2" },
+      { label: "Break-Even Revenue",    value: fmt(d.beRevenue),    sub: "Annual costs ÷ GM%",         color: "#B8922A", bg: "#FDF6E3" },
+      { label: "Break-Even Monthly",    value: fmt(d.beMonthly),    sub: "Minimum per month",          color: "#1D7A8A", bg: "#EBF6F8" },
+      { label: "Required Occupancy",    value: fmtP(d.beOccupancy), sub: `of ${s.availHrs} hrs/week available`,
+        color: d.beOccupancy > 0.75 ? "#C4687A" : "#2C4A2E",
+        bg:    d.beOccupancy > 0.75 ? "#FDF0F2" : "#EEF4EE" },
+    ];
+    const kpiGrid = document.getElementById("kpiGrid");
+    kpiGrid.innerHTML = "";
+    kpis.forEach(k => {
+      kpiGrid.innerHTML += `
+        <div class="kpi-card" style="background:${k.bg};border-color:${k.color}30;">
+          <div class="kpi-label">${k.label}</div>
+          <div class="kpi-value" style="color:${k.color}">${k.value}</div>
+          <div class="kpi-sub">${k.sub}</div>
+        </div>`;
+    });
+
+    // P&L
+    document.getElementById("plTitle").textContent = `P&L at $${(s.annualTarget/1000).toFixed(0)}K Revenue Target`;
+    const plRows = [
+      { label: "Annual Revenue",       value: fmt(d.annualRev),                       color: "#1C2B4A" },
+      { label: `COGS (${100-s.gmPct}%)`, value: fmt(-d.annualRev*(1-s.gmPct/100)),   color: "#C4687A" },
+      { label: "Gross Profit",         value: fmt(d.grossProfit),                     color: "#2C4A2E", border: true, bold: true },
+      { label: `GM% = ${fmtP(s.gmPct/100)}`, value: "",                              color: "#777",   italic: true },
+      { label: "Operating Costs",      value: fmt(-d.annual),                         color: "#C4687A" },
+      { label: "Net Operating Income", value: fmt(d.noi),                             color: d.noi >= 0 ? "#2C4A2E" : "#C4687A", border: true, bold: true, big: true },
+      { label: `Net Margin = ${fmtP(d.noiMargin)}`, value: "",                        color: "#777",   italic: true },
+    ];
+    document.getElementById("plBody").innerHTML = plRows.map(r => `
+      <div class="pl-row ${r.border ? 'border-top' : ''}">
+        <span class="pl-row-label ${r.bold ? 'bold' : ''} ${r.italic ? 'italic' : ''}">${r.label}</span>
+        <span class="pl-row-value ${r.big ? 'big' : ''} ${r.bold ? 'bold' : ''}" style="color:${r.color}">${r.value}</span>
+      </div>`).join("");
+
+    // Operational
+    const recStr = d.recoveryYears > 50 ? "N/A (loss)" : `${fmtN(d.recoveryYears, 1)} years`;
+    const opRows = [
+      { label: "Appointments / Month",   value: fmtN(d.beApptMonth, 0), note: `at ${fmt(s.avgTicket)} avg ticket` },
+      { label: "Appointments / Week",    value: fmtN(d.beApptWeek, 1),  note: "÷ 4.33 weeks" },
+      { label: "Occupied Hours / Week",  value: fmtN(d.beApptWeek, 1),  note: `of ${s.availHrs} available` },
+      { label: "Required Occupancy",     value: fmtP(d.beOccupancy),    note: d.beOccupancy > 1 ? "⚠ Over 100% — impossible" : d.beOccupancy > 0.75 ? "⚠ Above healthy range" : "✓ Within range" },
+      { label: "Revenue Gap vs $250K",   value: fmt(d.revenueGap),      note: d.revenueGap >= 0 ? "Target exceeds break-even ✓" : "Target below break-even ✗" },
+      { label: "Capital Recovery",       value: recStr,                  note: `at ${fmt(d.annualFCF)}/yr FCF` },
+    ];
+    document.getElementById("opBody").innerHTML = opRows.map(r => `
+      <div class="op-row">
+        <div class="op-row-left">
+          <div class="op-label">${r.label}</div>
+          <div class="op-note">${r.note}</div>
+        </div>
+        <div class="op-row-value">${r.value}</div>
+      </div>`).join("");
+
+    // Assumptions
+    const assumptions = [
+      { key: "gmPct",           label: "Gross Margin %",          min: 40,    max: 80,     step: 1,    fmtFn: v => v + "%"                       },
+      { key: "avgTicket",       label: "Average Ticket ($)",      min: 150,   max: 600,    step: 5,    fmtFn: v => "$" + v                        },
+      { key: "availHrs",        label: "Available Hours / Week",  min: 15,    max: 60,     step: 1,    fmtFn: v => v + " hrs"                     },
+      { key: "capitalRequired", label: "Capital Required ($)",    min: 100000, max: 600000, step: 5000, fmtFn: v => "$" + (v/1000).toFixed(0) + "K" },
+    ];
+    document.getElementById("assumptionsGrid").innerHTML = assumptions.map(a => `
+      <div class="assump-row">
+        <div class="assump-top">
+          <span class="assump-label">${a.label}</span>
+          <span class="assump-value" id="av_${a.key}">${a.fmtFn(s[a.key])}</span>
+        </div>
+        <input type="range" min="${a.min}" max="${a.max}" step="${a.step}" value="${s[a.key]}"
+          data-key="${a.key}" class="assump-slider">
+      </div>`).join("");
+
+    // Re-attach assumption slider listeners
+    document.querySelectorAll(".assump-slider").forEach(sl => {
+      sl.addEventListener("input", e => {
+        const key = e.target.dataset.key;
+        state[key] = +e.target.value;
+        render();
+      });
+    });
+
+    // Scenario table
+    const tbody = document.getElementById("scenarioBody");
+    tbody.innerHTML = "";
+    SCENARIOS.forEach((mc, i) => {
+      const ac = mc * 12;
+      const ber = ac / (s.gmPct / 100);
+      const bem = ber / 12;
+      const occ = (ber / 12) / s.avgTicket / 4.33 / s.availHrs;
+      const noiVal = (250000 * s.gmPct / 100) - ac;
+      const rst = getStatus(occ);
+      const isActive = mc === s.monthly;
+      const bg = isActive ? "#1C2B4A" : (i % 2 === 0 ? "#FAF7F2" : "#FFFFFF");
+      const defaultColor = isActive ? "#FAF7F2" : "#333";
+      const cells = [
+        { v: fmt(mc),      color: defaultColor, bold: true },
+        { v: fmt(ac),      color: defaultColor },
+        { v: fmt(ber),     color: defaultColor },
+        { v: fmt(bem),     color: defaultColor },
+        { v: fmtP(occ),    color: isActive ? "#FAF7F2" : (occ > 0.75 ? "#C4687A" : "#2C4A2E") },
+        { v: fmt(noiVal),  color: isActive ? "#FAF7F2" : (noiVal >= 0 ? "#2C4A2E" : "#C4687A") },
+        { v: rst.label,    color: isActive ? "#FAF7F2" : rst.color },
+      ];
+      const tr = document.createElement("tr");
+      tr.style.background = bg;
+      tr.style.cursor = "pointer";
+      tr.addEventListener("click", () => { state.monthly = mc; document.getElementById("mainSlider").value = mc; render(); });
+      tr.innerHTML = cells.map(c => `<td style="color:${c.color};font-weight:${(c.bold||isActive)?'700':'400'}">${c.v}</td>`).join("");
+      tbody.appendChild(tr);
+    });
+
+    // Insight
+    document.getElementById("insightBar").style.borderLeftColor = st.color;
+    const aboveBelow = d.beRevenue > s.annualTarget
+      ? `<strong style="color:#C4687A">${fmt(d.beRevenue - s.annualTarget)} above your $${(s.annualTarget/1000).toFixed(0)}K target</strong>`
+      : `<strong style="color:#4CAF50">${fmt(s.annualTarget - d.beRevenue)} below your $${(s.annualTarget/1000).toFixed(0)}K target — target exceeds break-even ✓</strong>`;
+    const occColor = d.beOccupancy > 0.75 ? "#C4687A" : "#4CAF50";
+    const occNote = d.beOccupancy > 1 ? "physically impossible with one van."
+                  : d.beOccupancy > 0.75 ? "above the healthy range for a solo mobile practice."
+                  : "within achievable range.";
+    document.getElementById("insightText").innerHTML =
+      `At <strong>${fmt(s.monthly)}/month</strong> in operating costs, your annual cost burden is <strong>${fmt(d.annual)}</strong>. ` +
+      `To break even you need <strong>${fmt(d.beRevenue)}</strong> in annual revenue — ${aboveBelow}. ` +
+      `This requires <strong style="color:${occColor}">${fmtP(d.beOccupancy)} occupancy</strong> — ${occNote}`;
+  }
+
+  // ── Wire main slider ───────────────────────────────────────────────────────
+  document.getElementById("mainSlider").addEventListener("input", e => {
+    state.monthly = +e.target.value;
+    render();
+  });
+
+  // ── Initial render ─────────────────────────────────────────────────────────
+  render();
+</script>
+</body>
+</html>
