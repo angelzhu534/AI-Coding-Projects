@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f0f6fb;
+      --ocean-deep: #1a3a52;
+      --ocean-mid: #2e6e8e;
+      --ocean-light: #5ba4c4;
+      --foam: #ffffff;
+      --mist: #e8f2f8;
+      --muted: #6a90a8;
+      --border: #c8dfe9;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--ocean-deep);
+      font-family: 'Jost', sans-serif;
+      font-weight: 300;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 100vh;
+      background:
+        radial-gradient(ellipse 80% 50% at 110% -10%, rgba(91,164,196,0.18) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 40% at -10% 80%, rgba(46,110,142,0.12) 0%, transparent 60%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    header {
+      position: relative;
+      z-index: 1;
+      padding: 4.5rem 6rem 3rem;
+      opacity: 0;
+      animation: fadeUp 0.9s ease forwards;
+    }
+
+    .header-eyebrow {
+      font-size: 0.72rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ocean-light);
+      margin-bottom: 1rem;
+      font-weight: 500;
+    }
+
+    header h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.8rem, 6vw, 5rem);
+      font-weight: 300;
+      letter-spacing: -0.01em;
+      line-height: 1.05;
+      color: var(--ocean-deep);
+    }
+
+    header h1 em {
+      font-style: italic;
+      color: var(--ocean-mid);
+    }
+
+    .header-rule {
+      margin-top: 2rem;
+      width: 48px;
+      height: 2px;
+      background: linear-gradient(90deg, var(--ocean-light), transparent);
+    }
+
+    main {
+      flex: 1;
+      position: relative;
+      z-index: 1;
+      padding: 3rem 6rem 5rem;
+    }
+
+    .section-label {
+      font-size: 0.72rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 2rem;
+      opacity: 0;
+      animation: fadeUp 0.8s ease 0.25s forwards;
+    }
+
+    .projects {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .card {
+      background: rgba(255,255,255,0.75);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--border);
+      padding: 2.2rem 2.4rem;
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease, background 0.25s ease;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards;
+    }
+
+    .card:nth-child(1) { animation-delay: 0.4s; }
+    .card:nth-child(2) { animation-delay: 0.5s; }
+    .card:nth-child(3) { animation-delay: 0.6s; }
+
+    .card:hover {
+      border-color: var(--ocean-light);
+      box-shadow: 0 8px 32px rgba(46,110,142,0.12), 0 2px 8px rgba(46,110,142,0.08);
+      transform: translateY(-3px);
+      background: rgba(255,255,255,0.92);
+    }
+
+    .card-tag {
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ocean-light);
+      font-weight: 500;
+    }
+
+    .card-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.6rem;
+      font-weight: 400;
+      line-height: 1.2;
+      color: var(--ocean-deep);
+    }
+
+    .card-desc {
+      font-size: 0.87rem;
+      color: var(--muted);
+      line-height: 1.65;
+      flex: 1;
+    }
+
+    .card-arrow {
+      font-size: 0.82rem;
+      color: var(--ocean-mid);
+      letter-spacing: 0.06em;
+      margin-top: 0.6rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-weight: 400;
+      transition: gap 0.2s ease, color 0.2s ease;
+    }
+
+    .card:hover .card-arrow {
+      gap: 0.75rem;
+      color: var(--ocean-deep);
+    }
+
+    footer {
+      position: relative;
+      z-index: 1;
+      padding: 1.75rem 6rem;
+      background: rgba(26,58,82,0.04);
+      border-top: 1px solid var(--border);
+      font-size: 0.76rem;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    footer::before {
+      content: '〰';
+      color: var(--ocean-light);
+      font-size: 1rem;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 640px) {
+      header, main, footer { padding-left: 1.5rem; padding-right: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <p class="header-eyebrow">Welcome</p>
+    <h1>My <em>Portfolio</em></h1>
+    <div class="header-rule"></div>
+  </header>
+
+  <main>
+    <p class="section-label">Projects</p>
+    <div class="projects">
+
+      <a class="card" href="sf-neighborhoods.html">
+        <span class="card-tag">Map · Data Visualization</span>
+        <span class="card-title">SF Neighborhoods</span>
+        <span class="card-desc">An interactive map exploring San Francisco's neighborhoods, built with Leaflet.js.</span>
+        <span class="card-arrow">View project →</span>
+      </a>
+
+    </div>
+  </main>
+
+  <footer>
+    Built with HTML · Hosted on GitHub Pages
+  </footer>
+
+</body>
+</html>
