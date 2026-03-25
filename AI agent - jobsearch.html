@@ -1,676 +1,549 @@
-import { useState, useRef, useCallback, useEffect } from "react";
-import * as mammoth from "mammoth";
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>JobAgent — AI Job Search</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0D0F14;--surface:#161A23;--surface2:#1E2330;--border:#2A2F3E;
+  --accent:#F0A830;--text:#E8EAF0;--muted:#7A8099;
+  --green:#4ADE80;--red:#F87171;--blue:#60A5FA;
+}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes up{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.fade{animation:up .3s ease}
+.spinner{display:inline-block;width:14px;height:14px;border:2px solid var(--border);
+  border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;flex-shrink:0}
+textarea,input{font-family:'DM Sans',sans-serif;color:var(--text)}
+textarea::placeholder,input::placeholder{color:var(--muted)}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+button{font-family:'DM Sans',sans-serif;cursor:pointer}
+a{text-decoration:none;color:inherit}
+#app{min-height:100vh}
 
-const API_URL = "https://api.anthropic.com/v1/messages";
+/* reusable classes */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px 18px;transition:border-color .2s}
+.card:hover{border-color:rgba(240,168,48,.4)}
+.btn-primary{background:var(--accent);color:#0D0F14;border:none;border-radius:6px;font-weight:600;padding:9px 20px;font-size:14px}
+.btn-primary:disabled{opacity:.4;cursor:not-allowed}
+.btn-ghost{background:var(--surface2);color:var(--text);border:1px solid var(--border);border-radius:6px;padding:6px 13px;font-size:12px}
+.tag{display:inline-block;background:rgba(240,168,48,.13);color:var(--accent);
+  border:1px solid rgba(240,168,48,.25);border-radius:4px;padding:2px 8px;
+  font-size:11px;font-family:'DM Mono',monospace;white-space:nowrap}
+.tag.blue{background:rgba(96,165,250,.13);color:var(--blue);border-color:rgba(96,165,250,.25)}
+.alert{border-radius:8px;padding:10px 14px;font-size:13px;margin-bottom:12px}
+.alert-warn{background:rgba(240,168,48,.1);border:1px solid rgba(240,168,48,.3);color:var(--accent)}
+.alert-err{background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.3);color:var(--red)}
+</style>
+</head>
+<body>
+<div id="app"></div>
 
-const COLORS = {
-  bg: "#0D0F14",
-  surface: "#161A23",
-  surfaceAlt: "#1E2330",
-  border: "#2A2F3E",
-  accent: "#F0A830",
-  accentDim: "#F0A83022",
-  text: "#E8EAF0",
-  textMuted: "#7A8099",
-  green: "#4ADE80",
-  red: "#F87171",
-  blue: "#60A5FA",
+<!-- Only external dep: mammoth for docx (loaded once, small) -->
+<script src="https://unpkg.com/mammoth@1.8.0/mammoth.browser.js"></script>
+
+<script>
+// ── State ──────────────────────────────────────────────────────────────────────
+const state = {
+  stage: 'upload',   // upload | loading | results
+  resumeText: '',
+  profile: null,
+  jobs: [],
+  error: '',
+  fileError: '',
+  fileLoading: false,
+  statusMsg: 'Reading resume…',
+  filter: '',
+  typeFilter: 'all',
+  apiKey: localStorage.getItem('ja_key') || '',
+  showKey: !localStorage.getItem('ja_key'),
+  coverLetterJob: null,
+  coverLetter: '',
+  coverLetterLoading: false,
 };
 
-const GOOGLE_FONTS = `@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap');`;
+// ── Mini render engine ─────────────────────────────────────────────────────────
+function set(updates) {
+  Object.assign(state, updates);
+  renderApp();
+}
 
-function callClaude(messages, systemPrompt, onChunk, useWebSearch = false) {
+function el(tag, attrs, ...children) {
+  const e = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs || {})) {
+    if (k === 'style' && typeof v === 'object') Object.assign(e.style, v);
+    else if (k.startsWith('on')) e.addEventListener(k.slice(2).toLowerCase(), v);
+    else if (k === 'class') e.className = v;
+    else if (k === 'html') { e.innerHTML = v; continue; }
+    else e.setAttribute(k, v);
+  }
+  for (const child of children.flat(9)) {
+    if (child == null || child === false) continue;
+    e.appendChild(typeof child === 'string' ? document.createTextNode(child) : child);
+  }
+  return e;
+}
+
+// ── Anthropic API ──────────────────────────────────────────────────────────────
+async function callClaude(messages, system, onChunk, webSearch) {
   const body = {
-    model: "claude-sonnet-4-20250514",
+    model: 'claude-sonnet-4-20250514',
     max_tokens: 2000,
     stream: true,
-    system: systemPrompt,
+    system,
     messages,
   };
-  if (useWebSearch) {
-    body.tools = [{ type: "web_search_20250305", name: "web_search" }];
+  if (webSearch) body.tools = [{ type: 'web_search_20250305', name: 'web_search' }];
+
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': state.apiKey,
+      'anthropic-version': '2023-06-01',
+      'anthropic-dangerous-direct-browser-access': 'true',
+    },
+    body: JSON.stringify(body),
+  });
+
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err?.error?.message || 'API error ' + res.status);
   }
 
-  return fetch(API_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body),
-  }).then(async (res) => {
-    if (!res.ok) throw new Error(`API error ${res.status}`);
-    const reader = res.body.getReader();
-    const decoder = new TextDecoder();
-    let buffer = "";
-    let fullText = "";
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-      buffer += decoder.decode(value, { stream: true });
-      const lines = buffer.split("\n");
-      buffer = lines.pop();
-      for (const line of lines) {
-        if (!line.startsWith("data: ")) continue;
-        const data = line.slice(6).trim();
-        if (data === "[DONE]") continue;
-        try {
-          const evt = JSON.parse(data);
-          if (evt.type === "content_block_delta" && evt.delta?.type === "text_delta") {
-            fullText += evt.delta.text;
-            onChunk(fullText);
-          }
-        } catch {}
-      }
-    }
-    return fullText;
-  });
-}
-
-// ─── Small UI Atoms ────────────────────────────────────────────────────────────
-function Tag({ children, color = COLORS.accent }) {
-  return (
-    <span style={{
-      background: color + "22",
-      color,
-      border: `1px solid ${color}44`,
-      borderRadius: 4,
-      padding: "2px 8px",
-      fontSize: 11,
-      fontFamily: "'DM Mono', monospace",
-      letterSpacing: "0.06em",
-      fontWeight: 500,
-      whiteSpace: "nowrap",
-    }}>{children}</span>
-  );
-}
-
-function ScoreBadge({ score }) {
-  const color = score >= 85 ? COLORS.green : score >= 70 ? COLORS.accent : COLORS.textMuted;
-  return (
-    <div style={{
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      justifyContent: "center",
-      width: 56,
-      height: 56,
-      borderRadius: "50%",
-      border: `2px solid ${color}`,
-      color,
-      flexShrink: 0,
-    }}>
-      <span style={{ fontSize: 18, fontWeight: 700, lineHeight: 1, fontFamily: "'DM Mono', monospace" }}>{score}</span>
-      <span style={{ fontSize: 9, letterSpacing: "0.08em", color: COLORS.textMuted, fontFamily: "'DM Sans', sans-serif" }}>FIT</span>
-    </div>
-  );
-}
-
-function Spinner() {
-  return (
-    <div style={{
-      width: 16, height: 16, border: `2px solid ${COLORS.border}`,
-      borderTopColor: COLORS.accent, borderRadius: "50%",
-      animation: "spin 0.8s linear infinite", display: "inline-block",
-    }} />
-  );
-}
-
-function Button({ children, onClick, disabled, variant = "primary", small }) {
-  const base = {
-    border: "none",
-    borderRadius: 6,
-    cursor: disabled ? "not-allowed" : "pointer",
-    fontFamily: "'DM Sans', sans-serif",
-    fontWeight: 600,
-    fontSize: small ? 12 : 14,
-    padding: small ? "6px 14px" : "10px 22px",
-    display: "inline-flex",
-    alignItems: "center",
-    gap: 6,
-    transition: "opacity 0.15s, transform 0.1s",
-    opacity: disabled ? 0.45 : 1,
-    letterSpacing: "0.02em",
-  };
-  const styles = {
-    primary: { background: COLORS.accent, color: "#0D0F14" },
-    ghost: { background: COLORS.surfaceAlt, color: COLORS.text, border: `1px solid ${COLORS.border}` },
-    danger: { background: COLORS.red + "22", color: COLORS.red, border: `1px solid ${COLORS.red}44` },
-  };
-  return (
-    <button onClick={onClick} disabled={disabled}
-      onMouseEnter={e => !disabled && (e.target.style.opacity = "0.85")}
-      onMouseLeave={e => !disabled && (e.target.style.opacity = "1")}
-      style={{ ...base, ...styles[variant] }}>
-      {children}
-    </button>
-  );
-}
-
-// ─── Cover Letter Modal ─────────────────────────────────────────────────────────
-function CoverLetterModal({ job, resumeText, profile, onClose }) {
-  const [letter, setLetter] = useState("");
-  const [loading, setLoading] = useState(true);
-
-  useState(() => {
-    const generate = async () => {
+  const reader = res.body.getReader();
+  const dec = new TextDecoder();
+  let buf = '', full = '';
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    buf += dec.decode(value, { stream: true });
+    const lines = buf.split('\n');
+    buf = lines.pop();
+    for (const line of lines) {
+      if (!line.startsWith('data: ')) continue;
+      const d = line.slice(6).trim();
+      if (d === '[DONE]') continue;
       try {
-        await callClaude(
-          [{ role: "user", content: `Write a tailored cover letter for this job:\n\nJob: ${job.title} at ${job.company}\nDescription: ${job.description}\n\nResume:\n${resumeText}\n\nProfile summary: ${JSON.stringify(profile)}` }],
-          `You are an expert career coach. Write a compelling, personalized cover letter. Be specific, use the candidate's actual experience, mirror language from the job posting. Keep it to 3 paragraphs + opening/close. Do NOT use generic filler phrases. Output only the letter text, no extra commentary.`,
-          (t) => setLetter(t),
-          false
-        );
-      } catch (e) {
-        setLetter("Error generating cover letter. Please try again.");
-      }
-      setLoading(false);
-    };
-    generate();
-  }, []);
-
-  const copyToClipboard = () => navigator.clipboard.writeText(letter);
-
-  return (
-    <div style={{
-      position: "fixed", inset: 0, background: "#000000CC",
-      display: "flex", alignItems: "center", justifyContent: "center", zIndex: 100,
-      padding: 24,
-    }} onClick={(e) => e.target === e.currentTarget && onClose()}>
-      <div style={{
-        background: COLORS.surface, border: `1px solid ${COLORS.border}`,
-        borderRadius: 12, maxWidth: 640, width: "100%", maxHeight: "85vh",
-        display: "flex", flexDirection: "column", overflow: "hidden",
-      }}>
-        <div style={{ padding: "20px 24px", borderBottom: `1px solid ${COLORS.border}`, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <div>
-            <div style={{ fontSize: 13, color: COLORS.textMuted, fontFamily: "'DM Mono', monospace", marginBottom: 2 }}>COVER LETTER</div>
-            <div style={{ fontFamily: "'DM Serif Display', serif", fontSize: 18, color: COLORS.text }}>{job.title} · {job.company}</div>
-          </div>
-          <div style={{ display: "flex", gap: 8 }}>
-            {!loading && <Button small variant="ghost" onClick={copyToClipboard}>Copy</Button>}
-            <Button small variant="ghost" onClick={onClose}>✕</Button>
-          </div>
-        </div>
-        <div style={{ padding: 24, overflowY: "auto", flex: 1 }}>
-          {loading ? (
-            <div style={{ display: "flex", gap: 10, alignItems: "center", color: COLORS.textMuted }}>
-              <Spinner /> <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14 }}>Drafting your cover letter…</span>
-            </div>
-          ) : (
-            <pre style={{
-              fontFamily: "'DM Sans', sans-serif", fontSize: 14, lineHeight: 1.7,
-              color: COLORS.text, whiteSpace: "pre-wrap", margin: 0,
-            }}>{letter}</pre>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// ─── Job Card ───────────────────────────────────────────────────────────────────
-function JobCard({ job, resumeText, profile }) {
-  const [expanded, setExpanded] = useState(false);
-  const [showCoverLetter, setShowCoverLetter] = useState(false);
-
-  return (
-    <>
-      {showCoverLetter && (
-        <CoverLetterModal job={job} resumeText={resumeText} profile={profile} onClose={() => setShowCoverLetter(false)} />
-      )}
-      <div style={{
-        background: COLORS.surface, border: `1px solid ${COLORS.border}`,
-        borderRadius: 10, padding: "18px 20px", transition: "border-color 0.2s",
-      }}
-        onMouseEnter={e => e.currentTarget.style.borderColor = COLORS.accent + "66"}
-        onMouseLeave={e => e.currentTarget.style.borderColor = COLORS.border}
-      >
-        <div style={{ display: "flex", gap: 14, alignItems: "flex-start" }}>
-          <ScoreBadge score={job.fitScore} />
-          <div style={{ flex: 1, minWidth: 0 }}>
-            <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 4, alignItems: "center" }}>
-              <span style={{ fontFamily: "'DM Serif Display', serif", fontSize: 17, color: COLORS.text }}>{job.title}</span>
-            </div>
-            <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: COLORS.textMuted, marginBottom: 8 }}>
-              {job.company} · {job.location} {job.remote && "· Remote/Hybrid"}
-            </div>
-            <div style={{ display: "flex", flexWrap: "wrap", gap: 5, marginBottom: 10 }}>
-              {(job.tags || []).map(t => <Tag key={t}>{t}</Tag>)}
-            </div>
-            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: COLORS.textMuted, lineHeight: 1.6, margin: 0 }}>
-              {job.whyMatch}
-            </p>
-            {expanded && (
-              <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: COLORS.textMuted, lineHeight: 1.6, marginTop: 10 }}>
-                {job.description}
-              </p>
-            )}
-          </div>
-        </div>
-        <div style={{ display: "flex", gap: 8, marginTop: 14, flexWrap: "wrap" }}>
-          {job.applyUrl && (
-            <a href={job.applyUrl} target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none" }}>
-              <Button small>Apply →</Button>
-            </a>
-          )}
-          <Button small variant="ghost" onClick={() => setShowCoverLetter(true)}>✦ Cover Letter</Button>
-          <Button small variant="ghost" onClick={() => setExpanded(!expanded)}>{expanded ? "Less" : "More"}</Button>
-        </div>
-      </div>
-    </>
-  );
-}
-
-// ─── Main App ───────────────────────────────────────────────────────────────────
-export default function JobAgent() {
-  const [stage, setStage] = useState("upload"); // upload | analyzing | searching | results
-  const [resumeText, setResumeText] = useState("");
-  const [profile, setProfile] = useState(null);
-  const [jobs, setJobs] = useState([]);
-  const [statusMsg, setStatusMsg] = useState("");
-  const [error, setError] = useState("");
-  const [searchQuery, setSearchQuery] = useState("");
-  const [jobTypeFilter, setJobTypeFilter] = useState("all");
-  const [fileLoading, setFileLoading] = useState(false);
-  const [fileError, setFileError] = useState("");
-  const fileRef = useRef();
-
-  // Load PDF.js once on mount
-  useEffect(() => {
-    if (window.pdfjsLib) return;
-    const script = document.createElement("script");
-    script.src = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js";
-    script.onload = () => {
-      window.pdfjsLib.GlobalWorkerOptions.workerSrc =
-        "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
-    };
-    document.head.appendChild(script);
-  }, []);
-
-  const extractPdf = async (file) => {
-    const arrayBuffer = await file.arrayBuffer();
-    const pdf = await window.pdfjsLib.getDocument({ data: arrayBuffer }).promise;
-    let text = "";
-    for (let i = 1; i <= pdf.numPages; i++) {
-      const page = await pdf.getPage(i);
-      const content = await page.getTextContent();
-      text += content.items.map((item) => item.str).join(" ") + "\n";
-    }
-    return text.trim();
-  };
-
-  const extractDocx = async (file) => {
-    const arrayBuffer = await file.arrayBuffer();
-    const result = await mammoth.extractRawText({ arrayBuffer });
-    return result.value.trim();
-  };
-
-  const handleFile = useCallback(async (e) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setFileError("");
-    setFileLoading(true);
-    try {
-      const ext = file.name.split(".").pop().toLowerCase();
-      let text = "";
-      if (ext === "pdf") {
-        if (!window.pdfjsLib) {
-          // Wait up to 3s for PDF.js to load
-          await new Promise((res, rej) => {
-            let tries = 0;
-            const interval = setInterval(() => {
-              if (window.pdfjsLib) { clearInterval(interval); res(); }
-              if (++tries > 30) { clearInterval(interval); rej(new Error("PDF.js failed to load")); }
-            }, 100);
-          });
+        const evt = JSON.parse(d);
+        if (evt.type === 'content_block_delta' && evt.delta?.type === 'text_delta') {
+          full += evt.delta.text;
+          onChunk(full);
         }
-        text = await extractPdf(file);
-      } else if (ext === "docx") {
-        text = await extractDocx(file);
-      } else if (ext === "doc") {
-        setFileError(".doc (legacy Word) isn't supported in the browser — please save as .docx and re-upload.");
-        setFileLoading(false);
-        return;
-      } else {
-        // Plain text fallback
-        text = await file.text();
-      }
-      if (!text || text.length < 80) {
-        setFileError("Couldn't extract enough text from the file. Try copy-pasting your resume as plain text instead.");
-      } else {
-        setResumeText(text);
-      }
-    } catch (err) {
-      setFileError("Failed to read file: " + err.message);
+      } catch (_) {}
     }
-    setFileLoading(false);
-  }, []);
-
-  const analyzeAndSearch = async () => {
-    if (!resumeText.trim()) return;
-    setError("");
-    setStage("analyzing");
-    setStatusMsg("Extracting profile from resume…");
-
-    let profileData;
-    try {
-      const raw = await callClaude(
-        [{ role: "user", content: `Analyze this resume and extract a structured profile:\n\n${resumeText}` }],
-        `You are a career analyst. Extract a JSON profile from the resume. Return ONLY valid JSON, no markdown fences, no extra text. Schema:
-{
-  "name": "string",
-  "currentTitle": "string",
-  "yearsExperience": number,
-  "topSkills": ["string"],
-  "domains": ["string"],
-  "education": "string",
-  "jobSearchKeywords": ["string - specific job title searches to run"],
-  "seniorityLevel": "entry|mid|senior|director|executive",
-  "industries": ["string"],
-  "summary": "2-sentence candidate summary"
+  }
+  return full;
 }
-jobSearchKeywords should be 4-6 specific job titles that match this person well.`,
-        () => {},
-        false
-      );
-      profileData = JSON.parse(raw.replace(/```json|```/g, "").trim());
-      setProfile(profileData);
-    } catch (e) {
-      setError("Failed to parse resume. Make sure it's pasted as plain text.");
-      setStage("upload");
+
+function parseJSON(raw) {
+  const s = raw.replace(/```json|```/g, '').trim();
+  const a = s.indexOf('{'), b = s.lastIndexOf('}');
+  if (a < 0 || b < 0) throw new Error('No JSON in response — try again');
+  return JSON.parse(s.slice(a, b + 1));
+}
+
+// ── PDF extraction ─────────────────────────────────────────────────────────────
+async function extractPDF(file) {
+  if (!window.pdfjsLib) {
+    await new Promise((res, rej) => {
+      const s = document.createElement('script');
+      s.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+      s.onload = () => {
+        window.pdfjsLib.GlobalWorkerOptions.workerSrc =
+          'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+        res();
+      };
+      s.onerror = rej;
+      document.head.appendChild(s);
+    });
+  }
+  const buf = await file.arrayBuffer();
+  const pdf = await window.pdfjsLib.getDocument({ data: buf }).promise;
+  let text = '';
+  for (let i = 1; i <= pdf.numPages; i++) {
+    const page = await pdf.getPage(i);
+    const content = await page.getTextContent();
+    text += content.items.map(x => x.str).join(' ') + '\n';
+  }
+  return text.trim();
+}
+
+// ── File handler ───────────────────────────────────────────────────────────────
+async function handleFile(e) {
+  const file = e.target.files?.[0];
+  if (!file) return;
+  set({ fileError: '', fileLoading: true });
+  try {
+    const ext = file.name.split('.').pop().toLowerCase();
+    let text = '';
+    if (ext === 'pdf') {
+      text = await extractPDF(file);
+    } else if (ext === 'docx') {
+      const buf = await file.arrayBuffer();
+      if (typeof mammoth === 'undefined') throw new Error('mammoth.js not loaded yet — try again in a moment');
+      const result = await mammoth.extractRawText({ arrayBuffer: buf });
+      text = result.value.trim();
+    } else if (ext === 'doc') {
+      set({ fileError: '.doc not supported — save as .docx first', fileLoading: false });
       return;
+    } else {
+      text = await file.text();
     }
-
-    setStage("searching");
-    setStatusMsg("Searching live job boards…");
-
-    try {
-      const searchPrompt = `You are a job search agent. Search for current job openings that match this candidate profile:
-
-Name: ${profileData.name}
-Current Title: ${profileData.currentTitle}
-Skills: ${profileData.topSkills?.join(", ")}
-Domains: ${profileData.domains?.join(", ")}
-Industries: ${profileData.industries?.join(", ")}
-Seniority: ${profileData.seniorityLevel}
-Search keywords to use: ${profileData.jobSearchKeywords?.join(", ")}
-
-Search for real, current job postings. Find 6-8 high-quality matches. For each job return a JSON array. Return ONLY the JSON array, no markdown, no preamble:
-[{
-  "title": "exact job title",
-  "company": "company name",
-  "location": "city, state or Remote",
-  "remote": boolean,
-  "fitScore": number 60-99,
-  "tags": ["3-5 relevant skill tags"],
-  "whyMatch": "2-sentence explanation of why this role fits the candidate specifically",
-  "description": "2-3 sentence role description",
-  "applyUrl": "direct URL to job posting if found, else null"
-}]`;
-
-      const rawJobs = await callClaude(
-        [{ role: "user", content: searchPrompt }],
-        "You are a job search agent with web search capability. Search for real current job openings and return structured JSON only.",
-        (t) => setStatusMsg("Analyzing job matches… " + (t.length > 50 ? "✓" : "")),
-        true
-      );
-
-      const cleaned = rawJobs.replace(/```json|```/g, "").trim();
-      const start = cleaned.indexOf("[");
-      const end = cleaned.lastIndexOf("]");
-      if (start === -1 || end === -1) throw new Error("No JSON array found");
-      const jobsData = JSON.parse(cleaned.slice(start, end + 1));
-      setJobs(jobsData.sort((a, b) => b.fitScore - a.fitScore));
-      setStage("results");
-    } catch (e) {
-      setError("Job search failed: " + e.message);
-      setStage("upload");
+    if (!text || text.length < 80) {
+      set({ fileError: "Couldn't extract enough text. Try pasting instead.", fileLoading: false });
+    } else {
+      set({ resumeText: text, fileError: '', fileLoading: false });
     }
-  };
+  } catch (err) {
+    set({ fileError: 'Read error: ' + err.message, fileLoading: false });
+  }
+  e.target.value = '';
+}
 
-  const filteredJobs = jobs.filter(j => {
-    const q = searchQuery.toLowerCase();
-    const matchesSearch = !q || j.title.toLowerCase().includes(q) || j.company.toLowerCase().includes(q) || j.tags?.some(t => t.toLowerCase().includes(q));
-    const matchesType = jobTypeFilter === "all" || (jobTypeFilter === "remote" && j.remote) || (jobTypeFilter === "onsite" && !j.remote);
-    return matchesSearch && matchesType;
+// ── Run job search ─────────────────────────────────────────────────────────────
+async function runSearch() {
+  if (!state.apiKey.trim()) { set({ showKey: true, error: 'Enter your Anthropic API key first.' }); return; }
+  if (wordCount() < 50) return;
+
+  set({ error: '', jobs: [], profile: null, stage: 'loading' });
+
+  const steps = ['Reading resume…', 'Searching job boards…', 'Scoring fit…', 'Ranking matches…'];
+  let tick = 0;
+  set({ statusMsg: steps[0] });
+  const iv = setInterval(() => { tick = (tick + 1) % steps.length; set({ statusMsg: steps[tick] }); }, 3200);
+
+  try {
+    const raw = await callClaude(
+      [{ role: 'user', content: 'Parse this resume and use web search to find 6 real current matching job postings.\n\nResume:\n' + state.resumeText.slice(0, 6000) }],
+      `You are a job search agent with web search. Parse the resume, use web_search to find 6 real current job openings. Return ONLY valid JSON — no markdown, no code fences, no text before or after:
+{"profile":{"name":"","currentTitle":"","yearsExperience":0,"topSkills":[],"seniorityLevel":"mid","industries":[]},"jobs":[{"title":"","company":"","location":"","remote":false,"fitScore":80,"tags":[],"whyMatch":"2 sentences why this fits","description":"2-3 sentence description","applyUrl":null}]}`,
+      () => {},
+      true,
+    );
+    clearInterval(iv);
+    const data = parseJSON(raw);
+    if (!data.profile || !Array.isArray(data.jobs)) throw new Error('Unexpected format — try again');
+    set({
+      profile: data.profile,
+      jobs: data.jobs.sort((a, b) => b.fitScore - a.fitScore),
+      stage: 'results',
+    });
+  } catch (err) {
+    clearInterval(iv);
+    set({ error: err.message, stage: 'upload' });
+  }
+}
+
+// ── Cover letter ───────────────────────────────────────────────────────────────
+async function generateCoverLetter(job) {
+  set({ coverLetterJob: job, coverLetter: '', coverLetterLoading: true });
+  try {
+    await callClaude(
+      [{ role: 'user', content: 'Write a tailored cover letter.\n\nJob: ' + job.title + ' at ' + job.company + '\nDescription: ' + (job.description || '') + '\n\nResume:\n' + state.resumeText.slice(0, 4000) }],
+      "Expert career coach. Write a compelling 3-paragraph cover letter specific to this role. Mirror the job description language. Use the candidate's real experience. Output only the letter, no commentary.",
+      (t) => set({ coverLetter: t, coverLetterLoading: false }),
+      false,
+    );
+  } catch (err) {
+    set({ coverLetter: 'Error generating letter: ' + err.message, coverLetterLoading: false });
+  }
+}
+
+// ── Helpers ────────────────────────────────────────────────────────────────────
+function wordCount() {
+  return state.resumeText.trim().split(/\s+/).filter(Boolean).length;
+}
+
+function filteredJobs() {
+  return state.jobs.filter(j => {
+    const q = state.filter.toLowerCase();
+    const mQ = !q || [j.title, j.company, ...(j.tags || [])].some(s => s?.toLowerCase().includes(q));
+    const mT = state.typeFilter === 'all'
+      || (state.typeFilter === 'remote' && j.remote)
+      || (state.typeFilter === 'onsite' && !j.remote);
+    return mQ && mT;
   });
+}
 
-  return (
-    <>
-      <style>{`
-        ${GOOGLE_FONTS}
-        @keyframes spin { to { transform: rotate(360deg); } }
-        @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        * { box-sizing: border-box; }
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: ${COLORS.bg}; }
-        ::-webkit-scrollbar-thumb { background: ${COLORS.border}; border-radius: 3px; }
-        textarea::placeholder { color: ${COLORS.textMuted}; }
-      `}</style>
-
-      <div style={{
-        minHeight: "100vh", background: COLORS.bg, color: COLORS.text,
-        fontFamily: "'DM Sans', sans-serif", padding: "0 0 60px",
-      }}>
-        {/* Header */}
-        <div style={{
-          borderBottom: `1px solid ${COLORS.border}`,
-          padding: "18px 32px",
-          display: "flex", alignItems: "center", justifyContent: "space-between",
-          background: COLORS.surface,
-        }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            <div style={{
-              width: 32, height: 32, borderRadius: 8,
-              background: COLORS.accent, display: "flex", alignItems: "center", justifyContent: "center",
-              fontSize: 16,
-            }}>✦</div>
-            <div>
-              <div style={{ fontFamily: "'DM Serif Display', serif", fontSize: 18, lineHeight: 1 }}>JobAgent</div>
-              <div style={{ fontSize: 11, color: COLORS.textMuted, fontFamily: "'DM Mono', monospace", letterSpacing: "0.06em" }}>AI-POWERED JOB SEARCH</div>
-            </div>
-          </div>
-          {profile && (
-            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-              <div style={{ width: 8, height: 8, borderRadius: "50%", background: COLORS.green }} />
-              <span style={{ fontSize: 13, color: COLORS.textMuted }}>{profile.name || "Resume loaded"}</span>
-              <Button small variant="ghost" onClick={() => { setStage("upload"); setResumeText(""); setProfile(null); setJobs([]); }}>
-                New Search
-              </Button>
-            </div>
-          )}
-        </div>
-
-        <div style={{ maxWidth: 760, margin: "0 auto", padding: "0 24px" }}>
-
-          {/* Upload Stage */}
-          {(stage === "upload") && (
-            <div style={{ animation: "fadeUp 0.3s ease", paddingTop: 48 }}>
-              <div style={{ textAlign: "center", marginBottom: 40 }}>
-                <h1 style={{
-                  fontFamily: "'DM Serif Display', serif", fontSize: 38,
-                  fontWeight: 400, margin: "0 0 12px", lineHeight: 1.15,
-                  background: `linear-gradient(135deg, ${COLORS.text} 60%, ${COLORS.accent})`,
-                  WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
-                }}>
-                  Find your next role.<br /><em>Intelligently.</em>
-                </h1>
-                <p style={{ color: COLORS.textMuted, fontSize: 15, lineHeight: 1.6, maxWidth: 460, margin: "0 auto" }}>
-                  Paste your resume below. The agent analyzes your profile, searches live job boards, scores fit, and drafts tailored cover letters.
-                </p>
-              </div>
-
-              {error && (
-                <div style={{
-                  background: COLORS.red + "15", border: `1px solid ${COLORS.red}44`,
-                  borderRadius: 8, padding: "12px 16px", marginBottom: 16,
-                  color: COLORS.red, fontSize: 13, fontFamily: "'DM Mono', monospace",
-                }}>{error}</div>
-              )}
-
-              <div style={{
-                background: COLORS.surface, border: `1px solid ${COLORS.border}`,
-                borderRadius: 12, overflow: "hidden",
-              }}>
-                <div style={{ padding: "16px 20px", borderBottom: `1px solid ${COLORS.border}`, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                  <span style={{ fontSize: 13, color: COLORS.textMuted, fontFamily: "'DM Mono', monospace", letterSpacing: "0.05em" }}>RESUME INPUT</span>
-                  <button
-                    onClick={() => fileRef.current?.click()}
-                    disabled={fileLoading}
-                    style={{
-                      background: "none", border: `1px solid ${COLORS.border}`, borderRadius: 5,
-                      color: fileLoading ? COLORS.accent : COLORS.textMuted, fontSize: 12, padding: "4px 12px", cursor: fileLoading ? "default" : "pointer",
-                      fontFamily: "'DM Sans', sans-serif", display: "inline-flex", alignItems: "center", gap: 6,
-                    }}>
-                    {fileLoading ? <><Spinner /> Reading…</> : "Upload PDF / DOCX / TXT"}
-                  </button>
-                  <input ref={fileRef} type="file" accept=".pdf,.docx,.doc,.txt,.md" onChange={handleFile} style={{ display: "none" }} />
-                </div>
-                <textarea
-                  value={resumeText}
-                  onChange={e => setResumeText(e.target.value)}
-                  placeholder="Paste your resume here — work experience, skills, education, accomplishments…"
-                  style={{
-                    width: "100%", minHeight: 280, background: "transparent",
-                    border: "none", outline: "none", padding: "18px 20px",
-                    color: COLORS.text, fontSize: 13, lineHeight: 1.65,
-                    fontFamily: "'DM Sans', sans-serif", resize: "vertical",
-                  }}
-                />
-                <div style={{ padding: "14px 20px", borderTop: `1px solid ${COLORS.border}`, display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 10 }}>
-                  <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-                    <span style={{ fontSize: 12, color: COLORS.textMuted, fontFamily: "'DM Mono', monospace" }}>
-                      {resumeText.trim().split(/\s+/).filter(Boolean).length} words
-                    </span>
-                    {fileError && (
-                      <span style={{ fontSize: 12, color: COLORS.red, fontFamily: "'DM Sans', sans-serif", maxWidth: 360 }}>
-                        ⚠ {fileError}
-                      </span>
-                    )}
-                    {!fileError && resumeText.length > 100 && (
-                      <span style={{ fontSize: 12, color: COLORS.green, fontFamily: "'DM Mono', monospace" }}>
-                        ✓ Resume loaded
-                      </span>
-                    )}
-                  </div>
-                  <Button onClick={analyzeAndSearch} disabled={resumeText.trim().length < 100}>
-                    Analyze & Find Jobs ✦
-                  </Button>
-                </div>
-              </div>
-
-              <div style={{ marginTop: 24, display: "flex", gap: 12, flexWrap: "wrap" }}>
-                {["Searches live job boards in real-time", "Scores each role for fit", "Drafts personalized cover letters"].map(f => (
-                  <div key={f} style={{
-                    background: COLORS.surface, border: `1px solid ${COLORS.border}`,
-                    borderRadius: 8, padding: "8px 14px", fontSize: 12,
-                    color: COLORS.textMuted, display: "flex", alignItems: "center", gap: 6,
-                  }}>
-                    <span style={{ color: COLORS.accent }}>✓</span> {f}
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Loading Stage */}
-          {(stage === "analyzing" || stage === "searching") && (
-            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: 400, gap: 20, animation: "fadeUp 0.3s ease" }}>
-              <div style={{
-                width: 64, height: 64, borderRadius: 16,
-                background: COLORS.accentDim, border: `1px solid ${COLORS.accent}44`,
-                display: "flex", alignItems: "center", justifyContent: "center", fontSize: 28,
-              }}>
-                {stage === "analyzing" ? "◈" : "⌕"}
-              </div>
-              <div style={{ textAlign: "center" }}>
-                <div style={{ fontFamily: "'DM Serif Display', serif", fontSize: 22, marginBottom: 8 }}>
-                  {stage === "analyzing" ? "Reading your resume…" : "Searching job boards…"}
-                </div>
-                <div style={{ color: COLORS.textMuted, fontSize: 13, display: "flex", alignItems: "center", gap: 8, justifyContent: "center" }}>
-                  <Spinner /> {statusMsg}
-                </div>
-              </div>
-              <div style={{ display: "flex", gap: 8 }}>
-                {["Profile extraction", "Skill mapping", "Job search", "Fit scoring"].map((step, i) => {
-                  const done = stage === "searching" ? i < 2 : i < 0;
-                  const active = stage === "analyzing" ? i === 0 : i === 2;
-                  return (
-                    <div key={step} style={{
-                      background: done ? COLORS.green + "22" : active ? COLORS.accentDim : COLORS.surfaceAlt,
-                      border: `1px solid ${done ? COLORS.green + "55" : active ? COLORS.accent + "55" : COLORS.border}`,
-                      borderRadius: 6, padding: "5px 10px", fontSize: 11,
-                      color: done ? COLORS.green : active ? COLORS.accent : COLORS.textMuted,
-                      fontFamily: "'DM Mono', monospace",
-                    }}>{done ? "✓ " : active ? "⟳ " : ""}{step}</div>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-
-          {/* Results Stage */}
-          {stage === "results" && (
-            <div style={{ animation: "fadeUp 0.3s ease", paddingTop: 32 }}>
-              {/* Profile summary */}
-              {profile && (
-                <div style={{
-                  background: COLORS.surfaceAlt, border: `1px solid ${COLORS.border}`,
-                  borderRadius: 10, padding: "16px 20px", marginBottom: 24,
-                  display: "flex", gap: 20, flexWrap: "wrap", alignItems: "center",
-                }}>
-                  <div>
-                    <div style={{ fontFamily: "'DM Serif Display', serif", fontSize: 20 }}>{profile.name}</div>
-                    <div style={{ fontSize: 13, color: COLORS.textMuted, marginTop: 2 }}>{profile.currentTitle} · {profile.yearsExperience}y exp · {profile.seniorityLevel}</div>
-                  </div>
-                  <div style={{ display: "flex", gap: 5, flexWrap: "wrap", flex: 1 }}>
-                    {(profile.topSkills || []).slice(0, 6).map(s => <Tag key={s} color={COLORS.blue}>{s}</Tag>)}
-                  </div>
-                </div>
-              )}
-
-              {/* Filters */}
-              <div style={{ display: "flex", gap: 10, marginBottom: 20, flexWrap: "wrap", alignItems: "center" }}>
-                <input
-                  value={searchQuery}
-                  onChange={e => setSearchQuery(e.target.value)}
-                  placeholder="Filter by title, company, or skill…"
-                  style={{
-                    background: COLORS.surface, border: `1px solid ${COLORS.border}`,
-                    borderRadius: 6, padding: "8px 14px", color: COLORS.text,
-                    fontSize: 13, fontFamily: "'DM Sans', sans-serif", flex: 1, minWidth: 180,
-                    outline: "none",
-                  }}
-                />
-                {["all", "remote", "onsite"].map(f => (
-                  <button key={f} onClick={() => setJobTypeFilter(f)} style={{
-                    background: jobTypeFilter === f ? COLORS.accentDim : COLORS.surface,
-                    border: `1px solid ${jobTypeFilter === f ? COLORS.accent + "66" : COLORS.border}`,
-                    borderRadius: 6, padding: "7px 14px", cursor: "pointer",
-                    color: jobTypeFilter === f ? COLORS.accent : COLORS.textMuted,
-                    fontSize: 12, fontFamily: "'DM Mono', monospace", letterSpacing: "0.04em",
-                  }}>{f.toUpperCase()}</button>
-                ))}
-                <span style={{ fontSize: 12, color: COLORS.textMuted, fontFamily: "'DM Mono', monospace" }}>
-                  {filteredJobs.length} roles
-                </span>
-              </div>
-
-              {/* Job cards */}
-              <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-                {filteredJobs.map((job, i) => (
-                  <div key={i} style={{ animation: `fadeUp 0.3s ease ${i * 0.05}s both` }}>
-                    <JobCard job={job} resumeText={resumeText} profile={profile} />
-                  </div>
-                ))}
-                {filteredJobs.length === 0 && (
-                  <div style={{ textAlign: "center", padding: 48, color: COLORS.textMuted }}>
-                    No roles match your filter.
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
-    </>
+// ── UI builders ────────────────────────────────────────────────────────────────
+function buildHeader() {
+  return el('div', { style: { background: 'var(--surface)', borderBottom: '1px solid var(--border)', padding: '14px 22px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '10px' } },
+    el('div', { style: { display: 'flex', alignItems: 'center', gap: '10px' } },
+      el('div', { style: { width: '28px', height: '28px', borderRadius: '7px', background: 'var(--accent)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '14px', color: '#0D0F14', fontWeight: 'bold' } }, '✦'),
+      el('div', {},
+        el('div', { style: { fontFamily: "'DM Serif Display',serif", fontSize: '16px', lineHeight: '1' } }, 'JobAgent'),
+        el('div', { style: { fontSize: '10px', color: 'var(--muted)', fontFamily: "'DM Mono',monospace", letterSpacing: '0.06em' } }, 'AI JOB SEARCH'),
+      ),
+    ),
+    el('div', { style: { display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' } },
+      state.profile ? el('span', { style: { fontSize: '12px', color: 'var(--muted)' } }, state.profile.name) : null,
+      el('button', {
+        class: 'btn-ghost',
+        style: { color: state.apiKey ? 'var(--green)' : 'var(--muted)', borderColor: state.apiKey ? 'rgba(74,222,128,.3)' : 'var(--border)', fontSize: '11px', fontFamily: "'DM Mono',monospace" },
+        onClick: () => set({ showKey: !state.showKey }),
+      }, state.apiKey ? '✓ API Key' : '+ API Key'),
+      state.stage === 'results' ? el('button', { class: 'btn-ghost', onClick: () => set({ stage: 'upload', profile: null, jobs: [] }) }, 'New Search') : null,
+    ),
   );
 }
+
+function buildKeyRow() {
+  if (!state.showKey) return null;
+  const input = el('input', {
+    type: 'password', value: state.apiKey, placeholder: 'sk-ant-…',
+    style: { flex: '1', minWidth: '180px', background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: '5px', padding: '6px 11px', fontSize: '13px', fontFamily: "'DM Mono',monospace", outline: 'none' },
+  });
+  input.addEventListener('input', e => { state.apiKey = e.target.value; localStorage.setItem('ja_key', e.target.value); });
+  return el('div', { style: { background: 'var(--surface2)', borderBottom: '1px solid var(--border)', padding: '10px 22px', display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' } },
+    el('span', { style: { fontSize: '11px', color: 'var(--muted)', fontFamily: "'DM Mono',monospace", whiteSpace: 'nowrap' } }, 'ANTHROPIC KEY'),
+    input,
+    el('button', { class: 'btn-primary', style: { padding: '6px 14px', fontSize: '12px' }, onClick: () => set({ showKey: false }) }, 'Done'),
+    el('a', { href: 'https://console.anthropic.com/settings/keys', target: '_blank', style: { fontSize: '11px', color: 'var(--muted)' } }, 'Get key ↗'),
+  );
+}
+
+function buildUpload() {
+  const fileInput = el('input', { type: 'file', accept: '.pdf,.docx,.doc,.txt,.md', style: { display: 'none' } });
+  fileInput.addEventListener('change', handleFile);
+
+  const ta = el('textarea', {
+    placeholder: 'Paste your resume here — experience, skills, education, accomplishments…',
+    style: { width: '100%', minHeight: '240px', background: 'transparent', border: 'none', outline: 'none', padding: '14px 16px', color: 'var(--text)', fontSize: '13px', lineHeight: '1.65', resize: 'vertical' },
+  });
+  ta.value = state.resumeText;
+  ta.addEventListener('input', e => { state.resumeText = e.target.value; updateWordCount(); });
+
+  function updateWordCount() {
+    wc.textContent = wordCount() + ' words';
+    ready.style.display = (!state.fileError && wordCount() > 50) ? '' : 'none';
+    runBtn.disabled = wordCount() < 50;
+  }
+
+  const wc = el('span', { style: { fontSize: '11px', color: 'var(--muted)', fontFamily: "'DM Mono',monospace" } }, wordCount() + ' words');
+  const ready = el('div', { style: { fontSize: '11px', color: 'var(--green)', fontFamily: "'DM Mono',monospace", marginTop: '3px', display: wordCount() > 50 ? '' : 'none' } }, '✓ Ready');
+  const fileErrEl = el('div', { style: { fontSize: '11px', color: 'var(--red)', marginTop: '3px', display: state.fileError ? '' : 'none' } }, state.fileError || '');
+
+  const uploadBtn = el('button', {
+    style: { background: 'none', border: '1px solid var(--border)', borderRadius: '5px', color: 'var(--muted)', fontSize: '12px', padding: '4px 11px', display: 'inline-flex', alignItems: 'center', gap: '5px' },
+    onClick: () => fileInput.click(),
+  }, state.fileLoading ? [el('span', { class: 'spinner' }), ' Reading…'] : 'Upload PDF / DOCX / TXT');
+
+  const runBtn = el('button', { class: 'btn-primary', onClick: runSearch });
+  runBtn.disabled = wordCount() < 50;
+  runBtn.textContent = 'Analyze & Find Jobs ✦';
+
+  return el('div', { class: 'fade', style: { paddingTop: '40px' } },
+    el('div', { style: { textAlign: 'center', marginBottom: '30px' } },
+      el('h1', { style: { fontFamily: "'DM Serif Display',serif", fontSize: '32px', fontWeight: '400', margin: '0 0 10px', lineHeight: '1.2' } },
+        'Find your next role.\u00A0', el('em', {}, 'Intelligently.')
+      ),
+      el('p', { style: { color: 'var(--muted)', fontSize: '14px', lineHeight: '1.6', maxWidth: '400px', margin: '0 auto' } },
+        'Upload or paste your resume. The agent reads your profile, searches live job boards, scores fit, and drafts cover letters.'
+      ),
+    ),
+    state.error ? el('div', { class: 'alert alert-err' }, state.error) : null,
+    !state.apiKey ? el('div', { class: 'alert alert-warn' }, '⚠ Add your Anthropic API key (top-right button) before searching.') : null,
+    el('div', { style: { background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '12px', overflow: 'hidden' } },
+      el('div', { style: { padding: '12px 16px', borderBottom: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' } },
+        el('span', { style: { fontSize: '11px', color: 'var(--muted)', fontFamily: "'DM Mono',monospace", letterSpacing: '0.05em' } }, 'RESUME'),
+        uploadBtn,
+        fileInput,
+      ),
+      ta,
+      el('div', { style: { padding: '11px 16px', borderTop: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' } },
+        el('div', {}, wc, fileErrEl, ready),
+        runBtn,
+      ),
+    ),
+    el('div', { style: { marginTop: '14px', display: 'flex', gap: '8px', flexWrap: 'wrap' } },
+      ...['Searches live job boards', 'Scores each role for fit', 'Drafts cover letters'].map(f =>
+        el('div', { style: { background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '7px', padding: '6px 11px', fontSize: '11px', color: 'var(--muted)', display: 'flex', alignItems: 'center', gap: '4px' } },
+          el('span', { style: { color: 'var(--accent)' } }, '✓'), ' ', f
+        )
+      ),
+    ),
+  );
+}
+
+function buildLoading() {
+  return el('div', { class: 'fade', style: { display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '420px', gap: '20px', textAlign: 'center' } },
+    el('div', { style: { width: '56px', height: '56px', borderRadius: '14px', background: 'rgba(240,168,48,.13)', border: '1px solid rgba(240,168,48,.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '26px' } }, '⌕'),
+    el('div', {},
+      el('div', { style: { fontFamily: "'DM Serif Display',serif", fontSize: '22px', marginBottom: '10px' } }, 'Searching live jobs…'),
+      el('div', { style: { color: 'var(--muted)', fontSize: '13px', display: 'flex', alignItems: 'center', gap: '8px', justifyContent: 'center' } },
+        el('span', { class: 'spinner' }),
+        el('span', { id: 'status-msg' }, state.statusMsg),
+      ),
+    ),
+    el('p', { style: { fontSize: '12px', color: 'var(--muted)', maxWidth: '280px', lineHeight: '1.6' } },
+      'Web search adds ~15–25s — results are pulled live from real job boards.'
+    ),
+  );
+}
+
+function buildScoreBadge(score) {
+  const color = score >= 85 ? 'var(--green)' : score >= 70 ? 'var(--accent)' : 'var(--muted)';
+  return el('div', { style: { display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '54px', height: '54px', borderRadius: '50%', border: '2px solid ' + color, color, flexShrink: '0' } },
+    el('span', { style: { fontSize: '17px', fontWeight: '700', lineHeight: '1', fontFamily: "'DM Mono',monospace" } }, score),
+    el('span', { style: { fontSize: '9px', color: 'var(--muted)', letterSpacing: '0.08em' } }, 'FIT'),
+  );
+}
+
+function buildJobCard(job) {
+  let expanded = false;
+  const desc = el('p', { style: { fontSize: '13px', color: 'var(--muted)', lineHeight: '1.6', marginTop: '8px', display: 'none' } }, job.description || '');
+
+  const moreBtn = el('button', { class: 'btn-ghost', onClick: () => {
+    expanded = !expanded;
+    desc.style.display = expanded ? '' : 'none';
+    moreBtn.textContent = expanded ? 'Less' : 'More';
+  }}, 'More');
+
+  const applyBtn = job.applyUrl
+    ? el('a', { href: job.applyUrl, target: '_blank', rel: 'noopener noreferrer' },
+        el('button', { style: { background: 'var(--accent)', border: 'none', borderRadius: '6px', color: '#0D0F14', fontWeight: '600', fontSize: '12px', padding: '6px 14px' } }, 'Apply →')
+      )
+    : null;
+
+  const clBtn = el('button', { class: 'btn-ghost', onClick: () => generateCoverLetter(job) }, '✦ Cover Letter');
+
+  return el('div', { class: 'card' },
+    el('div', { style: { display: 'flex', gap: '14px', alignItems: 'flex-start' } },
+      buildScoreBadge(job.fitScore || 75),
+      el('div', { style: { flex: '1', minWidth: '0' } },
+        el('div', { style: { fontFamily: "'DM Serif Display',serif", fontSize: '16px', marginBottom: '4px' } }, job.title),
+        el('div', { style: { fontSize: '12px', color: 'var(--muted)', marginBottom: '8px' } }, job.company + ' · ' + job.location + (job.remote ? ' · Remote' : '')),
+        el('div', { style: { display: 'flex', flexWrap: 'wrap', gap: '4px', marginBottom: '8px' } },
+          ...(job.tags || []).map(t => el('span', { class: 'tag' }, t))
+        ),
+        el('p', { style: { fontSize: '13px', color: 'var(--muted)', lineHeight: '1.6', margin: '0' } }, job.whyMatch),
+        desc,
+      ),
+    ),
+    el('div', { style: { display: 'flex', gap: '8px', marginTop: '14px', flexWrap: 'wrap' } },
+      applyBtn, clBtn, moreBtn,
+    ),
+  );
+}
+
+function buildResults() {
+  const jobs = filteredJobs();
+  const { profile } = state;
+
+  const filterInput = el('input', {
+    value: state.filter, placeholder: 'Filter by title, company, or skill…',
+    style: { background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '6px', padding: '7px 12px', color: 'var(--text)', fontSize: '13px', flex: '1', minWidth: '140px', outline: 'none' },
+  });
+  filterInput.addEventListener('input', e => set({ filter: e.target.value }));
+
+  const filterBtns = ['all', 'remote', 'onsite'].map(f =>
+    el('button', {
+      style: {
+        background: state.typeFilter === f ? 'rgba(240,168,48,.13)' : 'var(--surface)',
+        border: '1px solid ' + (state.typeFilter === f ? 'rgba(240,168,48,.4)' : 'var(--border)'),
+        borderRadius: '6px', padding: '6px 12px', fontSize: '11px',
+        color: state.typeFilter === f ? 'var(--accent)' : 'var(--muted)',
+        fontFamily: "'DM Mono',monospace",
+      },
+      onClick: () => set({ typeFilter: f }),
+    }, f.toUpperCase())
+  );
+
+  return el('div', { class: 'fade', style: { paddingTop: '24px' } },
+    profile ? el('div', { style: { background: 'var(--surface2)', border: '1px solid var(--border)', borderRadius: '10px', padding: '13px 16px', marginBottom: '16px', display: 'flex', gap: '14px', flexWrap: 'wrap', alignItems: 'center' } },
+      el('div', {},
+        el('div', { style: { fontFamily: "'DM Serif Display',serif", fontSize: '18px' } }, profile.name),
+        el('div', { style: { fontSize: '12px', color: 'var(--muted)', marginTop: '2px' } }, profile.currentTitle + ' · ' + profile.yearsExperience + 'y · ' + profile.seniorityLevel),
+      ),
+      el('div', { style: { display: 'flex', gap: '4px', flexWrap: 'wrap', flex: '1' } },
+        ...(profile.topSkills || []).slice(0, 6).map(s => el('span', { class: 'tag blue' }, s))
+      ),
+    ) : null,
+    el('div', { style: { display: 'flex', gap: '8px', marginBottom: '14px', flexWrap: 'wrap', alignItems: 'center' } },
+      filterInput, ...filterBtns,
+      el('span', { style: { fontSize: '11px', color: 'var(--muted)', fontFamily: "'DM Mono',monospace", whiteSpace: 'nowrap' } }, jobs.length + ' roles'),
+    ),
+    el('div', { style: { display: 'flex', flexDirection: 'column', gap: '10px' } },
+      ...jobs.map(buildJobCard),
+      jobs.length === 0 ? el('div', { style: { textAlign: 'center', padding: '44px', color: 'var(--muted)' } }, 'No roles match your filter.') : null,
+    ),
+  );
+}
+
+function buildCoverLetterModal() {
+  if (!state.coverLetterJob) return null;
+  const job = state.coverLetterJob;
+
+  const body = state.coverLetterLoading
+    ? el('div', { style: { display: 'flex', gap: '10px', alignItems: 'center', color: 'var(--muted)', fontSize: '14px' } }, el('span', { class: 'spinner' }), ' Drafting your cover letter…')
+    : el('pre', { style: { fontFamily: "'DM Sans',sans-serif", fontSize: '13px', lineHeight: '1.75', color: 'var(--text)', whiteSpace: 'pre-wrap', margin: '0' } }, state.coverLetter);
+
+  const copyBtn = !state.coverLetterLoading ? el('button', { class: 'btn-ghost', style: { fontSize: '12px' }, onClick: () => {
+    navigator.clipboard.writeText(state.coverLetter);
+    copyBtn.textContent = 'Copied!';
+    setTimeout(() => { copyBtn.textContent = 'Copy'; }, 2000);
+  }}, 'Copy') : null;
+
+  const overlay = el('div', {
+    style: { position: 'fixed', inset: '0', background: 'rgba(0,0,0,.82)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: '100', padding: '20px' },
+    onClick: e => { if (e.target === overlay) set({ coverLetterJob: null }); },
+  },
+    el('div', { style: { background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '12px', maxWidth: '620px', width: '100%', maxHeight: '85vh', display: 'flex', flexDirection: 'column', overflow: 'hidden' } },
+      el('div', { style: { padding: '15px 20px', borderBottom: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' } },
+        el('div', {},
+          el('div', { style: { fontSize: '11px', color: 'var(--muted)', fontFamily: "'DM Mono',monospace", marginBottom: '3px' } }, 'COVER LETTER'),
+          el('div', { style: { fontFamily: "'DM Serif Display',serif", fontSize: '17px' } }, job.title + ' · ' + job.company),
+        ),
+        el('div', { style: { display: 'flex', gap: '8px' } },
+          copyBtn,
+          el('button', { class: 'btn-ghost', style: { fontSize: '13px' }, onClick: () => set({ coverLetterJob: null }) }, '✕'),
+        ),
+      ),
+      el('div', { style: { padding: '20px', overflowY: 'auto', flex: '1' } }, body),
+    ),
+  );
+  return overlay;
+}
+
+// ── Main render ────────────────────────────────────────────────────────────────
+function renderApp() {
+  const app = document.getElementById('app');
+  app.innerHTML = '';
+
+  const header = buildHeader();
+  const keyRow = buildKeyRow();
+
+  let content;
+  if (state.stage === 'upload') content = buildUpload();
+  else if (state.stage === 'loading') content = buildLoading();
+  else content = buildResults();
+
+  const modal = buildCoverLetterModal();
+
+  const inner = el('div', { style: { maxWidth: '720px', margin: '0 auto', padding: '0 16px 60px' } }, content);
+
+  app.appendChild(header);
+  if (keyRow) app.appendChild(keyRow);
+  app.appendChild(inner);
+  if (modal) app.appendChild(modal);
+
+  // Keep status msg live during loading without full re-render
+  if (state.stage === 'loading') {
+    const sm = document.getElementById('status-msg');
+    if (sm) sm.textContent = state.statusMsg;
+  }
+}
+
+// ── Boot ───────────────────────────────────────────────────────────────────────
+renderApp();
+</script>
+</body>
+</html>
