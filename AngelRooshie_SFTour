@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0d1f3c">
+<title>SF Waterfront Explorer</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400;1,600&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --paper:  #eef3fb; --paper2: #dde7f5; --paper3: #c8d9ef;
+  --ink:    #0d1f3c; --ink2:   #1e3a6e; --ink3:   #5a7aa8;
+  --border: rgba(20,50,120,0.10); --border2: rgba(20,50,120,0.22);
+  --shadow: rgba(10,25,70,0.18); --ocean: #1a4a8a; --green: #1a8848;
+  --glass:  rgba(238,243,251,0.72);
+  --glass2: rgba(221,231,245,0.80);
+}
+
+/* ── Staryu cursor ── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden}
+body{font-family:'Nunito',sans-serif;color:var(--ink);
+  cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cpolygon points='16,2 19.1,11.4 28.5,11.8 21.2,17.6 23.7,26.9 16,21.4 8.3,26.9 10.8,17.6 3.5,11.8 12.9,11.4' fill='%23c8a050' stroke='%23906820' stroke-width='1'/%3E%3Ccircle cx='16' cy='16' r='4' fill='%23e02020'/%3E%3Ccircle cx='14.5' cy='14.5' r='1.6' fill='%23ffffff' opacity='0.7'/%3E%3C/svg%3E") 16 16,crosshair}
+
+/* ── Map + ocean tint ── */
+#map{position:fixed;inset:0;z-index:0;background:#b8d4ee}
+.leaflet-tile-pane{filter:hue-rotate(188deg) saturate(0.55) brightness(1.04)}
+.leaflet-control-attribution{font-size:8px!important;opacity:.35!important;background:rgba(238,243,251,.8)!important}
+.leaflet-control-zoom a{background:var(--glass)!important;backdrop-filter:blur(12px);color:var(--ink)!important;border-color:var(--border2)!important}
+
+/* ── Marker icon + pop-in animation ── */
+.icon-wrap{background:transparent!important;border:none!important;overflow:visible!important}
+.m-icon{
+  width:36px;height:36px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:17px;position:relative;
+  box-shadow:0 3px 10px rgba(10,25,70,.35),0 0 0 2.5px rgba(255,255,255,.96);
+  cursor:inherit;
+  animation:markerPop .4s cubic-bezier(.34,1.56,.64,1) both;
+  transition:transform .14s cubic-bezier(.34,1.56,.64,1),box-shadow .14s;
+}
+@keyframes markerPop{0%{transform:scale(0) translateY(8px);opacity:0}100%{transform:scale(1);opacity:1}}
+.m-icon.sel{transform:scale(1.32)!important;box-shadow:0 5px 18px rgba(10,25,70,.45),0 0 0 3px #fff}
+.m-icon.done{opacity:.42}
+.m-chk{position:absolute;inset:0;border-radius:10px;background:rgba(10,25,70,.55);display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;font-weight:800}
+
+/* Tooltip */
+.leaflet-tooltip.lbl{background:rgba(238,243,251,.97)!important;border:1px solid rgba(20,50,120,.22)!important;border-radius:6px!important;font-family:'Lora',serif!important;font-style:italic!important;font-size:10.5px!important;color:var(--ink)!important;padding:3px 9px!important;box-shadow:0 2px 12px rgba(10,25,70,.14)!important;pointer-events:none!important;white-space:nowrap!important}
+.leaflet-tooltip.lbl::before{display:none!important}
+
+/* ── Loading ── */
+#loading{position:fixed;inset:0;z-index:9999;background:linear-gradient(155deg,#0a1628 0%,#162d5a 55%,#1c4882 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;transition:opacity .5s}
+#loading.fade{opacity:0;pointer-events:none}
+.wave{font-size:44px;animation:float 2.2s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+#loading h2{font-family:'Lora',serif;font-size:22px;font-weight:600;color:#eef3fb;letter-spacing:-.3px}
+#loading p{font-family:'Lora',serif;font-style:italic;font-size:13px;color:rgba(180,205,240,.8)}
+.dots{display:flex;gap:7px;margin-top:2px}
+.dots span{width:7px;height:7px;border-radius:50%;background:rgba(180,205,240,.65);animation:bob 1.2s ease-in-out infinite}
+.dots span:nth-child(2){animation-delay:.18s}.dots span:nth-child(3){animation-delay:.36s}
+@keyframes bob{0%,60%,100%{transform:translateY(0);opacity:.45}30%{transform:translateY(-8px);opacity:1}}
+#load-status{font-family:'Nunito',sans-serif;font-size:11px;color:rgba(150,185,230,.65);min-height:16px}
+
+/* ── Filter bar ── */
+#top-bar{position:fixed;top:0;left:0;right:0;z-index:600;padding:calc(env(safe-area-inset-top,0px)+10px) 12px 8px;background:linear-gradient(to bottom,rgba(238,243,251,.98) 60%,transparent);pointer-events:none}
+#pill-scroll{display:flex;gap:6px;overflow-x:auto;pointer-events:all;scrollbar-width:none;padding-bottom:2px;padding-right:108px}
+#pill-scroll::-webkit-scrollbar{display:none}
+.pill{flex-shrink:0;padding:7px 12px;border-radius:20px;font-size:12px;font-weight:700;white-space:nowrap;border:1.5px solid var(--border2);background:var(--glass);backdrop-filter:blur(10px);color:var(--ink2);box-shadow:0 2px 8px var(--shadow);transition:all .15s;cursor:inherit;position:relative}
+.pill:hover{background:var(--glass2)}
+.pill.active{color:#fff;border-color:transparent;box-shadow:0 2px 14px rgba(10,25,70,.3)}
+.pill .time-dot{position:absolute;top:4px;right:5px;width:6px;height:6px;border-radius:50%;background:#f4a61a;border:1.5px solid #fff;animation:pulseDot 2s ease-in-out infinite}
+@keyframes pulseDot{0%,100%{transform:scale(1)}50%{transform:scale(1.4)}}
+
+/* ── Action strip ── */
+#action-strip{display:flex;gap:6px;padding:5px 0 0;pointer-events:all;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
+#action-strip::-webkit-scrollbar{display:none}
+.action-btn{flex-shrink:0;padding:5px 12px;border-radius:16px;font-size:11px;font-weight:700;white-space:nowrap;border:1.5px solid var(--border2);background:var(--glass);backdrop-filter:blur(10px);color:var(--ink2);box-shadow:0 1px 6px var(--shadow);cursor:inherit;display:flex;align-items:center;gap:5px;transition:all .15s}
+.action-btn:hover{background:var(--glass2)}
+.action-btn.active{background:var(--ocean);color:#fff;border-color:var(--ocean)}
+#time-banner{font-size:10px;color:var(--ink3);font-family:'Lora',serif;font-style:italic;display:flex;align-items:center;gap:4px;flex-shrink:0}
+
+/* ── Checklist button ── */
+#cl-btn{position:fixed;top:calc(env(safe-area-inset-top,0px)+10px);right:12px;z-index:650;display:flex;align-items:center;gap:7px;padding:8px 14px;border-radius:20px;background:var(--glass);backdrop-filter:blur(12px);border:1.5px solid var(--border2);box-shadow:0 2px 12px var(--shadow);font-size:12px;font-weight:800;color:var(--ink2);cursor:inherit;transition:background .15s}
+#cl-btn:hover{background:var(--glass2)}
+#cl-badge{background:var(--ink);color:var(--paper);border-radius:10px;padding:1px 7px;font-size:10px;min-width:20px;text-align:center;transition:background .3s,transform .2s}
+#cl-badge.lit{background:var(--green);transform:scale(1.12)}
+
+/* ── Checklist panel — glassmorphism ── */
+#cl-panel{position:fixed;top:0;right:0;bottom:0;z-index:800;width:min(400px,100vw);background:var(--glass);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);border-left:1.5px solid rgba(255,255,255,.4);box-shadow:-8px 0 40px rgba(10,25,70,.22);display:flex;flex-direction:column;overflow:hidden;transform:translateX(100%);transition:transform .32s cubic-bezier(.32,.72,0,1)}
+#cl-panel.open{transform:translateX(0)}
+#cl-head{padding:16px 20px 10px;flex-shrink:0;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+#cl-head h2{font-family:'Lora',serif;font-size:18px;font-weight:600;color:var(--ink)}
+.cl-x{width:32px;height:32px;border-radius:50%;background:var(--glass2);border:1.5px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:14px;cursor:inherit}
+.cl-x:hover{background:var(--paper3)}
+
+/* Neighborhood rings */
+#nb-rings{display:flex;gap:8px;padding:10px 20px;border-bottom:1px solid var(--border);flex-shrink:0;justify-content:space-around}
+.nb-ring{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:inherit}
+.nb-ring svg{width:44px;height:44px}
+.nb-ring-label{font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink3);text-align:center;line-height:1.2;max-width:50px}
+.nb-ring-count{font-size:8px;color:var(--ink3);font-family:'Lora',serif}
+
+#cl-prog{padding:8px 20px 10px;flex-shrink:0;border-bottom:1px solid var(--border)}
+.prog-lbl{font-size:11px;color:var(--ink3);font-family:'Lora',serif;font-style:italic;margin-bottom:5px;display:block}
+.prog-track{height:5px;background:var(--border);border-radius:3px;overflow:hidden}
+.prog-fill{height:100%;border-radius:3px;background:linear-gradient(to right,#1a8848,#38b870);transition:width .5s cubic-bezier(.4,0,.2,1)}
+
+#cl-search-wrap{padding:8px 14px;border-bottom:1px solid var(--border);flex-shrink:0}
+#cl-search{width:100%;padding:7px 11px;border-radius:10px;border:1.5px solid var(--border2);background:rgba(255,255,255,.5);font-family:'Nunito',sans-serif;font-size:12px;color:var(--ink);outline:none;cursor:text}
+#cl-search:focus{border-color:var(--ocean);background:rgba(255,255,255,.75)}
+#cl-search::placeholder{color:var(--ink3);font-style:italic}
+
+#cl-body{flex:1;overflow-y:auto;padding:4px 0 60px;scrollbar-width:thin;scrollbar-color:var(--border2) transparent}
+#cl-body::-webkit-scrollbar{width:3px}
+#cl-body::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+
+.cl-sec-hdr{padding:10px 18px 4px;display:flex;align-items:center;gap:8px;font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--ink3);font-weight:700;position:sticky;top:0;background:rgba(238,243,251,.85);backdrop-filter:blur(8px);z-index:1;border-bottom:1px solid var(--border)}
+.cl-sec-hdr.is-active{background:rgba(221,231,245,.9);border-top:2px solid var(--border2)}
+.cl-sec-dot{width:8px;height:8px;border-radius:3px;flex-shrink:0}
+.cl-sec-count{margin-left:auto;font-size:9px}
+.cl-item{display:flex;align-items:center;gap:10px;padding:8px 18px;cursor:inherit;transition:background .1s;position:relative}
+.cl-item:hover{background:rgba(221,231,245,.55)}
+.cl-item.done .cl-name{text-decoration:line-through;color:var(--ink3)}
+.cl-box{width:19px;height:19px;border-radius:4px;flex-shrink:0;border:1.5px solid var(--border2);background:rgba(255,255,255,.6);display:flex;align-items:center;justify-content:center;font-size:10px;transition:all .18s}
+.cl-item.done .cl-box{background:var(--ink);border-color:var(--ink);color:var(--paper);animation:ckpop .22s cubic-bezier(.34,1.56,.64,1)}
+@keyframes ckpop{0%{transform:scale(.6)}100%{transform:scale(1)}}
+.cl-info{flex:1;min-width:0}
+.cl-name{font-size:13px;color:var(--ink2);line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cl-sub{font-size:10px;color:var(--ink3);font-family:'Lora',serif;font-style:italic}
+.cl-stars{color:#f4a61a;letter-spacing:-.5px}
+.cl-note-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:#f4a61a;margin-left:4px;vertical-align:middle}
+.cl-dist{font-size:10px;color:var(--ocean);font-weight:700;flex-shrink:0;margin-right:4px}
+
+#cl-cel{display:none;margin:10px 14px;padding:14px 16px;background:linear-gradient(135deg,#e0f0e8,#c8e8d8);border:1.5px solid rgba(26,136,72,.28);border-radius:14px;text-align:center}
+#cl-cel h3{font-family:'Lora',serif;font-size:18px;color:var(--ink);margin-bottom:4px}
+#cl-cel p{font-family:'Lora',serif;font-style:italic;font-size:12px;color:var(--ink3)}
+
+/* ── Detail sheet — glassmorphism ── */
+#detail{position:fixed;left:0;right:0;bottom:0;z-index:700;max-height:82vh;background:var(--glass);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);border-radius:22px 22px 0 0;box-shadow:0 -8px 40px var(--shadow),0 -1px 0 rgba(255,255,255,.4);transform:translateY(100%);transition:transform .32s cubic-bezier(.32,.72,0,1);display:flex;flex-direction:column;overflow:hidden}
+#detail.open{transform:translateY(0)}
+.ds-pull{padding:12px 0 6px;display:flex;justify-content:center;flex-shrink:0;cursor:inherit}
+.ds-bar{width:36px;height:4px;border-radius:2px;background:var(--border2);transition:background .2s}
+.ds-pull:hover .ds-bar{background:var(--ink3)}
+#detail-body{overflow-y:auto;padding:0 20px 36px;scrollbar-width:none}
+#detail-body::-webkit-scrollbar{display:none}
+
+.d-photo{width:100%;height:175px;object-fit:cover;border-radius:12px;margin-bottom:12px;background:var(--paper2);display:block}
+.d-rating{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.d-stars-empty{color:#dde7f5;letter-spacing:1px;font-size:16px}
+.d-stars-wrap{position:relative;display:inline-block}
+.d-stars-full{position:absolute;top:0;left:0;overflow:hidden;white-space:nowrap;color:#f4a61a;letter-spacing:1px;font-size:16px}
+.d-rating-num{font-size:14px;font-weight:800;color:var(--ink2)}
+.d-rating-ct{font-size:11px;color:var(--ink3)}
+.d-open{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;padding:3px 9px;border-radius:8px;margin-bottom:10px}
+.d-open.yes{background:rgba(224,240,232,.8);color:#1a6838}
+.d-open.no{background:rgba(253,236,234,.8);color:#a02020}
+.d-dot{width:6px;height:6px;border-radius:50%}
+.d-open.yes .d-dot{background:#1a8848}
+.d-open.no .d-dot{background:#e03030}
+.d-strip{height:3px;border-radius:2px;margin-bottom:10px}
+.d-name{font-family:'Lora',serif;font-size:21px;font-weight:600;color:var(--ink);letter-spacing:-.3px;margin-bottom:4px;line-height:1.2}
+.d-badge{display:inline-block;font-size:10px;font-weight:700;padding:3px 11px;border-radius:10px;color:#fff;letter-spacing:.05em;margin-bottom:10px}
+.d-meta{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}
+.d-row{display:flex;align-items:flex-start;gap:9px;font-size:12px;color:var(--ink2);line-height:1.45}
+.d-icon{width:18px;text-align:center;flex-shrink:0;margin-top:1px;font-size:13px}
+.d-row a{color:var(--ink2);text-decoration:underline;text-underline-offset:2px}
+.d-hours-toggle{font-size:11px;color:var(--ink3);text-decoration:underline;cursor:inherit;margin-top:2px;display:inline-block}
+.d-hours-list{display:none;margin-top:5px;padding:7px 11px;background:rgba(221,231,245,.6);border-radius:8px}
+.d-hours-list.open{display:block}
+.d-hour-row{font-size:11px;color:var(--ink2);margin-bottom:2px}
+.d-note{font-family:'Lora',serif;font-style:italic;font-size:12px;color:var(--ink3);line-height:1.7;margin-bottom:12px;padding:9px 13px;background:rgba(221,231,245,.55);border-radius:10px;border-left:3px solid var(--ocean)}
+.d-actions{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.d-btn{padding:9px 16px;border-radius:20px;font-size:12px;font-weight:700;font-family:'Nunito',sans-serif;border:1.5px solid var(--border2);background:rgba(255,255,255,.55);color:var(--ink2);cursor:inherit;display:flex;align-items:center;gap:6px;text-decoration:none;transition:all .15s}
+.d-btn:hover{background:rgba(255,255,255,.8)}
+.d-btn.primary{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.d-btn.primary:hover{background:var(--ink2)}
+.d-btn.visited{background:var(--green);color:#fff;border-color:var(--green)}
+
+/* Notes section in detail */
+.d-notes-wrap{margin-top:2px}
+.d-notes-label{font-size:10px;text-transform:uppercase;letter-spacing:.09em;color:var(--ink3);font-weight:700;margin-bottom:5px;display:block}
+#d-notes-ta{width:100%;min-height:64px;padding:10px 12px;border-radius:10px;border:1.5px solid var(--border2);background:rgba(255,255,255,.55);font-family:'Lora',serif;font-style:italic;font-size:12.5px;color:var(--ink2);line-height:1.65;resize:none;outline:none;cursor:text;transition:border-color .15s,background .15s}
+#d-notes-ta:focus{border-color:var(--ocean);background:rgba(255,255,255,.8)}
+#d-notes-ta::placeholder{color:var(--ink3)}
+
+/* ── Bottom controls ── */
+#area-bar{position:fixed;bottom:20px;left:12px;z-index:600;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;max-width:calc(100vw - 64px)}
+#area-bar::-webkit-scrollbar{display:none}
+.ap{flex-shrink:0;padding:7px 12px;border-radius:20px;font-size:11px;font-weight:700;background:var(--glass);backdrop-filter:blur(10px);border:1.5px solid var(--border2);box-shadow:0 2px 8px var(--shadow);color:var(--ink2);cursor:inherit;transition:all .15s;white-space:nowrap}
+.ap:hover{background:var(--glass2)}
+.ap.active{background:var(--ocean);color:#fff;border-color:var(--ocean)}
+
+#stats{position:fixed;bottom:20px;right:56px;z-index:600;background:var(--glass);backdrop-filter:blur(10px);border:1.5px solid var(--border2);border-radius:20px;padding:7px 14px;box-shadow:0 2px 12px var(--shadow);font-size:11px;color:var(--ink3);font-family:'Lora',serif;font-style:italic;white-space:nowrap;pointer-events:none}
+#refresh{position:fixed;bottom:20px;right:12px;z-index:600;width:40px;height:40px;border-radius:50%;background:var(--glass);backdrop-filter:blur(10px);border:1.5px solid var(--border2);box-shadow:0 2px 10px var(--shadow);display:flex;align-items:center;justify-content:center;font-size:18px;cursor:inherit}
+#refresh.spin{animation:spinit .8s linear infinite}
+@keyframes spinit{to{transform:rotate(360deg)}}
+
+/* ── Confetti ── */
+.confetti-p{position:fixed;width:8px;height:8px;border-radius:2px;pointer-events:none;z-index:9999;animation:cflyup .9s ease-out forwards}
+@keyframes cflyup{0%{transform:translate(0,0) rotate(0deg);opacity:1}100%{transform:translate(var(--dx),var(--dy)) rotate(720deg);opacity:0}}
+
+/* ── Error banner ── */
+#err-banner{position:fixed;top:70px;left:50%;transform:translateX(-50%);z-index:700;background:#fff3cd;border:1.5px solid #ffc107;border-radius:12px;padding:9px 16px;font-size:12px;color:#856404;font-family:'Nunito',sans-serif;box-shadow:0 2px 12px rgba(0,0,0,.12);max-width:90vw;display:none;align-items:center;gap:8px}
+#err-banner button{padding:3px 9px;border-radius:8px;background:#ffc107;border:none;font-size:11px;font-weight:700;color:#333;cursor:inherit}
+
+#toast{position:fixed;bottom:68px;left:50%;transform:translateX(-50%);z-index:900;background:rgba(13,31,60,.92);color:var(--paper);padding:8px 18px;border-radius:20px;font-size:12px;font-family:'Nunito',sans-serif;white-space:nowrap;pointer-events:none;opacity:0;transition:opacity .3s}
+#toast.show{opacity:1}
+</style>
+</head>
+<body>
+
+<div id="loading">
+  <div class="wave">🌊</div>
+  <h2>SF Waterfront Explorer</h2>
+  <p>Dogpatch · Potrero Hill · Mission Bay · South Beach</p>
+  <div class="dots"><span></span><span></span><span></span></div>
+  <div id="load-status">Connecting to OpenStreetMap…</div>
+</div>
+
+<div id="map"></div>
+
+<div id="top-bar">
+  <div id="pill-scroll">
+    <button class="pill active" data-cat="all"   onclick="setFilter(this,'all')">All</button>
+    <button class="pill" data-cat="food"          onclick="setFilter(this,'food')">🍽️ Food</button>
+    <button class="pill" data-cat="cafe"          onclick="setFilter(this,'cafe')">☕ Cafes</button>
+    <button class="pill" data-cat="bar"           onclick="setFilter(this,'bar')">🍺 Bars</button>
+    <button class="pill" data-cat="shop"          onclick="setFilter(this,'shop')">🛍️ Shops</button>
+    <button class="pill" data-cat="florist"       onclick="setFilter(this,'florist')">🌸 Flowers</button>
+    <button class="pill" data-cat="nature"        onclick="setFilter(this,'nature')">🌿 Nature</button>
+    <button class="pill" data-cat="culture"       onclick="setFilter(this,'culture')">🎨 Culture</button>
+  </div>
+  <div id="action-strip">
+    <button class="action-btn" id="geo-btn" onclick="toggleGeo(this)">📍 Near Me</button>
+    <button class="action-btn" onclick="randomAdventure()">🎲 Surprise Us</button>
+    <div id="time-banner"></div>
+  </div>
+</div>
+
+<button id="cl-btn" onclick="toggleCL()">⭐ Our List <span id="cl-badge">0</span></button>
+
+<div id="cl-panel">
+  <div id="cl-head">
+    <h2>⭐ Our Adventure List</h2>
+    <div class="cl-x" onclick="toggleCL()">✕</div>
+  </div>
+  <div id="nb-rings"></div>
+  <div id="cl-prog">
+    <span class="prog-lbl" id="prog-lbl">Loading…</span>
+    <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+  </div>
+  <div id="cl-search-wrap">
+    <input type="text" id="cl-search" placeholder="Search places…" oninput="searchCL(this.value)">
+  </div>
+  <div id="cl-cel">
+    <h3>🎉 Adventure complete!</h3>
+    <p>Every single spot explored. What a date!</p>
+  </div>
+  <div id="cl-body"></div>
+</div>
+
+<div id="detail">
+  <div class="ds-pull" onclick="closeDetail()"><div class="ds-bar"></div></div>
+  <div id="detail-body"></div>
+</div>
+
+<div id="area-bar">
+  <button class="ap" onclick="goArea('dogpatch',this)">🏭 Dogpatch</button>
+  <button class="ap active" onclick="goArea('all',this)">🌊 All</button>
+  <button class="ap" onclick="goArea('potrero',this)">⛰️ Potrero</button>
+  <button class="ap" onclick="goArea('missionbay',this)">🏟️ Mission Bay</button>
+  <button class="ap" onclick="goArea('southbeach',this)">⚾ South Beach</button>
+</div>
+<div id="stats">Loading…</div>
+<button id="refresh" title="Refresh" onclick="loadData(true)">↻</button>
+
+<div id="err-banner">
+  <span>⚠️ <span id="err-msg">Could not reach OpenStreetMap.</span></span>
+  <button onclick="loadData(true)">Retry</button>
+  <button onclick="document.getElementById('err-banner').style.display='none'">✕</button>
+</div>
+<div id="toast"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+/* ══════════════════════════════════════════════════════
+   CONFIG
+══════════════════════════════════════════════════════ */
+const BBOX = '37.745,-122.415,37.800,-122.362';
+
+const AREAS = {
+  all:        { center:[37.771,-122.392], zoom:14.1 },
+  dogpatch:   { center:[37.758,-122.387], zoom:15.4 },
+  potrero:    { center:[37.763,-122.400], zoom:15.4 },
+  missionbay: { center:[37.772,-122.393], zoom:15.4 },
+  southbeach: { center:[37.782,-122.388], zoom:15.4 }
+};
+
+// Bounding boxes for neighborhood assignment
+const NB_BOUNDS = {
+  dogpatch:   { label:'Dogpatch',    emoji:'🏭', color:'#1840b0', s:37.748,n:37.768,w:-122.402,e:-122.372 },
+  potrero:    { label:'Potrero',     emoji:'⛰️', color:'#2850b0', s:37.752,n:37.778,w:-122.415,e:-122.388 },
+  missionbay: { label:'Mission Bay', emoji:'🏟️', color:'#0858c8', s:37.762,n:37.782,w:-122.408,e:-122.374 },
+  southbeach: { label:'S Beach',     emoji:'⚾', color:'#3878b8', s:37.775,n:37.800,w:-122.405,e:-122.365 }
+};
+
+const CATS = {
+  food:    { label:'Food & Drink',      color:'#e03030', emoji:'🍽️' },
+  cafe:    { label:'Cafes & Coffee',    color:'#b86800', emoji:'☕'  },  // boba merged here
+  bar:     { label:'Bars & Nightlife',  color:'#5830c0', emoji:'🍺' },
+  shop:    { label:'Shops & Boutiques', color:'#0858c8', emoji:'🛍️' },
+  florist: { label:'Flowers & Plants',  color:'#c01870', emoji:'🌸' },
+  nature:  { label:'Parks & Nature',    color:'#1a8848', emoji:'🌿' },
+  culture: { label:'Arts & Culture',    color:'#1840b0', emoji:'🎨' },
+  other:   { label:'Other',             color:'#4a6080', emoji:'📍' }
+};
+
+const PILL_COLORS = {
+  all:'#1a4a8a', food:'#e03030', cafe:'#b86800',
+  bar:'#5830c0', shop:'#0858c8', florist:'#c01870', nature:'#1a8848', culture:'#1840b0'
+};
+
+const SEARCH_CENTERS = [
+  { label:'Dogpatch',    lat:37.757, lng:-122.387, radius:900  },
+  { label:'Potrero',     lat:37.763, lng:-122.400, radius:950  },
+  { label:'Mission Bay', lat:37.772, lng:-122.393, radius:800  },
+  { label:'South Beach', lat:37.783, lng:-122.389, radius:850  }
+];
+
+const SEARCH_GROUPS = [
+  { cat:'food',    types:['restaurant','fast_food','food_court','ice_cream','juice_bar'] },
+  { cat:'cafe',    types:['cafe','coffee_shop','bakery','bubble_tea'] },  // boba in cafe
+  { cat:'bar',     types:['bar','pub','nightclub','brewery','biergarten','taproom'] },
+  { cat:'shop',    types:['clothing_store','book_store','gift_shop','jewelry_store',
+                          'home_goods_store','furniture_store','bicycle_store','ceramics','art'] },
+  { cat:'florist', types:['florist','garden_centre'] },
+  { cat:'nature',  types:['park','garden','nature_reserve','playground'] },
+  { cat:'culture', types:['museum','gallery','attraction','artwork','viewpoint','historic'] }
+];
+
+const OVERPASS_ENDPOINTS = [
+  'https://overpass-api.de/api/interpreter',
+  'https://overpass.kumi.systems/api/interpreter',
+  'https://overpass.openstreetmap.ru/api/interpreter'
+];
+
+const SUPPLEMENT = [
+  { id:'s-pier70',    name:'Pier 70',                    lat:37.7618,lng:-122.3824, cat:'culture', desc:'19th-century shipyard turned arts space — a SF landmark with iron buildings and sweeping bay views.' },
+  { id:'s-crane',     name:'Crane Cove Park',            lat:37.7598,lng:-122.3832, cat:'nature',  desc:'New waterfront park with a designated bay swimming beach. Sunsets here are unforgettable.' },
+  { id:'s-mnsp',      name:'Minnesota Street Project',   lat:37.7604,lng:-122.3893, cat:'culture', desc:"SF's premier contemporary art complex — multiple galleries in a converted industrial building. Free." },
+  { id:'s-ramp',      name:'The Ramp',                   lat:37.7661,lng:-122.3817, cat:'bar',     desc:'Classic waterfront dive bar on the water — live music weekends, outdoor deck, glorious bay views.' },
+  { id:'s-illinois',  name:'Illinois St Waterfront',     lat:37.7632,lng:-122.3810, cat:'nature',  desc:'Hidden waterfront path with Bay Bridge views — barely anyone knows about it.' },
+  { id:'s-piccino',   name:'Piccino',                    lat:37.7584,lng:-122.3876, cat:'food',    desc:'A Dogpatch institution — excellent Neapolitan pizza in an airy industrial space.' },
+  { id:'s-sandbox',   name:'Sandbox Bakery',             lat:37.7576,lng:-122.3878, cat:'cafe',    desc:'Outstanding pastries and espresso. The morning croissant ritual here is unmissable.' },
+  { id:'s-reveille',  name:'Réveille Coffee Co.',        lat:37.7572,lng:-122.3869, cat:'cafe',    desc:'One of SF\'s best independent roasters. Lovely space, exceptional pour-overs.' },
+  { id:'s-revel',     name:'Revel',                      lat:37.7580,lng:-122.3872, cat:'florist', desc:'Beautiful plant and lifestyle shop in Dogpatch — great for botanicals, ceramics, and home goods.' },
+  { id:'s-hardknox',  name:'Hard Knox Cafe',             lat:37.7578,lng:-122.3893, cat:'food',    desc:'SF institution for fried chicken, waffles, and proper Southern comfort food.' },
+  { id:'s-serpentine',name:'Serpentine',                 lat:37.7568,lng:-122.3873, cat:'food',    desc:'Casual American kitchen in a converted garage. Great burgers, classic Dogpatch energy.' },
+  { id:'s-magnolia',  name:'Magnolia Brewing Dogpatch',  lat:37.7572,lng:-122.3882, cat:'bar',     desc:'Excellent craft brewery with rotating taps and a great back patio.' },
+  { id:'s-popsons',   name:'Popsons Burgers',            lat:37.7570,lng:-122.3868, cat:'food',    desc:'Smash burgers done right — tight menu, high quality, always a line for good reason.' },
+  { id:'s-dogbould',  name:'Dogpatch Boulders',          lat:37.7575,lng:-122.3871, cat:'other',   desc:'Beloved outdoor bouldering spot tucked into the neighborhood. Community-focused, free.' },
+  { id:'s-heath',     name:'Heath Ceramics',             lat:37.7580,lng:-122.3875, cat:'shop',    desc:'Iconic American ceramics brand — factory store where you can watch pieces being made.' },
+  { id:'s-dandelion', name:'Dandelion Chocolate',        lat:37.7570,lng:-122.3871, cat:'cafe',    desc:'Bean-to-bar chocolate maker — the café is magical for hot chocolate and pastries.' },
+  { id:'s-mckinley',  name:'McKinley Square',            lat:37.7611,lng:-122.3980, cat:'nature',  desc:'Potrero Hill summit — sweeping panoramas of SF, the bay, and Bay Bridge on clear days.' },
+  { id:'s-jackson',   name:'Jackson Playground',         lat:37.7555,lng:-122.4002, cat:'nature',  desc:'Community park at the base of Potrero Hill with tennis and green space.' },
+  { id:'s-plow',      name:'Plow',                       lat:37.7622,lng:-122.3985, cat:'food',    desc:'Legendary Potrero Hill brunch. Egg dishes worth every minute of the wait.' },
+  { id:'s-farley',    name:"Farley's Coffee",            lat:37.7624,lng:-122.3988, cat:'cafe',    desc:'Neighborhood institution since 1989. Loyal regulars, great coffee, warm energy.' },
+  { id:'s-goathill',  name:'Goat Hill Pizza',            lat:37.7640,lng:-122.4010, cat:'food',    desc:'Potrero Hill pizza classic — all-you-can-eat Monday nights are a neighborhood tradition.' },
+  { id:'s-boh',       name:'Bottom of the Hill',         lat:37.7595,lng:-122.4029, cat:'bar',     desc:'Legendary SF live music venue. Indie and punk shows most nights — check their calendar.' },
+  { id:'s-chase',     name:'Chase Center',               lat:37.7680,lng:-122.3877, cat:'culture', desc:'Home of the Golden State Warriors. The waterfront plaza is worth exploring even off-season.' },
+  { id:'s-missioncrk',name:'Mission Creek Park',         lat:37.7715,lng:-122.3935, cat:'nature',  desc:'Peaceful restored waterway through Mission Bay — walk alongside houseboats and waterfowl.' },
+  { id:'s-chinab',    name:'China Basin Park',           lat:37.7730,lng:-122.3893, cat:'nature',  desc:'Quiet bayfront green space in Mission Bay — great for watching sailboats.' },
+  { id:'s-oracle',    name:'Oracle Park',                lat:37.7786,lng:-122.3893, cat:'culture', desc:"One of baseball's most beautiful parks — a game here with the bay behind right field is pure SF." },
+  { id:'s-sbharbor',  name:'South Beach Harbor',         lat:37.7820,lng:-122.3852, cat:'nature',  desc:'Beautiful working marina with sailboats, a promenade, and stunning Bay Bridge views.' },
+  { id:'s-rincon',    name:'Rincon Park',                lat:37.7890,lng:-122.3873, cat:'nature',  desc:"Embarcadero waterfront park with Cupid's Span sculpture and Bay Bridge views." },
+  { id:'s-waterbar',  name:'Waterbar',                   lat:37.7888,lng:-122.3880, cat:'food',    desc:'Waterfront seafood on the Embarcadero. Oysters + Bay Bridge views = worth the splurge.' },
+  { id:'s-baytrl',    name:'Bay Trail – Dogpatch',       lat:37.7650,lng:-122.3820, cat:'nature',  desc:'Multi-use path along the bay — perfect for a morning run or bike ride.' },
+];
+
+/* ══════════════════════════════════════════════════════
+   STATE
+══════════════════════════════════════════════════════ */
+let map;
+let allPlaces=[], markerMap={}, activeFilter='all', selectedId=null, searchQ='';
+let checked={}, notes={};
+try { checked = JSON.parse(localStorage.getItem('sfwex_checked') || '{}'); } catch(e) {}
+try { notes   = JSON.parse(localStorage.getItem('sfwex_notes')   || '{}'); } catch(e) {}
+let userLocation = null, geoWatchId = null;
+let currentDetailId = null;
+
+/* ══════════════════════════════════════════════════════
+   MAP
+══════════════════════════════════════════════════════ */
+map = L.map('map', {
+  center: AREAS.all.center, zoom: AREAS.all.zoom,
+  zoomControl: true, attributionControl: true, preferCanvas: true
+});
+L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+  attribution: '© CartoDB © OSM', subdomains:'abcd', maxZoom:19
+}).addTo(map);
+map.on('click', closeDetail);
+
+/* ══════════════════════════════════════════════════════
+   CATEGORIZE  (OSM tags win first, no name-guessing)
+══════════════════════════════════════════════════════ */
+function categorize(tags) {
+  const a=tags.amenity||'', s=tags.shop||'', l=tags.leisure||'', t=tags.tourism||'', name=(tags.name||'').toLowerCase();
+  // Tag-based (authoritative) — checked before any name inference
+  if (['restaurant','fast_food','food_court','ice_cream','juice_bar'].includes(a)) return 'food';
+  if (['bakery','deli','seafood','butcher'].includes(s)) return 'food';
+  if (['cafe','coffee_shop'].includes(a) || ['tea','coffee'].includes(s)) return 'cafe';
+  if (['bar','pub','nightclub','brewery','biergarten','taproom'].includes(a)) return 'bar';
+  if (s==='florist' || s==='garden_centre') return 'florist';
+  if (s&&!['tea','coffee','bakery','deli','seafood','supermarket','convenience','grocery','wine','beer','yes'].includes(s)) return 'shop';
+  if (['supermarket','convenience','grocery','wine','beer','alcohol'].includes(s)) return 'shop';
+  if (['park','garden','nature_reserve','pitch','playground'].includes(l)||tags.natural) return 'nature';
+  if (['museum','gallery','attraction','artwork','viewpoint'].includes(t)||tags.historic||['arts_centre','theatre','cinema'].includes(a)) return 'culture';
+  // Name fallback (boba only — narrow and reliable)
+  if (name.includes('boba')||name.includes('bubble tea')||name.includes('tapioca')) return 'cafe';
+  return 'other';
+}
+
+function getLabel(tags, cat) {
+  const a=tags.amenity||'', s=tags.shop||'';
+  if (a==='restaurant') return tags.cuisine ? ucfirst(tags.cuisine.split(';')[0])+' Restaurant' : 'Restaurant';
+  if (a==='fast_food')  return 'Fast Food';
+  if (a==='cafe')       return 'Café';
+  if (a==='bar')        return 'Bar';
+  if (a==='pub')        return 'Pub';
+  if (a==='brewery')    return 'Brewery';
+  if (a==='nightclub')  return 'Nightclub';
+  if (a==='ice_cream')  return 'Ice Cream';
+  if (s==='florist')    return 'Florist';
+  if (s==='bakery')     return 'Bakery';
+  if (['books','bookshop'].includes(s)) return 'Bookshop';
+  if (s==='ceramics')   return 'Ceramics';
+  if (s==='art')        return 'Art Gallery';
+  return CATS[cat]?.label || 'Place';
+}
+
+function ucfirst(s) { return s?s[0].toUpperCase()+s.slice(1):''; }
+
+/* ══════════════════════════════════════════════════════
+   MARKERS
+══════════════════════════════════════════════════════ */
+function makeIconHTML(catKey, isSelected, isDone) {
+  const cat = CATS[catKey]||CATS.other;
+  return `<div class="m-icon${isSelected?' sel':''}${isDone?' done':''}" style="background:${cat.color}">
+    ${isDone?'<div class="m-chk">✓</div>':''}
+    <span>${cat.emoji}</span>
+  </div>`;
+}
+
+function makeIcon(place) {
+  const isSelected = selectedId===place.id;
+  const size = isSelected ? 40 : 32;
+  return L.divIcon({
+    html: makeIconHTML(place.cat, isSelected, !!checked[place.id]),
+    className: 'icon-wrap',
+    iconSize: [size,size], iconAnchor: [size/2,size/2], tooltipAnchor:[size/2+4,0]
+  });
+}
+
+function createMarker(place, delayMs=0) {
+  const m = L.marker([place.lat,place.lng], { icon:makeIcon(place), zIndexOffset:0, riseOnHover:true });
+  m.on('click', e => { L.DomEvent.stopPropagation(e); showDetail(place); });
+  // Stagger pop-in animation
+  if (delayMs > 0) {
+    setTimeout(() => m.addTo(map), delayMs);
+  } else {
+    m.addTo(map);
+  }
+  markerMap[place.id] = m;
+}
+
+function refreshMarkers() {
+  allPlaces.forEach(p => {
+    const m = markerMap[p.id]; if(!m) return;
+    const visible = activeFilter==='all' || activeFilter===p.cat;
+    const isSelected = selectedId===p.id;
+    if (visible) {
+      if (!map.hasLayer(m)) m.addTo(map);
+      m.setIcon(makeIcon(p));
+      m.setZIndexOffset(isSelected ? 1000 : 0);
+      if (isSelected) {
+        if (!m.getTooltip()) m.bindTooltip(p.name,{permanent:true,direction:'right',className:'lbl',offset:[18,0]});
+        m.openTooltip();
+      } else {
+        if (m.getTooltip()) m.unbindTooltip();
+      }
+    } else {
+      if (map.hasLayer(m)) map.removeLayer(m);
+    }
+  });
+}
+
+/* ══════════════════════════════════════════════════════
+   PLACE MANAGEMENT
+══════════════════════════════════════════════════════ */
+function getNeighborhood(lat, lng) {
+  for (const [key, nb] of Object.entries(NB_BOUNDS)) {
+    if (lat>=nb.s && lat<=nb.n && lng>=nb.w && lng<=nb.e) return key;
+  }
+  return 'dogpatch';
+}
+
+function addPlace(data, delayMs=0) {
+  data.neighborhood = getNeighborhood(data.lat, data.lng);
+  allPlaces.push(data);
+  createMarker(data, delayMs);
+}
+
+/* ══════════════════════════════════════════════════════
+   DETAIL SHEET
+══════════════════════════════════════════════════════ */
+function showDetail(place) {
+  selectedId = place.id;
+  currentDetailId = place.id;
+  refreshMarkers();
+  map.panTo([place.lat,place.lng],{animate:true,duration:.4});
+
+  const cat = CATS[place.cat]||CATS.other;
+  const isDone = !!checked[place.id];
+  const t = place.tags||{};
+
+  let photoHTML = '';
+  if (place.getPhoto) { const u=place.getPhoto(); if(u) photoHTML=`<img class="d-photo" src="${u}" alt="${place.name}" loading="lazy" onerror="this.style.display='none'">`; }
+
+  let ratingHTML = '';
+  if (place.rating) {
+    const pct=(place.rating/5*100).toFixed(1);
+    ratingHTML=`<div class="d-rating"><div class="d-stars-wrap"><div class="d-stars-empty">★★★★★</div><div class="d-stars-full" style="width:${pct}%">★★★★★</div></div><span class="d-rating-num">${place.rating.toFixed(1)}</span>${place.ratingN?`<span class="d-rating-ct">(${place.ratingN.toLocaleString()})</span>`:''}</div>`;
+  }
+
+  let openHTML = '';
+  if (place.isOpen!==null) openHTML=`<div class="d-open ${place.isOpen?'yes':'no'}"><div class="d-dot"></div>${place.isOpen?'Open now':'Closed now'}</div>`;
+
+  let hoursHTML='';
+  if (place.hours?.length) {
+    const hid='h'+place.id.replace(/\W/g,'');
+    hoursHTML=`<span class="d-hours-toggle" onclick="document.getElementById('${hid}').classList.toggle('open')">See hours ▾</span><div class="d-hours-list" id="${hid}">${place.hours.map(h=>`<div class="d-hour-row">${h}</div>`).join('')}</div>`;
+  }
+
+  let meta='';
+  if (t.cuisine)   meta+=row('🍴',ucfirst(t.cuisine.replace(/;/g,', ')));
+  if (place.phone) meta+=row('📞',`<a href="tel:${place.phone}">${place.phone}</a>`);
+  if (place.website) meta+=row('🌐',`<a href="${place.website}" target="_blank">${place.website.replace(/https?:\/\//,'').split('/')[0]}</a>`);
+  if (place.address) meta+=row('📍',place.address);
+  if (hoursHTML)   meta+=row('🕐',`<div>${hoursHTML}</div>`);
+  if (place.desc)  meta+=`<div class="d-note">${place.desc}</div>`;
+
+  const gm=`https://www.google.com/maps/search/${encodeURIComponent(place.name+' San Francisco CA')}`;
+  const savedNote = notes[place.id]||'';
+
+  document.getElementById('detail-body').innerHTML=`
+    ${photoHTML}
+    <div class="d-strip" style="background:${cat.color}"></div>
+    <div class="d-name">${place.name}</div>
+    <span class="d-badge" style="background:${cat.color}">${cat.emoji} ${cat.label}</span>
+    ${ratingHTML}${openHTML}
+    ${meta?`<div class="d-meta">${meta}</div>`:''}
+    <div class="d-actions">
+      <button class="d-btn ${isDone?'visited':'primary'}" id="dchk" onclick="toggleCheck('${place.id}',this,event)">
+        ${isDone?'✓ Visited!':'⭐ Mark visited'}
+      </button>
+      <a class="d-btn" href="${gm}" target="_blank" rel="noopener">🗺️ Google Maps</a>
+    </div>
+    <div class="d-notes-wrap">
+      <span class="d-notes-label">📝 Our notes</span>
+      <textarea id="d-notes-ta" placeholder="Add a memory… (saves automatically)"
+        oninput="saveNote('${place.id}',this.value)">${savedNote}</textarea>
+    </div>`;
+
+  document.getElementById('detail').classList.add('open');
+}
+
+function row(icon,text){return`<div class="d-row"><span class="d-icon">${icon}</span><span>${text}</span></div>`;}
+function closeDetail(){selectedId=null;currentDetailId=null;document.getElementById('detail').classList.remove('open');refreshMarkers();}
+
+/* ══════════════════════════════════════════════════════
+   NOTES
+══════════════════════════════════════════════════════ */
+let noteTimer;
+function saveNote(id, val) {
+  clearTimeout(noteTimer);
+  noteTimer = setTimeout(() => {
+    if (val.trim()) notes[id]=val.trim(); else delete notes[id];
+    try { localStorage.setItem('sfwex_notes',JSON.stringify(notes)); } catch(e){}
+  }, 600);
+}
+
+/* ══════════════════════════════════════════════════════
+   CHECK / CONFETTI
+══════════════════════════════════════════════════════ */
+function toggleCheck(id, btn, evt) {
+  checked[id] = !checked[id];
+  try { localStorage.setItem('sfwex_checked',JSON.stringify(checked)); } catch(e){}
+  if (checked[id] && evt) spawnConfetti(evt.clientX, evt.clientY);
+  if (btn) { const d=checked[id]; btn.className=`d-btn ${d?'visited':'primary'}`; btn.textContent=d?'✓ Visited!':'⭐ Mark visited'; }
+  refreshMarkers(); renderCL(); updateStats();
+}
+
+function spawnConfetti(cx, cy) {
+  const colors=['#e03030','#c47820','#1a8848','#1840b0','#c01870','#f4a61a','#5830c0'];
+  for (let i=0;i<22;i++) {
+    const el=document.createElement('div');
+    el.className='confetti-p';
+    const dx=(Math.random()-.5)*220, dy=-(Math.random()*160+40);
+    el.style.cssText=`left:${cx}px;top:${cy}px;background:${colors[i%colors.length]};--dx:${dx}px;--dy:${dy}px;border-radius:${Math.random()>.5?'50%':'2px'};width:${6+Math.random()*6}px;height:${6+Math.random()*6}px;animation-duration:${.7+Math.random()*.4}s;animation-delay:${Math.random()*.15}s`;
+    document.body.appendChild(el);
+    setTimeout(()=>el.remove(),1200);
+  }
+}
+
+/* ══════════════════════════════════════════════════════
+   CHECKLIST
+══════════════════════════════════════════════════════ */
+function toggleCL(){document.getElementById('cl-panel').classList.toggle('open');}
+function searchCL(q){searchQ=q.toLowerCase();renderCL();}
+
+function renderCL() {
+  const done=Object.values(checked).filter(Boolean).length;
+  const total=allPlaces.length;
+  const pct=total>0?Math.round(done/total*100):0;
+  document.getElementById('prog-lbl').textContent=`${done} of ${total} places · ${pct}% explored`;
+  document.getElementById('prog-fill').style.width=pct+'%';
+  const badge=document.getElementById('cl-badge');
+  badge.textContent=done; badge.className=done>0?'lit':'';
+  document.getElementById('cl-cel').style.display=(total>0&&done===total)?'block':'none';
+
+  renderNbRings();
+
+  const grouped={};
+  allPlaces.forEach(p=>{
+    if (searchQ&&!p.name.toLowerCase().includes(searchQ)) return;
+    if (!grouped[p.cat]) grouped[p.cat]=[];
+    grouped[p.cat].push(p);
+  });
+
+  // Sort by distance if geo is active
+  if (userLocation) {
+    Object.values(grouped).forEach(arr=>arr.sort((a,b)=>haversine(userLocation,a)-haversine(userLocation,b)));
+  }
+
+  // Active filter category floats to top
+  const keys=Object.keys(CATS);
+  const ordered=activeFilter==='all'?keys:[activeFilter,...keys.filter(k=>k!==activeFilter)];
+  const timeCtx=getTimeContext();
+
+  let html='';
+  ordered.forEach(key=>{
+    const places=grouped[key]; if(!places?.length) return;
+    const cat=CATS[key];
+    const catDone=places.filter(p=>checked[p.id]).length;
+    const isActive=activeFilter!=='all'&&key===activeFilter;
+    const isGoodNow=timeCtx&&timeCtx.cats.includes(key);
+    html+=`<div>
+      <div class="cl-sec-hdr${isActive?' is-active':''}">
+        <div class="cl-sec-dot" style="background:${cat.color}"></div>
+        ${cat.emoji} ${cat.label}${isGoodNow?' <span style="font-size:9px;background:#f4a61a22;color:#b07000;padding:1px 5px;border-radius:5px;margin-left:3px">🕐 Good now</span>':''}
+        <span class="cl-sec-count">${catDone}/${places.length}</span>
+      </div>
+      ${places.map(p=>{
+        const dist=userLocation?`<span class="cl-dist">${formatDist(haversine(userLocation,p))}</span>`:'';
+        const hasNote=!!notes[p.id];
+        const stars=p.rating?`<span class="cl-stars">${'★'.repeat(Math.round(p.rating))}${'☆'.repeat(5-Math.round(p.rating))}</span> ${p.rating.toFixed(1)}`:'';
+        return `<div class="cl-item${checked[p.id]?' done':''}" onclick="openFromList('${p.id}')">
+          <div class="cl-box" onclick="event.stopPropagation();toggleCheck('${p.id}',null,event)">${checked[p.id]?'✓':''}</div>
+          <div class="cl-info">
+            <div class="cl-name">${p.name}${hasNote?'<span class="cl-note-dot" title="Has a note"></span>':''}</div>
+            <div class="cl-sub">${stars||cat.label}</div>
+          </div>
+          ${dist}
+          <span style="font-size:10px;color:var(--ink3);flex-shrink:0">›</span>
+        </div>`;
+      }).join('')}
+    </div>`;
+  });
+
+  if (!html) html=`<div style="padding:24px 20px;text-align:center;font-family:Lora,serif;font-style:italic;color:var(--ink3)">${searchQ?`No places match "${searchQ}"`:'Loading places…'}</div>`;
+  document.getElementById('cl-body').innerHTML=html;
+}
+
+function openFromList(id) {
+  const place=allPlaces.find(p=>p.id===id); if(!place) return;
+  document.getElementById('cl-panel').classList.remove('open');
+  setTimeout(()=>{ map.setView([place.lat,place.lng],17,{animate:true}); showDetail(place); },180);
+}
+
+/* ══════════════════════════════════════════════════════
+   NEIGHBORHOOD RINGS
+══════════════════════════════════════════════════════ */
+function renderNbRings() {
+  const C=2*Math.PI*16; // circumference r=16
+  const nbStats={};
+  Object.keys(NB_BOUNDS).forEach(k=>nbStats[k]={total:0,done:0});
+  allPlaces.forEach(p=>{ const nb=p.neighborhood; if(nbStats[nb]){nbStats[nb].total++;if(checked[p.id])nbStats[nb].done++;} });
+
+  document.getElementById('nb-rings').innerHTML=Object.entries(NB_BOUNDS).map(([key,nb])=>{
+    const {total,done}=nbStats[key]||{total:0,done:0};
+    const pct=total>0?done/total:0;
+    const offset=C*(1-pct);
+    return `<div class="nb-ring" onclick="goAreaByKey('${key}')">
+      <svg viewBox="0 0 40 40">
+        <circle cx="20" cy="20" r="16" fill="none" stroke="var(--border2)" stroke-width="4"/>
+        <circle cx="20" cy="20" r="16" fill="none" stroke="${nb.color}" stroke-width="4"
+          stroke-dasharray="${C.toFixed(1)}" stroke-dashoffset="${offset.toFixed(1)}"
+          stroke-linecap="round" transform="rotate(-90 20 20)"
+          style="transition:stroke-dashoffset .6s cubic-bezier(.4,0,.2,1)"/>
+        <text x="20" y="24" text-anchor="middle" font-size="9" fill="${nb.color}" font-weight="800" font-family="Nunito,sans-serif">${Math.round(pct*100)}%</text>
+      </svg>
+      <div class="nb-ring-label">${nb.emoji} ${nb.label}</div>
+      <div class="nb-ring-count">${done}/${total}</div>
+    </div>`;
+  }).join('');
+}
+
+function goAreaByKey(key) {
+  const a=AREAS[key]; if(!a) return;
+  map.flyTo(a.center,a.zoom,{animate:true,duration:1});
+  document.getElementById('cl-panel').classList.remove('open');
+}
+
+/* ══════════════════════════════════════════════════════
+   GEOLOCATION
+══════════════════════════════════════════════════════ */
+function toggleGeo(btn) {
+  if (geoWatchId!==null) {
+    navigator.geolocation.clearWatch(geoWatchId);
+    geoWatchId=null; userLocation=null;
+    btn.classList.remove('active');
+    btn.textContent='📍 Near Me';
+    renderCL(); return;
+  }
+  if (!navigator.geolocation) { toast('⚠️ Location not available on this device'); return; }
+  btn.textContent='📍 Locating…';
+  navigator.geolocation.getCurrentPosition(pos=>{
+    userLocation={lat:pos.coords.latitude,lng:pos.coords.longitude};
+    btn.classList.add('active'); btn.textContent='📍 Near Me ✓';
+    renderCL(); toast('📍 Sorted by walking distance');
+    // Pan map to user location
+    map.setView([userLocation.lat,userLocation.lng],15,{animate:true});
+  }, err=>{
+    btn.textContent='📍 Near Me';
+    toast('⚠️ Location not available — check browser permissions');
+  }, {enableHighAccuracy:true,timeout:8000});
+}
+
+function haversine(from, to) {
+  const R=6371000;
+  const φ1=from.lat*Math.PI/180, φ2=to.lat*Math.PI/180;
+  const Δφ=(to.lat-from.lat)*Math.PI/180, Δλ=(to.lng-from.lng)*Math.PI/180;
+  const a=Math.sin(Δφ/2)**2+Math.cos(φ1)*Math.cos(φ2)*Math.sin(Δλ/2)**2;
+  return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+}
+
+function formatDist(m) {
+  if (m<100) return `${Math.round(m)}m`;
+  if (m<1000) return `${Math.round(m/10)*10}m`;
+  return `${(m/1000).toFixed(1)}km`;
+}
+
+/* ══════════════════════════════════════════════════════
+   RANDOM ADVENTURE
+══════════════════════════════════════════════════════ */
+function randomAdventure() {
+  const pool=allPlaces.filter(p=>!checked[p.id]&&(activeFilter==='all'||p.cat===activeFilter));
+  if (!pool.length) { toast('🎉 You\'ve visited everything in this category!'); return; }
+  const place=pool[Math.floor(Math.random()*pool.length)];
+  map.setView([place.lat,place.lng],17,{animate:true});
+  showDetail(place);
+  toast(`🎲 ${place.name}`);
+}
+
+/* ══════════════════════════════════════════════════════
+   TIME CONTEXT
+══════════════════════════════════════════════════════ */
+function getTimeContext() {
+  const h=new Date().getHours();
+  if (h>=6  && h<11) return {cats:['cafe','food'],      label:'☀️ Morning — cafes & brunch'};
+  if (h>=11 && h<14) return {cats:['food'],              label:'🌤 Lunch time'};
+  if (h>=14 && h<17) return {cats:['cafe','shop','nature','culture'], label:'☁️ Afternoon — cafes & exploring'};
+  if (h>=17 && h<21) return {cats:['food','bar'],        label:'🌆 Evening — dinner & drinks'};
+  if (h>=21 || h<2)  return {cats:['bar'],               label:'🌙 Night out'};
+  return null;
+}
+
+function initTimeBanner() {
+  const ctx=getTimeContext();
+  const el=document.getElementById('time-banner');
+  if (!ctx) { el.style.display='none'; return; }
+  el.textContent=ctx.label;
+  // Add time-dot to relevant pills
+  document.querySelectorAll('.pill').forEach(p=>{
+    const cat=p.dataset.cat;
+    const existing=p.querySelector('.time-dot');
+    if (ctx.cats.includes(cat)) { if(!existing){const d=document.createElement('span');d.className='time-dot';p.appendChild(d);} }
+    else { if(existing) existing.remove(); }
+  });
+}
+
+/* ══════════════════════════════════════════════════════
+   FILTERS / AREA / STATS
+══════════════════════════════════════════════════════ */
+function setFilter(btn, key) {
+  document.querySelectorAll('.pill').forEach(b=>{b.classList.remove('active');b.style.background='';b.style.borderColor='';});
+  btn.classList.add('active');
+  const c=PILL_COLORS[key]||'#1a4a8a';
+  btn.style.background=c; btn.style.borderColor=c;
+  activeFilter=key; refreshMarkers(); renderCL();
+  document.getElementById('cl-body').scrollTop=0;
+  const n=key==='all'?allPlaces.length:allPlaces.filter(p=>p.cat===key).length;
+  toast(`${CATS[key]?.emoji||'📍'} ${n} ${key==='all'?'places':CATS[key]?.label}`);
+}
+
+function goArea(area, btn) {
+  document.querySelectorAll('.ap').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const a=AREAS[area]; if(a) map.flyTo(a.center,a.zoom,{animate:true,duration:1});
+}
+
+function updateStats() {
+  const counts={};
+  allPlaces.forEach(p=>counts[p.cat]=(counts[p.cat]||0)+1);
+  const parts=Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,4).map(([k,v])=>`${CATS[k]?.emoji||'📍'} ${v}`);
+  document.getElementById('stats').textContent=`${allPlaces.length} places · ${parts.join(' · ')}`;
+}
+
+/* ══════════════════════════════════════════════════════
+   OVERPASS DATA
+══════════════════════════════════════════════════════ */
+function buildQuery(){
+  return `[out:json][timeout:30];
+(
+  node["name"]["amenity"~"restaurant|fast_food|cafe|bar|pub|nightclub|brewery|biergarten|ice_cream|juice_bar|bubble_tea|arts_centre|theatre|cinema"](${BBOX});
+  node["name"]["shop"~"florist|garden_centre|clothes|gift|jewelry|antiques|books|bookshop|art|gallery|boutique|bakery|deli|tea|coffee|wine|ceramics|furniture|vintage|records|sports|stationery|toys|electronics|bicycle|candles"](${BBOX});
+  node["name"]["leisure"~"park|garden|nature_reserve|playground"](${BBOX});
+  node["name"]["tourism"~"museum|gallery|attraction|artwork|viewpoint"](${BBOX});
+  node["name"]["historic"](${BBOX});
+  way["name"]["amenity"~"restaurant|fast_food|cafe|bar|pub|brewery|ice_cream|arts_centre"](${BBOX});
+  way["name"]["shop"~"florist|bakery|ceramics|art"](${BBOX});
+  way["name"]["leisure"~"park|garden|nature_reserve"](${BBOX});
+  way["name"]["tourism"~"museum|gallery|attraction"](${BBOX});
+);
+out center;`;}
+
+const CACHE_KEY='sfwex_osm_v5', CACHE_TTL=8*60*60*1000;
+
+async function loadData(force=false){
+  document.getElementById('refresh').classList.add('spin');
+  if (!force){
+    try{
+      const raw=localStorage.getItem(CACHE_KEY);
+      if(raw){const{ts,elems}=JSON.parse(raw);if(Date.now()-ts<CACHE_TTL){processElems(elems);document.getElementById('refresh').classList.remove('spin');return;}}
+    }catch(e){}
+  }
+  const body='data='+encodeURIComponent(buildQuery());
+  for(const ep of OVERPASS_ENDPOINTS){
+    try{
+      const res=await fetch(ep,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body});
+      if(!res.ok) throw new Error('HTTP '+res.status);
+      const json=await res.json();
+      try{localStorage.setItem(CACHE_KEY,JSON.stringify({ts:Date.now(),elems:json.elements}));}catch(e){}
+      processElems(json.elements);
+      hideErr();
+      document.getElementById('refresh').classList.remove('spin');
+      return;
+    }catch(err){console.warn('Overpass endpoint failed:',ep,err.message);}
+  }
+  // Fallback to stale cache or supplement-only
+  try{const raw=localStorage.getItem(CACHE_KEY);if(raw){processElems(JSON.parse(raw).elems);showErr('Using cached data — network issue');}}
+  catch(e){processElems([]);showErr('Showing curated places only — OpenStreetMap unreachable');}
+  document.getElementById('refresh').classList.remove('spin');
+}
+
+function processElems(elements){
+  Object.values(markerMap).forEach(m=>{if(map.hasLayer(m))map.removeLayer(m);});
+  markerMap={}; allPlaces=[];
+  const seen=new Set();
+  (elements||[]).forEach((el,i)=>{
+    if(!el.tags?.name) return;
+    let lat,lng;
+    if(el.type==='node'){lat=el.lat;lng=el.lon;}
+    else if(el.center){lat=el.center.lat;lng=el.center.lon;}
+    else return;
+    const name=el.tags.name.trim();
+    const cat=categorize(el.tags);
+    const key=name.toLowerCase()+'|'+cat;
+    if(seen.has(key)) return; seen.add(key);
+    addPlace({id:`osm-${el.type}-${el.id}`,name,lat,lng,cat,tags:el.tags,label:getLabel(el.tags,cat),rating:null,ratingN:null,isOpen:null,hours:null,phone:null,website:null,address:null,desc:null,getPhoto:null}, i*8);
+  });
+  // Merge supplements
+  SUPPLEMENT.forEach(s=>{
+    const key=s.name.toLowerCase()+'|'+s.cat;
+    if(!seen.has(key)){seen.add(key);addPlace({...s,tags:{},label:CATS[s.cat]?.label||'Place',rating:null,ratingN:null,isOpen:null,hours:null,phone:null,website:null,address:null,getPhoto:null});}
+  });
+  allPlaces.sort((a,b)=>a.name.localeCompare(b.name));
+  updateStats(); renderCL();
+  showLoading(false);
+  toast(`✓ ${allPlaces.length} places loaded`);
+}
+
+/* ══════════════════════════════════════════════════════
+   UTILS
+══════════════════════════════════════════════════════ */
+function showLoading(show){const el=document.getElementById('loading');if(show){el.classList.remove('fade');el.style.display='flex';}else{el.classList.add('fade');setTimeout(()=>el.style.display='none',520);}}
+function showErr(msg){const b=document.getElementById('err-banner');document.getElementById('err-msg').textContent=msg;b.style.display='flex';}
+function hideErr(){document.getElementById('err-banner').style.display='none';}
+
+let toastT;
+function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>el.classList.remove('show'),2600);}
+
+/* ══════════════════════════════════════════════════════
+   INIT
+══════════════════════════════════════════════════════ */
+initTimeBanner();
+SUPPLEMENT.forEach(s=>addPlace({...s,tags:{},label:CATS[s.cat]?.label||'Place',rating:null,ratingN:null,isOpen:null,hours:null,phone:null,website:null,address:null,getPhoto:null}));
+updateStats(); renderCL();
+loadData();
+</script>
+</body>
+</html>
