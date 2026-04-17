@@ -1,549 +1,462 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>JobAgent — AI Job Search</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JobAgent — Legal & Compliance Ops</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --bg:#0D0F14;--surface:#161A23;--surface2:#1E2330;--border:#2A2F3E;
-  --accent:#F0A830;--text:#E8EAF0;--muted:#7A8099;
-  --green:#4ADE80;--red:#F87171;--blue:#60A5FA;
-}
-body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh}
-@keyframes spin{to{transform:rotate(360deg)}}
-@keyframes up{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-.fade{animation:up .3s ease}
-.spinner{display:inline-block;width:14px;height:14px;border:2px solid var(--border);
-  border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;flex-shrink:0}
-textarea,input{font-family:'DM Sans',sans-serif;color:var(--text)}
-textarea::placeholder,input::placeholder{color:var(--muted)}
-::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--bg)}
-::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
-button{font-family:'DM Sans',sans-serif;cursor:pointer}
-a{text-decoration:none;color:inherit}
-#app{min-height:100vh}
-
-/* reusable classes */
-.card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px 18px;transition:border-color .2s}
-.card:hover{border-color:rgba(240,168,48,.4)}
-.btn-primary{background:var(--accent);color:#0D0F14;border:none;border-radius:6px;font-weight:600;padding:9px 20px;font-size:14px}
-.btn-primary:disabled{opacity:.4;cursor:not-allowed}
-.btn-ghost{background:var(--surface2);color:var(--text);border:1px solid var(--border);border-radius:6px;padding:6px 13px;font-size:12px}
-.tag{display:inline-block;background:rgba(240,168,48,.13);color:var(--accent);
-  border:1px solid rgba(240,168,48,.25);border-radius:4px;padding:2px 8px;
-  font-size:11px;font-family:'DM Mono',monospace;white-space:nowrap}
-.tag.blue{background:rgba(96,165,250,.13);color:var(--blue);border-color:rgba(96,165,250,.25)}
-.alert{border-radius:8px;padding:10px 14px;font-size:13px;margin-bottom:12px}
-.alert-warn{background:rgba(240,168,48,.1);border:1px solid rgba(240,168,48,.3);color:var(--accent)}
-.alert-err{background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.3);color:var(--red)}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Syne', sans-serif; background: #08090d; color: #e2e4ed; min-height: 100vh; font-size: 14px; }
+::-webkit-scrollbar { width: 5px; } ::-webkit-scrollbar-track { background: #12141c; } ::-webkit-scrollbar-thumb { background: #252840; border-radius: 3px; }
+.mono { font-family: 'IBM Plex Mono', monospace; }
+/* HEADER */
+.header { padding: 14px 28px; border-bottom: 1px solid #1a1d2e; display: flex; align-items: center; justify-content: space-between; gap: 16px; position: sticky; top: 0; background: #08090d; z-index: 10; }
+.logo { display: flex; align-items: center; gap: 10px; }
+.logo-icon { width: 32px; height: 32px; background: linear-gradient(135deg, #5b6ef5, #8b5cf6); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; }
+.logo-name { font-weight: 800; font-size: 15px; letter-spacing: -.3px; }
+.logo-sub { font-size: 9px; color: #374151; font-family: 'IBM Plex Mono'; margin-top: 1px; letter-spacing: .5px; }
+.api-wrap { display: flex; align-items: center; gap: 8px; }
+.api-label { font-size: 10px; font-family: 'IBM Plex Mono'; color: #374151; white-space: nowrap; }
+.api-input { background: #12141c; border: 1px solid #1a1d2e; border-radius: 7px; padding: 7px 12px; color: #e2e4ed; font-size: 11px; font-family: 'IBM Plex Mono'; width: 240px; outline: none; transition: border .2s; }
+.api-input:focus { border-color: #5b6ef5; }
+.api-input::placeholder { color: #252840; }
+/* TABS */
+.tabs { display: flex; border-bottom: 1px solid #1a1d2e; padding: 0 28px; background: #08090d; }
+.tab { background: none; border: none; color: #374151; border-bottom: 2px solid transparent; padding: 11px 16px; cursor: pointer; font-family: 'Syne'; font-size: 12px; font-weight: 700; transition: all .2s; white-space: nowrap; }
+.tab.active { color: #5b6ef5; border-bottom-color: #5b6ef5; }
+.tab:hover:not(.active) { color: #64748b; }
+/* MAIN */
+.main { padding: 24px 28px; max-width: 900px; margin: 0 auto; }
+/* SEARCH */
+.search-row { display: flex; gap: 10px; margin-bottom: 16px; }
+.search-input { flex: 1; background: #12141c; border: 1px solid #1a1d2e; border-radius: 10px; padding: 11px 16px; color: #e2e4ed; font-size: 13px; font-family: 'Syne'; outline: none; transition: border .2s; }
+.search-input:focus { border-color: #5b6ef5; }
+.search-input::placeholder { color: #252840; }
+.btn-go { background: linear-gradient(135deg, #5b6ef5, #7c3aed); border: none; border-radius: 10px; padding: 11px 22px; color: #fff; cursor: pointer; font-family: 'Syne'; font-weight: 700; font-size: 13px; white-space: nowrap; transition: opacity .2s; }
+.btn-go:disabled { opacity: .35; cursor: not-allowed; }
+.btn-go:hover:not(:disabled) { opacity: .88; }
+/* STATUS */
+.status-bar { background: #12141c; border: 1px solid #1a1d2e; border-radius: 7px; padding: 9px 14px; margin-bottom: 14px; font-size: 11px; font-family: 'IBM Plex Mono'; color: #4b5563; display: flex; align-items: center; gap: 8px; }
+.dot { width: 6px; height: 6px; background: #5b6ef5; border-radius: 50%; animation: blink 1s infinite; flex-shrink: 0; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.2} }
+.error-bar { background: #1a0000; border: 1px solid #7f1d1d; border-radius: 7px; padding: 10px 14px; margin-bottom: 14px; font-size: 12px; color: #fca5a5; }
+/* JOB CARDS */
+.job-card { background: #12141c; border: 1px solid #1a1d2e; border-radius: 11px; overflow: hidden; margin-bottom: 9px; transition: border .2s; }
+.job-card:hover { border-color: #252840; }
+.job-header { padding: 15px 18px; cursor: pointer; display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; user-select: none; }
+.job-title-text { font-weight: 700; font-size: 14px; margin-bottom: 3px; }
+.job-co { color: #4b5563; font-size: 12px; }
+.job-chips { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 4px; }
+.chip { background: #1a1d2e; border-radius: 4px; padding: 2px 8px; font-size: 10px; font-family: 'IBM Plex Mono'; color: #374151; }
+.chip-sal { color: #4b5563; }
+/* SCORE BADGE */
+.badge { display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px 3px 4px; border-radius: 20px; font-size: 11px; flex-shrink: 0; }
+.badge-num { width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; font-family: 'IBM Plex Mono'; color: #000; }
+.badge-label { font-weight: 700; }
+.scoring-txt { font-size: 10px; font-family: 'IBM Plex Mono'; color: #252840; display: flex; align-items: center; gap: 5px; }
+.sdot { width: 5px; height: 5px; background: #374151; border-radius: 50%; animation: blink .7s infinite; }
+/* JOB BODY */
+.job-body { border-top: 1px solid #1a1d2e; padding: 16px 18px; animation: fadein .2s; }
+@keyframes fadein { from{opacity:0;transform:translateY(-4px)} to{opacity:1;transform:translateY(0)} }
+.job-desc { font-size: 12px; color: #64748b; line-height: 1.65; margin-bottom: 12px; }
+.reqs { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 12px; }
+.req { background: #0f1018; border: 1px solid #1a1d2e; border-radius: 4px; padding: 3px 9px; font-size: 10px; font-family: 'IBM Plex Mono'; color: #374151; }
+.score-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+.score-box { background: #0a0b10; border-radius: 7px; padding: 10px 12px; }
+.score-box-hd { font-size: 9px; font-family: 'IBM Plex Mono'; margin-bottom: 6px; letter-spacing: .8px; font-weight: 600; }
+.score-item { font-size: 11px; color: #94a3b8; margin-bottom: 3px; line-height: 1.45; }
+.verdict { background: #0d0f1a; border: 1px solid #1a1d2e; border-radius: 5px; padding: 9px 12px; margin-bottom: 12px; font-size: 11px; font-style: italic; color: #4b5563; line-height: 1.5; }
+.actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.btn-letter { background: linear-gradient(135deg, #5b6ef5, #7c3aed); border: none; border-radius: 7px; padding: 8px 16px; color: #fff; cursor: pointer; font-family: 'Syne'; font-weight: 700; font-size: 12px; transition: opacity .2s; }
+.btn-letter:hover { opacity: .88; }
+.btn-view { display: inline-flex; align-items: center; gap: 5px; background: #1a1d2e; border: none; border-radius: 7px; padding: 8px 14px; color: #4b5563; text-decoration: none; font-family: 'Syne'; font-weight: 600; font-size: 12px; cursor: pointer; transition: all .2s; }
+.btn-view:hover { background: #252840; color: #94a3b8; }
+/* EMPTY */
+.empty { text-align: center; padding: 64px 20px; color: #1f2937; }
+.empty-icon { font-size: 40px; margin-bottom: 12px; }
+.empty-title { font-size: 14px; font-weight: 700; color: #374151; margin-bottom: 6px; }
+.empty-sub { font-size: 12px; color: #1f2937; line-height: 1.6; max-width: 320px; margin: 0 auto; }
+/* PROFILE */
+.profile-hd { margin-bottom: 14px; }
+.profile-title { font-weight: 700; font-size: 15px; margin-bottom: 4px; }
+.profile-sub { font-size: 12px; color: #374151; }
+.profile-area { width: 100%; min-height: 500px; background: #12141c; border: 1px solid #1a1d2e; border-radius: 11px; padding: 18px; color: #d1d5db; font-size: 12px; font-family: 'IBM Plex Mono'; line-height: 1.75; outline: none; resize: vertical; transition: border .2s; }
+.profile-area:focus { border-color: #5b6ef5; }
+/* COVER LETTER */
+.cl-badge { background: #12141c; border: 1px solid #1a1d2e; border-radius: 9px; padding: 11px 15px; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.cl-badge-title { font-weight: 700; font-size: 14px; }
+.cl-badge-co { color: #4b5563; font-size: 12px; }
+.cl-body { background: #12141c; border: 1px solid #1a1d2e; border-radius: 11px; padding: 26px; margin-bottom: 12px; font-size: 13px; line-height: 1.85; color: #d1d5db; white-space: pre-wrap; }
+.cl-loading { text-align: center; padding: 40px; font-family: 'IBM Plex Mono'; font-size: 11px; color: #252840; }
+.btn-copy { background: #1a1d2e; border: none; border-radius: 7px; padding: 8px 16px; color: #4b5563; cursor: pointer; font-family: 'Syne'; font-weight: 600; font-size: 12px; transition: all .2s; }
+.btn-copy:hover { background: #252840; color: #94a3b8; }
+/* FOOTER */
+.footer { border-top: 1px solid #1a1d2e; padding: 10px 28px; font-size: 10px; font-family: 'IBM Plex Mono'; color: #1f2937; text-align: center; }
 </style>
 </head>
 <body>
-<div id="app"></div>
 
-<!-- Only external dep: mammoth for docx (loaded once, small) -->
-<script src="https://unpkg.com/mammoth@1.8.0/mammoth.browser.js"></script>
+<div class="header">
+  <div class="logo">
+    <div class="logo-icon">⚡</div>
+    <div>
+      <div class="logo-name">JobAgent</div>
+      <div class="logo-sub mono">LEGAL &amp; COMPLIANCE OPS</div>
+    </div>
+  </div>
+  <div class="api-wrap">
+    <span class="api-label mono">API KEY (GitHub Pages only):</span>
+    <input type="password" class="api-input mono" id="apiKey" placeholder="leave blank inside Claude.ai" />
+  </div>
+</div>
+
+<div class="tabs">
+  <button class="tab active" id="tab-btn-search" onclick="switchTab('search')">🔍 Search &amp; Score</button>
+  <button class="tab" id="tab-btn-profile" onclick="switchTab('profile')">👤 My Profile</button>
+  <button class="tab" id="tab-btn-letter" onclick="switchTab('letter')">✍️ Cover Letter</button>
+</div>
+
+<div class="main">
+
+  <!-- SEARCH -->
+  <div id="tab-search">
+    <div class="search-row">
+      <input class="search-input" id="searchQuery" value="Legal Operations Specialist tech company San Francisco Bay Area" onkeydown="if(event.key==='Enter'&&!searching)doSearch()" />
+      <button class="btn-go" id="searchBtn" onclick="doSearch()">Find &amp; Score →</button>
+    </div>
+    <div id="statusBar" style="display:none" class="status-bar"><div class="dot"></div><span id="statusText" class="mono"></span></div>
+    <div id="errorBar" style="display:none" class="error-bar"></div>
+    <div id="jobList"></div>
+    <div id="emptyState" class="empty">
+      <div class="empty-icon">⚡</div>
+      <div class="empty-title">Ready to hunt</div>
+      <div class="empty-sub">Enter a role above — the agent finds real open listings and scores your fit against each one automatically.</div>
+    </div>
+  </div>
+
+  <!-- PROFILE -->
+  <div id="tab-profile" style="display:none">
+    <div class="profile-hd">
+      <div class="profile-title">Your Profile</div>
+      <div class="profile-sub">Used to score your fit for every role. Edit freely — the more detail, the sharper the scores.</div>
+    </div>
+    <textarea class="profile-area" id="profileText"></textarea>
+  </div>
+
+  <!-- COVER LETTER -->
+  <div id="tab-letter" style="display:none">
+    <div id="clContent">
+      <div class="empty">
+        <div class="empty-icon">✍️</div>
+        <div class="empty-title">No letter yet</div>
+        <div class="empty-sub">Click "Draft Cover Letter" on any job card to generate a tailored letter here.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">AUTO-APPLY · Requires Playwright/Puppeteer browser automation · Separate local setup needed for actual form submission</div>
 
 <script>
-// ── State ──────────────────────────────────────────────────────────────────────
-const state = {
-  stage: 'upload',   // upload | loading | results
-  resumeText: '',
-  profile: null,
-  jobs: [],
-  error: '',
-  fileError: '',
-  fileLoading: false,
-  statusMsg: 'Reading resume…',
-  filter: '',
-  typeFilter: 'all',
-  apiKey: localStorage.getItem('ja_key') || '',
-  showKey: !localStorage.getItem('ja_key'),
-  coverLetterJob: null,
-  coverLetter: '',
-  coverLetterLoading: false,
-};
+const API_URL = "https://api.anthropic.com/v1/messages";
 
-// ── Mini render engine ─────────────────────────────────────────────────────────
-function set(updates) {
-  Object.assign(state, updates);
-  renderApp();
-}
+const DEFAULT_PROFILE = `NAME: Angel Zhu
+LOCATION: Oakland, CA · open to hybrid or remote
+TARGET: Legal Operations Specialist, Compliance Ops Analyst, RegOps, Legal Ops Manager at tech companies
 
-function el(tag, attrs, ...children) {
-  const e = document.createElement(tag);
-  for (const [k, v] of Object.entries(attrs || {})) {
-    if (k === 'style' && typeof v === 'object') Object.assign(e.style, v);
-    else if (k.startsWith('on')) e.addEventListener(k.slice(2).toLowerCase(), v);
-    else if (k === 'class') e.className = v;
-    else if (k === 'html') { e.innerHTML = v; continue; }
-    else e.setAttribute(k, v);
-  }
-  for (const child of children.flat(9)) {
-    if (child == null || child === false) continue;
-    e.appendChild(typeof child === 'string' ? document.createTextNode(child) : child);
-  }
-  return e;
-}
+SUMMARY:
+Strategic operations professional with 4+ years managing complex compliance portfolios at the intersection of regulatory accountability, data systems, and cross-functional execution. Translate regulatory/legal obligations into scalable systems. Fluent in stakeholder management, financial strategy, and technical automation (Python, R, SQL). Legal background spans corporate immigration (Fragomen), federal legal ops (SBA), and 3+ years in compliance leadership. Known for connecting money, operations, and organizational priorities in ways that drive better decisions at the leadership level.
 
-// ── Anthropic API ──────────────────────────────────────────────────────────────
-async function callClaude(messages, system, onChunk, webSearch) {
-  const body = {
-    model: 'claude-sonnet-4-20250514',
-    max_tokens: 2000,
-    stream: true,
-    system,
-    messages,
-  };
-  if (webSearch) body.tools = [{ type: 'web_search_20250305', name: 'web_search' }];
+EXPERIENCE:
 
-  const res = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': state.apiKey,
-      'anthropic-version': '2023-06-01',
-      'anthropic-dangerous-direct-browser-access': 'true',
-    },
-    body: JSON.stringify(body),
+Accountability & Compliance Manager · KIPP Public Schools Northern California (Jul 2023–Present)
+• Lead compliance operations and risk management across 17 schools, 7,000+ students
+• Own $20M+ public funding portfolio end-to-end: grant strategy, fiscal oversight, regulatory reporting, audit prep
+• ZERO audit findings for 2 consecutive years across federal, state, and local requirements
+• Secured ~$14M in competitive grant funding through proposal development and cross-departmental coordination
+• Built Python automation tools → 40% reduction in compliance reporting processing time
+• R statistical modeling (regression, mixed effects) informing $4M+ compensation strategy to senior leadership
+• Designed SOPs and compliance frameworks that cut document retrieval from hours to under 5 minutes
+• Lead quarterly stakeholder reviews with Finance and executive leadership on portfolio spend, milestones, and risk exposure
+• Serve as connective tissue between Finance, Legal, Operations, and Program teams
+
+Public Programs Associate · KIPP Public Schools Northern California (Feb 2022–Jun 2023)
+• Secured ~$14M in grant funding through research, proposal development, and cross-departmental coordination
+• Built compliance tracking systems for after-school programs across 13 sites
+• Established centralized documentation infrastructure for funding eligibility and reporting
+
+Paralegal Specialist / Legal Assistant · U.S. Small Business Administration (Oct 2021–Jan 2022)
+• Managed 1,000–2,000 active cases simultaneously for Post-Compliance Team
+• Tracked case statuses, flagged priorities, coordinated document collection in proprietary case management systems
+• Independent problem-solving on complex cases; high accuracy under deadline-driven conditions
+
+Business Immigration Analyst / Legal Assistant · Fragomen (Aug–Oct 2021)
+• Corporate immigration firm — compiled legal forms, reviewed documents, prepared filings for AOS and permanent residence
+• Direct client correspondence on deadlines, filing timelines, and immigration compliance topics
+
+EDUCATION:
+University of California, Berkeley · B.A. Legal Studies, Political Economy & Environmental Economics and Policy · 2021
+Triple major · AP Scholar with Distinction
+
+SKILLS:
+Technical: Python, R, SQL, Google Apps Script, Excel/Sheets, Zapier, Claude AI, Salesforce, DocuSign
+Compliance: Regulatory monitoring, audit prep, policy interpretation, risk management, grant lifecycle management
+Legal: Paralegal background, immigration law, contract management, federal legal ops (SBA)
+Languages: Mandarin Chinese (Professional), Korean & Spanish (Working)
+
+TRANSITION NOTE: Intentionally moving from education compliance → tech legal/compliance ops. Strong interest in AI's impact on legal/ops functions. Demonstrated ability to build compliance infrastructure from scratch and scale it across large portfolios.`;
+
+document.getElementById('profileText').value = DEFAULT_PROFILE;
+
+let jobs = [];
+let expandedId = null;
+let searching = false;
+
+function switchTab(tab) {
+  ['search','profile','letter'].forEach(t => {
+    document.getElementById('tab-'+t).style.display = t===tab ? '' : 'none';
+    document.getElementById('tab-btn-'+t).classList.toggle('active', t===tab);
   });
+}
 
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({}));
-    throw new Error(err?.error?.message || 'API error ' + res.status);
+function setStatus(msg) {
+  const bar = document.getElementById('statusBar');
+  if (msg) { bar.style.display='flex'; document.getElementById('statusText').textContent=msg; }
+  else bar.style.display='none';
+}
+
+function setError(msg) {
+  const bar = document.getElementById('errorBar');
+  if (msg) { bar.style.display=''; bar.textContent='⚠ '+msg; }
+  else bar.style.display='none';
+}
+
+async function callClaude(messages, system, webSearch=false) {
+  const key = document.getElementById('apiKey').value.trim();
+  const headers = { 'Content-Type':'application/json', 'anthropic-dangerous-direct-browser-access':'true' };
+  if (key) headers['x-api-key'] = key;
+  const body = { model:'claude-sonnet-4-20250514', max_tokens:2000, messages };
+  if (system) body.system = system;
+  if (webSearch) body.tools = [{ type:'web_search_20250305', name:'web_search' }];
+  const res = await fetch(API_URL, { method:'POST', headers, body:JSON.stringify(body) });
+  if (!res.ok) { const e=await res.json().catch(()=>({})); throw new Error(e?.error?.message||'HTTP '+res.status); }
+  return res.json();
+}
+
+function getText(data) {
+  return (data.content||[]).filter(b=>b.type==='text').map(b=>b.text).join('');
+}
+
+function repairJSON(str) {
+  // Remove trailing commas before ] or }
+  str = str.replace(/,\s*([\]}])/g, '$1');
+  // If truncated array, close it
+  if (str.includes('[') && !str.trimEnd().endsWith(']')) {
+    // Remove last incomplete object
+    const lastComplete = str.lastIndexOf('}');
+    if (lastComplete > -1) str = str.slice(0, lastComplete + 1) + ']';
+    else str = str + ']';
   }
+  // If truncated object, close it
+  if (str.includes('{') && !str.trimEnd().endsWith('}') && !str.trimEnd().endsWith(']')) {
+    str = str + '"}';
+  }
+  return str;
+}
 
-  const reader = res.body.getReader();
-  const dec = new TextDecoder();
-  let buf = '', full = '';
-  while (true) {
-    const { done, value } = await reader.read();
-    if (done) break;
-    buf += dec.decode(value, { stream: true });
-    const lines = buf.split('\n');
-    buf = lines.pop();
-    for (const line of lines) {
-      if (!line.startsWith('data: ')) continue;
-      const d = line.slice(6).trim();
-      if (d === '[DONE]') continue;
+function parseJSON(text) {
+  const clean = text.replace(/```json|```/g,'').trim();
+  // Try array first
+  const aMatch = clean.match(/\[[\s\S]*/);
+  if (aMatch) {
+    try { return JSON.parse(aMatch[0]); } catch(_) {}
+    try { return JSON.parse(repairJSON(aMatch[0])); } catch(_) {}
+  }
+  // Try object
+  const oMatch = clean.match(/\{[\s\S]*\}/);
+  if (oMatch) {
+    try { return JSON.parse(oMatch[0]); } catch(_) {}
+    try { return JSON.parse(repairJSON(oMatch[0])); } catch(_) {}
+  }
+  throw new Error('Could not parse JSON from response');
+}
+
+function tierStyle(tier) {
+  return ({
+    'Strong Match':{ bg:'#052e16', border:'#16a34a', text:'#4ade80', dot:'#22c55e' },
+    'Good Match':  { bg:'#1c1400', border:'#d97706', text:'#fbbf24', dot:'#f59e0b' },
+    'Partial Match':{ bg:'#1c0e00', border:'#ea580c', text:'#fb923c', dot:'#f97316' },
+    'Low Match':   { bg:'#1c0000', border:'#dc2626', text:'#f87171', dot:'#ef4444' },
+  }[tier] || { bg:'#1c0e00', border:'#ea580c', text:'#fb923c', dot:'#f97316' });
+}
+
+function badgeHTML(score, tier) {
+  if (score===null) return `<div class="scoring-txt"><div class="sdot"></div><span>scoring...</span></div>`;
+  const s=tierStyle(tier);
+  return `<div class="badge" style="background:${s.bg};border:1px solid ${s.border}">
+    <div class="badge-num" style="background:${s.dot}">${score}</div>
+    <span class="badge-label" style="color:${s.text}">${tier}</span>
+  </div>`;
+}
+
+function renderJobs() {
+  const list = document.getElementById('jobList');
+  const empty = document.getElementById('emptyState');
+  if (!jobs.length) { list.innerHTML=''; empty.style.display=''; return; }
+  empty.style.display='none';
+  const sorted = [...jobs].sort((a,b)=>(b.score||0)-(a.score||0));
+  list.innerHTML = sorted.map(j => {
+    const open = expandedId===j.id;
+    const sd = j.scoreDetails;
+    return `<div class="job-card">
+      <div class="job-header" onclick="toggleCard('${j.id}')">
+        <div style="flex:1;min-width:0">
+          <div class="job-title-text">${j.title}</div>
+          <div class="job-co">@ ${j.company}</div>
+          <div class="job-chips">
+            ${j.workType?`<span class="chip">${j.workType}</span>`:''}
+            ${j.location?`<span class="chip">${j.location}</span>`:''}
+            ${j.salary?`<span class="chip chip-sal">${j.salary}</span>`:''}
+          </div>
+        </div>
+        <div>${badgeHTML(j.score, sd?.tier)}</div>
+      </div>
+      ${open?`<div class="job-body">
+        <div class="job-desc">${j.description||''}</div>
+        ${(j.requirements||[]).length?`<div class="reqs">${j.requirements.slice(0,5).map(r=>`<span class="req">${r}</span>`).join('')}</div>`:''}
+        ${sd?`<div class="score-grid">
+          <div class="score-box">
+            <div class="score-box-hd" style="color:#4ade80">✓ STRENGTHS</div>
+            ${(sd.strengths||[]).map(s=>`<div class="score-item">• ${s}</div>`).join('')}
+          </div>
+          <div class="score-box">
+            <div class="score-box-hd" style="color:#f87171">⚠ GAPS</div>
+            ${(sd.gaps||[]).length?(sd.gaps||[]).map(g=>`<div class="score-item">• ${g}</div>`).join(''):'<div class="score-item" style="color:#252840">None identified</div>'}
+          </div>
+        </div>
+        ${sd.verdict?`<div class="verdict">"${sd.verdict}"</div>`:''}`:''}
+        <div class="actions">
+          <button class="btn-letter" onclick="doCoverLetter('${j.id}')">✍️ Draft Cover Letter</button>
+          ${j.url&&j.url!=='N/A'?`<a class="btn-view" href="${j.url}" target="_blank" rel="noopener">↗ View Job</a>`:''}
+        </div>
+      </div>`:''}
+    </div>`;
+  }).join('');
+}
+
+function toggleCard(id) { expandedId = expandedId===id ? null : id; renderJobs(); }
+
+async function doSearch() {
+  if (searching) return;
+  const query = document.getElementById('searchQuery').value.trim();
+  if (!query) return;
+  searching = true;
+  document.getElementById('searchBtn').disabled = true;
+  jobs = []; expandedId = null;
+  setError(''); renderJobs();
+  try {
+    setStatus('Searching for open positions...');
+    const data = await callClaude(
+      [{ role:'user', content:`Search for currently open job listings: "${query}". Find 5 real active job postings right now. Return ONLY a valid JSON array with no markdown or explanation:
+[{"id":"1","title":"","company":"","location":"","workType":"Remote/Hybrid/Onsite","url":"https://...","description":"2-3 sentence role summary","requirements":["req1","req2","req3"],"salary":"range or null","posted":"date or Recent"}]` }],
+      'You search the web for real current job listings and return structured JSON only. No backticks, no text outside the JSON array.',
+      true
+    );
+    const list = parseJSON(getText(data));
+    jobs = list.map((j,i)=>({...j, id:String(i+1), score:null, scoreDetails:null}));
+    renderJobs();
+    setStatus(`Found ${jobs.length} listings — scoring your fit...`);
+
+    const profile = document.getElementById('profileText').value;
+    for (let i=0; i<jobs.length; i++) {
+      const job = jobs[i];
+      setStatus(`Scoring: ${job.title} at ${job.company} (${i+1}/${jobs.length})`);
       try {
-        const evt = JSON.parse(d);
-        if (evt.type === 'content_block_delta' && evt.delta?.type === 'text_delta') {
-          full += evt.delta.text;
-          onChunk(full);
-        }
-      } catch (_) {}
+        const sd = await callClaude(
+          [{ role:'user', content:`Score this candidate's fit for this job. Return ONLY valid JSON, no backticks:
+
+CANDIDATE:
+${profile}
+
+JOB: ${job.title} at ${job.company}
+${job.description}
+Requirements: ${(job.requirements||[]).join(', ')}
+
+{"score":85,"tier":"Strong Match","strengths":["strength 1","strength 2","strength 3"],"gaps":["gap if any"],"verdict":"one sentence on fit"}
+
+Replace the example values with your actual assessment. score must be an integer. tier must be exactly one of: Strong Match, Good Match, Partial Match, Low Match.` }],
+          'You are a hiring expert. Score job fit objectively and specifically. Return JSON only, no backticks.'
+        );
+        const scoreData = parseJSON(getText(sd));
+        jobs = jobs.map(j => j.id===job.id ? {...j, score:scoreData.score, scoreDetails:scoreData} : j);
+        renderJobs();
+      } catch(e) { console.error('Score error:', e); }
     }
+    setStatus('✓ Done — sorted by fit');
+    setTimeout(()=>setStatus(''), 3000);
+  } catch(e) {
+    setError(e.message);
+    setStatus('');
+  } finally {
+    searching = false;
+    document.getElementById('searchBtn').disabled = false;
   }
-  return full;
 }
 
-function parseJSON(raw) {
-  const s = raw.replace(/```json|```/g, '').trim();
-  const a = s.indexOf('{'), b = s.lastIndexOf('}');
-  if (a < 0 || b < 0) throw new Error('No JSON in response — try again');
-  return JSON.parse(s.slice(a, b + 1));
-}
-
-// ── PDF extraction ─────────────────────────────────────────────────────────────
-async function extractPDF(file) {
-  if (!window.pdfjsLib) {
-    await new Promise((res, rej) => {
-      const s = document.createElement('script');
-      s.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
-      s.onload = () => {
-        window.pdfjsLib.GlobalWorkerOptions.workerSrc =
-          'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-        res();
-      };
-      s.onerror = rej;
-      document.head.appendChild(s);
-    });
-  }
-  const buf = await file.arrayBuffer();
-  const pdf = await window.pdfjsLib.getDocument({ data: buf }).promise;
-  let text = '';
-  for (let i = 1; i <= pdf.numPages; i++) {
-    const page = await pdf.getPage(i);
-    const content = await page.getTextContent();
-    text += content.items.map(x => x.str).join(' ') + '\n';
-  }
-  return text.trim();
-}
-
-// ── File handler ───────────────────────────────────────────────────────────────
-async function handleFile(e) {
-  const file = e.target.files?.[0];
-  if (!file) return;
-  set({ fileError: '', fileLoading: true });
+let currentLetter = '';
+async function doCoverLetter(jobId) {
+  const job = jobs.find(j=>j.id===jobId);
+  if (!job) return;
+  switchTab('letter');
+  const sd = job.scoreDetails;
+  const s = sd ? tierStyle(sd.tier) : tierStyle('Partial Match');
+  const badge = job.score!==null ? `<div class="badge" style="background:${s.bg};border:1px solid ${s.border}"><div class="badge-num" style="background:${s.dot}">${job.score}</div><span class="badge-label" style="color:${s.text}">${sd?.tier}</span></div>` : '';
+  document.getElementById('clContent').innerHTML = `
+    <div class="cl-badge">
+      <div><span class="cl-badge-title">${job.title}</span> <span class="cl-badge-co">@ ${job.company}</span></div>
+      ${badge}
+    </div>
+    <div class="cl-loading mono">Drafting your cover letter...</div>`;
   try {
-    const ext = file.name.split('.').pop().toLowerCase();
-    let text = '';
-    if (ext === 'pdf') {
-      text = await extractPDF(file);
-    } else if (ext === 'docx') {
-      const buf = await file.arrayBuffer();
-      if (typeof mammoth === 'undefined') throw new Error('mammoth.js not loaded yet — try again in a moment');
-      const result = await mammoth.extractRawText({ arrayBuffer: buf });
-      text = result.value.trim();
-    } else if (ext === 'doc') {
-      set({ fileError: '.doc not supported — save as .docx first', fileLoading: false });
-      return;
-    } else {
-      text = await file.text();
-    }
-    if (!text || text.length < 80) {
-      set({ fileError: "Couldn't extract enough text. Try pasting instead.", fileLoading: false });
-    } else {
-      set({ resumeText: text, fileError: '', fileLoading: false });
-    }
-  } catch (err) {
-    set({ fileError: 'Read error: ' + err.message, fileLoading: false });
-  }
-  e.target.value = '';
-}
+    const profile = document.getElementById('profileText').value;
+    const data = await callClaude(
+      [{ role:'user', content:`Write a tailored cover letter for this application.
 
-// ── Run job search ─────────────────────────────────────────────────────────────
-async function runSearch() {
-  if (!state.apiKey.trim()) { set({ showKey: true, error: 'Enter your Anthropic API key first.' }); return; }
-  if (wordCount() < 50) return;
+CANDIDATE:
+${profile}
 
-  set({ error: '', jobs: [], profile: null, stage: 'loading' });
+ROLE: ${job.title} at ${job.company}
+${job.description}
+Requirements: ${(job.requirements||[]).join(', ')}
 
-  const steps = ['Reading resume…', 'Searching job boards…', 'Scoring fit…', 'Ranking matches…'];
-  let tick = 0;
-  set({ statusMsg: steps[0] });
-  const iv = setInterval(() => { tick = (tick + 1) % steps.length; set({ statusMsg: steps[tick] }); }, 3200);
-
-  try {
-    const raw = await callClaude(
-      [{ role: 'user', content: 'Parse this resume and use web search to find 6 real current matching job postings.\n\nResume:\n' + state.resumeText.slice(0, 6000) }],
-      `You are a job search agent with web search. Parse the resume, use web_search to find 6 real current job openings. Return ONLY valid JSON — no markdown, no code fences, no text before or after:
-{"profile":{"name":"","currentTitle":"","yearsExperience":0,"topSkills":[],"seniorityLevel":"mid","industries":[]},"jobs":[{"title":"","company":"","location":"","remote":false,"fitScore":80,"tags":[],"whyMatch":"2 sentences why this fits","description":"2-3 sentence description","applyUrl":null}]}`,
-      () => {},
-      true,
+Write 3 focused paragraphs. Be specific — reference actual skills, quantify impact from the profile (zero audit findings, $14M grants secured, 40% time reduction, etc. — use what's relevant). No generic opener. Start with a hook. First person. Close with a direct call to action.` }],
+      'You write exceptional tailored cover letters. Be specific, concrete, and compelling. Never use clichés.'
     );
-    clearInterval(iv);
-    const data = parseJSON(raw);
-    if (!data.profile || !Array.isArray(data.jobs)) throw new Error('Unexpected format — try again');
-    set({
-      profile: data.profile,
-      jobs: data.jobs.sort((a, b) => b.fitScore - a.fitScore),
-      stage: 'results',
-    });
-  } catch (err) {
-    clearInterval(iv);
-    set({ error: err.message, stage: 'upload' });
+    const letter = getText(data);
+    currentLetter = letter;
+    document.getElementById('clContent').innerHTML = `
+      <div class="cl-badge">
+        <div><span class="cl-badge-title">${job.title}</span> <span class="cl-badge-co">@ ${job.company}</span></div>
+        ${badge}
+      </div>
+      <div class="cl-body">${letter}</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn-copy" id="copyBtn" onclick="copyLetter()">📋 Copy</button>
+        <button class="btn-view" onclick="switchTab('search')">← Back to Jobs</button>
+      </div>`;
+  } catch(e) {
+    document.getElementById('clContent').innerHTML = `<div class="error-bar">Error generating letter: ${e.message}</div>`;
   }
 }
 
-// ── Cover letter ───────────────────────────────────────────────────────────────
-async function generateCoverLetter(job) {
-  set({ coverLetterJob: job, coverLetter: '', coverLetterLoading: true });
-  try {
-    await callClaude(
-      [{ role: 'user', content: 'Write a tailored cover letter.\n\nJob: ' + job.title + ' at ' + job.company + '\nDescription: ' + (job.description || '') + '\n\nResume:\n' + state.resumeText.slice(0, 4000) }],
-      "Expert career coach. Write a compelling 3-paragraph cover letter specific to this role. Mirror the job description language. Use the candidate's real experience. Output only the letter, no commentary.",
-      (t) => set({ coverLetter: t, coverLetterLoading: false }),
-      false,
-    );
-  } catch (err) {
-    set({ coverLetter: 'Error generating letter: ' + err.message, coverLetterLoading: false });
-  }
-}
-
-// ── Helpers ────────────────────────────────────────────────────────────────────
-function wordCount() {
-  return state.resumeText.trim().split(/\s+/).filter(Boolean).length;
-}
-
-function filteredJobs() {
-  return state.jobs.filter(j => {
-    const q = state.filter.toLowerCase();
-    const mQ = !q || [j.title, j.company, ...(j.tags || [])].some(s => s?.toLowerCase().includes(q));
-    const mT = state.typeFilter === 'all'
-      || (state.typeFilter === 'remote' && j.remote)
-      || (state.typeFilter === 'onsite' && !j.remote);
-    return mQ && mT;
+function copyLetter() {
+  navigator.clipboard.writeText(currentLetter).then(()=>{
+    const btn = document.getElementById('copyBtn');
+    if(btn){ btn.textContent='✓ Copied!'; setTimeout(()=>btn.textContent='📋 Copy',2000); }
   });
 }
-
-// ── UI builders ────────────────────────────────────────────────────────────────
-function buildHeader() {
-  return el('div', { style: { background: 'var(--surface)', borderBottom: '1px solid var(--border)', padding: '14px 22px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '10px' } },
-    el('div', { style: { display: 'flex', alignItems: 'center', gap: '10px' } },
-      el('div', { style: { width: '28px', height: '28px', borderRadius: '7px', background: 'var(--accent)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '14px', color: '#0D0F14', fontWeight: 'bold' } }, '✦'),
-      el('div', {},
-        el('div', { style: { fontFamily: "'DM Serif Display',serif", fontSize: '16px', lineHeight: '1' } }, 'JobAgent'),
-        el('div', { style: { fontSize: '10px', color: 'var(--muted)', fontFamily: "'DM Mono',monospace", letterSpacing: '0.06em' } }, 'AI JOB SEARCH'),
-      ),
-    ),
-    el('div', { style: { display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' } },
-      state.profile ? el('span', { style: { fontSize: '12px', color: 'var(--muted)' } }, state.profile.name) : null,
-      el('button', {
-        class: 'btn-ghost',
-        style: { color: state.apiKey ? 'var(--green)' : 'var(--muted)', borderColor: state.apiKey ? 'rgba(74,222,128,.3)' : 'var(--border)', fontSize: '11px', fontFamily: "'DM Mono',monospace" },
-        onClick: () => set({ showKey: !state.showKey }),
-      }, state.apiKey ? '✓ API Key' : '+ API Key'),
-      state.stage === 'results' ? el('button', { class: 'btn-ghost', onClick: () => set({ stage: 'upload', profile: null, jobs: [] }) }, 'New Search') : null,
-    ),
-  );
-}
-
-function buildKeyRow() {
-  if (!state.showKey) return null;
-  const input = el('input', {
-    type: 'password', value: state.apiKey, placeholder: 'sk-ant-…',
-    style: { flex: '1', minWidth: '180px', background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: '5px', padding: '6px 11px', fontSize: '13px', fontFamily: "'DM Mono',monospace", outline: 'none' },
-  });
-  input.addEventListener('input', e => { state.apiKey = e.target.value; localStorage.setItem('ja_key', e.target.value); });
-  return el('div', { style: { background: 'var(--surface2)', borderBottom: '1px solid var(--border)', padding: '10px 22px', display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' } },
-    el('span', { style: { fontSize: '11px', color: 'var(--muted)', fontFamily: "'DM Mono',monospace", whiteSpace: 'nowrap' } }, 'ANTHROPIC KEY'),
-    input,
-    el('button', { class: 'btn-primary', style: { padding: '6px 14px', fontSize: '12px' }, onClick: () => set({ showKey: false }) }, 'Done'),
-    el('a', { href: 'https://console.anthropic.com/settings/keys', target: '_blank', style: { fontSize: '11px', color: 'var(--muted)' } }, 'Get key ↗'),
-  );
-}
-
-function buildUpload() {
-  const fileInput = el('input', { type: 'file', accept: '.pdf,.docx,.doc,.txt,.md', style: { display: 'none' } });
-  fileInput.addEventListener('change', handleFile);
-
-  const ta = el('textarea', {
-    placeholder: 'Paste your resume here — experience, skills, education, accomplishments…',
-    style: { width: '100%', minHeight: '240px', background: 'transparent', border: 'none', outline: 'none', padding: '14px 16px', color: 'var(--text)', fontSize: '13px', lineHeight: '1.65', resize: 'vertical' },
-  });
-  ta.value = state.resumeText;
-  ta.addEventListener('input', e => { state.resumeText = e.target.value; updateWordCount(); });
-
-  function updateWordCount() {
-    wc.textContent = wordCount() + ' words';
-    ready.style.display = (!state.fileError && wordCount() > 50) ? '' : 'none';
-    runBtn.disabled = wordCount() < 50;
-  }
-
-  const wc = el('span', { style: { fontSize: '11px', color: 'var(--muted)', fontFamily: "'DM Mono',monospace" } }, wordCount() + ' words');
-  const ready = el('div', { style: { fontSize: '11px', color: 'var(--green)', fontFamily: "'DM Mono',monospace", marginTop: '3px', display: wordCount() > 50 ? '' : 'none' } }, '✓ Ready');
-  const fileErrEl = el('div', { style: { fontSize: '11px', color: 'var(--red)', marginTop: '3px', display: state.fileError ? '' : 'none' } }, state.fileError || '');
-
-  const uploadBtn = el('button', {
-    style: { background: 'none', border: '1px solid var(--border)', borderRadius: '5px', color: 'var(--muted)', fontSize: '12px', padding: '4px 11px', display: 'inline-flex', alignItems: 'center', gap: '5px' },
-    onClick: () => fileInput.click(),
-  }, state.fileLoading ? [el('span', { class: 'spinner' }), ' Reading…'] : 'Upload PDF / DOCX / TXT');
-
-  const runBtn = el('button', { class: 'btn-primary', onClick: runSearch });
-  runBtn.disabled = wordCount() < 50;
-  runBtn.textContent = 'Analyze & Find Jobs ✦';
-
-  return el('div', { class: 'fade', style: { paddingTop: '40px' } },
-    el('div', { style: { textAlign: 'center', marginBottom: '30px' } },
-      el('h1', { style: { fontFamily: "'DM Serif Display',serif", fontSize: '32px', fontWeight: '400', margin: '0 0 10px', lineHeight: '1.2' } },
-        'Find your next role.\u00A0', el('em', {}, 'Intelligently.')
-      ),
-      el('p', { style: { color: 'var(--muted)', fontSize: '14px', lineHeight: '1.6', maxWidth: '400px', margin: '0 auto' } },
-        'Upload or paste your resume. The agent reads your profile, searches live job boards, scores fit, and drafts cover letters.'
-      ),
-    ),
-    state.error ? el('div', { class: 'alert alert-err' }, state.error) : null,
-    !state.apiKey ? el('div', { class: 'alert alert-warn' }, '⚠ Add your Anthropic API key (top-right button) before searching.') : null,
-    el('div', { style: { background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '12px', overflow: 'hidden' } },
-      el('div', { style: { padding: '12px 16px', borderBottom: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' } },
-        el('span', { style: { fontSize: '11px', color: 'var(--muted)', fontFamily: "'DM Mono',monospace", letterSpacing: '0.05em' } }, 'RESUME'),
-        uploadBtn,
-        fileInput,
-      ),
-      ta,
-      el('div', { style: { padding: '11px 16px', borderTop: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' } },
-        el('div', {}, wc, fileErrEl, ready),
-        runBtn,
-      ),
-    ),
-    el('div', { style: { marginTop: '14px', display: 'flex', gap: '8px', flexWrap: 'wrap' } },
-      ...['Searches live job boards', 'Scores each role for fit', 'Drafts cover letters'].map(f =>
-        el('div', { style: { background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '7px', padding: '6px 11px', fontSize: '11px', color: 'var(--muted)', display: 'flex', alignItems: 'center', gap: '4px' } },
-          el('span', { style: { color: 'var(--accent)' } }, '✓'), ' ', f
-        )
-      ),
-    ),
-  );
-}
-
-function buildLoading() {
-  return el('div', { class: 'fade', style: { display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '420px', gap: '20px', textAlign: 'center' } },
-    el('div', { style: { width: '56px', height: '56px', borderRadius: '14px', background: 'rgba(240,168,48,.13)', border: '1px solid rgba(240,168,48,.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '26px' } }, '⌕'),
-    el('div', {},
-      el('div', { style: { fontFamily: "'DM Serif Display',serif", fontSize: '22px', marginBottom: '10px' } }, 'Searching live jobs…'),
-      el('div', { style: { color: 'var(--muted)', fontSize: '13px', display: 'flex', alignItems: 'center', gap: '8px', justifyContent: 'center' } },
-        el('span', { class: 'spinner' }),
-        el('span', { id: 'status-msg' }, state.statusMsg),
-      ),
-    ),
-    el('p', { style: { fontSize: '12px', color: 'var(--muted)', maxWidth: '280px', lineHeight: '1.6' } },
-      'Web search adds ~15–25s — results are pulled live from real job boards.'
-    ),
-  );
-}
-
-function buildScoreBadge(score) {
-  const color = score >= 85 ? 'var(--green)' : score >= 70 ? 'var(--accent)' : 'var(--muted)';
-  return el('div', { style: { display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '54px', height: '54px', borderRadius: '50%', border: '2px solid ' + color, color, flexShrink: '0' } },
-    el('span', { style: { fontSize: '17px', fontWeight: '700', lineHeight: '1', fontFamily: "'DM Mono',monospace" } }, score),
-    el('span', { style: { fontSize: '9px', color: 'var(--muted)', letterSpacing: '0.08em' } }, 'FIT'),
-  );
-}
-
-function buildJobCard(job) {
-  let expanded = false;
-  const desc = el('p', { style: { fontSize: '13px', color: 'var(--muted)', lineHeight: '1.6', marginTop: '8px', display: 'none' } }, job.description || '');
-
-  const moreBtn = el('button', { class: 'btn-ghost', onClick: () => {
-    expanded = !expanded;
-    desc.style.display = expanded ? '' : 'none';
-    moreBtn.textContent = expanded ? 'Less' : 'More';
-  }}, 'More');
-
-  const applyBtn = job.applyUrl
-    ? el('a', { href: job.applyUrl, target: '_blank', rel: 'noopener noreferrer' },
-        el('button', { style: { background: 'var(--accent)', border: 'none', borderRadius: '6px', color: '#0D0F14', fontWeight: '600', fontSize: '12px', padding: '6px 14px' } }, 'Apply →')
-      )
-    : null;
-
-  const clBtn = el('button', { class: 'btn-ghost', onClick: () => generateCoverLetter(job) }, '✦ Cover Letter');
-
-  return el('div', { class: 'card' },
-    el('div', { style: { display: 'flex', gap: '14px', alignItems: 'flex-start' } },
-      buildScoreBadge(job.fitScore || 75),
-      el('div', { style: { flex: '1', minWidth: '0' } },
-        el('div', { style: { fontFamily: "'DM Serif Display',serif", fontSize: '16px', marginBottom: '4px' } }, job.title),
-        el('div', { style: { fontSize: '12px', color: 'var(--muted)', marginBottom: '8px' } }, job.company + ' · ' + job.location + (job.remote ? ' · Remote' : '')),
-        el('div', { style: { display: 'flex', flexWrap: 'wrap', gap: '4px', marginBottom: '8px' } },
-          ...(job.tags || []).map(t => el('span', { class: 'tag' }, t))
-        ),
-        el('p', { style: { fontSize: '13px', color: 'var(--muted)', lineHeight: '1.6', margin: '0' } }, job.whyMatch),
-        desc,
-      ),
-    ),
-    el('div', { style: { display: 'flex', gap: '8px', marginTop: '14px', flexWrap: 'wrap' } },
-      applyBtn, clBtn, moreBtn,
-    ),
-  );
-}
-
-function buildResults() {
-  const jobs = filteredJobs();
-  const { profile } = state;
-
-  const filterInput = el('input', {
-    value: state.filter, placeholder: 'Filter by title, company, or skill…',
-    style: { background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '6px', padding: '7px 12px', color: 'var(--text)', fontSize: '13px', flex: '1', minWidth: '140px', outline: 'none' },
-  });
-  filterInput.addEventListener('input', e => set({ filter: e.target.value }));
-
-  const filterBtns = ['all', 'remote', 'onsite'].map(f =>
-    el('button', {
-      style: {
-        background: state.typeFilter === f ? 'rgba(240,168,48,.13)' : 'var(--surface)',
-        border: '1px solid ' + (state.typeFilter === f ? 'rgba(240,168,48,.4)' : 'var(--border)'),
-        borderRadius: '6px', padding: '6px 12px', fontSize: '11px',
-        color: state.typeFilter === f ? 'var(--accent)' : 'var(--muted)',
-        fontFamily: "'DM Mono',monospace",
-      },
-      onClick: () => set({ typeFilter: f }),
-    }, f.toUpperCase())
-  );
-
-  return el('div', { class: 'fade', style: { paddingTop: '24px' } },
-    profile ? el('div', { style: { background: 'var(--surface2)', border: '1px solid var(--border)', borderRadius: '10px', padding: '13px 16px', marginBottom: '16px', display: 'flex', gap: '14px', flexWrap: 'wrap', alignItems: 'center' } },
-      el('div', {},
-        el('div', { style: { fontFamily: "'DM Serif Display',serif", fontSize: '18px' } }, profile.name),
-        el('div', { style: { fontSize: '12px', color: 'var(--muted)', marginTop: '2px' } }, profile.currentTitle + ' · ' + profile.yearsExperience + 'y · ' + profile.seniorityLevel),
-      ),
-      el('div', { style: { display: 'flex', gap: '4px', flexWrap: 'wrap', flex: '1' } },
-        ...(profile.topSkills || []).slice(0, 6).map(s => el('span', { class: 'tag blue' }, s))
-      ),
-    ) : null,
-    el('div', { style: { display: 'flex', gap: '8px', marginBottom: '14px', flexWrap: 'wrap', alignItems: 'center' } },
-      filterInput, ...filterBtns,
-      el('span', { style: { fontSize: '11px', color: 'var(--muted)', fontFamily: "'DM Mono',monospace", whiteSpace: 'nowrap' } }, jobs.length + ' roles'),
-    ),
-    el('div', { style: { display: 'flex', flexDirection: 'column', gap: '10px' } },
-      ...jobs.map(buildJobCard),
-      jobs.length === 0 ? el('div', { style: { textAlign: 'center', padding: '44px', color: 'var(--muted)' } }, 'No roles match your filter.') : null,
-    ),
-  );
-}
-
-function buildCoverLetterModal() {
-  if (!state.coverLetterJob) return null;
-  const job = state.coverLetterJob;
-
-  const body = state.coverLetterLoading
-    ? el('div', { style: { display: 'flex', gap: '10px', alignItems: 'center', color: 'var(--muted)', fontSize: '14px' } }, el('span', { class: 'spinner' }), ' Drafting your cover letter…')
-    : el('pre', { style: { fontFamily: "'DM Sans',sans-serif", fontSize: '13px', lineHeight: '1.75', color: 'var(--text)', whiteSpace: 'pre-wrap', margin: '0' } }, state.coverLetter);
-
-  const copyBtn = !state.coverLetterLoading ? el('button', { class: 'btn-ghost', style: { fontSize: '12px' }, onClick: () => {
-    navigator.clipboard.writeText(state.coverLetter);
-    copyBtn.textContent = 'Copied!';
-    setTimeout(() => { copyBtn.textContent = 'Copy'; }, 2000);
-  }}, 'Copy') : null;
-
-  const overlay = el('div', {
-    style: { position: 'fixed', inset: '0', background: 'rgba(0,0,0,.82)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: '100', padding: '20px' },
-    onClick: e => { if (e.target === overlay) set({ coverLetterJob: null }); },
-  },
-    el('div', { style: { background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '12px', maxWidth: '620px', width: '100%', maxHeight: '85vh', display: 'flex', flexDirection: 'column', overflow: 'hidden' } },
-      el('div', { style: { padding: '15px 20px', borderBottom: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' } },
-        el('div', {},
-          el('div', { style: { fontSize: '11px', color: 'var(--muted)', fontFamily: "'DM Mono',monospace", marginBottom: '3px' } }, 'COVER LETTER'),
-          el('div', { style: { fontFamily: "'DM Serif Display',serif", fontSize: '17px' } }, job.title + ' · ' + job.company),
-        ),
-        el('div', { style: { display: 'flex', gap: '8px' } },
-          copyBtn,
-          el('button', { class: 'btn-ghost', style: { fontSize: '13px' }, onClick: () => set({ coverLetterJob: null }) }, '✕'),
-        ),
-      ),
-      el('div', { style: { padding: '20px', overflowY: 'auto', flex: '1' } }, body),
-    ),
-  );
-  return overlay;
-}
-
-// ── Main render ────────────────────────────────────────────────────────────────
-function renderApp() {
-  const app = document.getElementById('app');
-  app.innerHTML = '';
-
-  const header = buildHeader();
-  const keyRow = buildKeyRow();
-
-  let content;
-  if (state.stage === 'upload') content = buildUpload();
-  else if (state.stage === 'loading') content = buildLoading();
-  else content = buildResults();
-
-  const modal = buildCoverLetterModal();
-
-  const inner = el('div', { style: { maxWidth: '720px', margin: '0 auto', padding: '0 16px 60px' } }, content);
-
-  app.appendChild(header);
-  if (keyRow) app.appendChild(keyRow);
-  app.appendChild(inner);
-  if (modal) app.appendChild(modal);
-
-  // Keep status msg live during loading without full re-render
-  if (state.stage === 'loading') {
-    const sm = document.getElementById('status-msg');
-    if (sm) sm.textContent = state.statusMsg;
-  }
-}
-
-// ── Boot ───────────────────────────────────────────────────────────────────────
-renderApp();
 </script>
 </body>
 </html>
