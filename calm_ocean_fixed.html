@@ -1,0 +1,346 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.wrap{padding:16px 0 32px;max-width:680px;margin:0 auto;font-family:Georgia,serif}
+.hdr{text-align:center;margin-bottom:14px}
+.hdr h1{font-size:18px;font-weight:600;color:#1A1915;margin-bottom:4px}
+.hdr p{font-size:12px;color:#6B6860;margin-bottom:10px}
+.sbar{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;margin-bottom:6px}
+.sbtn{padding:7px 18px;border-radius:100px;border:2px solid #A8D8E8;background:#E8F6FA;color:#2A6880;font-size:12px;font-weight:600;cursor:pointer;font-family:Georgia,serif}
+.sbtn.on{background:#5BB8D4;border-color:#5BB8D4;color:#fff}
+.vwrap{display:flex;align-items:center;gap:6px}
+.vlbl{font-size:11px;color:#888}
+.vis{display:flex;align-items:flex-end;justify-content:center;gap:2px;height:20px;margin-bottom:12px}
+.vb{width:3px;border-radius:2px;background:#B8E0F0}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:18px}
+.scene{perspective:700px;cursor:pointer}
+.card{width:100%;aspect-ratio:1;position:relative;transform-style:preserve-3d;transition:transform .6s cubic-bezier(.4,0,.2,1);border-radius:16px}
+.card.flipped{transform:rotateY(180deg)!important}
+.face{position:absolute;inset:0;border-radius:16px;backface-visibility:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px;gap:4px}
+.bface{padding:11px;text-align:center;line-height:1.6;font-style:italic;font-size:10.5px;transform:rotateY(180deg)}
+.btitle{font-size:11px;font-weight:600;font-style:normal;margin-bottom:4px}
+.cap{font-size:9.5px;font-weight:600;letter-spacing:.04em;text-align:center}
+.shuf{display:block;margin:0 auto 16px;padding:7px 20px;border-radius:100px;border:2px solid #F9C8D0;background:#FFF0F5;color:#C2617A;font-size:12px;font-weight:600;cursor:pointer;font-family:Georgia,serif}
+.bsec{background:#EEF8FF;border:1.5px solid #A8D8E8;border-radius:20px;padding:20px;margin-bottom:12px;text-align:center}
+.btit{font-size:15px;font-weight:600;color:#1A4060;margin-bottom:3px}
+.bsub{font-size:11px;color:#4A7A98;margin-bottom:10px;font-style:italic}
+.bsci{font-size:10.5px;color:#6A9AB8;margin-bottom:14px;line-height:1.6;max-width:360px;margin-left:auto;margin-right:auto}
+.bwrap{position:relative;width:140px;height:140px;margin:0 auto 12px}
+.bring{border-radius:50%;position:absolute;inset:0;border:1.5px solid #A8D8E8}
+.binn{border-radius:50%;position:absolute;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;transition:all 1s cubic-bezier(.4,0,.6,1)}
+.bph{font-size:12px;font-weight:600;font-family:Georgia,serif}
+.bcnt{font-size:20px;font-weight:600;font-family:Georgia,serif}
+.blbl{font-size:11.5px;color:#4A7A98;font-style:italic;min-height:16px;margin-bottom:8px}
+.bbtn{padding:7px 20px;border-radius:100px;border:1.5px solid #A8D8E8;background:white;color:#2A6880;font-size:12px;cursor:pointer;font-family:Georgia,serif}
+.bbtn.on{background:#5BB8D4;border-color:#5BB8D4;color:white}
+.qt{background:#F5FBF5;border:1.5px solid #C8E6C9;border-radius:18px;padding:18px 20px;font-style:italic;font-size:12.5px;color:#1A1915;line-height:1.85}
+.qtn{margin-top:8px;font-style:normal;font-size:11px;color:#6B6860}
+</style>
+
+<div class="wrap">
+<div class="hdr">
+  <div style="font-size:22px;margin-bottom:5px">🌊</div>
+  <h1>You are ready. You are enough.</h1>
+  <p>Hover to tilt · click to flip · find your affirmation</p>
+  <div class="sbar">
+    <button class="sbtn" id="sBtn">&#9835; play ocean melody</button>
+    <div class="vwrap">
+      <span class="vlbl">vol</span>
+      <input type="range" min="0" max="100" value="40" step="1" id="vSl" style="width:70px;accent-color:#5BB8D4">
+    </div>
+  </div>
+  <div class="vis" id="vis"></div>
+</div>
+
+<div class="grid" id="grid"></div>
+<button class="shuf" id="shuf">&#10024; shuffle</button>
+
+<div class="bsec">
+  <div class="btit">4 · 7 · 8 breathing</div>
+  <div class="bsub">inhale 4 · hold 7 · exhale 8</div>
+  <div class="bsci">Slow exhales activate the vagus nerve — your body's built-in calm switch. The extended 8-count exhale is the most researched breath pattern for acute anxiety relief.</div>
+  <div class="bwrap">
+    <div class="bring"></div>
+    <div class="binn" id="bInn" style="inset:28px;background:#B8E8F8;color:#0A3040">
+      <div class="bph" id="bPh">ready</div>
+      <div class="bcnt" id="bCt">·</div>
+    </div>
+  </div>
+  <div class="blbl" id="bLbl">music syncs when playing · press start</div>
+  <button class="bbtn" id="bBt">Start breathing</button>
+</div>
+
+<div class="qt">
+  "The anxiety you feel is not a sign that something is wrong. It is a sign that something matters. And things that matter are worth showing up for — exactly as you are."
+  <div class="qtn">You've done the prep. You know your stories. Now just show up as yourself.</div>
+</div>
+</div>
+
+<script>
+// ── CHIBI SVGS ──
+function S(s){return s}
+
+var SVGS = {
+kitty: S('<svg viewBox="0 0 120 120" width="78" height="78" xmlns="http://www.w3.org/2000/svg"><ellipse cx="60" cy="62" rx="40" ry="38" fill="#FFFEF8" stroke="#F5E0C0" stroke-width="1.2"/><ellipse cx="35" cy="36" rx="14" ry="19" fill="#FFFEF8" stroke="#F5E0C0" stroke-width="1"/><ellipse cx="85" cy="36" rx="14" ry="19" fill="#FFFEF8" stroke="#F5E0C0" stroke-width="1"/><ellipse cx="35" cy="34" rx="8" ry="12" fill="#FFD0D8" opacity=".7"/><ellipse cx="85" cy="34" rx="8" ry="12" fill="#FFD0D8" opacity=".7"/><ellipse cx="44" cy="70" rx="9" ry="5.5" fill="#FFD0D0" opacity=".5"/><ellipse cx="76" cy="70" rx="9" ry="5.5" fill="#FFD0D0" opacity=".5"/><ellipse cx="48" cy="58" rx="8" ry="9" fill="white"/><ellipse cx="72" cy="58" rx="8" ry="9" fill="white"/><circle cx="48" cy="59" r="6" fill="#1A1208"/><circle cx="72" cy="59" r="6" fill="#1A1208"/><circle cx="49.5" cy="57" r="2.4" fill="white"/><circle cx="73.5" cy="57" r="2.4" fill="white"/><ellipse cx="60" cy="68" rx="2" ry="1.5" fill="#F0A8A8"/><ellipse cx="86" cy="50" rx="11" ry="7" fill="#FFB7C5"/><ellipse cx="93" cy="46" rx="7" ry="4.5" fill="#FF8FAB"/><ellipse cx="86" cy="50" rx="4" ry="3" fill="#FFB7C5"/><line x1="30" y1="65" x2="46" y2="68" stroke="#D8C8A0" stroke-width=".9"/><line x1="30" y1="69" x2="46" y2="70" stroke="#D8C8A0" stroke-width=".9"/><line x1="90" y1="65" x2="74" y2="68" stroke="#D8C8A0" stroke-width=".9"/></svg>'),
+
+melody: S('<svg viewBox="0 0 120 120" width="78" height="78" xmlns="http://www.w3.org/2000/svg"><ellipse cx="34" cy="44" rx="21" ry="27" fill="#FFB8DC" stroke="#F098C8" stroke-width="1"/><ellipse cx="86" cy="44" rx="21" ry="27" fill="#FFB8DC" stroke="#F098C8" stroke-width="1"/><ellipse cx="34" cy="41" rx="12" ry="18" fill="#FFD8EE"/><ellipse cx="86" cy="41" rx="12" ry="18" fill="#FFD8EE"/><ellipse cx="60" cy="68" rx="40" ry="38" fill="#FFFEF8" stroke="#F5C8E8" stroke-width="1"/><ellipse cx="60" cy="78" rx="28" ry="21" fill="white" opacity=".2"/><ellipse cx="40" cy="76" rx="10" ry="6" fill="#FFD0E8" opacity=".55"/><ellipse cx="80" cy="76" rx="10" ry="6" fill="#FFD0E8" opacity=".55"/><ellipse cx="48" cy="64" rx="10" ry="11" fill="white"/><ellipse cx="72" cy="64" rx="10" ry="11" fill="white"/><circle cx="48" cy="65" r="8" fill="#1A1208"/><circle cx="72" cy="65" r="8" fill="#1A1208"/><circle cx="50" cy="63" r="3.2" fill="white"/><circle cx="74" cy="63" r="3.2" fill="white"/><ellipse cx="60" cy="75" rx="2.8" ry="2" fill="#F0A8B8"/><path d="M55 80 Q60 86 65 80" stroke="#D090A8" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>'),
+
+cinna: S('<svg viewBox="0 0 120 120" width="78" height="78" xmlns="http://www.w3.org/2000/svg"><ellipse cx="24" cy="34" rx="13" ry="30" fill="#D8EEFF" stroke="#AACCF0" stroke-width="1" transform="rotate(-18 24 34)"/><ellipse cx="96" cy="34" rx="13" ry="30" fill="#D8EEFF" stroke="#AACCF0" stroke-width="1" transform="rotate(18 96 34)"/><ellipse cx="24" cy="32" rx="7" ry="20" fill="#B8D8FF" opacity=".7" transform="rotate(-18 24 32)"/><ellipse cx="96" cy="32" rx="7" ry="20" fill="#B8D8FF" opacity=".7" transform="rotate(18 96 32)"/><ellipse cx="60" cy="65" rx="44" ry="42" fill="#EEF8FF" stroke="#C0DCFF" stroke-width="1.2"/><ellipse cx="40" cy="74" rx="11" ry="7" fill="#C8E4FF" opacity=".55"/><ellipse cx="80" cy="74" rx="11" ry="7" fill="#C8E4FF" opacity=".55"/><ellipse cx="48" cy="62" rx="10" ry="11" fill="white"/><ellipse cx="72" cy="62" rx="10" ry="11" fill="white"/><circle cx="48" cy="63" r="8" fill="#2A3A5A"/><circle cx="72" cy="63" r="8" fill="#2A3A5A"/><circle cx="50" cy="60.5" r="3.2" fill="white"/><circle cx="74" cy="60.5" r="3.2" fill="white"/><ellipse cx="60" cy="74" rx="5" ry="3.5" fill="#FFB0D0"/><path d="M54 79 Q60 85 66 79" stroke="#D490B0" stroke-width="1.5" fill="none" stroke-linecap="round"/><path d="M60 96 Q68 104 72 101 Q70 109 60 108 Q50 109 48 101 Q52 104 60 96" fill="#FFB0D0" opacity=".6"/></svg>'),
+
+cherry: S('<svg viewBox="0 0 120 120" width="78" height="78" xmlns="http://www.w3.org/2000/svg"><ellipse cx="60" cy="60" rx="13" ry="26" fill="#FFB8D0" opacity=".93" transform="rotate(0 60 60) translate(0 -23)"/><ellipse cx="60" cy="60" rx="13" ry="26" fill="#FF9AB8" opacity=".9" transform="rotate(72 60 60) translate(0 -23)"/><ellipse cx="60" cy="60" rx="13" ry="26" fill="#FFB8D0" opacity=".93" transform="rotate(144 60 60) translate(0 -23)"/><ellipse cx="60" cy="60" rx="13" ry="26" fill="#FF9AB8" opacity=".9" transform="rotate(216 60 60) translate(0 -23)"/><ellipse cx="60" cy="60" rx="13" ry="26" fill="#FFB8D0" opacity=".93" transform="rotate(288 60 60) translate(0 -23)"/><circle cx="60" cy="60" r="16" fill="#FFF0A0"/><circle cx="60" cy="60" r="11" fill="#FFDA00"/><circle cx="55" cy="56" r="3" fill="#FFF8C0" opacity=".7"/><circle cx="60" cy="52.5" r="2" fill="#FF9AB8" opacity=".8"/><circle cx="67.5" cy="56" r="2" fill="#FF9AB8" opacity=".8"/><circle cx="67.5" cy="64" r="2" fill="#FF9AB8" opacity=".8"/><circle cx="60" cy="67.5" r="2" fill="#FF9AB8" opacity=".8"/><circle cx="52.5" cy="64" r="2" fill="#FF9AB8" opacity=".8"/><circle cx="52.5" cy="56" r="2" fill="#FF9AB8" opacity=".8"/><line x1="60" y1="76" x2="58" y2="104" stroke="#5A9A2A" stroke-width="2.5" stroke-linecap="round"/><path d="M59 93 Q44 86 40 73 Q53 76 59 93" fill="#8DC850"/><path d="M59 93 Q74 86 78 73 Q65 76 59 93" fill="#70B038"/></svg>'),
+
+matcha: S('<svg viewBox="0 0 120 130" width="78" height="85" xmlns="http://www.w3.org/2000/svg"><rect x="28" y="35" width="64" height="78" rx="16" fill="#F8F2E4" stroke="#D8C8A0" stroke-width="1.5"/><rect x="32" y="39" width="56" height="70" rx="12" fill="white"/><ellipse cx="60" cy="35" rx="32" ry="11" fill="#C8EDA0" stroke="#A8D880" stroke-width="1"/><ellipse cx="60" cy="35" rx="27" ry="8" fill="#90CC60" opacity=".85"/><ellipse cx="52" cy="31" rx="9" ry="4" fill="#B0DE78" opacity=".6"/><path d="M36 62 Q60 56 84 62 Q60 68 36 62" fill="#B8E878" opacity=".4"/><ellipse cx="92" cy="88" rx="6" ry="17" fill="#E8D8B0" stroke="#C8B880" stroke-width="1"/><rect x="16" y="25" width="88" height="15" rx="8" fill="#EDE0C0" stroke="#C8B070" stroke-width="1"/><text x="60" y="36" text-anchor="middle" font-size="8" fill="#8B7040" font-family="Georgia,serif" font-style="italic">matcha</text><path d="M55 22 Q58 12 54 7 Q52 14 55 22" fill="#90CC5A" opacity=".7"/><path d="M65 20 Q68 11 72 8 Q67 15 65 20" fill="#78B840" opacity=".6"/></svg>'),
+
+bunny: S('<svg viewBox="0 0 120 120" width="78" height="78" xmlns="http://www.w3.org/2000/svg"><ellipse cx="40" cy="26" rx="9" ry="24" fill="#F8F4EE" stroke="#E8D8C0" stroke-width="1" transform="rotate(-8 40 26)"/><ellipse cx="80" cy="26" rx="9" ry="24" fill="#F8F4EE" stroke="#E8D8C0" stroke-width="1" transform="rotate(8 80 26)"/><ellipse cx="40" cy="25" rx="5" ry="16" fill="#FFD0D0" transform="rotate(-8 40 25)"/><ellipse cx="80" cy="25" rx="5" ry="16" fill="#FFD0D0" transform="rotate(8 80 25)"/><ellipse cx="60" cy="65" rx="38" ry="36" fill="#FDFAF4" stroke="#E8D8C0" stroke-width="1.2"/><ellipse cx="60" cy="73" rx="26" ry="20" fill="white" opacity=".3"/><ellipse cx="40" cy="72" rx="9" ry="6" fill="#FFD0D8" opacity=".5"/><ellipse cx="80" cy="72" rx="9" ry="6" fill="#FFD0D8" opacity=".5"/><ellipse cx="48" cy="61" rx="10" ry="11" fill="white"/><ellipse cx="72" cy="61" rx="10" ry="11" fill="white"/><circle cx="48" cy="62" r="8" fill="#1A1208"/><circle cx="72" cy="62" r="8" fill="#1A1208"/><circle cx="50" cy="59.5" r="3.2" fill="white"/><circle cx="74" cy="59.5" r="3.2" fill="white"/><ellipse cx="60" cy="71" rx="2.5" ry="1.8" fill="#F0A8A8"/><path d="M55 75 Q60 81 65 75" stroke="#D09090" stroke-width="1.4" fill="none" stroke-linecap="round"/><ellipse cx="40" cy="92" rx="13" ry="7" fill="#F0E8D0"/><ellipse cx="80" cy="92" rx="13" ry="7" fill="#F0E8D0"/></svg>'),
+
+panda: S('<svg viewBox="0 0 120 120" width="78" height="78" xmlns="http://www.w3.org/2000/svg"><ellipse cx="60" cy="64" rx="40" ry="38" fill="#F8F8F8" stroke="#E0E0E0" stroke-width="1.2"/><ellipse cx="38" cy="48" rx="16" ry="16" fill="#2A2A2A"/><ellipse cx="82" cy="48" rx="16" ry="16" fill="#2A2A2A"/><ellipse cx="60" cy="64" rx="36" ry="34" fill="#FAFAFA"/><ellipse cx="44" cy="72" rx="10" ry="6.5" fill="#F0F0F0" opacity=".8"/><ellipse cx="76" cy="72" rx="10" ry="6.5" fill="#F0F0F0" opacity=".8"/><ellipse cx="48" cy="61" rx="10" ry="11" fill="white"/><ellipse cx="72" cy="61" rx="10" ry="11" fill="white"/><circle cx="48" cy="62" r="8" fill="#2A2A2A"/><circle cx="72" cy="62" r="8" fill="#2A2A2A"/><circle cx="50" cy="59.5" r="3.2" fill="white"/><circle cx="74" cy="59.5" r="3.2" fill="white"/><ellipse cx="60" cy="71" rx="2.8" ry="2" fill="#F0A8A8"/><path d="M54 75 Q60 81 66 75" stroke="#D09090" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>'),
+
+shiba: S('<svg viewBox="0 0 120 120" width="78" height="78" xmlns="http://www.w3.org/2000/svg"><ellipse cx="40" cy="38" rx="14" ry="18" fill="#F0C880" stroke="#D89040" stroke-width="1" transform="rotate(-10 40 38)"/><ellipse cx="80" cy="38" rx="14" ry="18" fill="#F0C880" stroke="#D89040" stroke-width="1" transform="rotate(10 80 38)"/><ellipse cx="40" cy="37" rx="8" ry="11" fill="#C07030" opacity=".7" transform="rotate(-10 40 37)"/><ellipse cx="80" cy="37" rx="8" ry="11" fill="#C07030" opacity=".7" transform="rotate(10 80 37)"/><ellipse cx="60" cy="65" rx="40" ry="38" fill="#F0C880" stroke="#D08030" stroke-width="1"/><ellipse cx="60" cy="74" rx="30" ry="23" fill="#F8E4B8"/><ellipse cx="42" cy="74" rx="10" ry="6" fill="#F0D890" opacity=".7"/><ellipse cx="78" cy="74" rx="10" ry="6" fill="#F0D890" opacity=".7"/><ellipse cx="48" cy="61" rx="10" ry="11" fill="white"/><ellipse cx="72" cy="61" rx="10" ry="11" fill="white"/><circle cx="48" cy="62" r="8" fill="#1A1208"/><circle cx="72" cy="62" r="8" fill="#1A1208"/><circle cx="50" cy="59.5" r="3.2" fill="white"/><circle cx="74" cy="59.5" r="3.2" fill="white"/><ellipse cx="60" cy="72" rx="7" ry="5" fill="#C86040"/><path d="M54 77 Q60 83 66 77" stroke="#A84020" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>'),
+
+frog: S('<svg viewBox="0 0 120 120" width="78" height="78" xmlns="http://www.w3.org/2000/svg"><circle cx="36" cy="42" r="18" fill="#90D060" stroke="#60A030" stroke-width="1"/><circle cx="84" cy="42" r="18" fill="#90D060" stroke="#60A030" stroke-width="1"/><circle cx="36" cy="42" r="13" fill="white"/><circle cx="84" cy="42" r="13" fill="white"/><circle cx="36" cy="43" r="9" fill="#1A3010"/><circle cx="84" cy="43" r="9" fill="#1A3010"/><circle cx="38.5" cy="40.5" r="3.5" fill="white"/><circle cx="86.5" cy="40.5" r="3.5" fill="white"/><ellipse cx="60" cy="72" rx="40" ry="36" fill="#90D060" stroke="#58A028" stroke-width="1"/><ellipse cx="60" cy="80" rx="28" ry="21" fill="#C0EE90"/><ellipse cx="40" cy="76" rx="10" ry="6.5" fill="#B0E078" opacity=".55"/><ellipse cx="80" cy="76" rx="10" ry="6.5" fill="#B0E078" opacity=".55"/><ellipse cx="60" cy="78" rx="9" ry="6" fill="#A8E068"/><path d="M50 83 Q60 91 70 83" stroke="#58A028" stroke-width="2" fill="none" stroke-linecap="round"/></svg>'),
+
+wave: S('<svg viewBox="0 0 120 120" width="78" height="78" xmlns="http://www.w3.org/2000/svg"><rect x="6" y="50" width="108" height="65" rx="14" fill="#2888C8"/><path d="M6 68 Q20 52 36 62 Q52 72 68 54 Q84 36 114 50 L114 115 L6 115 Z" fill="#50A8E0" opacity=".85"/><path d="M6 80 Q25 66 44 76 Q63 86 82 68 Q101 50 114 62 L114 115 L6 115 Z" fill="#90D0F0" opacity=".7"/><path d="M6 56 Q22 42 38 52 Q54 62 70 44 Q86 26 112 40" stroke="white" stroke-width="3.5" fill="none" stroke-linecap="round" opacity=".85"/><ellipse cx="32" cy="46" rx="7" ry="4.5" fill="white" opacity=".5" transform="rotate(-15 32 46)"/><ellipse cx="78" cy="40" rx="6" ry="3.5" fill="white" opacity=".4" transform="rotate(-10 78 40)"/><circle cx="98" cy="52" r="3.5" fill="white" opacity=".55"/></svg>'),
+
+shell: S('<svg viewBox="0 0 120 120" width="78" height="78" xmlns="http://www.w3.org/2000/svg"><path d="M60 18 Q98 28 103 66 Q103 98 60 103 Q17 98 17 66 Q22 28 60 18" fill="#FFCF88" stroke="#D09040" stroke-width="1.2"/><path d="M60 18 Q60 52 60 103" stroke="#C07830" stroke-width="1.2" fill="none" opacity=".35"/><path d="M60 18 Q88 46 103 66" stroke="#C07830" stroke-width="1" fill="none" opacity=".3"/><path d="M60 18 Q32 46 17 66" stroke="#C07830" stroke-width="1" fill="none" opacity=".3"/><path d="M33 26 Q60 34 87 26" stroke="#D89040" stroke-width=".9" fill="none" opacity=".5"/><path d="M22 50 Q60 60 98 50" stroke="#D89040" stroke-width=".9" fill="none" opacity=".5"/><path d="M20 74 Q60 84 100 74" stroke="#D89040" stroke-width=".9" fill="none" opacity=".45"/><ellipse cx="42" cy="33" rx="11" ry="6" fill="white" opacity=".26" transform="rotate(-30 42 33)"/></svg>'),
+
+jelly: S('<svg viewBox="0 0 120 130" width="78" height="85" xmlns="http://www.w3.org/2000/svg"><ellipse cx="60" cy="52" rx="42" ry="36" fill="#E8D0FF" stroke="#C090E8" stroke-width="1.2"/><ellipse cx="42" cy="42" rx="12" ry="9" fill="white" opacity=".28" transform="rotate(-20 42 42)"/><ellipse cx="70" cy="40" rx="9" ry="6" fill="white" opacity=".22"/><ellipse cx="44" cy="58" rx="9" ry="10" fill="white"/><ellipse cx="76" cy="58" rx="9" ry="10" fill="white"/><circle cx="44" cy="59" r="7" fill="#7030C0" opacity=".8"/><circle cx="76" cy="59" r="7" fill="#7030C0" opacity=".8"/><circle cx="46" cy="57" r="2.8" fill="white"/><circle cx="78" cy="57" r="2.8" fill="white"/><ellipse cx="60" cy="68" rx="4" ry="3" fill="#D0A0F0"/><path d="M55 73 Q60 79 65 73" stroke="#B080D0" stroke-width="1.5" fill="none" stroke-linecap="round"/><ellipse cx="38" cy="62" rx="10" ry="6" fill="#D8B8FF" opacity=".5"/><ellipse cx="82" cy="62" rx="10" ry="6" fill="#D8B8FF" opacity=".5"/><path d="M40 90 Q36 103 40 115" stroke="#C090E8" stroke-width="2.2" fill="none" stroke-linecap="round"/><path d="M50 92 Q46 107 50 118" stroke="#D0A8F8" stroke-width="1.8" fill="none" stroke-linecap="round"/><path d="M60 93 Q60 108 60 120" stroke="#C090E8" stroke-width="2.2" fill="none" stroke-linecap="round"/><path d="M70 92 Q74 107 70 118" stroke="#D0A8F8" stroke-width="1.8" fill="none" stroke-linecap="round"/><path d="M80 90 Q84 103 80 115" stroke="#C090E8" stroke-width="2.2" fill="none" stroke-linecap="round"/></svg>'),
+
+stars: S('<svg viewBox="0 0 120 120" width="78" height="78" xmlns="http://www.w3.org/2000/svg"><polygon points="60,20 63.8,31.8 76.2,31.8 66.2,38.8 70,50.6 60,43.6 50,50.6 53.8,38.8 43.8,31.8 56.2,31.8" fill="#FFE060" opacity=".95"/><polygon points="30,52 32.4,59.4 40.2,59.4 33.9,63.8 36.3,71.2 30,66.8 23.7,71.2 26.1,63.8 19.8,59.4 27.6,59.4" fill="#FFD0DC" opacity=".9"/><polygon points="90,52 92.4,59.4 100.2,59.4 93.9,63.8 96.3,71.2 90,66.8 83.7,71.2 86.1,63.8 79.8,59.4 87.6,59.4" fill="#D8C8FF" opacity=".9"/><polygon points="40,80 42,86.2 48.4,86.2 43.2,89.8 45.2,96 40,92.4 34.8,96 36.8,89.8 31.6,86.2 38,86.2" fill="#A0D870" opacity=".85"/><polygon points="80,80 82,86.2 88.4,86.2 83.2,89.8 85.2,96 80,92.4 74.8,96 76.8,89.8 71.6,86.2 78,86.2" fill="#90CCFF" opacity=".85"/><circle cx="48" cy="34" r="3" fill="#FFE878" opacity=".6"/><circle cx="74" cy="32" r="2.5" fill="#FFD0DC" opacity=".65"/><circle cx="60" cy="26" r="2" fill="#FFE878" opacity=".5"/></svg>'),
+
+cloud: S('<svg viewBox="0 0 120 120" width="78" height="78" xmlns="http://www.w3.org/2000/svg"><ellipse cx="48" cy="62" rx="26" ry="22" fill="white" stroke="#E0EEFF" stroke-width="1"/><ellipse cx="72" cy="66" rx="24" ry="20" fill="white" stroke="#E0EEFF" stroke-width="1"/><ellipse cx="36" cy="68" rx="20" ry="17" fill="white" stroke="#E0EEFF" stroke-width="1"/><ellipse cx="60" cy="56" rx="30" ry="24" fill="white" stroke="#E0EEFF" stroke-width="1"/><ellipse cx="42" cy="50" rx="20" ry="18" fill="white" stroke="#E0EEFF" stroke-width="1"/><ellipse cx="78" cy="54" rx="18" ry="16" fill="white" stroke="#E0EEFF" stroke-width="1"/><path d="M28 78 Q38 68 48 78 Q56 67 64 78 Q72 67 80 78 Q87 72 94 78" stroke="#FF7070" stroke-width="3" fill="none" stroke-linecap="round" opacity=".85"/><path d="M28 83 Q38 73 48 83 Q56 72 64 83 Q72 72 80 83 Q87 77 94 83" stroke="#FFAA44" stroke-width="3" fill="none" stroke-linecap="round" opacity=".8"/><path d="M28 88 Q38 78 48 88 Q56 77 64 88 Q72 77 80 88 Q87 82 94 88" stroke="#FFE044" stroke-width="2.5" fill="none" stroke-linecap="round" opacity=".75"/><path d="M28 92 Q38 82 48 92 Q56 81 64 92 Q72 81 80 92 Q87 86 94 92" stroke="#78CCFF" stroke-width="2" fill="none" stroke-linecap="round" opacity=".7"/></svg>'),
+
+straw: S('<svg viewBox="0 0 120 120" width="78" height="78" xmlns="http://www.w3.org/2000/svg"><ellipse cx="60" cy="74" rx="34" ry="38" fill="#F06070"/><ellipse cx="60" cy="74" rx="31" ry="35" fill="#FF8090"/><ellipse cx="46" cy="60" rx="5.5" ry="7" fill="#FFFDE7" opacity=".88"/><ellipse cx="63" cy="78" rx="5.5" ry="7" fill="#FFFDE7" opacity=".88"/><ellipse cx="74" cy="62" rx="5" ry="6.5" fill="#FFFDE7" opacity=".88"/><ellipse cx="46" cy="84" rx="4.5" ry="6" fill="#FFFDE7" opacity=".85"/><ellipse cx="74" cy="82" rx="4.5" ry="6" fill="#FFFDE7" opacity=".85"/><ellipse cx="60" cy="62" rx="4" ry="5.5" fill="#FFFDE7" opacity=".8"/><path d="M60 36 Q50 24 44 32 Q60 30 60 36" fill="#90CC5A"/><path d="M60 36 Q70 24 76 32 Q60 30 60 36" fill="#78B840"/><path d="M60 34 Q60 19 55 14 Q60 24 60 34" fill="#90CC5A"/><ellipse cx="46" cy="65" rx="8" ry="5" fill="white" opacity=".18" transform="rotate(-25 46 65)"/></svg>'),
+
+peach: S('<svg viewBox="0 0 120 120" width="78" height="78" xmlns="http://www.w3.org/2000/svg"><ellipse cx="60" cy="70" rx="38" ry="40" fill="#FFCBA8"/><ellipse cx="60" cy="70" rx="36" ry="38" fill="#FFD8B8"/><path d="M44 46 Q60 43 76 46 Q60 110 44 46" fill="#FFD8B0" opacity=".55"/><path d="M60 45 Q62 60 60 94 Q58 60 60 45" stroke="#F09070" stroke-width="1.5" fill="none" opacity=".55"/><path d="M60 34 Q64 20 70 17 Q65 26 60 34" fill="#90CC5A"/><path d="M60 34 Q58 21 54 18 Q58 26 60 34" fill="#78B840"/><ellipse cx="44" cy="60" rx="11" ry="7" fill="white" opacity=".2" transform="rotate(-25 44 60)"/></svg>'),
+
+sun: S('<svg viewBox="0 0 120 120" width="78" height="78" xmlns="http://www.w3.org/2000/svg"><ellipse cx="60" cy="60" rx="9" ry="22" fill="#F5C840" opacity=".93" transform="rotate(0 60 60) translate(0 -19)"/><ellipse cx="60" cy="60" rx="9" ry="22" fill="#E8B028" opacity=".93" transform="rotate(30 60 60) translate(0 -19)"/><ellipse cx="60" cy="60" rx="9" ry="22" fill="#F5C840" opacity=".93" transform="rotate(60 60 60) translate(0 -19)"/><ellipse cx="60" cy="60" rx="9" ry="22" fill="#E8B028" opacity=".93" transform="rotate(90 60 60) translate(0 -19)"/><ellipse cx="60" cy="60" rx="9" ry="22" fill="#F5C840" opacity=".93" transform="rotate(120 60 60) translate(0 -19)"/><ellipse cx="60" cy="60" rx="9" ry="22" fill="#E8B028" opacity=".93" transform="rotate(150 60 60) translate(0 -19)"/><ellipse cx="60" cy="60" rx="9" ry="22" fill="#F5C840" opacity=".93" transform="rotate(180 60 60) translate(0 -19)"/><ellipse cx="60" cy="60" rx="9" ry="22" fill="#E8B028" opacity=".93" transform="rotate(210 60 60) translate(0 -19)"/><ellipse cx="60" cy="60" rx="9" ry="22" fill="#F5C840" opacity=".93" transform="rotate(240 60 60) translate(0 -19)"/><ellipse cx="60" cy="60" rx="9" ry="22" fill="#E8B028" opacity=".93" transform="rotate(270 60 60) translate(0 -19)"/><ellipse cx="60" cy="60" rx="9" ry="22" fill="#F5C840" opacity=".93" transform="rotate(300 60 60) translate(0 -19)"/><ellipse cx="60" cy="60" rx="9" ry="22" fill="#E8B028" opacity=".93" transform="rotate(330 60 60) translate(0 -19)"/><circle cx="60" cy="60" r="20" fill="#8B5E3C"/><circle cx="60" cy="60" r="15" fill="#6B3E1C"/><circle cx="54" cy="54" r="3.5" fill="#7A4820" opacity=".35"/><line x1="60" y1="80" x2="56" y2="110" stroke="#5A9A2A" stroke-width="3.5" stroke-linecap="round"/><path d="M58 98 Q40 90 37 76 Q52 80 58 98" fill="#90CC5A"/></svg>'),
+
+tulip: S('<svg viewBox="0 0 120 130" width="78" height="85" xmlns="http://www.w3.org/2000/svg"><path d="M60 72 Q40 60 37 40 Q47 30 60 44 Q73 30 83 40 Q80 60 60 72" fill="#FFB0C8" stroke="#FF7888" stroke-width=".8"/><path d="M60 72 Q44 62 42 46 Q50 37 60 50" fill="#FF8090" opacity=".5"/><path d="M60 72 Q76 62 78 46 Q70 37 60 50" fill="#FFCCD8" opacity=".55"/><path d="M37 38 Q30 22 40 18 Q48 33 60 44" fill="#FFACC0"/><path d="M83 38 Q90 22 80 18 Q72 33 60 44" fill="#FFACC0"/><line x1="60" y1="72" x2="60" y2="118" stroke="#5A9A2A" stroke-width="3" stroke-linecap="round"/><path d="M60 96 Q42 88 38 72 Q52 76 60 96" fill="#90CC5A"/><path d="M60 96 Q78 88 82 72 Q68 76 60 96" fill="#78B840"/></svg>')
+};
+
+var ITEMS = [
+  {t:'kitty', cap:'hello kitty',    bg:'#FFF0F5',b:'#F9C8D0',ct:'#C2617A',bbg:'#FEE8EF',bb:'#F9C8D0',bt:'#8A2848',bx:'#5A1830',aff:'You have sparkle that no one can take away. Walk in like you own the room — gently.'},
+  {t:'melody',cap:'my melody',      bg:'#FFF0F8',b:'#F5B8DC',ct:'#A03070',bbg:'#FDE8F4',bb:'#F5B8DC',bt:'#7A1A50',bx:'#5A1038',aff:'Soft and strong at the same time. That is a superpower not everyone carries.'},
+  {t:'cinna', cap:'cinnamoroll',    bg:'#EEF6FF',b:'#AACCF0',ct:'#4A6FA5',bbg:'#E0EFFE',bb:'#AACCF0',bt:'#1A4A80',bx:'#0A2A60',aff:"You don't have to be perfect — just present. Float through this one."},
+  {t:'cherry',cap:'cherry blossom', bg:'#FFF0F5',b:'#F9C8D0',ct:'#C2617A',bbg:'#FEE8EF',bb:'#F9C8D0',bt:'#8A2848',bx:'#5A1830',aff:'Bloom where you are. This is your moment, and you are ready for it.'},
+  {t:'matcha',cap:'matcha latte',   bg:'#F0FBF5',b:'#C8E6C9',ct:'#388E3C',bbg:'#E0F5E8',bb:'#C8E6C9',bt:'#1A6A28',bx:'#0A4018',aff:'Warmth and depth are your strengths. The best things in life have both.'},
+  {t:'tulip', cap:'spring tulip',   bg:'#FFF0F8',b:'#F5B8DC',ct:'#A03070',bbg:'#FDE8F4',bb:'#F5B8DC',bt:'#7A1A50',bx:'#5A1038',aff:'New seasons come. This one is yours to step into without apology.'},
+  {t:'sun',   cap:'sunflower',      bg:'#FFFBEE',b:'#F5E090',ct:'#8A6A00',bbg:'#FFF5D0',bb:'#F5E090',bt:'#6A4A00',bx:'#4A3000',aff:'Turn toward the light. The right people will always see what you bring.'},
+  {t:'straw', cap:'strawberry',     bg:'#FFF0F5',b:'#F9C8D0',ct:'#C2617A',bbg:'#FEE8EF',bb:'#F9C8D0',bt:'#8A2848',bx:'#5A1830',aff:'Sweet, a little tart, completely one of a kind. That has always been your pitch.'},
+  {t:'peach', cap:'peach',          bg:'#FFF4EE',b:'#FFCCB0',ct:'#B05A2A',bbg:'#FFE8D8',bb:'#FFCCB0',bt:'#8A3A0A',bx:'#6A2000',aff:'Soft on the outside, strong at the core. That combination wins every room.'},
+  {t:'bunny', cap:'bunny friend',   bg:'#FFF8F0',b:'#FFD8A8',ct:'#9C6B00',bbg:'#FFF0D8',bb:'#FFD8A8',bt:'#7A4A00',bx:'#5A3000',aff:'Gentle and quick. You think fast on your feet and always land with grace.'},
+  {t:'panda', cap:'panda bear',     bg:'#F0F4FF',b:'#C0D0F0',ct:'#4A5A90',bbg:'#E4EAF8',bb:'#C0D0F0',bt:'#2A3A70',bx:'#1A2850',aff:'Rare, beloved, and completely yourself. Own every single bit of it.'},
+  {t:'shiba', cap:'shiba inu',      bg:'#FFF8F0',b:'#FFD8A8',ct:'#9C6B00',bbg:'#FFF0D8',bb:'#FFD8A8',bt:'#7A4A00',bx:'#5A3000',aff:'Loyal, clever, and a little surprising. That combination wins every time.'},
+  {t:'frog',  cap:'frog friend',    bg:'#F0F8F0',b:'#A8D8A8',ct:'#306A30',bbg:'#E0F0E0',bb:'#A8D8A8',bt:'#1A4A1A',bx:'#0A3010',aff:'You thrive in your element. This is your pond. Jump in with confidence.'},
+  {t:'cloud', cap:'rainbow cloud',  bg:'#EEF6FF',b:'#AACCF0',ct:'#4A6FA5',bbg:'#E0EFFE',bb:'#AACCF0',bt:'#1A4A80',bx:'#0A2A60',aff:'After every hard thing, there is color. You are already on the other side.'},
+  {t:'stars', cap:'star cluster',   bg:'#F5F0FF',b:'#D8C8F9',ct:'#7B5EA7',bbg:'#EDE0FF',bb:'#D8C8F9',bt:'#4A2A88',bx:'#321868',aff:'You earned your spot. You belong exactly where you are standing right now.'},
+  {t:'wave',  cap:'ocean wave',     bg:'#E8F6FF',b:'#A8D8F0',ct:'#2A6080',bbg:'#D8EEFF',bb:'#A8D8F0',bt:'#0A4060',bx:'#082840',aff:'Like water, you move around every obstacle. Nothing stops the tide.'},
+  {t:'shell', cap:'seashell',       bg:'#FFF8EE',b:'#F0D8A8',ct:'#8A5820',bbg:'#FFF0D8',bb:'#F0D8A8',bt:'#6A3800',bx:'#4A2000',aff:'Every layer of you holds something beautiful. You do not have to hide any of it.'},
+  {t:'jelly', cap:'jellyfish',      bg:'#F8F0FF',b:'#D8B8F8',ct:'#7030A0',bbg:'#EEE0FF',bb:'#D8B8F8',bt:'#4A1080',bx:'#300858',aff:'Luminous and graceful under pressure. You glow more than you know.'},
+];
+
+var order = [];
+for(var k=0;k<ITEMS.length;k++) order.push(k);
+
+function build(ord) {
+  var g = document.getElementById('grid');
+  g.innerHTML = '';
+  for(var i=0;i<ord.length;i++) {
+    (function(idx, pos) {
+      var it = ITEMS[idx];
+      var sc = document.createElement('div'); sc.className='scene';
+      sc.style.animationDelay = (pos*42)+'ms';
+      var cd = document.createElement('div'); cd.className='card';
+      var fr = document.createElement('div'); fr.className='face';
+      fr.style.background = it.bg; fr.style.border = '2px solid '+it.b;
+      var svg = SVGS[it.t] || '';
+      fr.innerHTML = svg + '<div class="cap" style="color:'+it.ct+'">'+it.cap+'</div>';
+      var bk = document.createElement('div'); bk.className='face bface';
+      bk.style.background = it.bbg; bk.style.border = '2px solid '+it.bb;
+      bk.innerHTML = '<div class="btitle" style="color:'+it.bt+'">for you</div><div style="color:'+it.bx+'">'+it.aff+'</div>';
+      cd.appendChild(fr); cd.appendChild(bk);
+      sc.appendChild(cd); g.appendChild(sc);
+      sc.addEventListener('mousemove', function(e) {
+        if(cd.classList.contains('flipped')) return;
+        var r=sc.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;
+        cd.style.transform='rotateY('+(x*22)+'deg) rotateX('+(-y*22)+'deg) scale(1.07)';
+        cd.style.boxShadow=(-x*14)+'px '+(y*10)+'px 24px rgba(0,0,0,0.12)';
+      });
+      sc.addEventListener('mouseleave', function() {
+        if(!cd.classList.contains('flipped')) { cd.style.transform=''; cd.style.boxShadow=''; }
+      });
+      sc.addEventListener('click', function() {
+        var f=cd.classList.toggle('flipped');
+        cd.style.transform=f?'rotateY(180deg)':'';
+        cd.style.boxShadow=f?'0 8px 30px rgba(0,0,0,0.14)':'';
+      });
+    })(ord[i], i);
+  }
+}
+build(order);
+
+document.getElementById('shuf').onclick = function() {
+  for(var i=order.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var tmp=order[i];order[i]=order[j];order[j]=tmp;}
+  build(order);
+};
+
+// ── AUDIO ──
+var actx=null, mGain=null, filt=null, playing=false;
+var drones=[], lfos=[], melTmr=null, vTmr=null;
+var phraseIdx=0, noteIdx=0;
+
+var PENTA=[146.83,293.66,329.63,369.99,440,493.88,587.33,659.25,739.99,880];
+var PHRASES=[
+  [4,5,6,5,4,2,1,0],
+  [0,1,2,4,5,4,2],
+  [6,5,4,5,6,8,6,5],
+  [2,4,5,4,2,1,0],
+  [4,6,8,6,4,2],
+  [0,2,4,5,4,2,0],
+  [5,6,8,9,8,6,5,4],
+  [3,4,5,3,1,0]
+];
+
+function ramp(p,v,t,d){p.setTargetAtTime(v,t,d);}
+
+function playNote(freq,vol,dur) {
+  if(!actx||!filt) return;
+  var o=actx.createOscillator(),o2=actx.createOscillator(),g=actx.createGain();
+  o.type='sine'; o.frequency.value=freq;
+  o2.type='sine'; o2.frequency.value=freq*2.003;
+  var g2=actx.createGain(); g2.gain.value=0.18;
+  o2.connect(g2); g2.connect(g);
+  g.gain.setValueAtTime(0,actx.currentTime);
+  g.gain.linearRampToValueAtTime(vol,actx.currentTime+0.08);
+  g.gain.setTargetAtTime(vol*0.6,actx.currentTime+0.08,0.4);
+  g.gain.exponentialRampToValueAtTime(0.0001,actx.currentTime+dur);
+  o.connect(g); g.connect(filt);
+  o.start(); o2.start();
+  o.stop(actx.currentTime+dur+0.1); o2.stop(actx.currentTime+dur+0.1);
+}
+
+function schedMelody() {
+  if(!playing) return;
+  var phrase=PHRASES[phraseIdx%PHRASES.length];
+  var ni=noteIdx%phrase.length;
+  var freq=PENTA[phrase[ni]];
+  var isLast=(ni===phrase.length-1);
+  playNote(freq, 0.08+Math.random()*0.04, isLast?2.2:1.1+Math.random()*0.5);
+  noteIdx++;
+  var delay;
+  if(isLast){phraseIdx++;noteIdx=0;delay=(2.5+Math.random()*3)*1000;}
+  else{delay=(0.9+Math.random()*0.6)*1000;}
+  melTmr=setTimeout(schedMelody,delay);
+}
+
+function buildVis() {
+  var v=document.getElementById('vis'); v.innerHTML='';
+  for(var i=0;i<20;i++){var b=document.createElement('div');b.className='vb';b.style.height='3px';v.appendChild(b);}
+}
+function animVis() {
+  var bars=document.querySelectorAll('.vb');
+  var t=Date.now()/1000;
+  bars.forEach(function(b,i){
+    var w=Math.abs(Math.sin(t*.35+i*.32))*Math.abs(Math.sin(t*.22+i*.19));
+    b.style.height=Math.round(2+13*w)+'px';
+    b.style.background='hsl('+(192+i*4)+','+(55+w*20)+'%,'+(58+w*18)+'%)';
+  });
+  if(playing) vTmr=requestAnimationFrame(animVis);
+  else{document.querySelectorAll('.vb').forEach(function(b){b.style.height='3px';b.style.background='#B8E0F0';});}
+}
+
+function startAudio() {
+  actx=new(window.AudioContext||window.webkitAudioContext)();
+  mGain=actx.createGain();
+  mGain.gain.value=document.getElementById('vSl').value/100*0.6;
+  filt=actx.createBiquadFilter(); filt.type='lowpass'; filt.frequency.value=2200; filt.Q.value=0.5;
+  filt.connect(mGain); mGain.connect(actx.destination);
+  var d1=actx.createDelay(3),d2=actx.createDelay(3),dg1=actx.createGain(),dg2=actx.createGain();
+  d1.delayTime.value=0.22; d2.delayTime.value=0.45; dg1.gain.value=0.28; dg2.gain.value=0.18;
+  filt.connect(d1); d1.connect(dg1); dg1.connect(mGain);
+  filt.connect(d2); d2.connect(dg2); dg2.connect(mGain);
+  [[73.42,.15,0],[146.83,.1,4],[220,.09,-3],[293.66,.07,6],[440,.05,2]].forEach(function(arr){
+    var o=actx.createOscillator(),og=actx.createGain();
+    o.type='sine'; o.frequency.value=arr[0]; o.detune.value=arr[2]; og.gain.value=0;
+    o.connect(og); og.connect(filt); o.start(); ramp(og.gain,arr[1],actx.currentTime,3.5);
+    var lfo=actx.createOscillator(),lg=actx.createGain();
+    lfo.type='sine'; lfo.frequency.value=0.04+Math.random()*0.04; lg.gain.value=arr[0]*0.01;
+    lfo.connect(lg); lg.connect(o.frequency); lfo.start();
+    drones.push({o:o,g:og}); lfos.push(lfo);
+  });
+  phraseIdx=0; noteIdx=0;
+  setTimeout(schedMelody,1200);
+  playing=true; buildVis(); animVis();
+}
+
+function stopAudio() {
+  clearTimeout(melTmr); cancelAnimationFrame(vTmr);
+  drones.forEach(function(n){ramp(n.g.gain,0,actx.currentTime,1.8);n.o.stop(actx.currentTime+2);});
+  lfos.forEach(function(l){try{l.stop(actx.currentTime+2);}catch(e){}});
+  drones=[]; lfos=[];
+  setTimeout(function(){try{actx.close();}catch(e){}actx=null;filt=null;},2500);
+  playing=false;
+}
+
+document.getElementById('sBtn').onclick = function() {
+  if(!playing){startAudio();this.innerHTML='&#9646;&#9646; pause music';this.classList.add('on');}
+  else{stopAudio();this.innerHTML='&#9835; play ocean melody';this.classList.remove('on');}
+};
+
+document.getElementById('vSl').oninput = function() {
+  if(mGain) mGain.gain.value=this.value/100*0.6;
+};
+
+// ── BREATHING ──
+var bPhases=[
+  {n:4,label:'breathe in',word:'in',bg:'#90D8F8',color:'#0A3040'},
+  {n:7,label:'hold',word:'hold',bg:'#C8A0E8',color:'#2A0A50'},
+  {n:8,label:'breathe out',word:'out',bg:'#A8E8C8',color:'#0A3020'}
+];
+var bAct=false,bPh=0,bCt=0,bT=null;
+var bInn=document.getElementById('bInn');
+var bPhEl=document.getElementById('bPh');
+var bCtEl=document.getElementById('bCt');
+var bLbl=document.getElementById('bLbl');
+var bBt=document.getElementById('bBt');
+
+function getSize(ph,ct){
+  if(ph===0) return 28+62*(ct/bPhases[ph].n);
+  if(ph===1) return 90;
+  return 90-62*(ct/bPhases[ph].n);
+}
+
+function applyPhase(ph,ct){
+  var p=bPhases[ph];
+  var sz=getSize(ph,ct);
+  var inset=((100-sz)/2)+'%';
+  bInn.style.inset=inset;
+  bInn.style.background=p.bg;
+  bInn.style.color=p.color;
+  bPhEl.textContent=p.word;
+  bCtEl.textContent=(p.n-ct+1);
+  bLbl.textContent=p.label;
+  if(playing&&filt) ramp(filt.frequency, ph===0?3200:ph===1?2800:1600, actx.currentTime, ph===2?2.5:1);
+}
+
+function bStep(){
+  bCt++;
+  if(bCt>bPhases[bPh].n){bCt=1;bPh=(bPh+1)%3;}
+  applyPhase(bPh,bCt);
+}
+
+bBt.onclick = function() {
+  if(!bAct){
+    bAct=true; this.textContent='Stop'; this.classList.add('on');
+    bPh=0; bCt=1; applyPhase(0,1);
+    bT=setInterval(bStep,1000);
+  } else {
+    bAct=false; this.textContent='Start breathing'; this.classList.remove('on');
+    clearInterval(bT);
+    bInn.style.inset='28px'; bPhEl.textContent='ready'; bCtEl.textContent='·';
+    bInn.style.background='#B8E8F8'; bInn.style.color='#0A3040';
+    bLbl.textContent='music syncs when playing · press start';
+    if(playing&&filt) ramp(filt.frequency,2200,actx.currentTime,1.5);
+  }
+};
+</script>
