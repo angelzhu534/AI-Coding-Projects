@@ -384,6 +384,52 @@ body{font-family:'Nunito',sans-serif;color:var(--ink);
 
 .itin-empty{padding:40px 20px;text-align:center;font-family:'Lora',serif;font-style:italic;color:var(--ink3);font-size:13px}
 
+/* ── Transit connector between itinerary stops ── */
+.itin-transit{margin:2px 0 8px 32px;padding:6px 11px;background:rgba(26,85,168,.06);border-left:2px dashed rgba(26,85,168,.35);border-radius:0 8px 8px 0;font-family:'Space Grotesk',sans-serif;font-size:10.5px;color:var(--ink3);font-weight:600;display:flex;align-items:center;gap:6px;line-height:1.4}
+.itin-transit .t-icon{font-size:13px;line-height:1}
+.itin-transit .t-mode{color:var(--ink2);font-weight:700}
+.itin-transit .t-time{color:var(--accent);font-weight:700}
+
+/* ══════════════════════════════════════════════════════
+   AREA INFO CARD
+══════════════════════════════════════════════════════ */
+#area-info{position:fixed;left:12px;right:12px;bottom:72px;max-width:480px;margin:0 auto;z-index:680;
+  background:var(--glass);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+  border:1.5px solid rgba(255,255,255,.5);border-radius:22px;
+  padding:16px 18px 14px;
+  box-shadow:0 12px 40px rgba(10,25,70,.22);
+  transform:translateY(24px) scale(.96);opacity:0;pointer-events:none;
+  transition:all .35s cubic-bezier(.32,.72,0,1);
+  max-height:62vh;overflow-y:auto;scrollbar-width:none;
+}
+#area-info::-webkit-scrollbar{display:none}
+#area-info.open{transform:translateY(0) scale(1);opacity:1;pointer-events:auto}
+.ai-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:8px}
+.ai-title-block{flex:1;min-width:0}
+.ai-emoji{font-size:22px;line-height:1;margin-bottom:2px;display:block}
+.ai-title{font-family:'Instrument Serif',serif;font-size:24px;color:var(--ink);letter-spacing:-.4px;line-height:1.05}
+.ai-tagline{font-family:'Lora',serif;font-style:italic;font-size:12px;color:var(--ink3);margin-top:1px}
+.ai-x{width:30px;height:30px;border-radius:10px;background:var(--glass2);border:1.5px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:12px;cursor:inherit;flex-shrink:0;transition:all .15s}
+.ai-x:hover{background:var(--paper3);transform:rotate(90deg)}
+.ai-desc{font-family:'Lora',serif;font-size:12px;color:var(--ink2);line-height:1.5;margin-bottom:11px}
+.ai-section-label{font-family:'Space Grotesk',sans-serif;font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);margin:10px 0 6px;display:flex;align-items:center;gap:6px}
+.ai-section-label::after{content:'';flex:1;height:1px;background:var(--border2)}
+.ai-hl{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:6px}
+.ai-hl-chip{padding:4px 10px;background:rgba(255,255,255,.55);border:1px solid var(--border2);border-radius:10px;font-family:'Space Grotesk',sans-serif;font-size:10.5px;color:var(--ink2);font-weight:600}
+.ai-transit-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.ai-transit-card{padding:9px 11px;background:rgba(255,255,255,.6);border:1.5px solid var(--border);border-radius:12px;transition:all .15s}
+.ai-transit-card:hover{background:rgba(255,255,255,.85);transform:translateY(-1px);box-shadow:0 3px 10px rgba(10,25,70,.08)}
+.ai-tc-head{display:flex;align-items:center;gap:6px;margin-bottom:3px}
+.ai-tc-icon{font-size:14px;line-height:1}
+.ai-tc-mode{font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:700;color:var(--ink)}
+.ai-tc-time{font-family:'Instrument Serif',serif;font-style:italic;font-size:15px;color:var(--accent);letter-spacing:-.3px;line-height:1.1;margin-bottom:1px}
+.ai-tc-note{font-family:'Lora',serif;font-style:italic;font-size:10px;color:var(--ink3);line-height:1.35}
+.ai-from{display:inline-flex;align-items:center;gap:5px;font-family:'Space Grotesk',sans-serif;font-size:9.5px;font-weight:700;letter-spacing:.05em;color:var(--ink3);background:rgba(26,85,168,.1);padding:3px 9px;border-radius:8px;margin-bottom:8px}
+
+@media (max-width:380px){
+  .ai-transit-grid{grid-template-columns:1fr}
+}
+
 </style>
 </head>
 <body>
@@ -532,7 +578,7 @@ body{font-family:'Nunito',sans-serif;color:var(--ink);
     <div id="itin-head">
       <div class="h-titleblock">
         <h2>An <em>itinerary</em>, rolled</h2>
-        <div class="h-sub">For an ISTP × ENFJ kind of day</div>
+        <div class="h-sub">For an ISTP × xxFP kind of day</div>
         <div class="h-roll-count">Rolled <strong id="head-rc">0</strong> times together</div>
       </div>
       <div class="cl-x" onclick="closeItin()">✕</div>
@@ -544,6 +590,11 @@ body{font-family:'Nunito',sans-serif;color:var(--ink);
       <button class="itin-act primary" onclick="rollItin()">🎲 Roll it</button>
     </div>
   </div>
+</div>
+
+<!-- Area info card -->
+<div id="area-info">
+  <div id="ai-content"></div>
 </div>
 
 <div id="area-bar">
@@ -584,6 +635,58 @@ const NB_BOUNDS = {
   missionbay: { label:'Mission Bay', emoji:'🏟️', color:'#0858c8', s:37.762,n:37.782,w:-122.408,e:-122.374 },
   southbeach: { label:'S Beach',     emoji:'⚾', color:'#3878b8', s:37.775,n:37.800,w:-122.405,e:-122.365 }
 };
+
+/* Neighborhood info + transit FROM Dogpatch (the home base) */
+const DOGPATCH_HOME = { lat:37.758, lng:-122.388, label:'Dogpatch (home base)' };
+
+const NB_INFO = {
+  dogpatch: {
+    label:'Dogpatch', emoji:'🏭', color:'#1840b0',
+    tagline:'Industrial bones, makers\' soul',
+    desc:'Converted shipyards and warehouses — the heart of SF\'s maker scene. Ceramics studios, craft breweries, art galleries, and waterfront walks. Quieter than the rest of the city, with serious character. Roughly bordered by Mariposa St (north) and Cesar Chavez (south), with 3rd Street as the main artery.',
+    highlights:['Heath Ceramics','Crane Cove Park','Pier 70','Minnesota Street Project','Magnolia Brewing'],
+    transit:null
+  },
+  potrero: {
+    label:'Potrero Hill', emoji:'⛰️', color:'#2850b0',
+    tagline:'Sunny hilltop, killer views',
+    desc:'Microclimate magic — sunnier than most of SF. Steep streets, picturesque rowhouses, neighborhood-y vibe. McKinley Square at the summit has panoramic city + bay views worth the climb.',
+    highlights:['McKinley Square','Plow brunch','Farley\'s Coffee','Bottom of the Hill','Goat Hill Pizza'],
+    transit:{
+      walk:    {time:'15–20 min', dist:'0.8 mi', note:'Steep uphill — earn the view'},
+      bike:    {time:'8–10 min',  dist:'0.8 mi', note:'Take Mariposa west, less steep'},
+      muni:    {time:'~10 min',   mode:'22 Fillmore bus', note:'Catch at 18th & Connecticut'},
+      drive:   {time:'5–7 min',   dist:'0.8 mi', note:'Easy parking on side streets'}
+    }
+  },
+  missionbay: {
+    label:'Mission Bay', emoji:'🏟️', color:'#0858c8',
+    tagline:'Glassy + new, with bay access',
+    desc:'SF\'s newest neighborhood — built on old rail yards. Chase Center, UCSF campus, Mission Creek waterway with houseboats. Wide flat streets, modern architecture, and the start of the Bay Trail.',
+    highlights:['Mission Creek Park','Chase Center','China Basin Park','Oracle Park','Spark Social'],
+    transit:{
+      walk:    {time:'15–20 min', dist:'1.0 mi', note:'Pleasant flat walk up 3rd Street'},
+      bike:    {time:'6–8 min',   dist:'1.0 mi', note:'Bay Trail or 3rd St bike lane'},
+      muni:    {time:'6–8 min',   mode:'T-Third light rail', note:'20th St stop → UCSF/Mission Bay'},
+      drive:   {time:'5–7 min',   dist:'1.0 mi', note:'Parking lots near Chase Center'}
+    }
+  },
+  southbeach: {
+    label:'South Beach', emoji:'⚾', color:'#3878b8',
+    tagline:'Ballpark, marina, bridge views',
+    desc:'Embarcadero waterfront, Oracle Park, the marina with sailboats, and the Bay Bridge as backdrop. Lots of foot traffic on Giants game days. The classic SF bayfront postcard view lives here.',
+    highlights:['Oracle Park','South Beach Harbor','Rincon Park','Waterbar','Embarcadero promenade'],
+    transit:{
+      walk:    {time:'30–35 min', dist:'1.8 mi', note:'Long but scenic along Bay Trail'},
+      bike:    {time:'10–12 min', dist:'1.8 mi', note:'⭐ Bay Trail — flat + scenic, best option'},
+      muni:    {time:'12–15 min', mode:'T-Third light rail', note:'Direct to 2nd & King / Embarcadero'},
+      drive:   {time:'8–10 min',  dist:'1.8 mi', note:'⚠️ Avoid Giants game days'}
+    }
+  }
+};
+
+const TRANSIT_ICONS = { walk:'🚶', bike:'🚲', muni:'🚊', drive:'🚗' };
+const TRANSIT_LABEL = { walk:'Walk', bike:'Bike', muni:'Muni', drive:'Drive/Lyft' };
 
 const CATS = {
   food:    { label:'Food & Drink',      color:'#e03050', emoji:'🍽️' },
@@ -641,8 +744,8 @@ const OVERPASS_ENDPOINTS = [
 ];
 
 /* ══════════════════════════════════════════════════════
-   ITINERARY CONFIG  —  ISTP (hands-on, calm, observant)
-                       × ENFJ (warm, expressive, connecting)
+   ITINERARY CONFIG  —  ISTP (hands-on, quiet, observant)
+                       × xxFP (warm, expressive, social)
 ══════════════════════════════════════════════════════ */
 const ITIN_MODES = {
   morning: {
@@ -687,41 +790,41 @@ const ITIN_MODES = {
   }
 };
 
-// Vibe lines — woven for both energies, never just one
+// Vibe lines — Angel reads the craft, Rooshie reads the room
 const VIBE = {
   cafe: [
-    {tag:'COZY + TACTILE',  text:'Slow espresso, warm light, soft hum — the kind of spot where Angel can read the room and Rooshie can talk to the barista.'},
-    {tag:'MORNING RITUAL',  text:'Quiet enough to people-watch, warm enough to linger. Hands-on roasting for one of you, real connection for the other.'},
-    {tag:'SOFT START',      text:'Low-key, no agenda. Angel sketches her day; Rooshie maps out who you should both text back.'}
+    {tag:'COZY + TACTILE',  text:'Slow espresso, warm light, soft hum. Angel clocks the grind and the brew method; Rooshie clocks the regulars and the energy at the next table.'},
+    {tag:'MORNING RITUAL',  text:'Quiet enough to settle in, warm enough to linger. Hands-on craft for one of you, real atmosphere for the other.'},
+    {tag:'SOFT START',      text:'Low-key, no agenda. Angel maps the day; Rooshie reads the room. Both of you needed this.'}
   ],
   food: [
-    {tag:'SHARED PLATES',   text:'Open kitchen energy + good seats. The mechanics of cooking on display (ISTP eyes) and table-side warmth (ENFJ heart).'},
-    {tag:'COMFORT + STYLE', text:'Real food, real conversation. The kind of place where Rooshie befriends the server and Angel approves of the wine list.'},
-    {tag:'NEIGHBORHOOD GEM',text:'Beloved local spot. Authentic, unpretentious — gives Angel calm and Rooshie the regulars to chat with.'}
+    {tag:'SHARED PLATES',   text:'Open kitchen energy + good seats. The mechanics of cooking on display (Angel\'s thing) and the social hum of a packed room (Rooshie\'s thing).'},
+    {tag:'COMFORT + STYLE', text:'Real food, real conversation. Angel approves of the technique; Rooshie befriends the server in 30 seconds.'},
+    {tag:'NEIGHBORHOOD GEM',text:'Beloved local spot — authentic, unpretentious. Calm vibe for Angel, warm regulars for Rooshie.'}
   ],
   bar: [
-    {tag:'CRAFT + CONVO',   text:'A bartender who knows their stuff (ISTP appreciation) in a room warm enough for a long conversation (ENFJ delight).'},
-    {tag:'DIM + WARM',      text:'Low light, hands-on cocktails, soft buzz of people. Both of your favorite kind of room.'},
-    {tag:'LIVE MUSIC?',     text:'Maybe music tonight. Angel watches the band do the work; Rooshie feels the room come alive.'}
+    {tag:'CRAFT + CONVO',   text:'A bartender who actually knows their stuff. Angel watches the technique; Rooshie talks to whoever sits down next.'},
+    {tag:'DIM + WARM',      text:'Low light, soft buzz, a room that feels lived-in. Angel relaxes into the quiet of it; Rooshie feels the warmth of a full room.'},
+    {tag:'MAYBE LIVE MUSIC',text:'Could be a band tonight. Angel watches the players do the work; Rooshie feels the whole room come alive.'}
   ],
   shop: [
-    {tag:'MAKERS + STORIES',text:'Tactile finds, real craftsmanship. Angel picks up every object; Rooshie hears the story behind the maker.'},
-    {tag:'BROWSE OR CHAT',  text:'Curated, calm, with friendly staff. Equally good for quiet wandering or warm conversation — pick your speed.'},
-    {tag:'TREASURE HUNT',   text:'You\'ll both spot different things. Angel finds the well-made thing; Rooshie finds the one with a soul.'}
+    {tag:'MAKERS + STORIES',text:'Tactile finds, real craftsmanship. Angel picks up every object to see how it\'s made; Rooshie picks up on the energy of the maker behind it.'},
+    {tag:'BROWSE OR CHAT',  text:'Curated, calm, friendly staff. Quiet wandering or warm conversation — pick your speed, both fit.'},
+    {tag:'TREASURE HUNT',   text:'You\'ll both spot different things. Angel finds the well-made thing; Rooshie finds the one with a story.'}
   ],
   florist: [
-    {tag:'SLOW BEAUTY',     text:'A space that rewards patience. Angel reads the leaves; Rooshie picks the one that\'ll make someone cry happy.'},
-    {tag:'CALM POCKET',     text:'Quiet, fragrant, generous. The kind of stop that resets the day for both of you.'}
+    {tag:'SLOW BEAUTY',     text:'A space that rewards patience. Angel reads the leaves and learns the species; Rooshie picks the one that\'ll make somebody cry-happy.'},
+    {tag:'CALM POCKET',     text:'Quiet, fragrant, generous. A real reset for both of you — different reasons, same effect.'}
   ],
   nature: [
-    {tag:'OPEN AIR + REAL TALK', text:'Walking pace = real conversation. Open sky for Angel; sunset light for Rooshie.'},
+    {tag:'OPEN AIR + REAL TALK', text:'Walking pace = real conversation. Open sky for Angel; golden light and people-watching for Rooshie.'},
     {tag:'NO AGENDA',       text:'Just bay views and the two of you. Hands in pockets for one; arm around shoulders for the other.'},
     {tag:'GOLDEN HOUR',     text:'Time it for the light. Angel notices the boats; Rooshie notices you.'}
   ],
   culture: [
-    {tag:'SLOW LOOKING',    text:'Quiet observation + things worth discussing after. ISTP analysis meets ENFJ meaning-making.'},
-    {tag:'BEAUTIFUL ROOM',  text:'A space designed to slow you down. Angel maps the building; Rooshie reads the artist statements.'},
-    {tag:'DEEP TALK FUEL',  text:'The kind of place that gives you 3 hours of conversation afterward over dinner.'}
+    {tag:'SLOW LOOKING',    text:'Quiet observation + plenty to discuss after. Angel maps the building and the technique; Rooshie reads the emotion and the artist\'s story.'},
+    {tag:'BEAUTIFUL ROOM',  text:'A space designed to slow you both down. Different things land — same long conversation afterward.'},
+    {tag:'DEEP TALK FUEL',  text:'The kind of place that gives you three hours of conversation afterward over dinner.'}
   ]
 };
 
@@ -755,7 +858,7 @@ map = L.map('map', {
 L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
   attribution: '© CartoDB © OSM', subdomains:'abcd', maxZoom:19
 }).addTo(map);
-map.on('click', closeDetail);
+map.on('click', () => { closeDetail(); closeAreaInfo(); });
 
 /* ══════════════════════════════════════════════════════
    CATEGORIZE
@@ -880,6 +983,7 @@ function saveTakes() {
 function showDetail(place) {
   selectedId = place.id;
   currentDetailId = place.id;
+  closeAreaInfo();
   refreshMarkers();
   map.panTo([place.lat,place.lng],{animate:true,duration:.4});
 
@@ -950,7 +1054,7 @@ function showDetail(place) {
             ${[1,2,3,4,5].map(n=>`<span class="take-star${n<=rooshieTake.stars?' lit':''}" data-n="${n}" onclick="setTakeStar('${place.id}','rooshie',${n})">★</span>`).join('')}
           </div>
         </div>
-        <textarea class="take-input" placeholder="The vibe, the people, the feeling. What did you love?"
+        <textarea class="take-input" placeholder="The vibe, the people, the energy — what made it feel alive?"
           oninput="saveTakeNote('${place.id}','rooshie',this.value)">${rooshieTake.note}</textarea>
       </div>
 
@@ -1291,6 +1395,28 @@ function updateRollCountUI() {
   if (fab) fab.textContent = rollCount + '×';
 }
 
+/* Pick best transit mode between two stops based on distance */
+function estimateTransit(p1, p2) {
+  if (!p1 || !p2) return null;
+  const distM = haversine({lat:p1.lat,lng:p1.lng}, {lat:p2.lat,lng:p2.lng});
+  // Walking ≈ 5 km/h = 12 min/km
+  const walkMin = Math.round(distM / 1000 * 13);
+  // Biking ≈ 16 km/h = 3.75 min/km, +1 min unlock
+  const bikeMin = Math.max(2, Math.round(distM / 1000 * 4 + 1));
+  // Pick recommended mode
+  let mode, time, note;
+  if (distM < 500) {
+    mode = 'walk'; time = walkMin + ' min walk'; note = `${Math.round(distM)}m`;
+  } else if (distM < 1200) {
+    mode = 'walk'; time = walkMin + ' min walk'; note = `${(distM/1609).toFixed(1)} mi`;
+  } else if (distM < 2500) {
+    mode = 'bike'; time = bikeMin + ' min bike'; note = `or ${walkMin} min walk · ${(distM/1609).toFixed(1)} mi`;
+  } else {
+    mode = 'muni'; time = bikeMin + ' min bike / T-Third'; note = `${(distM/1609).toFixed(1)} mi`;
+  }
+  return { mode, time, note, distM };
+}
+
 function renderItinBody() {
   const mode = ITIN_MODES[currentItinMode];
   const body = document.getElementById('itin-body');
@@ -1304,34 +1430,49 @@ function renderItinBody() {
       <div class="m-total">${currentItinStops.length} stops</div>
     </div>
   `;
-  const stopsHTML = currentItinStops.map((s,i) => {
+  // Build stops with transit connectors woven between them
+  const blocks = [];
+  // Lead-off transit: from Dogpatch home base to first stop
+  if (currentItinStops[0]?.place) {
+    const t = estimateTransit(DOGPATCH_HOME, currentItinStops[0].place);
+    if (t) blocks.push(`<div class="itin-transit"><span class="t-icon">🏭</span><span class="t-mode">From Dogpatch:</span> <span class="t-time">${t.time}</span> · ${t.note}</div>`);
+  }
+
+  currentItinStops.forEach((s, i) => {
     const cat = CATS[s.cat] || CATS.other;
     const dotColor = ITIN_DOT_COLORS[i % ITIN_DOT_COLORS.length];
     if (!s.place) {
-      return `<div class="itin-stop">
+      blocks.push(`<div class="itin-stop">
         <div class="itin-stop-dot" style="background:${dotColor}">${i+1}</div>
         <div class="itin-stop-time">${s.time} <span class="dur">· ${s.dur}</span></div>
         <div class="itin-stop-name" style="color:var(--ink3)">${s.title} — no spot found</div>
         <div class="itin-stop-cat">${cat.emoji} ${cat.label}</div>
         <div class="itin-vibe"><span class="vibe-pic">🤷</span><span class="vibe-text">Try rolling again or unlock more places.</span></div>
-      </div>`;
+      </div>`);
+    } else {
+      blocks.push(`<div class="itin-stop">
+        <div class="itin-stop-dot" style="background:${dotColor}">${i+1}</div>
+        <div class="itin-stop-time">${s.time} <span class="dur">· ${s.dur}</span></div>
+        <div class="itin-stop-name" onclick="jumpToItinPlace('${s.place.id}')">${s.place.name}</div>
+        <div class="itin-stop-cat">${cat.emoji} ${s.title} · ${cat.label}</div>
+        <div class="itin-vibe">
+          <span class="vibe-pic">${cat.emoji}</span>
+          <span class="vibe-text">
+            <span class="vibe-tag">${s.vibe.tag}</span>
+            ${s.vibe.text}
+          </span>
+        </div>
+      </div>`);
     }
-    return `<div class="itin-stop">
-      <div class="itin-stop-dot" style="background:${dotColor}">${i+1}</div>
-      <div class="itin-stop-time">${s.time} <span class="dur">· ${s.dur}</span></div>
-      <div class="itin-stop-name" onclick="jumpToItinPlace('${s.place.id}')">${s.place.name}</div>
-      <div class="itin-stop-cat">${cat.emoji} ${s.title} · ${cat.label}</div>
-      <div class="itin-vibe">
-        <span class="vibe-pic">${cat.emoji}</span>
-        <span class="vibe-text">
-          <span class="vibe-tag">${s.vibe.tag}</span>
-          ${s.vibe.text}
-        </span>
-      </div>
-    </div>`;
-  }).join('');
+    // Add transit connector to next stop
+    const next = currentItinStops[i+1];
+    if (next?.place && s.place) {
+      const t = estimateTransit(s.place, next.place);
+      if (t) blocks.push(`<div class="itin-transit"><span class="t-icon">${TRANSIT_ICONS[t.mode]}</span><span class="t-mode">Then:</span> <span class="t-time">${t.time}</span> · ${t.note}</div>`);
+    }
+  });
 
-  body.innerHTML = summary + stopsHTML;
+  body.innerHTML = summary + blocks.join('');
 }
 
 function jumpToItinPlace(id) {
@@ -1390,6 +1531,63 @@ function goArea(area, btn) {
   document.querySelectorAll('.ap').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
   const a=AREAS[area]; if(a) map.flyTo(a.center,a.zoom,{animate:true,duration:1});
+  // Show neighborhood info card
+  if (area === 'all') closeAreaInfo();
+  else showAreaInfo(area);
+}
+
+/* ══════════════════════════════════════════════════════
+   AREA INFO CARD — neighborhood + transit from Dogpatch
+══════════════════════════════════════════════════════ */
+function showAreaInfo(key) {
+  const info = NB_INFO[key];
+  if (!info) return closeAreaInfo();
+
+  const isHome = key === 'dogpatch';
+  const highlightsHTML = info.highlights?.length
+    ? `<div class="ai-section-label">📍 Worth a stop</div>
+       <div class="ai-hl">${info.highlights.map(h=>`<div class="ai-hl-chip">${h}</div>`).join('')}</div>`
+    : '';
+
+  let transitHTML = '';
+  if (info.transit) {
+    transitHTML = `
+      <div class="ai-section-label">🚊 Getting there from Dogpatch</div>
+      <div class="ai-transit-grid">
+        ${Object.entries(info.transit).map(([mode, d]) => `
+          <div class="ai-transit-card">
+            <div class="ai-tc-head">
+              <span class="ai-tc-icon">${TRANSIT_ICONS[mode]}</span>
+              <span class="ai-tc-mode">${d.mode || TRANSIT_LABEL[mode]}</span>
+            </div>
+            <div class="ai-tc-time">${d.time}${d.dist?` <span style="font-size:10px;color:var(--ink3);font-style:normal">· ${d.dist}</span>`:''}</div>
+            <div class="ai-tc-note">${d.note}</div>
+          </div>
+        `).join('')}
+      </div>`;
+  } else if (isHome) {
+    transitHTML = `<div style="padding:9px 12px;background:rgba(26,168,88,.1);border-left:3px solid var(--green);border-radius:0 10px 10px 0;font-family:'Lora',serif;font-style:italic;font-size:12px;color:var(--ink2);line-height:1.5">🏠 This is home base. All transit times in other areas are measured from here.</div>`;
+  }
+
+  document.getElementById('ai-content').innerHTML = `
+    <div class="ai-head">
+      <div class="ai-title-block">
+        <span class="ai-emoji">${info.emoji}</span>
+        <div class="ai-title">${info.label}</div>
+        <div class="ai-tagline">${info.tagline}</div>
+      </div>
+      <div class="ai-x" onclick="closeAreaInfo()">✕</div>
+    </div>
+    ${!isHome ? `<div class="ai-from">🏭 From Dogpatch</div>` : ''}
+    <div class="ai-desc">${info.desc}</div>
+    ${highlightsHTML}
+    ${transitHTML}
+  `;
+  document.getElementById('area-info').classList.add('open');
+}
+
+function closeAreaInfo() {
+  document.getElementById('area-info').classList.remove('open');
 }
 
 function updateStats() {
