@@ -237,30 +237,55 @@ footer{background:var(--dp);padding:72px 48px;text-align:center;position:relativ
 /* MOBILE RESPONSIVE */
 @media(max-width:900px){
   .hero{grid-template-columns:1fr}
-  .hero-r{height:45vh}
-  .hero-l{padding:60px 28px}
+  .hero-r{height:42vh}
+  .hero-l{padding:56px 24px}
   .bn2,.split{grid-template-columns:1fr}
-  .wrap{padding:60px 22px}
-  .fashion-section,.nail-section,.city-section{padding:60px 22px}
+  .wrap{padding:56px 24px}
+  .fashion-section,.nail-section,.city-section,.routine-section,.rest-section,.fn-widget{padding:56px 24px}
   .fashion-tabs .tnav{gap:0}
   .fashion-tabs .tb{padding:10px 12px;font-size:8px}
+  .routine-grid{grid-template-columns:repeat(4,1fr)}
+  .fn-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr))}
+  .nail-palette-grid{grid-template-columns:repeat(auto-fill,minmax(130px,1fr))}
 }
 @media(max-width:600px){
+  .hero-r{height:35vh}
+  .hero-l{padding:44px 18px}
   .ss{grid-template-columns:1fr 1fr}
-  nav{justify-content:flex-start;padding:0 8px}
-  nav a{padding:14px 10px;font-size:8px;letter-spacing:.2em}
-  .wrap{padding:48px 18px}
-  .fashion-section,.nail-section,.city-section{padding:48px 18px}
-  .ttl{margin-bottom:24px}
-  .pg,.nail-grid{grid-template-columns:1fr 1fr;gap:8px}
-  .fashion-grid{grid-template-columns:1fr 1fr}
+  nav{justify-content:flex-start;padding:0 4px}
+  nav a{padding:13px 9px;font-size:8px;letter-spacing:.16em}
+  .wrap{padding:44px 18px}
+  .fashion-section,.nail-section,.city-section,.routine-section,.rest-section,.fn-widget{padding:44px 18px}
+  .ttl{font-size:clamp(28px,8vw,48px);margin-bottom:20px}
+  .pg{grid-template-columns:1fr 1fr;gap:8px}
   .city-grid{grid-template-columns:1fr}
-  .fst{padding:9px 14px;font-size:8px;letter-spacing:.2em}
-  .hero-l{padding:48px 20px}
+  .fst{padding:8px 12px;font-size:8px;letter-spacing:.18em}
+  .routine-grid{grid-template-columns:repeat(2,1fr)}
+  .rest-grid{grid-template-columns:1fr}
+  .rest-controls{gap:6px}
+  .rest-filter{padding:5px 10px;font-size:8px}
+  .rest-refresh-btn{width:100%;justify-content:center;margin-left:0}
+  .fn-grid{grid-template-columns:1fr 1fr}
+  .nail-palette-grid{grid-template-columns:1fr 1fr}
+  .fn-tab-bar{overflow-x:auto;flex-wrap:nowrap;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+  .fn-tab-bar::-webkit-scrollbar{display:none}
+  .fn-sfilt-bar{overflow-x:auto;flex-wrap:nowrap;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+  .fn-sfilt-bar::-webkit-scrollbar{display:none}
+  .fn-pill-row{overflow-x:auto;flex-wrap:nowrap;-webkit-overflow-scrolling:touch;padding-bottom:4px;scrollbar-width:none}
+  .fn-pill-row::-webkit-scrollbar{display:none}
+  .bn2 .bc{padding:28px 20px}
+  .split .sp-dk,.split .sp-lt{padding:28px 20px}
+  .bc{padding:24px 18px}
+  .city-card{padding:20px 16px}
+  .ss{grid-template-columns:repeat(4,1fr)}
+  .sb{padding:14px 6px;font-size:8px;letter-spacing:.18em}
+  .pg{grid-template-columns:1fr}
 }
 @media(max-width:380px){
-  .pg,.nail-grid{grid-template-columns:1fr}
-  .fashion-grid{grid-template-columns:1fr}
+  .fn-grid{grid-template-columns:1fr}
+  .nail-palette-grid{grid-template-columns:1fr}
+  .pg{grid-template-columns:1fr}
+  .routine-grid{grid-template-columns:1fr}
 }
 </style>
 </head>
@@ -1112,34 +1137,35 @@ function fnRenderNails() {
   const items = NAILS[fnCurNSeason] || [];
   const g = document.getElementById('fn-nail-grid');
   g.className = 'nail-palette-grid';
-  g.innerHTML = items.map(item => {
+  g.innerHTML = items.map(function(item) {
     const key = 'nail::' + item.brand + '::' + item.name;
     const tried = !!TRIED[key];
-    // Build gradient for swatch based on finish
     let bg = item.color;
     if (item.finish === 'gloss') {
-      bg = `linear-gradient(160deg, ${fnLighten(item.color,32)} 0%, ${item.color} 45%, ${item.color} 100%)`;
+      bg = 'linear-gradient(160deg, ' + fnLighten(item.color, 32) + ' 0%, ' + item.color + ' 45%, ' + item.color + ' 100%)';
     } else if (item.finish === 'satin') {
-      bg = `linear-gradient(160deg, ${fnLighten(item.color,16)} 0%, ${item.color} 100%)`;
+      bg = 'linear-gradient(160deg, ' + fnLighten(item.color, 16) + ' 0%, ' + item.color + ' 100%)';
     } else if (item.finish === 'sheer') {
-      bg = `linear-gradient(160deg, ${fnLighten(item.color,24)} 0%, ${item.color}99 100%)`;
+      bg = 'linear-gradient(160deg, ' + fnLighten(item.color, 24) + ' 0%, ' + item.color + '99 100%)';
     }
-    // Nail shape SVG overlay
-    const shape = fnCurShape;
-    const sw = fnNailSwatch(item.color, item.finish, shape);
-    return `<div class="nail-chip${tried?' tried-nail':''}">
-      <div class="nail-chip-swatch" style="background:${bg}">
-        ${sw}
-        <span class="nail-chip-finish">${item.finish}</span>
-      </div>
-      <div class="nail-chip-info">
-        <div class="nail-chip-brand">${item.brand}</div>
-        <div class="nail-chip-name">${item.name}</div>
-        <div class="nail-chip-desc">${item.desc}</div>
-        <div class="nail-chip-vibe">${item.vibe}</div>
- + '<button class="nail-tried-btn' + (tried?' tried':'') + '" onclick="markTriedNail(\'' + key.replace(/'/g,"\\'") + '\',this)">' + (tried?'✓ tried':'tried it?') + '</button>' +
-      </div>
-    </div>`;
+    const sw = fnNailSwatch(item.color, item.finish, fnCurShape);
+    const triedClass = tried ? ' tried-nail' : '';
+    const btnClass = tried ? ' tried' : '';
+    const btnLabel = tried ? '✓ tried' : 'tried it?';
+    const safeKey = key.replace(/'/g, "\\'");
+    return '<div class="nail-chip' + triedClass + '">'
+      + '<div class="nail-chip-swatch" style="background:' + bg + '">'
+      + sw
+      + '<span class="nail-chip-finish">' + item.finish + '</span>'
+      + '</div>'
+      + '<div class="nail-chip-info">'
+      + '<div class="nail-chip-brand">' + item.brand + '</div>'
+      + '<div class="nail-chip-name">' + item.name + '</div>'
+      + '<div class="nail-chip-desc">' + item.desc + '</div>'
+      + '<div class="nail-chip-vibe">' + item.vibe + '</div>'
+      + '<button class="nail-tried-btn' + btnClass + '" onclick="markTriedNail(\'' + safeKey + '\',this)">' + btnLabel + '</button>'
+      + '</div>'
+      + '</div>';
   }).join('');
 }
 
@@ -1169,41 +1195,71 @@ function fnNailSwatch(color, finish, shape) {
 // ── RESTAURANTS ───────────────────────────────────────────────────────
 const ALL_RESTAURANTS = [
   // Dogpatch
-  {name:'Piccino',neighborhood:'Dogpatch',vibe:'Italian small plates, wood-fired. The neighborhood institution. Quiet room, good wine.',tags:['dogpatch','solo','date'],url:'https://piccinosf.com'},
-  {name:'Ungrafted',neighborhood:'Dogpatch',vibe:'Natural wine bar with small bites. The Dogpatch Tuesday move. Candlelit, unhurried.',tags:['dogpatch','date','solo'],url:'https://ungraftedsf.com'},
+  {name:'Piccino',neighborhood:'Dogpatch',vibe:'Italian small plates, wood-fired pizza. The neighborhood institution. Quiet room, good wine list.',tags:['dogpatch','solo','date'],url:'https://piccinosf.com'},
+  {name:'Ungrafted',neighborhood:'Dogpatch',vibe:'Natural wine bar with small bites. Candlelit, unhurried. The Dogpatch Tuesday move.',tags:['dogpatch','date','solo'],url:'https://ungraftedsf.com'},
   {name:'Third Rail',neighborhood:'Dogpatch',vibe:'Craft cocktail bar. The after-work decompression. Strong drinks, good low lighting.',tags:['dogpatch','date'],url:'https://thirdrailsf.com'},
-  {name:'Harmonic Brewing',neighborhood:'Dogpatch',vibe:'Patio brewery. Best on rare warm evenings. Relaxed, neighborhood feel.',tags:['dogpatch','solo'],url:'https://harmonicbrewing.com'},
-  {name:'Plow',neighborhood:'Dogpatch',vibe:'Brunch done right. Long lines but worth it. The weekend morning ritual.',tags:['dogpatch','morning'],url:'https://eatatplow.com'},
-  // Hayes Valley / Mission
+  {name:'Harmonic Brewing',neighborhood:'Dogpatch',vibe:'Patio brewery. Best on rare warm evenings when the fog clears at 4pm.',tags:['dogpatch','solo'],url:'https://harmonicbrewing.com'},
+  {name:'Plow',neighborhood:'Dogpatch',vibe:'Brunch done correctly. The weekend morning ritual. Go early.',tags:['dogpatch','morning'],url:'https://eatatplow.com'},
+  {name:'Bernal Star',neighborhood:'Dogpatch',vibe:'Neighborhood wine and small plates. Quieter than Ungrafted, just as considered.',tags:['dogpatch','solo','date'],url:'https://www.google.com/search?q=bernal+star+sf'},
+  // Hayes Valley
   {name:'Nopa',neighborhood:'Hayes Valley',vibe:'Wood-fired, late-night, neighborhood energy. The SF institution that still earns it.',tags:['sf','date'],url:'https://nopasf.com'},
-  {name:'Stonemill Matcha',neighborhood:'Hayes Valley',vibe:'The post-shopping matcha stop. Soft-serve optional but correct.',tags:['sf','morning','solo'],url:'https://stonemillmatcha.com'},
-  {name:'Zuni Café',neighborhood:'Hayes Valley',vibe:'The roast chicken. The room. A complete SF experience — earned.',tags:['sf','date'],url:'https://zunicafe.com'},
-  {name:'Absinthe Brasserie',neighborhood:'Hayes Valley',vibe:'French brasserie in the best sense. Good for post-SFJAZZ or a long Thursday.',tags:['sf','date'],url:'https://absinthe.com'},
-  {name:'Rich Table',neighborhood:'Hayes Valley',vibe:'Creative, personal, beautiful. The tasting menu when it\'s the right occasion.',tags:['sf','date'],url:'https://richtablesf.com'},
+  {name:'Stonemill Matcha',neighborhood:'Hayes Valley',vibe:'The post-shopping matcha stop. Ceremonial grade, soft-serve optional.',tags:['sf','morning','solo'],url:'https://stonemillmatcha.com'},
+  {name:'Zuni Cafe',neighborhood:'Hayes Valley',vibe:'The roast chicken. The room. A complete SF experience.',tags:['sf','date'],url:'https://zunicafe.com'},
+  {name:'Absinthe Brasserie',neighborhood:'Hayes Valley',vibe:'French brasserie at its best. Good for post-SFJAZZ or a long unhurried Thursday.',tags:['sf','date'],url:'https://absinthe.com'},
+  {name:'Rich Table',neighborhood:'Hayes Valley',vibe:'Creative and personal. The tasting menu for the right occasion.',tags:['sf','date'],url:'https://richtablesf.com'},
+  {name:'Anker',neighborhood:'Hayes Valley',vibe:'Scandinavian-influenced. Clean, precise, beautiful room. The Libra/Taurus pick.',tags:['sf','date','solo'],url:'https://www.google.com/search?q=anker+restaurant+sf'},
   // Mission
-  {name:'Tartine Manufactory',neighborhood:'Mission',vibe:'All-day café. The bread is the point. Go weekday morning to avoid the queue.',tags:['sf','morning','solo'],url:'https://tartinemanufactory.com'},
-  {name:'Delfina',neighborhood:'Mission',vibe:'California-Italian, consistent, beautiful. The neighborhood restaurant model.',tags:['sf','date','solo'],url:'https://delfinasf.com'},
-  {name:'Trick Dog',neighborhood:'Mission',vibe:'The cocktail bar that always has a better menu than you expect.',tags:['sf','date'],url:'https://trickdogbar.com'},
-  {name:'Foreign Cinema',neighborhood:'Mission',vibe:'Outdoor courtyard, film projections, good food. The special occasion without being precious.',tags:['sf','date'],url:'https://foreigncinema.com'},
+  {name:'Tartine Manufactory',neighborhood:'Mission',vibe:'All-day cafe. The bread is the point. Weekday morning before the queue forms.',tags:['sf','morning','solo'],url:'https://tartinemanufactory.com'},
+  {name:'Delfina',neighborhood:'Mission',vibe:'California-Italian, consistent, beautiful. The neighborhood restaurant as it should be.',tags:['sf','date','solo'],url:'https://delfinasf.com'},
+  {name:'Trick Dog',neighborhood:'Mission',vibe:'The cocktail bar that always has a more interesting menu than you expect.',tags:['sf','date'],url:'https://trickdogbar.com'},
+  {name:'Foreign Cinema',neighborhood:'Mission',vibe:'Outdoor courtyard, film projections, good food. The special occasion without fuss.',tags:['sf','date'],url:'https://foreigncinema.com'},
+  {name:'Pizzeria Delfina',neighborhood:'Mission',vibe:'The better casual pizza in the city. Margherita only and you will not regret it.',tags:['sf','solo'],url:'https://pizzeriadelfina.com'},
+  {name:'Al\'s Place',neighborhood:'Mission',vibe:'Vegetables first, fish sometimes. Beautifully considered. Worth the reservation.',tags:['sf','date','solo'],url:'https://alsplacesf.com'},
+  {name:'Loló',neighborhood:'Mission',vibe:'Modern Mexican. The mezcal list is serious. Cramped and excellent.',tags:['sf','date'],url:'https://lolosf.com'},
+  {name:'Lazy Bear',neighborhood:'Mission',vibe:'Communal tasting menu. The theatrical SF dining experience. Book months ahead.',tags:['sf','date'],url:'https://lazybearsf.com'},
   // North Beach / Embarcadero
   {name:'Cotogna',neighborhood:'North Beach',vibe:'Rustic Italian. Wood fire, handmade pasta, grappa. The room feels earned.',tags:['sf','date'],url:'https://cotognasf.com'},
-  {name:'Bix',neighborhood:'North Beach',vibe:'Jazz supper club. Dark, glamorous, a different era. The Libra sun pick.',tags:['sf','date'],url:'https://bixrestaurant.com'},
-  {name:'The Slanted Door (Redux)',neighborhood:'Ferry Building',vibe:'Vietnamese modern. The Ferry Building lunch when the light is right.',tags:['sf','solo','date'],url:'https://www.ferrybuildingmarketplace.com'},
-  {name:'Boulette\'s Larder',neighborhood:'Ferry Building',vibe:'Market breakfast. One of the best in the city. Saturday with coffee and water views.',tags:['sf','morning','solo'],url:'https://boulettelarder.com'},
-  // Noe Valley / Castro
+  {name:'Bix',neighborhood:'North Beach',vibe:'Jazz supper club. Dark, glamorous, another era. The Libra sun pick.',tags:['sf','date'],url:'https://bixrestaurant.com'},
+  {name:'Quince',neighborhood:'North Beach',vibe:'The three-Michelin-star occasion. Italian-Californian perfection. The birthday dinner.',tags:['sf','date'],url:'https://quincerestaurant.com'},
+  {name:'Boulettes Larder',neighborhood:'Ferry Building',vibe:'Market breakfast. One of the best in the city. Saturday with water views.',tags:['sf','morning','solo'],url:'https://bouletteslarder.com'},
+  {name:'Hog Island Oyster Co',neighborhood:'Ferry Building',vibe:'Raw bar at the Ferry Building. The Friday afternoon ritual.',tags:['sf','solo','date'],url:'https://hogislandoysters.com'},
+  // Noe Valley / Castro / Bernal
   {name:'Contigo',neighborhood:'Noe Valley',vibe:'Spanish, convivial, late. Good pintxos, better wine list.',tags:['sf','date'],url:'https://contigo-sf.com'},
-  {name:'Firefly',neighborhood:'Noe Valley',vibe:'The quiet neighborhood restaurant doing serious work. Regulars only feel.',tags:['sf','solo','date'],url:'https://fireflysf.com'},
-  // SoMa / Tenderloin
-  {name:'Mourad',neighborhood:'SoMa',vibe:'Moroccan-Californian tasting menu. The beautiful room when the occasion calls for it.',tags:['sf','date'],url:'https://mouradsf.com'},
-  {name:'ICHI Sushi',neighborhood:'Bernal Heights',vibe:'Neighborhood sushi that is better than its size suggests. Serious fish, no scene.',tags:['sf','solo','date'],url:'https://ichisushisf.com'},
-  // Berkeley
-  {name:'Chez Panisse',neighborhood:'Berkeley',vibe:'The origin. Fixed menu, local produce, Cal-Med perfection. The pilgrimage.',tags:['sf','date'],url:'https://chezpanisse.com'},
+  {name:'Firefly',neighborhood:'Noe Valley',vibe:'The quiet neighborhood restaurant doing serious work. Regulars-only feel.',tags:['sf','solo','date'],url:'https://fireflysf.com'},
+  {name:'ICHI Sushi',neighborhood:'Bernal Heights',vibe:'Neighborhood sushi better than its size suggests. Serious fish, no scene.',tags:['sf','solo','date'],url:'https://ichisushisf.com'},
+  {name:'Prubechu',neighborhood:'Bernal Heights',vibe:'Chamorro cuisine, totally unique in SF. The discovery dinner.',tags:['sf','date'],url:'https://prubechu.com'},
+  // SoMa / Tenderloin / Civic Center
+  {name:'Mourad',neighborhood:'SoMa',vibe:'Moroccan-Californian tasting menu. The beautiful room when occasion calls.',tags:['sf','date'],url:'https://mouradsf.com'},
+  {name:'Sightglass Coffee',neighborhood:'SoMa',vibe:'The high-ceiling SoMa cafe. The working morning away from the desk.',tags:['sf','morning','solo'],url:'https://sightglasscoffee.com'},
+  {name:'Marlowe',neighborhood:'SoMa',vibe:'Upscale bar-restaurant. The burger is genuinely excellent. Good solo lunch.',tags:['sf','solo','date'],url:'https://marlowesf.com'},
+  {name:'The Progress',neighborhood:'Western Addition',vibe:'Communal sharing plates, exceptional wine. Sister to State Bird Provisions.',tags:['sf','date'],url:'https://theprogresssf.com'},
+  {name:'State Bird Provisions',neighborhood:'Western Addition',vibe:'Dim sum-style California cuisine. One of the best in the city.',tags:['sf','date'],url:'https://statebirdsf.com'},
+  // Japantown / Pacific Heights
+  {name:'Marufuku',neighborhood:'Japantown',vibe:'Hakata-style ramen. Saturday after the tea shop. Worth the wait.',tags:['sf','solo'],url:'https://marufukuramen.com'},
+  {name:'Rintaro',neighborhood:'Western Addition',vibe:'Japanese izakaya, beautifully executed. The wood interior is a room worth being in.',tags:['sf','date','solo'],url:'https://izakayarintaro.com'},
+  {name:'Ju-ni',neighborhood:'Japantown',vibe:'Omakase sushi, intimate counter. The considered splurge.',tags:['sf','date'],url:'https://junisf.com'},
+  // Richmond / Sunset
+  {name:'Outerlands',neighborhood:'Outer Sunset',vibe:'Wood-paneled, cozy, sand-adjacent. The Dutch baby. Ocean Beach walk after.',tags:['sf','morning','solo'],url:'https://outerlandssf.com'},
+  {name:'Burma Superstar',neighborhood:'Inner Richmond',vibe:'The tea leaf salad. Worth every minute of the wait.',tags:['sf','solo'],url:'https://burmasuperstar.com'},
+  {name:'Pizzetta 211',neighborhood:'Outer Richmond',vibe:'Nine-inch personal pizzas, weekly menu. The intimate neighborhood find.',tags:['sf','solo','date'],url:'https://pizzetta211.com'},
+  {name:'Ton Kiang',neighborhood:'Inner Richmond',vibe:'Dim sum done properly. The Sunday morning with good company.',tags:['sf','morning'],url:'https://www.google.com/search?q=ton+kiang+sf+dim+sum'},
+  // South Bay / Day trips
+  {name:'Manresa',neighborhood:'Los Gatos',vibe:'Three-Michelin farm-to-table. The occasion restaurant worth the drive south.',tags:['date'],url:'https://manresarestaurant.com'},
+  {name:'Baumé',neighborhood:'Palo Alto',vibe:'French modernist, intimate. Tasting menu with genuine intention.',tags:['date'],url:'https://www.baumerestaurant.com'},
+  // Berkeley / East Bay
+  {name:'Chez Panisse',neighborhood:'Berkeley',vibe:'The origin of everything. Fixed menu, local produce, Cal-Med perfection.',tags:['sf','date'],url:'https://chezpanisse.com'},
   {name:'Ippuku',neighborhood:'Berkeley',vibe:'Japanese izakaya. Charcoal, skewers, good sake. The right Berkeley dinner.',tags:['sf','date'],url:'https://ippukuberkeley.com'},
-  // Morning specific
-  {name:'Sightglass Coffee',neighborhood:'SoMa',vibe:'The high-ceiling SoMa café for a working morning away from the desk.',tags:['sf','morning','solo'],url:'https://sightglasscoffee.com'},
-  {name:'Ritual Coffee',neighborhood:'Hayes Valley',vibe:'The coffee to pair with the Hayes Valley browse.',tags:['sf','morning','solo'],url:'https://ritualroasters.com'},
-  {name:'Marufuku',neighborhood:'Japantown',vibe:'Hakata-style ramen. Saturday after Maruwu Seicha. Worth the wait.',tags:['sf','solo'],url:'https://marufukuramen.com'},
+  {name:'Asha Tea House',neighborhood:'Berkeley',vibe:'The serious tea destination. Ceremonial matcha, sourced with obsession.',tags:['sf','morning','solo'],url:'https://ashateahouse.com'},
+  {name:'Zachary\'s Chicago Pizza',neighborhood:'Berkeley',vibe:'Deep dish that earns the hype. The comfort meal after a Tilden hike.',tags:['sf','solo'],url:'https://zacharys.com'},
+  {name:'Cheese Board Pizza',neighborhood:'Berkeley',vibe:'Collective-run, one daily pizza, always correct. The Telegraph Ave ritual.',tags:['sf','solo','morning'],url:'https://cheeseboardcollective.coop'},
+  {name:'Camino',neighborhood:'Oakland',vibe:'Wood fire, whole animal, farm-direct. The Oakland restaurant with actual conviction.',tags:['sf','date'],url:'https://caminorestaurant.com'},
+  {name:'Commis',neighborhood:'Oakland',vibe:'Two Michelin stars in a small Oakland room. The most serious tasting menu in the East Bay.',tags:['date'],url:'https://commisrestaurant.com'},
+  {name:'Duende',neighborhood:'Oakland',vibe:'Spanish pintxos and flamenco. Loud, warm, convivial. The social dinner.',tags:['sf','date'],url:'https://duendeoakland.com'},
+  // Marin
+  {name:'Osteria Stellina',neighborhood:'Point Reyes Station',vibe:'Farm-to-table Italian after the Bear Valley hike. The correct Marin day off.',tags:['date','solo'],url:'https://osteriastellina.com'},
+  {name:'Sir and Star',neighborhood:'Olema',vibe:'Historic inn dining room. Local and seasonal done with real craft.',tags:['date'],url:'https://www.sirandstar.com'},
 ];
+
 
 let restCurrentFilter = 'all';
 let restShuffled = [];
@@ -1235,15 +1291,18 @@ function restRender() {
   g.innerHTML = items.map(r => {
     const key = 'rest::' + r.name;
     const tried = !!TRIED[key];
-    return `<a href="${r.url}" target="_blank" rel="noopener" class="rest-card${tried?' tried-rest':''}">
-      <div class="rest-neighborhood">${r.neighborhood}</div>
-      <div class="rest-name">${r.name}</div>
-      <div class="rest-vibe">${r.vibe}</div>
-      <div class="rest-meta">
-        ${r.tags.map(t=>`<span class="rest-tag">${t}</span>`).join('')}
- + '<button class="rest-tried-btn' + (tried?' tried':'') + '" onclick="event.preventDefault();event.stopPropagation();markTriedRest(\'' + key.replace(/'/g,"\\'") + '\',this)">' + (tried?'✓ been':'been here?') + '</button>' +
-      </div>
-    </a>`;
+    const triedClass = tried ? ' tried-rest' : '';
+    const btnClass = tried ? ' tried' : '';
+    const btnLabel = tried ? '✓ been' : 'been here?';
+    const safeKey = key.replace(/'/g, "\\'");
+    const tags = r.tags.map(t => '<span class="rest-tag">' + t + '</span>').join('');
+    const btn = '<button class="rest-tried-btn' + btnClass + '" onclick="event.preventDefault();event.stopPropagation();markTriedRest(\'' + safeKey + '\',this)">' + btnLabel + '</button>';
+    return '<a href="' + r.url + '" target="_blank" rel="noopener" class="rest-card' + triedClass + '">'
+      + '<div class="rest-neighborhood">' + r.neighborhood + '</div>'
+      + '<div class="rest-name">' + r.name + '</div>'
+      + '<div class="rest-vibe">' + r.vibe + '</div>'
+      + '<div class="rest-meta">' + tags + btn + '</div>'
+      + '</a>';
   }).join('');
 }
 
