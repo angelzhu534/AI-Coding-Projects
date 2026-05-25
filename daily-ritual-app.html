@@ -635,6 +635,19 @@ if ('serviceWorker' in navigator) {
   });
 }
 
+// Re-check date whenever app comes back to foreground
+// Handles: phone sitting open overnight, returning from another app, waking from sleep
+let lastDate = new Date().toDateString();
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible') {
+    const today = new Date().toDateString();
+    if (today !== lastDate) {
+      lastDate = today;
+      init(); // reloads with the new day
+    }
+  }
+});
+
 init();
 </script>
 </body>
