@@ -1,0 +1,19 @@
+{
+  "name": "In Full Bloom",
+  "short_name": "In Bloom",
+  "description": "Daily ritual, routine, life guide",
+  "start_url": "./in-full-bloom-v7.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#faf7f2",
+  "theme_color": "#2a3528",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

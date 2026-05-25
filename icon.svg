@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" fill="#2a3528"/>
+  <circle cx="256" cy="256" r="200" fill="none" stroke="#c4a96a" stroke-width="2"/>
+  <circle cx="256" cy="256" r="130" fill="none" stroke="#c4a96a" stroke-width="1" opacity="0.5"/>
+  <!-- Flower petals -->
+  <ellipse cx="256" cy="156" rx="22" ry="40" fill="#c4a96a" opacity="0.8"/>
+  <ellipse cx="256" cy="356" rx="22" ry="40" fill="#c4a96a" opacity="0.8"/>
+  <ellipse cx="156" cy="256" rx="40" ry="22" fill="#c4a96a" opacity="0.8"/>
+  <ellipse cx="356" cy="256" rx="40" ry="22" fill="#c4a96a" opacity="0.8"/>
+  <ellipse cx="185" cy="185" rx="22" ry="40" fill="#c4a96a" opacity="0.6" transform="rotate(45 185 185)"/>
+  <ellipse cx="327" cy="185" rx="22" ry="40" fill="#c4a96a" opacity="0.6" transform="rotate(-45 327 185)"/>
+  <ellipse cx="185" cy="327" rx="22" ry="40" fill="#c4a96a" opacity="0.6" transform="rotate(-45 185 327)"/>
+  <ellipse cx="327" cy="327" rx="22" ry="40" fill="#c4a96a" opacity="0.6" transform="rotate(45 327 327)"/>
+  <!-- Center -->
+  <circle cx="256" cy="256" r="32" fill="#c4a96a"/>
+  <circle cx="256" cy="256" r="18" fill="#2a3528"/>
+  <circle cx="256" cy="256" r="6" fill="#c4a96a"/>
+</svg>
