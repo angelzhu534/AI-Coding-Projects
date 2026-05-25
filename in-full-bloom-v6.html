@@ -1056,19 +1056,24 @@ function fnShape(s,btn){fnCurShape=s;document.querySelectorAll('#fnp-nails .fn-p
 function fnDesign(d,btn){fnCurDesign=d;document.querySelectorAll('#fnp-nails .fn-pill').forEach(b=>{if(b.getAttribute('onclick')&&b.getAttribute('onclick').includes('fnDesign'))b.classList.remove('active')});btn.classList.add('active');fnRenderNails();}
 function fnNSeason(s,btn){fnCurNSeason=s;document.querySelectorAll('#fn-nseasons .fn-tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');fnRenderNails();}
 
-function fnCard(i){
-  const wrap = i.url
-    ? `<a href="${i.url}" target="_blank" rel="noopener" class="fn-card fn-card-link">`
-    : `<div class="fn-card">`;
-  const close = i.url ? `</a>` : `</div>`;
-  return wrap +
-    `<div class="fn-brand">${i.brand}</div>` +
-    `<div class="fn-name">${i.name}</div>` +
-    `<div class="fn-desc">${i.desc}</div>` +
-    `<div class="fn-price">${i.price}${i.url ? ' <span class="fn-link-icon">↗</span>' : ''}</div>` +
-    `<div class="fn-why">${i.why}</div>` +
-    `<span class="fn-tag">${i.tag}</span>` +
-    close;
+function fnCard(i) {
+  const key = i.brand + '::' + i.name;
+  const tried = !!TRIED[key];
+  const tc = tried ? ' tried' : '';
+  const tl = tried ? '\u2713 tried' : 'tried it?';
+  const sk = key.replace(/'/g, "\\'");
+  const triedBtn = '<button class="tried-btn' + tc + '" onclick="event.preventDefault();event.stopPropagation();markTried(\'' + sk + '\',this)">' + tl + '</button>';
+  const inner = '<div class="fn-brand">' + i.brand + '</div>'
+    + '<div class="fn-name">' + i.name + '</div>'
+    + '<div class="fn-desc">' + i.desc + '</div>'
+    + '<div class="fn-price">' + i.price + (i.url ? ' <span class="fn-link-icon">\u2197</span>' : '') + '</div>'
+    + '<div class="fn-why">' + i.why + '</div>'
+    + '<span class="fn-tag">' + i.tag + '</span>'
+    + triedBtn;
+  if (i.url) {
+    return '<a href="' + i.url + '" target="_blank" rel="noopener" class="fn-card fn-card-link">' + inner + '</a>';
+  }
+  return '<div class="fn-card">' + inner + '</div>';
 }
 
 function fnRenderFashion(){
@@ -1119,18 +1124,7 @@ function markTried(key, btn) {
   if (card) card.style.opacity = TRIED[key] ? '0.45' : '1';
 }
 
-// Patch fnCard to include tried-it button
-const _origFnCard = fnCard;
-window.fnCard = function(item) {
-  const key = item.brand + '::' + item.name;
-  const tried = !!TRIED[key];
-  const base = _origFnCard(item);
-  const tc = tried ? ' tried' : '';
-  const tl = tried ? '✓ tried' : 'tried it?';
-  const sk = key.replace(/'/g, "\\'");
-  const btn = '<button class="tried-btn' + tc + '" onclick="event.preventDefault();event.stopPropagation();markTried(\'' + sk + '\',this)">' + tl + '</button>';
-  return base.replace(/(<\/a>|<\/div>)$/, btn + '$1');
-};
+// tried-it is now built into fnCard directly
 
 // ── NAIL redesign — palette chips ────────────────────────────────────
 function fnRenderNails() {
