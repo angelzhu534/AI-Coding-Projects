@@ -130,50 +130,40 @@ footer{background:var(--dp);padding:72px 48px;text-align:center;position:relativ
 .reveal{opacity:0;transform:translateY(15px);transition:opacity .72s,transform .72s}
 .reveal.visible{opacity:1;transform:translateY(0)}
 
-/* FASHION SECTION */
-.fashion-section{background:var(--ik);padding:80px 56px}
-.fashion-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:2px;background:rgba(255,255,255,.06);margin-top:0}
-.fashion-item{background:#242420;padding:22px 18px;border-top:1px solid rgba(255,255,255,.06);transition:background .3s,border-color .3s;position:relative;cursor:default}
-.fashion-item:hover{background:#2e2e2a;border-top-color:var(--rs)}
-.fi-brand{font-size:9px;letter-spacing:.38em;text-transform:uppercase;color:var(--gd);margin-bottom:6px}
-.fi-name{font-family:'Cormorant Garamond',serif;font-size:17px;color:var(--cr);margin-bottom:5px;line-height:1.25}
-.fi-desc{font-size:11px;color:var(--st);line-height:1.7;margin-bottom:10px}
-.fi-price{font-size:10px;letter-spacing:.2em;color:var(--pt)}
-.fi-why{font-size:10px;font-style:italic;color:rgba(168,184,154,.6);margin-top:5px;line-height:1.5}
-.fi-tag{display:inline-block;font-size:8px;letter-spacing:.22em;text-transform:uppercase;color:var(--ik);background:var(--gd);padding:2px 7px;margin-top:8px}
-.fashion-tabs .tnav{border-bottom-color:rgba(255,255,255,.12)}
-.fashion-tabs .tb{color:rgba(168,184,154,.55)}
-.fashion-tabs .tb.active{color:var(--cr);border-bottom-color:var(--rs)}
-.fashion-season-tabs{display:flex;gap:0;margin-bottom:0;flex-wrap:wrap}
-.fst{padding:11px 20px;font-size:9px;letter-spacing:.3em;text-transform:uppercase;border:none;cursor:pointer;transition:all .3s;background:rgba(255,255,255,.05);color:rgba(200,190,180,.5)}
-.fst.active{background:var(--rs);color:var(--cr)}
-.fashion-loading{display:flex;align-items:center;gap:12px;padding:40px 0;color:var(--st)}
-.loading-dot{width:6px;height:6px;border-radius:50%;background:var(--rs);animation:pulse 1.4s ease-in-out infinite}
-.loading-dot:nth-child(2){animation-delay:.2s}
-.loading-dot:nth-child(3){animation-delay:.4s}
-@keyframes pulse{0%,80%,100%{transform:scale(0);opacity:.3}40%{transform:scale(1);opacity:1}}
+/* FASHION + NAILS + WORKOUT WIDGET */
+.fn-widget{padding:60px 56px;background:var(--wm)}
+.fn-tab-bar{display:flex;gap:4px;flex-wrap:wrap;border-bottom:1px solid rgba(122,140,110,.25);margin-bottom:1.25rem}
+.fn-tab{background:none;border:none;padding:9px 16px;font-size:9px;letter-spacing:.28em;text-transform:uppercase;color:var(--st);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .2s}
+.fn-tab.active{color:var(--ik);border-bottom-color:var(--rs)}
+.fn-tab:hover:not(.active){color:var(--ik)}
+.fn-sfilt-bar{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:1rem}
+.fn-sfilt{background:var(--cr);border:.5px solid rgba(122,140,110,.3);border-radius:2px;padding:5px 12px;font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--st);cursor:pointer;transition:all .2s}
+.fn-sfilt.active{background:var(--ik);color:var(--cr)}
+.fn-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:8px}
+.fn-card{background:var(--cr);border:.5px solid rgba(122,140,110,.2);border-radius:2px;padding:1rem;transition:border-color .2s}
+.fn-card:hover{border-color:var(--rs)}
+.fn-brand{font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--gd);margin-bottom:4px}
+.fn-name{font-size:14px;font-weight:400;font-family:'Cormorant Garamond',serif;color:var(--ik);margin-bottom:5px;line-height:1.3}
+.fn-desc{font-size:11px;color:var(--st);line-height:1.65;margin-bottom:7px}
+.fn-price{font-size:10px;color:var(--rs)}
+.fn-tag{display:inline-block;font-size:8px;letter-spacing:.18em;text-transform:uppercase;background:var(--mP);color:var(--sD);padding:2px 7px;border-radius:2px;margin-top:6px}
+.fn-why{font-size:10px;font-style:italic;color:var(--st);margin-top:5px;line-height:1.5}
+.fn-panel{display:none}.fn-panel.active{display:block}
+.fn-pill-row{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:.75rem;align-items:center}
+.fn-pill-lbl{font-size:9px;letter-spacing:.28em;text-transform:uppercase;color:var(--st);margin-right:6px;white-space:nowrap}
+.fn-pill{background:var(--cr);border:.5px solid rgba(122,140,110,.3);border-radius:20px;padding:4px 12px;font-size:10px;color:var(--st);cursor:pointer;transition:all .2s}
+.fn-pill.active{background:var(--rs);color:var(--cr);border-color:var(--rs)}
+.fn-nail-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px}
+.fn-nc{background:var(--cr);border:.5px solid rgba(122,140,110,.2);border-radius:2px;overflow:hidden;transition:border-color .2s}
+.fn-nc:hover{border-color:var(--rs)}
+.fn-nv{height:115px;display:flex;align-items:center;justify-content:center;background:var(--wm);padding:8px}
+.fn-ni{padding:10px 11px}
+.fn-nb{font-size:9px;letter-spacing:.28em;text-transform:uppercase;color:var(--sg);margin-bottom:2px}
+.fn-nn{font-family:'Cormorant Garamond',serif;font-size:15px;color:var(--ik);margin-bottom:3px}
+.fn-nd{font-size:10px;color:var(--st);line-height:1.55}
+.fn-nf{font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:var(--rs);margin-top:4px;display:block}
 
-/* NAIL SECTION */
-.nail-section{background:var(--wm);padding:80px 56px}
-.nail-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:14px;margin-top:0}
-.nail-card{background:var(--cr);border-radius:2px;overflow:hidden;transition:transform .3s;cursor:pointer}
-.nail-card:hover{transform:translateY(-3px)}
-.nail-visual{height:150px;display:flex;align-items:center;justify-content:center;gap:5px;padding:14px 10px;position:relative;overflow:hidden}
-.nail-info{padding:13px 12px 14px}
-.nail-brand{font-size:9px;letter-spacing:.35em;text-transform:uppercase;color:var(--sg);margin-bottom:3px}
-.nail-name{font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--ik);margin-bottom:4px}
-.nail-desc{font-size:10px;color:var(--st);line-height:1.6}
-.nail-finish{font-size:8px;letter-spacing:.25em;text-transform:uppercase;color:var(--rs);margin-top:6px;display:inline-block}
-.nail-vibe{font-size:10px;font-style:italic;color:var(--bk);margin-top:3px;display:block}
-/* Shape filter tabs */
-.shape-tabs{display:flex;gap:2px;margin-bottom:16px;flex-wrap:wrap}
-.shape-tab{padding:9px 18px;font-size:9px;letter-spacing:.28em;text-transform:uppercase;background:var(--cr);border:1px solid rgba(122,140,110,.25);color:var(--st);cursor:pointer;transition:all .3s}
-.shape-tab.active{background:var(--sD);color:var(--cr);border-color:var(--sD)}
-/* Design toggle */
-.design-toggle{display:flex;gap:2px;margin-bottom:4px;flex-wrap:wrap}
-.dtb{padding:8px 14px;font-size:8px;letter-spacing:.28em;text-transform:uppercase;background:transparent;border:1px solid rgba(122,140,110,.3);color:var(--st);cursor:pointer;transition:all .3s}
-.dtb.active{background:var(--rs);color:var(--cr);border-color:var(--rs)}
-
+/* CITY SECTION */
 /* CITY SECTION */
 .city-section{background:var(--dp);padding:80px 56px}
 .city-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:3px;background:rgba(255,255,255,.06)}
@@ -536,130 +526,74 @@ footer{background:var(--dp);padding:72px 48px;text-align:center;position:relativ
   <div style="height:60px"></div>
 </div>
 
-<!-- FASHION SECTION -->
-<div id="fashion" class="fashion-section">
-  <div style="max-width:1320px;margin:0 auto">
-    <p class="lbl reveal" style="color:var(--gd)">Quiet luxury · Libra sun · ISTP precision</p>
-    <h2 class="ttl reveal" style="color:var(--cr)">Curated Wardrobe,<br><em style="color:var(--pt)">All Seasons</em></h2>
-    <p class="bt reveal" style="color:var(--st);max-width:560px;margin-bottom:36px">Taurus rising demands quality that can be felt. ISTP demands pieces that function beautifully without effort. Libra sun requires the whole picture to cohere. The result: quiet luxury that never needs explanation.</p>
+<!-- FASHION + NAILS + WORKOUT -->
+<div class="fn-widget" style="max-width:1320px;margin:0 auto;background:transparent">
+  <p class="lbl reveal" style="color:var(--sg)">Quiet luxury · Libra sun · ISTP precision</p>
+  <h2 class="ttl reveal">Wardrobe, Workout<br><em>&amp; Nail Edit</em></h2>
 
-    <!-- Season filter -->
-    <div class="fashion-season-tabs reveal" id="fashionSeasonTabs">
-      <button class="fst active" onclick="setFashionSeason('all',this)">All Seasons</button>
-      <button class="fst" onclick="setFashionSeason('spring',this)">Spring</button>
-      <button class="fst" onclick="setFashionSeason('summer',this)">Summer</button>
-      <button class="fst" onclick="setFashionSeason('autumn',this)">Autumn</button>
-      <button class="fst" onclick="setFashionSeason('winter',this)">Winter</button>
-    </div>
-
-    <!-- Category tabs -->
-    <div class="fashion-tabs" style="margin-top:2px">
-      <div class="tnav">
-        <button class="tb active" onclick="switchFashionTab(event,'f-tops')">Tops</button>
-        <button class="tb" onclick="switchFashionTab(event,'f-bottoms')">Bottoms</button>
-        <button class="tb" onclick="switchFashionTab(event,'f-dresses')">Dresses</button>
-        <button class="tb" onclick="switchFashionTab(event,'f-outerwear')">Outerwear</button>
-        <button class="tb" onclick="switchFashionTab(event,'f-shoes')">Shoes</button>
-        <button class="tb" onclick="switchFashionTab(event,'f-accessories')">Accessories</button>
-        <button class="tb" onclick="switchFashionTab(event,'f-bags')">Bags</button>
-      </div>
-
-      <div id="f-tops" class="tp active">
-        <div class="fashion-grid" id="tops-grid"></div>
-        <div id="tops-loading" class="fashion-loading"><div class="loading-dot"></div><div class="loading-dot"></div><div class="loading-dot"></div><span style="font-size:11px;letter-spacing:.2em;text-transform:uppercase">Curating for your chart</span></div>
-      </div>
-      <div id="f-bottoms" class="tp">
-        <div class="fashion-grid" id="bottoms-grid"></div>
-        <div id="bottoms-loading" class="fashion-loading" style="display:none"><div class="loading-dot"></div><div class="loading-dot"></div><div class="loading-dot"></div><span style="font-size:11px;letter-spacing:.2em;text-transform:uppercase">Loading</span></div>
-      </div>
-      <div id="f-dresses" class="tp">
-        <div class="fashion-grid" id="dresses-grid"></div>
-        <div id="dresses-loading" class="fashion-loading" style="display:none"><div class="loading-dot"></div><div class="loading-dot"></div><div class="loading-dot"></div><span style="font-size:11px;letter-spacing:.2em;text-transform:uppercase">Loading</span></div>
-      </div>
-      <div id="f-outerwear" class="tp">
-        <div class="fashion-grid" id="outerwear-grid"></div>
-        <div id="outerwear-loading" class="fashion-loading" style="display:none"><div class="loading-dot"></div><div class="loading-dot"></div><div class="loading-dot"></div><span style="font-size:11px;letter-spacing:.2em;text-transform:uppercase">Loading</span></div>
-      </div>
-      <div id="f-shoes" class="tp">
-        <div class="fashion-grid" id="shoes-grid"></div>
-        <div id="shoes-loading" class="fashion-loading" style="display:none"><div class="loading-dot"></div><div class="loading-dot"></div><div class="loading-dot"></div><span style="font-size:11px;letter-spacing:.2em;text-transform:uppercase">Loading</span></div>
-      </div>
-      <div id="f-accessories" class="tp">
-        <div class="fashion-grid" id="accessories-grid"></div>
-        <div id="accessories-loading" class="fashion-loading" style="display:none"><div class="loading-dot"></div><div class="loading-dot"></div><div class="loading-dot"></div><span style="font-size:11px;letter-spacing:.2em;text-transform:uppercase">Loading</span></div>
-      </div>
-      <div id="f-bags" class="tp">
-        <div class="fashion-grid" id="bags-grid"></div>
-        <div id="bags-loading" class="fashion-loading" style="display:none"><div class="loading-dot"></div><div class="loading-dot"></div><div class="loading-dot"></div><span style="font-size:11px;letter-spacing:.2em;text-transform:uppercase">Loading</span></div>
-      </div>
-    </div>
-
-    <div class="callout reveal" style="margin-top:40px;background:#1e1e1a;border-left-color:var(--gd)">
-      <div class="cl-lbl" style="color:var(--gd)">The dressing principle</div>
-      <div class="cl-q">"Taurus rising selects once and selects correctly. Nothing trendy, nothing temporary. The ISTP brain reads quality before the conscious mind does — the hand on fabric, the way a seam sits. Libra sun makes it coherent. Mercury Scorpio makes it intentional. The result is a wardrobe that looks effortless because every piece was chosen with complete attention."</div>
-    </div>
+  <div class="fn-tab-bar reveal">
+    <button class="fn-tab active" onclick="fnShow('fashion',this)">Fashion</button>
+    <button class="fn-tab" onclick="fnShow('workout',this)">Workout Gear</button>
+    <button class="fn-tab" onclick="fnShow('nails',this)">Nails</button>
   </div>
-</div>
 
-<!-- NAILS SECTION -->
-<div id="nails" class="nail-section">
-  <div style="max-width:1320px;margin:0 auto">
-    <p class="lbl reveal">Venus Virgo · precise, intentional</p>
-    <h2 class="ttl reveal">Nail Edit,<br><em>Shaped &amp; Curated</em></h2>
-    <p class="bt reveal" style="max-width:560px;margin-bottom:28px">Venus in Virgo means the details register. A chipped nail is a thought disruption. Almond shape is the correct shape — elongating without drama, feminine without effort. The palette: earthy nudes, deep berries, muted botanicals. Never neon. Never glitter.</p>
+  <!-- FASHION -->
+  <div id="fnp-fashion" class="fn-panel active">
+    <div class="fn-sfilt-bar" id="fn-seasons">
+      <button class="fn-sfilt active" onclick="fnSeason('all',this)">All seasons</button>
+      <button class="fn-sfilt" onclick="fnSeason('spring',this)">Spring</button>
+      <button class="fn-sfilt" onclick="fnSeason('summer',this)">Summer</button>
+      <button class="fn-sfilt" onclick="fnSeason('autumn',this)">Autumn</button>
+      <button class="fn-sfilt" onclick="fnSeason('winter',this)">Winter</button>
+    </div>
+    <div class="fn-tab-bar" id="fn-cats">
+      <button class="fn-tab active" onclick="fnCat('tops',this)">Tops</button>
+      <button class="fn-tab" onclick="fnCat('bottoms',this)">Bottoms</button>
+      <button class="fn-tab" onclick="fnCat('dresses',this)">Dresses</button>
+      <button class="fn-tab" onclick="fnCat('outerwear',this)">Outerwear</button>
+      <button class="fn-tab" onclick="fnCat('shoes',this)">Shoes</button>
+      <button class="fn-tab" onclick="fnCat('accessories',this)">Accessories</button>
+      <button class="fn-tab" onclick="fnCat('bags',this)">Bags</button>
+    </div>
+    <div class="fn-grid" id="fn-fashion-grid"></div>
+  </div>
 
-    <!-- Shape selector -->
-    <div class="shape-tabs reveal" id="shapeSelector">
-      <button class="shape-tab active" onclick="setShape('almond',this)">Almond</button>
-      <button class="shape-tab" onclick="setShape('oval',this)">Oval</button>
-      <button class="shape-tab" onclick="setShape('squoval',this)">Squoval</button>
-      <button class="shape-tab" onclick="setShape('square',this)">Square</button>
+  <!-- WORKOUT -->
+  <div id="fnp-workout" class="fn-panel">
+    <div class="fn-tab-bar" id="fn-wcats">
+      <button class="fn-tab active" onclick="fnWCat('run',this)">Run</button>
+      <button class="fn-tab" onclick="fnWCat('yoga',this)">Yoga &amp; Studio</button>
+      <button class="fn-tab" onclick="fnWCat('everyday',this)">Everyday Active</button>
+      <button class="fn-tab" onclick="fnWCat('gear',this)">Gear &amp; Extras</button>
     </div>
+    <div class="fn-grid" id="fn-workout-grid"></div>
+  </div>
 
-    <!-- Design type toggle -->
-    <div class="reveal" style="margin-bottom:4px">
-      <p style="font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--st);margin-bottom:10px">Design style</p>
-      <div class="design-toggle">
-        <button class="dtb active" onclick="setDesignType('solid',this)">Solid Color</button>
-        <button class="dtb" onclick="setDesignType('french',this)">French &amp; Tip</button>
-        <button class="dtb" onclick="setDesignType('minimal-art',this)">Minimal Art</button>
-        <button class="dtb" onclick="setDesignType('botanical',this)">Botanical</button>
-        <button class="dtb" onclick="setDesignType('negative',this)">Negative Space</button>
-      </div>
+  <!-- NAILS -->
+  <div id="fnp-nails" class="fn-panel">
+    <div class="fn-pill-row">
+      <span class="fn-pill-lbl">Shape</span>
+      <button class="fn-pill active" onclick="fnShape('almond',this)">Almond</button>
+      <button class="fn-pill" onclick="fnShape('oval',this)">Oval</button>
+      <button class="fn-pill" onclick="fnShape('squoval',this)">Squoval</button>
+      <button class="fn-pill" onclick="fnShape('square',this)">Square</button>
     </div>
-
-    <!-- Season tabs -->
-    <div class="tnav reveal" style="margin-top:24px">
-      <button class="tb active" onclick="switchTab(event,'n2-spring')">Spring</button>
-      <button class="tb" onclick="switchTab(event,'n2-summer')">Summer</button>
-      <button class="tb" onclick="switchTab(event,'n2-autumn')">Autumn</button>
-      <button class="tb" onclick="switchTab(event,'n2-winter')">Winter</button>
-      <button class="tb" onclick="switchTab(event,'n2-always')">Always</button>
+    <div class="fn-pill-row">
+      <span class="fn-pill-lbl">Design</span>
+      <button class="fn-pill active" onclick="fnDesign('solid',this)">Solid</button>
+      <button class="fn-pill" onclick="fnDesign('french',this)">French</button>
+      <button class="fn-pill" onclick="fnDesign('art',this)">Minimal art</button>
+      <button class="fn-pill" onclick="fnDesign('botanical',this)">Botanical</button>
+      <button class="fn-pill" onclick="fnDesign('negative',this)">Negative space</button>
     </div>
-
-    <!-- SPRING -->
-    <div id="n2-spring" class="tp active">
-      <div class="nail-grid" id="nail-grid-spring"></div>
+    <div class="fn-tab-bar" id="fn-nseasons">
+      <button class="fn-tab active" onclick="fnNSeason('spring',this)">Spring</button>
+      <button class="fn-tab" onclick="fnNSeason('summer',this)">Summer</button>
+      <button class="fn-tab" onclick="fnNSeason('autumn',this)">Autumn</button>
+      <button class="fn-tab" onclick="fnNSeason('winter',this)">Winter</button>
+      <button class="fn-tab" onclick="fnNSeason('always',this)">Always</button>
     </div>
-    <div id="n2-summer" class="tp">
-      <div class="nail-grid" id="nail-grid-summer"></div>
-    </div>
-    <div id="n2-autumn" class="tp">
-      <div class="nail-grid" id="nail-grid-autumn"></div>
-    </div>
-    <div id="n2-winter" class="tp">
-      <div class="nail-grid" id="nail-grid-winter"></div>
-    </div>
-    <div id="n2-always" class="tp">
-      <div class="nail-grid" id="nail-grid-always"></div>
-    </div>
-
-    <div style="padding:24px 0 0">
-      <div class="callout" style="background:var(--sD);border-left-color:var(--rs)">
-        <div class="cl-lbl">On nail care</div>
-        <div class="cl-q">"The length: medium-short, filed into almond or squoval. Nothing that interferes with function — no coffin, no stiletto. The maintenance product that matters: CND SolarOil, every night without exception. Taurus rising keeps the ritual because the ritual keeps everything else."</div>
-      </div>
-    </div>
+    <div class="fn-nail-grid" id="fn-nail-grid"></div>
   </div>
 </div>
 
@@ -921,429 +855,73 @@ function switchFashionTab(e,id){
 const io=new IntersectionObserver(entries=>{entries.forEach((e,i)=>{if(e.isIntersecting){setTimeout(()=>e.target.classList.add('visible'),i*50);io.unobserve(e.target);}});},{threshold:0.06});
 document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
 
-// ---- FASHION SEASON FILTER ----
-let currentFashionSeason = 'all';
-function setFashionSeason(s, btn) {
-  currentFashionSeason = s;
-  document.querySelectorAll('.fst').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  fashionRendered.clear();
-  const activeTab = document.querySelector('.fashion-tabs .tp.active');
-  if (activeTab) {
-    const cat = activeTab.id.replace('f-','');
-    renderFashion(cat, true);
-  }
-}
+// ── FASHION + NAILS + WORKOUT ─────────────────────────────────────────
+const F={tops:[{brand:'The Row',name:'Crochet Silk Tank',desc:'Ivory silk crochet. Beautiful without announcement.',price:'$490',tag:'Quiet statement',season:'spring',why:'Taurus rising senses silk quality before reading the label.'},{brand:'Totême',name:'Draped Jersey Top',desc:'Warm taupe draped jersey. Clean lines, zero effort.',price:'$295',tag:'No-effort perfect',season:'year-round',why:'ISTP needs pieces that work without styling thought.'},{brand:'Vince',name:'Pima Cotton Turtleneck',desc:'Cream ribbed pima. The tattoo-frame turtleneck.',price:'$195',tag:'Capsule anchor',season:'autumn',why:'Capricorn moon: the foundation piece you return to for years.'},{brand:'COS',name:'Relaxed Linen Shirt',desc:'Sage green oversized linen. The SF fog layer.',price:'$89',tag:'Fog layer',season:'summer',why:'ISTP: linen breathes, folds small, never wrinkles obviously.'},{brand:'Arket',name:'Merino Crew Neck',desc:'Dusty sage fine merino. Elevated basics knit.',price:'$120',tag:'Elevated basics',season:'winter',why:'Venus Virgo notices quality-to-price before anyone else.'},{brand:'Equipment',name:'Signature Silk Blouse',desc:'Ivory silk. Tucks into everything, statement alone.',price:'$298',tag:'The coherer',season:'year-round',why:'Libra sun: the blouse that makes the whole outfit cohere.'},{brand:'& Other Stories',name:'Ribbed Cashmere Blend',desc:'Warm ivory ribbed knit.',price:'$149',tag:'Skin-adjacent',season:'winter',why:'Taurus rising: hand-feel test passed immediately.'},{brand:'Margaret O\'Leary',name:'Cashmere Cardigan',desc:'Natural cashmere open-front. Hayes Valley essential.',price:'$398',tag:'Decade piece',season:'autumn',why:'Capricorn moon invests only in longevity.'},{brand:'Theory',name:'Stretch Linen Henley',desc:'Slate linen henley. Remote work and Crane Cove.',price:'$195',tag:'Work-to-outside',season:'spring',why:'ISTP: versatile, function-forward, zero maintenance.'},{brand:'Filippa K',name:'Silk Cami',desc:'Dusty rose silk. Wears under everything or alone.',price:'$220',tag:'Quiet luxury cami',season:'summer',why:'Libra sun: the piece that elevates everything it touches.'},{brand:'Club Monaco',name:'Ribbed Turtleneck',desc:'Chocolate brown ribbed. Against camel coat: exact.',price:'$148',tag:'Decision removed',season:'autumn',why:'Moon Capricorn: removes the daily uniform decision.'},{brand:'Aritzia',name:'Wilfred Silk Mock Neck',desc:'Cream silk mock neck. Always correct.',price:'$148',tag:'Precise ease',season:'year-round',why:'ISTP: precise without trying to be precise.'},{brand:'Vince',name:'Draped Silk Tank',desc:'Ivory silk draped. Museum day top.',price:'$275',tag:'Orbit piece',season:'spring',why:'Libra sun: the neutral everything else orbits.'},{brand:'COS',name:'Oversized Cotton Shirt',desc:'Cream poplin. WFH and farmers market.',price:'$79',tag:'Context-free',season:'summer',why:'ISTP: one piece, many contexts, zero mental overhead.'},{brand:'Totême',name:'Striped Turtleneck',desc:'Off-white with camel stripe. Quintessential quiet luxury.',price:'$320',tag:'Stripe precision',season:'winter',why:'Taurus rising reads quality in subtle stripe spacing.'},{brand:'Theory',name:'Cashmere Relaxed Crew',desc:'Camel cashmere. October through March.',price:'$395',tag:'Cost-per-wear win',season:'winter',why:'Capricorn moon: cost-per-wear math always wins.'},{brand:'Arket',name:'Linen Collarless Shirt',desc:'Stone linen. Unstructured, elegant, Dogpatch.',price:'$99',tag:'Collar-free',season:'spring',why:'ISTP: no collar = no adjustment all day.'},{brand:'& Other Stories',name:'Draped Satin Blouse',desc:'Warm taupe satin. Evening-capable with a trouser swap.',price:'$129',tag:'Evening pivot',season:'year-round',why:'Libra sun: one piece, two contexts, complete.'}],bottoms:[{brand:'Totême',name:'Original Denim',desc:'Wide-leg clean denim in off-white.',price:'$295',tag:'The original',season:'spring',why:'ISTP finds the correct version of a thing and stops looking.'},{brand:'The Row',name:'Charcoal Wool Trouser',desc:'Charcoal wide-leg wool. Ends trouser-shopping.',price:'$890',tag:'End of search',season:'autumn',why:'Capricorn moon: one exceptional piece over five mediocre.'},{brand:'COS',name:'Wide Linen Trouser',desc:'Sage linen wide-leg. Crane Cove to Harmonic Brewing.',price:'$129',tag:'SF-native',season:'summer',why:'ISTP: functional in fog, beautiful in rare sun.'},{brand:'Vince',name:'Satin Pull-On Pant',desc:'Ivory satin-finish wide-leg. Silk-adjacent feel.',price:'$345',tag:'Satin elevation',season:'year-round',why:'Taurus rising: satin hand-feel elevates the silhouette.'},{brand:'Theory',name:'Tailored Straight Trouser',desc:'Camel wool-blend straight leg.',price:'$375',tag:'Precision cut',season:'autumn',why:'Libra sun: precision-cut trousers make the look cohere.'},{brand:'Madewell',name:'Baggy Straight Jean',desc:'Classic indigo. Photographs like a luxury brand.',price:'$148',tag:'Reliable intentional',season:'year-round',why:'ISTP: reliable, washable, intentional without effort.'},{brand:'Arket',name:'Midi Wrap Skirt',desc:'Warm taupe linen midi.',price:'$109',tag:'Libra silhouette',season:'spring',why:'Libra sun: the wrap is inherently balanced.'},{brand:'& Other Stories',name:'Satin Midi Skirt',desc:'Dusty rose satin midi. Evening understated.',price:'$139',tag:'Subtle evening',season:'summer',why:'Venus Virgo: shimmer only visible on close inspection.'},{brand:'Filippa K',name:'Straight Crepe Trouser',desc:'Slate grey. Museum days, remote calls, wine bar.',price:'$290',tag:'Context-free trouser',season:'winter',why:'ISTP: one trouser, every context.'},{brand:'Club Monaco',name:'Pleated Linen Trouser',desc:'Ivory pleated wide-leg linen.',price:'$199',tag:'Architectural linen',season:'summer',why:'Taurus rising: pleat reads as considered craftsmanship.'},{brand:'Totême',name:'Boot Cut Jean',desc:'Dark indigo boot-cut. Perfect with knee-high boots.',price:'$265',tag:'Boot-balanced',season:'autumn',why:'Libra sun: proportions inherently correct with the right boot.'},{brand:'Vince',name:'Silk Slip Skirt',desc:'Cream silk bias-cut midi. Never needs ironing.',price:'$395',tag:'Self-correcting',season:'spring',why:'ISTP: bias-cut falls perfectly without intervention.'},{brand:'Madewell',name:'Wide-Leg Crop Jean',desc:'Light wash wide-leg crop.',price:'$148',tag:'Palette neutral',season:'spring',why:'ISTP: light wash neutral enough for any palette.'},{brand:'Filippa K',name:'High-Waist Tailored Pant',desc:'Chocolate tailored. Against cream turtleneck: the uniform.',price:'$340',tag:'Uniform piece',season:'autumn',why:'Moon Capricorn: the uniform removes decision fatigue.'},{brand:'Arket',name:'Straight Canvas Trouser',desc:'Stone canvas. Everyday structured trouser.',price:'$119',tag:'Satisfying weight',season:'year-round',why:'Taurus rising: canvas has satisfying weight and structure.'},{brand:'COS',name:'Relaxed Satin Midi',desc:'Warm camel satin midi. Capsule workhorse.',price:'$119',tag:'Maximum output',season:'autumn',why:'Capricorn moon: maximum output from minimum pieces.'},{brand:'Theory',name:'Tailored Shorts',desc:'Camel wool-crepe. Warm SF day piece.',price:'$275',tag:'Deliberate casual',season:'summer',why:'Libra sun: tailored shorts look deliberate, never casual.'},{brand:'& Other Stories',name:'Woven Linen Midi',desc:'Sage woven linen. Texture reads beautifully on camera.',price:'$129',tag:'Close-up detail',season:'summer',why:'Venus Virgo: weave detail only visible close-up — exactly right.'}],dresses:[{brand:'Vince',name:'Linen Slip Dress',desc:'Cream linen slip. The SF summer dress.',price:'$395',tag:'Slip and done',season:'summer',why:'ISTP: slip on and done. Libra: beautiful. Taurus: breathes.'},{brand:'Totême',name:'Knit Midi Dress',desc:'Warm taupe ribbed knit midi.',price:'$495',tag:'One piece morning',season:'autumn',why:'Capricorn moon: one piece dressing removes morning decisions.'},{brand:'COS',name:'Relaxed Linen Dress',desc:'Sage linen shift. Generous proportions.',price:'$149',tag:'No-adjust',season:'spring',why:'ISTP: no waist definition = no adjustment all day.'},{brand:'The Row',name:'Silk Cady Midi',desc:'Ivory silk. The occasion dress that isn\'t obvious.',price:'$1,890',tag:'Room-better',season:'year-round',why:'Libra sun: makes every room better just by being in it.'},{brand:'& Other Stories',name:'Floral Midi Dress',desc:'Muted botanical print. Marin Headlands energy.',price:'$189',tag:'Botanical field',season:'spring',why:'Taurus rising: florals from observation, not decoration.'},{brand:'Arket',name:'Wrap Linen Dress',desc:'Natural linen wrap midi. Adjustable, flattering.',price:'$139',tag:'Inherently balanced',season:'summer',why:'Libra sun: the wrap silhouette is inherently balanced.'},{brand:'Filippa K',name:'Jersey Turtleneck Dress',desc:'Dusty slate fitted midi. Second skin.',price:'$320',tag:'Precise fit',season:'winter',why:'Venus Virgo: the fit is precise and unforgiving — that\'s it.'},{brand:'Club Monaco',name:'Satin Slip Dress',desc:'Dusty rose satin bias. Evening without trying.',price:'$298',tag:'Quiet evening',season:'summer',why:'Mercury Scorpio: says something without saying it aloud.'},{brand:'Vince',name:'Cashmere Sweater Dress',desc:'Camel cashmere. Warmth as luxury.',price:'$595',tag:'Sensory baseline',season:'winter',why:'Taurus rising: cashmere against skin is the winter baseline.'},{brand:'Theory',name:'Linen Shirt Dress',desc:'Cream linen. Remote work or Piccino lunch.',price:'$345',tag:'Context fluid',season:'spring',why:'ISTP: context-fluid, no thought, always reads well.'},{brand:'Totême',name:'Ribbed Turtleneck Dress',desc:'Off-white ribbed. Frames flower tattoos.',price:'$425',tag:'Tattoo frame',season:'autumn',why:'Libra sun: the frame matters as much as what it holds.'},{brand:'Margaret O\'Leary',name:'Knit Wrap Dress',desc:'Merino wrap. Hayes Valley essential.',price:'$348',tag:'Compounding value',season:'winter',why:'Capricorn moon: compounds in value with every wear.'},{brand:'Madewell',name:'Denim Midi Dress',desc:'Light indigo. Crane Cove to Harmonic Brewing.',price:'$148',tag:'Zero maintenance',season:'summer',why:'ISTP: denim requires nothing and gives everything back.'},{brand:'Arket',name:'Smocked Waist Linen',desc:'Cream smocked-waist linen.',price:'$159',tag:'Craftwork detail',season:'spring',why:'Taurus rising: smock texture registers as craftwork.'},{brand:'& Other Stories',name:'Satin Column Dress',desc:'Taupe satin column midi. Minimal, impactful.',price:'$249',tag:'Perfect column',season:'autumn',why:'Libra sun: nothing added, nothing missing.'},{brand:'COS',name:'Volume Midi Dress',desc:'Stone poplin with volume. Structured without stiffness.',price:'$149',tag:'Self-structures',season:'year-round',why:'ISTP: structure works on its own.'},{brand:'Filippa K',name:'Long Shirt Dress',desc:'Slate silk-blend. Layers over everything.',price:'$390',tag:'The multiplier',season:'year-round',why:'ISTP: the one piece that changes everything it touches.'},{brand:'Vince',name:'Drape Back Silk Dress',desc:'Ivory silk draped open back.',price:'$595',tag:'For paying attention',season:'summer',why:'Mercury Scorpio: the detail is in the back.'}],outerwear:[{brand:'Totême',name:'Double-Breasted Camel Coat',desc:'The camel coat. Long, structured. Autumn armour.',price:'$1,290',tag:'Buy once right',season:'autumn',why:'This is the coat. Capricorn moon buys it once, correctly.'},{brand:'Vince',name:'Oversized Wool Blend',desc:'Charcoal oversized. Architectural winter coat.',price:'$695',tag:'Weight = quality',season:'winter',why:'Taurus rising: wool weight signals quality before the label.'},{brand:'The Row',name:'Belted Cashmere Coat',desc:'Ivory cashmere belted. Makes everything beneath better.',price:'$3,290',tag:'Elevation effect',season:'winter',why:'Libra sun: improves everything beneath it by association.'},{brand:'COS',name:'Relaxed Trench',desc:'Stone cotton trench. SF fog and rain utility.',price:'$295',tag:'Silent solution',season:'spring',why:'ISTP: solves weather without announcing it\'s doing so.'},{brand:'Theory',name:'Tailored Blazer',desc:'Camel wool-blend. WFH to wine bar.',price:'$575',tag:'Context pivot',season:'year-round',why:'ISTP: one blazer, every context from Zoom to wine bar.'},{brand:'Arket',name:'Quilted Nylon Jacket',desc:'Sage quilted. Crane Cove 7am when cold.',price:'$199',tag:'7am layer',season:'winter',why:'Taurus rising: the quilted texture is tactilely satisfying.'},{brand:'Club Monaco',name:'Belted Wrap Coat',desc:'Rust wool belted wrap. Birthday month coat.',price:'$598',tag:'October harmony',season:'autumn',why:'Libra sun: rust against October landscape is perfect harmony.'},{brand:'Filippa K',name:'Recycled Wool Blazer',desc:'Slate structured. Professional without performing it.',price:'$490',tag:'Non-performance',season:'year-round',why:'Mercury Scorpio: communicates professionalism without performing.'},{brand:'& Other Stories',name:'Leather Biker Jacket',desc:'Cognac lambskin. Against cream slip: ISTP.',price:'$499',tag:'Contrast equation',season:'autumn',why:'ISTP: softness of silk against precision of leather.'},{brand:'Totême',name:'Cocoon Wool Coat',desc:'Cream cocoon silhouette.',price:'$990',tag:'Silhouette statement',season:'winter',why:'Libra sun: the silhouette is a complete aesthetic statement.'},{brand:'Madewell',name:'Longline Denim Jacket',desc:'Dark indigo longline. Works with everything.',price:'$178',tag:'No more deciding',season:'spring',why:'ISTP: denim jacket over any dress = done.'},{brand:'Vince',name:'Leather Moto Jacket',desc:'Slate leather moto. Presence without trying.',price:'$998',tag:'Saturn energy',season:'year-round',why:'Saturn ASC: you already have authority. Jacket confirms it.'},{brand:'Theory',name:'Teddy Shearling Jacket',desc:'Camel teddy-shearling. Farmers market in November.',price:'$695',tag:'Autumn texture',season:'autumn',why:'Taurus rising: shearling is exactly what autumn feels like.'},{brand:'Margaret O\'Leary',name:'Cashmere Wrap Coat',desc:'Natural cashmere long wrap. Hayes Valley find.',price:'$698',tag:'Fifteen year coat',season:'winter',why:'Capricorn moon: a cashmere coat bought right lasts fifteen years.'},{brand:'COS',name:'Structured Canvas Coat',desc:'Stone canvas long. Handles everything transitional.',price:'$349',tag:'Weather-adaptive',season:'spring',why:'ISTP: weather-adaptive without being a technical piece.'},{brand:'Arket',name:'Merino Overshirt',desc:'Warm camel merino. Between shirt and jacket.',price:'$179',tag:'Gap solver',season:'autumn',why:'ISTP: solves a transitional problem simply.'},{brand:'Filippa K',name:'Organic Cotton Trench',desc:'Classic stone trench. Rain walks to Piccino.',price:'$540',tag:'Classic done right',season:'spring',why:'Libra sun: classic proportions in quality material = correct.'},{brand:'Club Monaco',name:'Cocoon Blazer',desc:'Chocolate cocoon blazer. Casual authority.',price:'$398',tag:'Casual authority',season:'year-round',why:'Saturn ASC: even casual blazers communicate authority.'}],shoes:[{brand:'The Row',name:'Ginza Slingback',desc:'Ivory leather. No one can place it — everyone registers it.',price:'$990',tag:'Proportion correct',season:'spring',why:'Libra sun: improves every silhouette it enters.'},{brand:'Totême',name:'Knee-High Leather Boot',desc:'Cognac leather. The autumn boot.',price:'$995',tag:'Real version',season:'autumn',why:'Capricorn moon: buys the real version once.'},{brand:'Vince',name:'Gabi Ballet Flat',desc:'Cream leather flat. Photographs like a luxury brand.',price:'$275',tag:'Flat precision',season:'spring',why:'ISTP: flat, comfortable, precise.'},{brand:'COS',name:'Leather Loafer',desc:'Tan loafer, subtle hardware. Walking intelligence.',price:'$189',tag:'Walking intelligence',season:'year-round',why:'ISTP: loafer = functionality + intention. Zero maintenance.'},{brand:'Arket',name:'Platform Sandal',desc:'Tan leather platform. Baker Beach summer.',price:'$179',tag:'Grounded elevation',season:'summer',why:'Taurus rising: elevation without losing ground connection.'},{brand:'Theory',name:'Block Heel Boot',desc:'Chocolate suede block heel ankle.',price:'$498',tag:'Balanced proportion',season:'autumn',why:'Libra sun: block heel balanced with wide trousers.'},{brand:'Filippa K',name:'Chelsea Boot',desc:'Tan leather chelsea. Wears like a second pair of feet.',price:'$390',tag:'Zero load',season:'autumn',why:'ISTP: slip on, slip off. Zero cognitive load.'},{brand:'New Balance',name:'550 White/Gum',desc:'Clean white leather. The only sneaker this wardrobe needs.',price:'$110',tag:'Tailored sneaker',season:'year-round',why:'ISTP: looks intentional next to tailored anything.'},{brand:'COS',name:'Square-Toe Flat',desc:'Slate leather. Statement in geometry alone.',price:'$149',tag:'Geometric statement',season:'year-round',why:'Mercury Scorpio: says something without being obvious.'},{brand:'The Row',name:'Boheme Flat',desc:'Black leather ballet flat. The standard.',price:'$870',tag:'The standard',season:'year-round',why:'Capricorn moon: the definitive version, bought once.'},{brand:'Vince',name:'Almond-Toe Mule',desc:'Cream leather mule. Spring-to-summer transition.',price:'$395',tag:'Shape cohesion',season:'spring',why:'Taurus rising: almond toe mirrors the nail shape.'},{brand:'Arket',name:'Leather Sandal',desc:'Tan flat. Minimal strapping, maximum simplicity.',price:'$129',tag:'Efficiency beauty',season:'summer',why:'ISTP: one strap doing all the work.'},{brand:'Madewell',name:'The Regan Boot',desc:'Cognac leather mid-calf. Punches above its price.',price:'$298',tag:'Cost justified',season:'winter',why:'Capricorn moon: cost-per-wear always justified on leather.'},{brand:'Club Monaco',name:'Kitten Heel Mule',desc:'Camel leather. Museum days, dinner nights.',price:'$298',tag:'Height balance',season:'year-round',why:'Libra sun: kitten heel inherently balanced.'},{brand:'Totême',name:'Cap-Toe Boot',desc:'Ivory with black cap-toe. Minimal, impactful.',price:'$795',tag:'Contrast intention',season:'winter',why:'Libra sun: contrast detail makes the whole silhouette intentional.'},{brand:'Filippa K',name:'Pointed Flat',desc:'Slate leather. Elongates without effort.',price:'$340',tag:'Visual work',season:'spring',why:'ISTP: pointed toe does visual work with no effort.'},{brand:'New Balance',name:'2002R Cream',desc:'Cream leather. Design credibility for any context.',price:'$150',tag:'Recognizable why',season:'year-round',why:'Mercury Scorpio: recognized without knowing why.'},{brand:'Arket',name:'Ankle Strap Sandal',desc:'Ivory flat ankle-strap. Simple architecture.',price:'$149',tag:'Ankle grounded',season:'summer',why:'Taurus rising: ankle strap grounds the foot beautifully.'}],accessories:[{brand:'Mejuri',name:'Thin Gold Chain',desc:'14k gold 1.2mm chain, 18". The only necklace needed.',price:'$225',tag:'The only one',season:'year-round',why:'Libra sun: one perfect piece over five good ones.'},{brand:'Catbird',name:'Stacking Rings Set',desc:'Thin 14k gold stacking bands.',price:'$168',tag:'Capsule rings',season:'year-round',why:'Venus Virgo: precise, minimal, never decorative for its own sake.'},{brand:'Quay',name:'Black Aviator',desc:'Matte black aviator. Saturn ASC in sunglasses form.',price:'$65',tag:'Saturn sunnies',season:'summer',why:'ISTP: aviator requires no maintenance or adjustment.'},{brand:'Arket',name:'Merino Scarf',desc:'Camel merino oblong. The winter texture note.',price:'$69',tag:'Texture note',season:'winter',why:'Taurus rising: merino against the throat right in November.'},{brand:'Mejuri',name:'Gold Cuff',desc:'14k thin cuff. Visible against tattoo sleeve.',price:'$445',tag:'Tattoo contrast',season:'year-round',why:'Mercury Scorpio: cuff against flower tattoos — perfect contrast.'},{brand:'Warby Parker',name:'Chamberlain in Whiskey',desc:'Tortoise acetate. Intelligent, warm, considered.',price:'$145',tag:'Considered frames',season:'year-round',why:'ISTP: considered but not conspicuous.'},{brand:'Catbird',name:'Diamond-Cut Gold Hoop',desc:'14k tiny hoops. The only earring needed.',price:'$188',tag:'Ear equation',season:'year-round',why:'Libra sun: symmetry, gold, small — the correct equation.'},{brand:'& Other Stories',name:'Leather Belt',desc:'Cognac belt, minimal gold buckle.',price:'$65',tag:'Ratio perfect',season:'year-round',why:'Venus Virgo: correct buckle-width ratio is never an accident.'},{brand:'Loewe',name:'Wool-Silk Scarf',desc:'Warm taupe. Noticeable to those who notice.',price:'$495',tag:'Communicates taste',season:'autumn',why:'Mercury Scorpio: communicates to those who recognize it.'},{brand:'Mejuri',name:'Gold Anklet',desc:'14k gold thin anklet. Baker Beach, summer.',price:'$195',tag:'Summer ankle',season:'summer',why:'Taurus rising: jewelry at the ankle registers physically.'},{brand:'Catbird',name:'Ear Cuff',desc:'14k gold, no piercing. Unexpected without permanence.',price:'$128',tag:'Asymmetric interest',season:'year-round',why:'Libra sun: visual interest without disrupting the whole.'},{brand:'Mejuri',name:'Initial Charm',desc:'14k gold minimal initial. Personal, not sentimental.',price:'$195',tag:'Private meaning',season:'year-round',why:'Mercury Scorpio: the meaning is private — exactly right.'},{brand:'& Other Stories',name:'Leather Gloves',desc:'Tan leather unlined. The winter detail camel coat requires.',price:'$79',tag:'Winter transform',season:'winter',why:'Taurus rising: leather gloves transform how winter feels.'},{brand:'Catbird',name:'Tennis Bracelet',desc:'14k diamond-alternative. Stays on permanently.',price:'$398',tag:'Permanent piece',season:'year-round',why:'Capricorn moon: buys the version that never needs to come off.'},{brand:'Quay',name:'Round Gold Frame',desc:'Thin gold round, amber lens. Crane Cove morning.',price:'$75',tag:'Balance geometry',season:'spring',why:'Libra sun: round is the most balanced frame geometry.'},{brand:'Arket',name:'Canvas Wide-Brim Hat',desc:'Stone canvas. Photographs beautifully outdoors.',price:'$79',tag:'Functional beautiful',season:'summer',why:'ISTP: functional against SF sun without performing it.'},{brand:'Loewe',name:'Merino Beanie',desc:'Merino beanie in camel. Silhouette-safe.',price:'$250',tag:'Silhouette-safe',season:'winter',why:'Taurus rising: merino beanie — most sensory winter upgrade.'},{brand:'Warby Parker',name:'Haskell in Rye',desc:'Warm amber rectangle. Reading + outdoor in one.',price:'$145',tag:'One pair two uses',season:'year-round',why:'ISTP: one pair, two functions.'}],bags:[{brand:'Totême',name:'T-Lock Clutch',desc:'Smooth ivory leather. Hardware identifies without logos.',price:'$595',tag:'Recognizable silence',season:'year-round',why:'Mercury Scorpio: known to those who know.'},{brand:'The Row',name:'Soft Margaux 10',desc:'Slate pebbled leather tote. Ends bag shopping.',price:'$1,590',tag:'End of search',season:'year-round',why:'Capricorn moon: one exceptional bag lasts decades.'},{brand:'Polène',name:'Numéro Un Nano',desc:'Cognac structured nano. The Crane Cove crossbody.',price:'$350',tag:'Nothing excess',season:'year-round',why:'ISTP: exactly the right size. Nothing missing, nothing excess.'},{brand:'Aritzia',name:'Wilfred Crescent Bag',desc:'Tan leather crescent shoulder.',price:'$298',tag:'Body-natural shape',season:'spring',why:'Taurus rising: crescent sits against the body naturally.'},{brand:'Cuyana',name:'Classic Leather Tote',desc:'Stone leather. Fits laptop, thermos, library book.',price:'$298',tag:'Asks nothing',season:'year-round',why:'ISTP: the bag that asks nothing and holds everything.'},{brand:'Loewe',name:'Hammock Small',desc:'Cream smooth leather. Architectural, rewards attention.',price:'$1,850',tag:'Bag as object',season:'year-round',why:'Libra sun: beautiful to hold, to see, to use.'},{brand:'Totême',name:'T-Handle Tote',desc:'Cognac vegetable-tanned. Better every year.',price:'$795',tag:'Better with age',season:'autumn',why:'Taurus rising: the patina developing over years is the point.'},{brand:'Polène',name:'Numéro Neuf',desc:'Taupe suede bucket. Soft-looking, holds shape.',price:'$450',tag:'Practical intelligence',season:'summer',why:'ISTP: structured enough to reach into without looking.'},{brand:'Cuyana',name:'Mini Zipper Tote',desc:'Black pebbled leather mini. Evening-capable daily.',price:'$198',tag:'Multi-context',season:'year-round',why:'Capricorn moon: one bag, multiple contexts, no fuss.'},{brand:'Arket',name:'Leather Shoulder Bag',desc:'Tan leather, minimal hardware. No logo.',price:'$289',tag:'No logo',season:'year-round',why:'ISTP: identifies its owner without words.'},{brand:'Polène',name:'Numéro Sept',desc:'Warm camel leather flap. Small authority.',price:'$395',tag:'Small authority',season:'year-round',why:'Saturn ASC: precision in a small form carries authority.'},{brand:'Loewe',name:'Flamenco Nano',desc:'Slate gathered nano. Art-object bag.',price:'$1,350',tag:'Object is the point',season:'winter',why:'Libra sun: holds almost nothing — the object is the point.'},{brand:'Cuyana',name:'System Tote',desc:'Stone leather with insert. Elegant work bag.',price:'$398',tag:'Permanent solution',season:'year-round',why:'ISTP: solves organisation once, permanently.'},{brand:'Aritzia',name:'Everyday Shoulder Bag',desc:'Cognac pebbled medium. The Dogpatch daily.',price:'$248',tag:'Sensory neutral',season:'year-round',why:'Taurus rising: cognac leather is the most satisfying neutral.'},{brand:'Totême',name:'New Boxy Tote',desc:'Ivory structured boxy. Nothing excess, nothing missing.',price:'$595',tag:'Inherently organised',season:'spring',why:'Venus Virgo: the boxy proportion is inherently organised.'},{brand:'Polène',name:'Numéro Quatorze',desc:'Taupe soft leather. Architectural folds, zero hardware.',price:'$495',tag:'No maintenance',season:'year-round',why:'ISTP: no hardware = no maintenance, no catches.'},{brand:'Cuyana',name:'Mini Crossbody',desc:'Tan leather mini. Phone, card, key. Crane Cove.',price:'$198',tag:'Phone card key',season:'summer',why:'ISTP: phone, card, key. That\'s the bag.'},{brand:'The Row',name:'Sock Bag',desc:'Ivory nappa gathered. Reads as deeply confident.',price:'$1,490',tag:'Taste reveal',season:'spring',why:'Mercury Scorpio: reveals taste to those paying attention.'}]};
 
-// ---- FASHION DATA (fully embedded, curated for Sun Libra / Moon Capricorn / Taurus Rising / ISTP) ----
-const FASHION = {
-  tops: [
-    {brand:'The Row',name:'Crochet Silk Tank',desc:'Ivory silk crochet. Libra sun\'s quiet statement — beautiful without announcement.',price:'$490',why:'Taurus rising senses the silk quality before reading the label.',tag:'Quiet statement',season:'spring'},
-    {brand:'Totême',name:'Draped Jersey Top',desc:'Warm taupe draped jersey. Clean lines, zero effort required.',price:'$295',why:'ISTP needs pieces that work without styling thought.',tag:'No-effort perfect',season:'year-round'},
-    {brand:'Vince',name:'Pima Cotton Turtleneck',desc:'Cream ribbed pima cotton. The tattoo-frame turtleneck. Works with everything.',price:'$195',why:'Capricorn moon: the foundation piece you return to for years.',tag:'Capsule anchor',season:'autumn'},
-    {brand:'COS',name:'Relaxed Linen Shirt',desc:'Sage green oversized linen. The SF fog layer that always looks intentional.',price:'$89',why:'ISTP function: linen breathes, folds small, doesn\'t wrinkle obviously.',tag:'Fog layer',season:'summer'},
-    {brand:'Arket',name:'Merino Crew Neck',desc:'Dusty sage fine merino. The elevated basics knit. Pills less than cashmere at half the price.',price:'$120',why:'Venus Virgo notices quality-to-price ratio before anyone else.',tag:'Elevated basics',season:'winter'},
-    {brand:'Equipment',name:'Signature Silk Blouse',desc:'Ivory silk with subtle sheen. Tucks into everything, wears alone as a statement.',price:'$298',why:'Libra sun: the blouse that makes the whole outfit cohere.',tag:'The coherer',season:'year-round'},
-    {brand:'& Other Stories',name:'Ribbed Cashmere Blend',desc:'Warm ivory ribbed knit. Soft enough to wear against flower tattoos daily.',price:'$149',why:'Taurus rising: the hand-feel test passed immediately.',tag:'Skin-adjacent',season:'winter'},
-    {brand:'Margaret O\'Leary',name:'Cashmere Cardigan',desc:'Natural cashmere open-front. The Hayes Valley essential. Wears for decades.',price:'$398',why:'Capricorn moon only invests in pieces with longevity certainty.',tag:'Decade piece',season:'autumn'},
-    {brand:'Theory',name:'Stretch Linen Henley',desc:'Slate linen blend henley. Effortless but structured. Remote work and Crane Cove.',price:'$195',why:'ISTP: versatile, function-forward, zero maintenance.',tag:'Work-to-outside',season:'spring'},
-    {brand:'Filippa K',name:'Silk Cami',desc:'Dusty rose silk camisole. Wears under everything or alone with wide-leg trousers.',price:'$220',why:'Libra sun: the piece that elevates everything it touches.',tag:'Quiet luxury cami',season:'summer'},
-    {brand:'Club Monaco',name:'Ribbed Turtleneck',desc:'Chocolate brown ribbed turtleneck. Against camel coat: the exact Autumn combination.',price:'$148',why:'Moon Capricorn: the uniform piece that removes daily decisions.',tag:'Decision removed',season:'autumn'},
-    {brand:'Aritzia',name:'Wilfred Silk Mock Neck',desc:'Cream silk mock neck. Boundary between casual and polished. Always correct.',price:'$148',why:'ISTP aesthetic: precise without trying to be precise.',tag:'Precise ease',season:'year-round'},
-    {brand:'Vince',name:'Draped Silk Tank',desc:'Ivory silk draped tank. The museum day top. Pairs with every trouser in the wardrobe.',price:'$275',why:'Libra sun: the neutral anchor everything else orbits.',tag:'Orbit piece',season:'spring'},
-    {brand:'COS',name:'Oversized Cotton Shirt',desc:'Cream cotton-poplin oversized. Perfect for WFH desk days and farmers market.',price:'$79',why:'ISTP: one piece, many contexts, zero mental overhead.',tag:'Context-free',season:'summer'},
-    {brand:'Totême',name:'Signature Striped Turtleneck',desc:'Off-white with thin camel stripe. Totême\'s quintessential quiet luxury silhouette.',price:'$320',why:'Taurus rising reads quality in the subtle stripe spacing.',tag:'Stripe precision',season:'winter'},
-    {brand:'Theory',name:'Cashmere Relaxed Crew',desc:'Camel cashmere. The investment crew that earns its keep October through March.',price:'$395',why:'Capricorn moon: cost-per-wear math always wins here.',tag:'Cost-per-wear win',season:'winter'},
-    {brand:'Arket',name:'Linen Collarless Shirt',desc:'Stone linen collarless. Unstructured, elegant, very Dogpatch.',price:'$99',why:'ISTP: no collar = no adjustment throughout the day.',tag:'Collar-free freedom',season:'spring'},
-    {brand:'& Other Stories',name:'Draped Satin Blouse',desc:'Warm taupe satin drape. Evening-capable from remote-work day with a trouser swap.',price:'$129',why:'Libra sun: one piece, two contexts, complete.',tag:'Evening pivot',season:'year-round'},
-  ],
-  bottoms: [
-    {brand:'Totême',name:'Original Denim',desc:'Wide-leg clean denim in off-white. The Totême denim that launched a thousand imitations.',price:'$295',why:'ISTP finds the correct version of a thing and stops looking.',tag:'The original',season:'spring'},
-    {brand:'The Row',name:'Charcoal Wool Trouser',desc:'Charcoal wide-leg wool. The trouser that ends trouser-shopping permanently.',price:'$890',why:'Capricorn moon: one exceptional piece over five mediocre ones.',tag:'End of search',season:'autumn'},
-    {brand:'COS',name:'Wide Linen Trouser',desc:'Sage linen wide-leg. The SF summer trouser. Crane Cove to Harmonic Brewing without changing.',price:'$129',why:'ISTP: functional in SF fog, beautiful in rare sun.',tag:'SF-native',season:'summer'},
-    {brand:'Vince',name:'Satin Pull-On Pant',desc:'Ivory satin-finish wide-leg. Silk-adjacent feel at Vince price. Elevated instantly.',price:'$345',why:'Taurus rising: the satin hand-feel elevates the whole silhouette.',tag:'Satin elevation',season:'year-round'},
-    {brand:'Theory',name:'Tailored Straight Trouser',desc:'Camel wool-blend straight leg. The birthday season trouser — rust, cognac, camel.',price:'$375',why:'Libra sun: precision-cut trousers make the whole look cohere.',tag:'Precision cut',season:'autumn'},
-    {brand:'Madewell',name:'Baggy Straight Jean',desc:'Classic indigo straight-leg. The everyday denim that photographs like a luxury brand.',price:'$148',why:'ISTP: reliable, washable, looks intentional without effort.',tag:'Reliable intentional',season:'year-round'},
-    {brand:'Arket',name:'Midi Wrap Skirt',desc:'Warm taupe linen midi. Botanical garden, farmers market, Piccino lunch.',price:'$109',why:'Libra sun: the wrap silhouette is inherently balanced and beautiful.',tag:'Libra silhouette',season:'spring'},
-    {brand:'& Other Stories',name:'Satin Midi Skirt',desc:'Dusty rose satin midi. Evening piece that reads understated in person.',price:'$139',why:'Venus Virgo: subtle shimmer — beautiful but only on close inspection.',tag:'Subtle evening',season:'summer'},
-    {brand:'Filippa K',name:'Straight Crepe Trouser',desc:'Slate grey straight-leg crepe. Museum days, remote calls, wine bar evenings.',price:'$290',why:'ISTP: one trouser, every context. No mental overhead.',tag:'Context-free trouser',season:'winter'},
-    {brand:'Club Monaco',name:'Pleated Linen Trouser',desc:'Ivory pleated wide-leg linen. The summer trouser with architectural credibility.',price:'$199',why:'Taurus rising: the pleat detail registers as considered craftsmanship.',tag:'Architectural linen',season:'summer'},
-    {brand:'Totême',name:'Boot Cut Jean',desc:'Dark indigo boot-cut. Balanced silhouette for knee-high boots in autumn.',price:'$265',why:'Libra sun: the proportions are inherently correct with the right boot.',tag:'Boot-balanced',season:'autumn'},
-    {brand:'COS',name:'Relaxed Satin Midi',desc:'Warm camel satin midi. The piece that works harder than any other in the wardrobe.',price:'$119',why:'Capricorn moon: maximum output from minimum pieces.',tag:'Maximum output',season:'autumn'},
-    {brand:'Vince',name:'Silk Slip Skirt',desc:'Cream silk bias-cut midi. Crane Cove to dinner. Never needs ironing.',price:'$395',why:'ISTP: bias-cut falls perfectly without intervention.',tag:'Self-correcting',season:'spring'},
-    {brand:'Theory',name:'Tailored Shorts',desc:'Camel wool-crepe tailored. The warm SF days where trousers feel like too much.',price:'$275',why:'Libra sun: tailored shorts look deliberate, never casual.',tag:'Deliberate casual',season:'summer'},
-    {brand:'Arket',name:'Straight Canvas Trouser',desc:'Stone cotton canvas straight-leg. The everyday structured trouser.',price:'$119',why:'Taurus rising: canvas has a satisfying weight and structure.',tag:'Satisfying weight',season:'year-round'},
-    {brand:'Madewell',name:'Wide-Leg Crop Jean',desc:'Light wash wide-leg crop. The spring-summer denim with platform sandal pairing.',price:'$148',why:'ISTP: light wash is neutral enough to build any palette around.',tag:'Palette neutral',season:'spring'},
-    {brand:'Filippa K',name:'High-Waist Tailored Pant',desc:'Chocolate tailored high-waist. Against a cream turtleneck: the autumn uniform.',price:'$340',why:'Moon Capricorn: the uniform removes daily decision fatigue.',tag:'Uniform piece',season:'autumn'},
-    {brand:'& Other Stories',name:'Woven Linen Midi',desc:'Sage green woven linen. Texture reads beautifully on camera and in person.',price:'$129',why:'Venus Virgo: the weave detail only visible close-up — exactly right.',tag:'Close-up detail',season:'summer'},
-  ],
-  dresses: [
-    {brand:'Vince',name:'Linen Slip Dress',desc:'Cream linen slip. The SF summer dress. Crane Cove, farmers market, afternoon matcha.',price:'$395',why:'ISTP: slip on and done. Libra sun: it\'s beautiful. Taurus: the linen breathes.',tag:'Slip and done',season:'summer'},
-    {brand:'Totême',name:'Knit Midi Dress',desc:'Warm taupe ribbed knit midi. The autumn dress that makes a coat unnecessary.',price:'$495',why:'Capricorn moon: one piece dressing removes morning decisions.',tag:'One piece morning',season:'autumn'},
-    {brand:'COS',name:'Relaxed Linen Dress',desc:'Sage linen shift. Generous proportions, clean seams. Always correct in SF.',price:'$149',why:'ISTP: no waist definition = no adjustment throughout the day.',tag:'No-adjust',season:'spring'},
-    {brand:'The Row',name:'Silk Cady Midi',desc:'Ivory silk cady. The occasion dress that doesn\'t announce itself as an occasion dress.',price:'$1,890',why:'Libra sun: the piece that makes every room better just by being in it.',tag:'Room-better',season:'year-round'},
-    {brand:'& Other Stories',name:'Floral Midi Dress',desc:'Muted botanical print on cream. The spring dress with Marin Headlands energy.',price:'$189',why:'Taurus rising: florals that come from observation, not decoration.',tag:'Botanical field',season:'spring'},
-    {brand:'Arket',name:'Wrap Linen Dress',desc:'Natural linen wrap midi. Adjustable, breathable, always flattering.',price:'$139',why:'Libra sun: the wrap silhouette is inherently balanced.',tag:'Inherently balanced',season:'summer'},
-    {brand:'Filippa K',name:'Jersey Turtleneck Dress',desc:'Dusty slate jersey fitted midi. The winter dress that wears like a second skin.',price:'$320',why:'Venus Virgo: the fit is precise and unforgiving — that\'s the point.',tag:'Precise fit',season:'winter'},
-    {brand:'Club Monaco',name:'Satin Slip Dress',desc:'Dusty rose satin bias. The evening dress that doesn\'t try to be an evening dress.',price:'$298',why:'Mercury Scorpio: the dress says something without saying it out loud.',tag:'Quiet evening',season:'summer'},
-    {brand:'Vince',name:'Cashmere Sweater Dress',desc:'Camel cashmere mini/midi. The warmth-as-luxury winter piece.',price:'$595',why:'Taurus rising: cashmere against skin is the sensory baseline for winter.',tag:'Sensory baseline',season:'winter'},
-    {brand:'Theory',name:'Linen Shirt Dress',desc:'Cream linen shirt dress. Belted or open, remote work or Piccino lunch.',price:'$345',why:'ISTP: context-fluid, requires no thought, always reads well.',tag:'Context fluid',season:'spring'},
-    {brand:'Totême',name:'Ribbed Turtleneck Dress',desc:'Off-white fitted ribbed. The dress that frames flower tattoos perfectly.',price:'$425',why:'Libra sun: the frame matters as much as the art it holds.',tag:'Tattoo frame',season:'autumn'},
-    {brand:'COS',name:'Volume Midi Dress',desc:'Stone cotton-poplin with volume. Structured without stiffness.',price:'$149',why:'ISTP: the structure works on its own without styling intervention.',tag:'Self-structures',season:'year-round'},
-    {brand:'Margaret O\'Leary',name:'Knit Wrap Dress',desc:'Merino wrap dress in natural. Hayes Valley essential. Worn for years.',price:'$348',why:'Capricorn moon: the piece that compounds in value with every wear.',tag:'Compounding value',season:'winter'},
-    {brand:'Madewell',name:'Denim Midi Dress',desc:'Light indigo denim midi. Crane Cove morning to Harmonic Brewing patio.',price:'$148',why:'ISTP: denim requires nothing from you and gives everything back.',tag:'Zero maintenance',season:'summer'},
-    {brand:'Arket',name:'Smocked Waist Linen',desc:'Warm cream smocked-waist linen. The detail that does all the work.',price:'$159',why:'Taurus rising: the smock texture registers as craftwork.',tag:'Craftwork detail',season:'spring'},
-    {brand:'& Other Stories',name:'Satin Column Dress',desc:'Taupe satin column midi. The dinner dress. Minimal, impactful, effortless.',price:'$249',why:'Libra sun: a perfect column. Nothing added, nothing missing.',tag:'Perfect column',season:'autumn'},
-    {brand:'Filippa K',name:'Long Shirt Dress',desc:'Slate silk-blend long shirt. Layers over everything, wears alone.',price:'$390',why:'ISTP: the one piece that changes everything it touches.',tag:'The multiplier',season:'year-round'},
-    {brand:'Vince',name:'Drape Back Silk Dress',desc:'Ivory silk with draped open back. For the occasions that deserve it.',price:'$595',why:'Mercury Scorpio: the detail is in the back, for those paying attention.',tag:'For paying attention',season:'summer'},
-  ],
-  outerwear: [
-    {brand:'Totême',name:'Double-Breasted Camel Coat',desc:'The camel coat. Long, double-breasted, structured. Autumn armour piece.',price:'$1,290',why:'This is the coat. Capricorn moon buys it once, correctly.',tag:'Buy once buy right',season:'autumn'},
-    {brand:'Vince',name:'Oversized Wool Blend',desc:'Charcoal oversized dropped-shoulder. The winter coat with architectural scale.',price:'$695',why:'Taurus rising: the weight of the wool signals quality before seeing the label.',tag:'Weight signals quality',season:'winter'},
-    {brand:'The Row',name:'Belted Cashmere Coat',desc:'Ivory cashmere belted. The investment coat that makes every outfit better.',price:'$3,290',why:'Libra sun: a coat this good improves everything beneath it by association.',tag:'Elevation effect',season:'winter'},
-    {brand:'COS',name:'Relaxed Trench',desc:'Stone cotton trench. SF fog and rain utility. Never looks weathered.',price:'$295',why:'ISTP: a trench solves weather without announcing that it\'s solving weather.',tag:'Silent solution',season:'spring'},
-    {brand:'Theory',name:'Tailored Blazer',desc:'Camel wool-blend single-button blazer. The WFH-to-outside pivot piece.',price:'$575',why:'ISTP: one blazer, every context from Zoom call to wine bar.',tag:'Context pivot',season:'year-round'},
-    {brand:'Arket',name:'Quilted Nylon Jacket',desc:'Sage quilted. Crane Cove 7am when it\'s cold and beautiful.',price:'$199',why:'Taurus rising: the quilted texture is tactilely satisfying every time.',tag:'7am layer',season:'winter'},
-    {brand:'Club Monaco',name:'Belted Wrap Coat',desc:'Rust wool belted wrap. Birthday month coat — the exact October color.',price:'$598',why:'Libra sun: the rust against the October landscape is perfect harmony.',tag:'October harmony',season:'autumn'},
-    {brand:'Filippa K',name:'Recycled Wool Blazer',desc:'Slate grey structured blazer. The work blazer that doesn\'t announce itself as a work blazer.',price:'$490',why:'Mercury Scorpio: communicates professionalism without performing it.',tag:'Professional non-performance',season:'year-round'},
-    {brand:'& Other Stories',name:'Leather Biker Jacket',desc:'Cognac lambskin biker. Against a cream slip dress: the ISTP equation.',price:'$499',why:'ISTP contrasts: the softness of silk against the precision of leather.',tag:'Contrast equation',season:'autumn'},
-    {brand:'Totême',name:'Cocoon Wool Coat',desc:'Cream cocoon silhouette. For the rare SF cold snap. Worth every penny.',price:'$990',why:'Libra sun: the silhouette is a complete aesthetic statement.',tag:'Silhouette statement',season:'winter'},
-    {brand:'Madewell',name:'Longline Denim Jacket',desc:'Dark indigo longline denim. The everyday layer that works with everything.',price:'$178',why:'ISTP: denim jacket over any dress = done, no further decisions needed.',tag:'No more decisions',season:'spring'},
-    {brand:'Vince',name:'Leather Moto Jacket',desc:'Slate leather moto. The Saturn ASC jacket — presence without trying.',price:'$998',why:'Saturn conjunct ASC: you already have authority. The jacket confirms it.',tag:'Saturn energy',season:'year-round'},
-    {brand:'COS',name:'Structured Canvas Coat',desc:'Stone canvas long coat. The transitional SF layer that handles everything.',price:'$349',why:'ISTP: weather-adaptive without being a technical piece.',tag:'Weather-adaptive',season:'spring'},
-    {brand:'Theory',name:'Teddy Shearling Jacket',desc:'Camel teddy-shearling. The cozy authority piece. Farmers market in November.',price:'$695',why:'Taurus rising: the texture of shearling is exactly what autumn should feel like.',tag:'Autumn texture',season:'autumn'},
-    {brand:'Margaret O\'Leary',name:'Cashmere Wrap Coat',desc:'Natural cashmere long wrap. Hayes Valley find. The warmth of investment.',price:'$698',why:'Capricorn moon: a cashmere coat bought right lasts fifteen years.',tag:'Fifteen year coat',season:'winter'},
-    {brand:'Arket',name:'Merino Overshirt',desc:'Warm camel merino. Between a shirt and a jacket — the versatility gap filler.',price:'$179',why:'ISTP: the piece that solves a transitional problem simply.',tag:'Gap solver',season:'autumn'},
-    {brand:'Filippa K',name:'Trench in Organic Cotton',desc:'Classic stone trench, longer cut. Rain walks to Piccino, done beautifully.',price:'$540',why:'Libra sun: classic proportions done in quality material = correct.',tag:'Classic done right',season:'spring'},
-    {brand:'Club Monaco',name:'Cocoon Blazer',desc:'Chocolate cocoon blazer. Oversized but structured — the casual authority piece.',price:'$398',why:'Saturn ASC: even casual blazers communicate authority on this rising sign.',tag:'Casual authority',season:'year-round'},
-  ],
-  shoes: [
-    {brand:'The Row',name:'Ginza Slingback',desc:'Ivory leather slingback. The quiet luxury shoe — no one can place it, everyone registers it.',price:'$990',why:'Libra sun: a shoe this proportionally correct improves every silhouette.',tag:'Proportion correct',season:'spring'},
-    {brand:'Totême',name:'Knee-High Leather Boot',desc:'Cognac leather knee-high. The autumn boot. Against wide-leg trousers: perfect.',price:'$995',why:'Capricorn moon: buys the real version once rather than approximations forever.',tag:'Real version',season:'autumn'},
-    {brand:'Vince',name:'Gabi Ballet Flat',desc:'Cream leather ballet flat. The everyday flat that photographs like a luxury brand.',price:'$275',why:'ISTP: flat, comfortable, precise — functions and looks perfect.',tag:'Flat precision',season:'spring'},
-    {brand:'COS',name:'Leather Loafer',desc:'Tan leather loafer with subtle hardware. The walking shoe with intelligence.',price:'$189',why:'ISTP: loafer = functionality + intention. Zero maintenance.',tag:'Walking intelligence',season:'year-round'},
-    {brand:'Arket',name:'Platform Sandal',desc:'Tan leather platform sandal. Baker Beach and Crane Cove summer elevation.',price:'$179',why:'Taurus rising: the platform gives height without sacrificing the connection to ground.',tag:'Grounded elevation',season:'summer'},
-    {brand:'Theory',name:'Block Heel Boot',desc:'Chocolate suede block heel ankle boot. Stable, beautiful, day-to-evening.',price:'$498',why:'Libra sun: the block heel is proportionally balanced with wide trousers.',tag:'Balanced proportion',season:'autumn'},
-    {brand:'Filippa K',name:'Chelsea Boot',desc:'Tan leather chelsea. The everyday autumn boot that wears like a second pair of feet.',price:'$390',why:'ISTP: slip on, slip off. Zero cognitive load. Constant elegance.',tag:'Zero cognitive load',season:'autumn'},
-    {brand:'Vince',name:'Almond-Toe Mule',desc:'Cream leather mule. The transition piece from spring to summer.',price:'$395',why:'Taurus rising: the almond toe mirrors the nail shape — everything coheres.',tag:'Shape cohesion',season:'spring'},
-    {brand:'New Balance',name:'550 White/Gum',desc:'Clean white leather with gum sole. The only sneaker this wardrobe needs.',price:'$110',why:'ISTP: the sneaker that looks intentional next to tailored anything.',tag:'Tailored sneaker',season:'year-round'},
-    {brand:'COS',name:'Square-Toe Flat',desc:'Slate leather square-toe. The architectural flat — statement in geometry alone.',price:'$149',why:'Mercury Scorpio: says something without being obvious about what it says.',tag:'Geometric statement',season:'year-round'},
-    {brand:'The Row',name:'Boheme Flat',desc:'Black leather ballet flat. The standard. Everything else is an approximation.',price:'$870',why:'Capricorn moon: the definitive version of a thing, bought once.',tag:'The standard',season:'year-round'},
-    {brand:'Totême',name:'Cap-Toe Boot',desc:'Ivory with black cap-toe. The Totême contrast. Minimal, impactful.',price:'$795',why:'Libra sun: the contrast detail makes the whole silhouette intentional.',tag:'Contrast intention',season:'winter'},
-    {brand:'Arket',name:'Leather Sandal',desc:'Warm tan flat leather sandal. Minimal strapping, maximum simplicity.',price:'$129',why:'ISTP: one strap doing all the work. Efficiency is beauty.',tag:'Efficiency beauty',season:'summer'},
-    {brand:'Madewell',name:'The Regan Boot',desc:'Cognac leather mid-calf boot. The Madewell boot that punches above its price.',price:'$298',why:'Capricorn moon: cost-per-wear on a good leather boot is always justified.',tag:'Cost justified',season:'winter'},
-    {brand:'Club Monaco',name:'Kitten Heel Mule',desc:'Camel leather kitten heel. Museum days, dinner nights, the middle-height sweet spot.',price:'$298',why:'Libra sun: the kitten heel is inherently balanced — heel height equals elegance.',tag:'Height balance',season:'year-round'},
-    {brand:'Filippa K',name:'Pointed Flat',desc:'Slate leather pointed flat. The pointed toe elongates every silhouette without effort.',price:'$340',why:'ISTP: pointed toe does visual work without any effort from the wearer.',tag:'Visual work',season:'spring'},
-    {brand:'Vince',name:'Ankle Strap Sandal',desc:'Ivory leather ankle-strap flat. Simple architecture, maximum summer elegance.',price:'$325',why:'Taurus rising: the ankle strap grounds the foot connection beautifully.',tag:'Ankle grounded',season:'summer'},
-    {brand:'New Balance',name:'2002R Cream',desc:'Cream leather 2002R. The sneaker with enough design credibility for any context.',price:'$150',why:'Mercury Scorpio in 7th: chooses the sneaker others recognize without knowing why.',tag:'Recognizable why',season:'year-round'},
-  ],
-  accessories: [
-    {brand:'Mejuri',name:'Thin Gold Chain',desc:'14k gold 1.2mm chain, 18". The only necklace needed. Wears permanently.',price:'$225',why:'Libra sun: one perfect piece over five good ones. Always.',tag:'The only one',season:'year-round'},
-    {brand:'Catbird',name:'Stacking Rings Set',desc:'Thin 14k gold stacking bands. Three rings — the ISTP capsule ring wardrobe.',price:'$168',why:'Venus Virgo: the rings are precise, minimal, never decorative for decoration\'s sake.',tag:'Capsule rings',season:'year-round'},
-    {brand:'Quay',name:'Black Aviator',desc:'Matte black aviator. Saturn ASC in sunglasses form.',price:'$65',why:'ISTP: the aviator shape requires no maintenance or adjustment.',tag:'Saturn sunnies',season:'summer'},
-    {brand:'Arket',name:'Merino Scarf',desc:'Camel merino oblong. The winter accent — the one texture note in an otherwise clean outfit.',price:'$69',why:'Taurus rising: merino against the throat is exactly right in November.',tag:'Winter texture note',season:'winter'},
-    {brand:'Mejuri',name:'Gold Cuff',desc:'14k gold thin cuff, open-ended. Visible against tattoo sleeve. The wrist accent.',price:'$445',why:'Mercury Scorpio: the cuff against the flower tattoos creates perfect contrast.',tag:'Tattoo contrast',season:'year-round'},
-    {brand:'Warby Parker',name:'Chamberlain in Whiskey',desc:'Tortoise acetate square-ish frame. Intelligent, warm, ISTP-appropriate.',price:'$145',why:'ISTP: frames that are considered but not conspicuous.',tag:'Considered not conspicuous',season:'year-round'},
-    {brand:'Catbird',name:'Diamond-Cut Gold Hoop',desc:'14k tiny hoops, diamond-cut texture. The only earring needed. Year-round.',price:'$188',why:'Libra sun: symmetry, gold, small — the exact correct ear equation.',tag:'Ear equation',season:'year-round'},
-    {brand:'& Other Stories',name:'Leather Belt',desc:'Cognac leather belt, gold minimal buckle. Finishes every trouser-tuck.',price:'$65',why:'Venus Virgo: the correct belt buckle width ratio is never an accident.',tag:'Ratio perfect',season:'year-round'},
-    {brand:'Loewe',name:'Anagram Scarf',desc:'Wool-silk blend in warm taupe. The considered scarf — noticeable to those who notice.',price:'$495',why:'Mercury Scorpio: communicates taste to those who recognize it.',tag:'Communicates taste',season:'autumn'},
-    {brand:'Mejuri',name:'Anklet',desc:'14k gold thin anklet. Baker Beach, platform sandals, linen dress. Summer.',price:'$195',why:'Taurus rising: the ankle is sensory — jewelry there registers physically.',tag:'Summer ankle',season:'summer'},
-    {brand:'Quay',name:'Round Gold Frame',desc:'Thin gold round frame with amber lens. Crane Cove morning light.',price:'$75',why:'Libra sun: round is the most balanced frame geometry.',tag:'Balance geometry',season:'spring'},
-    {brand:'Arket',name:'Canvas Hat',desc:'Stone canvas wide-brim. The outdoor accessory that photographs beautifully.',price:'$79',why:'ISTP: functional against SF sun without being a performance.',tag:'Functional beautiful',season:'summer'},
-    {brand:'Catbird',name:'Ear Cuff',desc:'14k gold ear cuff, no piercing needed. The unexpected detail without permanence.',price:'$128',why:'Libra sun: the asymmetric ear cuff creates visual interest without disrupting.',tag:'Asymmetric interest',season:'year-round'},
-    {brand:'Mejuri',name:'Initial Charm',desc:'14k gold minimal initial charm on chain. Personal without being sentimental.',price:'$195',why:'Mercury Scorpio: the meaning is private, which is exactly how it should be.',tag:'Private meaning',season:'year-round'},
-    {brand:'& Other Stories',name:'Leather Gloves',desc:'Tan leather unlined gloves. The winter detail that the camel coat requires.',price:'$79',why:'Taurus rising: leather gloves transform how everything feels in winter.',tag:'Winter transform',season:'winter'},
-    {brand:'Warby Parker',name:'Haskell in Rye',desc:'Warm amber rectangle. The reading glasses that also work as the outdoor glasses.',price:'$145',why:'ISTP: one pair, two functions.',tag:'One pair two functions',season:'year-round'},
-    {brand:'Loewe',name:'Wool Beanie',desc:'Merino beanie in camel. The winter hat that doesn\'t sacrifice the silhouette.',price:'$250',why:'Taurus rising: cashmere/merino beanie — the most sensory winter upgrade.',tag:'Silhouette-safe',season:'winter'},
-    {brand:'Catbird',name:'Tennis Bracelet',desc:'14k diamond-alternative tennis. The wrist piece that stays on permanently.',price:'$398',why:'Capricorn moon: buys the version that never needs to come off.',tag:'Permanent piece',season:'year-round'},
-  ],
-  bags: [
-    {brand:'Totême',name:'T-Lock Clutch',desc:'Smooth leather clutch in ivory. The Totême hardware that identifies without logos.',price:'$595',why:'Mercury Scorpio: recognized by people who know, invisible to those who don\'t.',tag:'Recognizable silence',season:'year-round'},
-    {brand:'The Row',name:'Soft Margaux 10',desc:'Slate pebbled leather tote. The bag. Ends bag shopping permanently.',price:'$1,590',why:'Capricorn moon: one exceptional bag lasts decades. The math always works.',tag:'End of search',season:'year-round'},
-    {brand:'Polène',name:'Numéro Un Nano',desc:'Cognac leather structured nano. The crossbody for Crane Cove, SŌHN, Piccino.',price:'$350',why:'ISTP: exactly the right size. Nothing missing, nothing excess.',tag:'Nothing excess',season:'year-round'},
-    {brand:'Aritzia',name:'Wilfred Crescent Bag',desc:'Tan leather crescent shoulder. The every-day bag that looks considered.',price:'$298',why:'Taurus rising: the crescent shape sits against the body naturally.',tag:'Body-natural shape',season:'spring'},
-    {brand:'Cuyana',name:'Classic Leather Tote',desc:'Stone leather tote, unlined. Fits laptop, matcha thermos, library book.',price:'$298',why:'ISTP: the bag that asks nothing and holds everything.',tag:'Asks nothing',season:'year-round'},
-    {brand:'Loewe',name:'Hammock Small',desc:'Cream smooth leather. Architectural shape — the Loewe that rewards attention.',price:'$1,850',why:'Libra sun: the bag as object. Beautiful to hold, to see, to use.',tag:'Bag as object',season:'year-round'},
-    {brand:'Totême',name:'T-Handle Tote',desc:'Cognac vegetable-tanned. Stiffens and deepens with use — better every year.',price:'$795',why:'Taurus rising: the patina developing over years is the point.',tag:'Better with age',season:'autumn'},
-    {brand:'Polène',name:'Numéro Neuf',desc:'Taupe suede structured bucket. Soft-looking but holds its shape.',price:'$450',why:'ISTP: structured enough to reach into without looking. Practical intelligence.',tag:'Practical intelligence',season:'summer'},
-    {brand:'Cuyana',name:'Mini Zipper Tote',desc:'Black pebbled leather mini tote. The evening-capable everyday bag.',price:'$198',why:'Capricorn moon: one bag that handles multiple contexts without fuss.',tag:'Multi-context',season:'year-round'},
-    {brand:'Arket',name:'Leather Shoulder Bag',desc:'Tan leather shoulder with minimal hardware. No logo. All quality.',price:'$289',why:'ISTP: the bag that identifies its owner without text.',tag:'Identifies without text',season:'year-round'},
-    {brand:'The Row',name:'Sock Bag',desc:'Ivory nappa leather gathered. The unusual choice that reads as deeply confident.',price:'$1,490',why:'Mercury Scorpio: the bag choice that reveals taste to those paying attention.',tag:'Taste reveal',season:'spring'},
-    {brand:'Polène',name:'Numéro Sept',desc:'Warm camel leather flap. Structured, small, precise — the Saturn ASC bag.',price:'$395',why:'Saturn ASC: precision in a small form carries authority.',tag:'Small authority',season:'year-round'},
-    {brand:'Loewe',name:'Flamenco Nano',desc:'Slate leather gathered nano. Architectural art-object bag.',price:'$1,350',why:'Libra sun: holds almost nothing, but the object itself is the point.',tag:'Object is the point',season:'winter'},
-    {brand:'Cuyana',name:'System Tote',desc:'Stone leather structured tote with insert system. Remote work laptop bag, elegant.',price:'$398',why:'ISTP: the system solves the organization problem once, permanently.',tag:'Permanent solution',season:'year-round'},
-    {brand:'Aritzia',name:'Everyday Shoulder Bag',desc:'Cognac pebbled medium shoulder. The Dogpatch daily bag.',price:'$248',why:'Taurus rising: cognac leather is the most sensory-satisfying neutral.',tag:'Sensory neutral',season:'year-round'},
-    {brand:'Totême',name:'New Boxy Tote',desc:'Ivory structured boxy tote. The clean-desk bag. Nothing excess, nothing missing.',price:'$595',why:'Venus Virgo: the boxy proportion is inherently organized.',tag:'Inherently organized',season:'spring'},
-    {brand:'Polène',name:'Numéro Quatorze',desc:'Taupe soft leather shoulder. Architectural folds, zero hardware.',price:'$495',why:'ISTP: no hardware = no maintenance, no catches, no attention.',tag:'No maintenance',season:'year-round'},
-    {brand:'Arket',name:'Mini Crossbody',desc:'Tan leather mini crossbody. Crane Cove mornings when the large bag stays home.',price:'$189',why:'ISTP: phone, card, key. That\'s the bag.',tag:'Phone card key',season:'summer'},
-  ]
-};
+const W={run:[{brand:'Lululemon',name:'Swift Speed HR Tight 25"',desc:'The run tight that holds and doesn\'t shift. Black or dark olive.',price:'$128',tag:'7am Crane Cove',why:'Capricorn moon: the run is non-negotiable. The tight should be too.'},{brand:'Lululemon',name:'Fast and Free Tight 28"',desc:'Ultralight Nulu. The tight you forget you\'re wearing.',price:'$148',tag:'Forget wearing it',why:'ISTP: gear that disappears so you focus on the run.'},{brand:'Lululemon',name:'Swiftly Tech Long Sleeve',desc:'Seamless. The run top that doesn\'t chafe at mile 6.',price:'$88',tag:'Seamless mile 6',why:'Taurus rising: no seams registering wrong = correct choice.'},{brand:'Lululemon',name:'Swiftly Tech Racerback',desc:'Silky barely-there tank. Layered or solo in summer.',price:'$68',tag:'Barely there',why:'ISTP runs hot. This is the answer.'},{brand:'Lululemon',name:'Hotty Hot HR Short 4"',desc:'Summer run short. High rise, lined, doesn\'t ride.',price:'$68',tag:'Summer Embarcadero',why:'Baker Beach route in July. Nothing rides, nothing shifts.'},{brand:'Lululemon',name:'Surge Run Jacket',desc:'Lightweight wind-resistant. Packs into itself. The fog layer.',price:'$178',tag:'Fog-layer run',why:'Crane Cove at 7am: the jacket that comes off at mile 2.'},{brand:'Lululemon',name:'Wunder Train HR Tight 25"',desc:'Luxtreme fabric. Cooler compression feel.',price:'$128',tag:'Compression cool',why:'Taurus rising: Luxtreme feels different on the body — noticeably better.'},{brand:'Popflex',name:'Pirouette Legging',desc:'High-waist full-length. Pockets that actually fit a phone.',price:'$98',tag:'Fits a real phone',why:'ISTP: solves the phone-pocket problem permanently.'},{brand:'Popflex',name:'Active Tank',desc:'Fitted tank with built-in support. Clean lines.',price:'$58',tag:'Built-in support',why:'Venus Virgo: the clean line that doesn\'t need a separate bra.'},{brand:'Popflex',name:'High-Waist Flare Legging',desc:'Fitted hip, flared below knee. Run to errand.',price:'$88',tag:'Run to errand',why:'ISTP: one piece, multiple contexts, no changing.'},{brand:'On Running',name:'Cloudmonster 2',desc:'Maximum cushion rocker sole. Works with SF hills.',price:'$180',tag:'SF hills approved',why:'Taurus rising: the cushion registers as quality before mile 1.'},{brand:'Hoka',name:'Clifton 9',desc:'Lightweight max cushion. The daily trainer.',price:'$145',tag:'Daily trainer',why:'Capricorn moon: the run is daily. The shoe must be too.'}],yoga:[{brand:'Lululemon',name:'Align HR Pant 28"',desc:'The yoga pant. Nulu fabric is the softest on skin.',price:'$128',tag:'The yoga pant',why:'Taurus rising: Nulu fabric is the sensory standard for studio.'},{brand:'Lululemon',name:'Align HR Short 6"',desc:'Same Nulu, short version. Hot yoga or summer studio.',price:'$68',tag:'Hot studio',why:'ISTP: same excellent piece, right length for the context.'},{brand:'Lululemon',name:'Nulu Cropped Jacket',desc:'Buttery zip-up. Pre and post class. Studio to matcha.',price:'$138',tag:'Studio to matcha',why:'Libra sun: the transition from studio to SOHN requires this.'},{brand:'Lululemon',name:'Flow Y Bra',desc:'Medium support, minimal straps. Non-distracting in practice.',price:'$68',tag:'Non-distracting',why:'ISTP: gear that removes friction from the practice itself.'},{brand:'Lululemon',name:'Instill HR Tight 25"',desc:'Luon fabric. The studio tight with a pant-like drape.',price:'$128',tag:'Pant-like drape',why:'Libra sun: refined enough to go directly from studio to lunch.'},{brand:'Popflex',name:'Pirouette Bra',desc:'Adjustable, minimal, clean. Disappears under a flowing top.',price:'$58',tag:'Disappearing bra',why:'Venus Virgo: the bra that does its job invisibly.'},{brand:'Popflex',name:'Open-Back Flow Top',desc:'Draped open back, minimal front. Real support inside.',price:'$68',tag:'Back detail',why:'Mercury Scorpio: the detail is in the back.'},{brand:'Popflex',name:'Studio Flare',desc:'Wide-leg flare legging. Moves beautifully in flow.',price:'$88',tag:'Flow-ready',why:'Libra sun: the movement is aesthetically correct in this shape.'},{brand:'Lululemon',name:'Wunder Under HR Tight 28"',desc:'Luon fabric, full length, dependable. The original.',price:'$98',tag:'The original',why:'Capricorn moon: the classic that doesn\'t need improvement.'},{brand:'Lululemon',name:'Energy Bra',desc:'Light support, Y-back. For low-impact and yoga.',price:'$58',tag:'Light support',why:'ISTP: low-maintenance, effective, nothing excess.'},{brand:'Lululemon',name:'Scuba Full-Zip Hoodie',desc:'French terry oversized. Post-yoga wrap.',price:'$168',tag:'Post-practice wrap',why:'Taurus rising: the weight of Scuba terry is exactly right.'},{brand:'Popflex',name:'Ballet Wrap Top',desc:'Wrap silhouette for studio. The Libra piece.',price:'$64',tag:'Ballet-adjacent',why:'Libra sun: the wrap silhouette is always the correct one.'}],everyday:[{brand:'Lululemon',name:'ABC Jogger',desc:'The jogger that passes for a real pant. Warpstreme fabric.',price:'$128',tag:'Passes as pants',why:'ISTP: handles remote calls without looking like loungewear.'},{brand:'Lululemon',name:'City Sleek 5-Pocket HR Pant',desc:'Sleek, polished, athletic. Dogpatch errands.',price:'$168',tag:'Dogpatch errands',why:'Libra sun: activewear that is also aesthetically correct.'},{brand:'Lululemon',name:'Define Jacket',desc:'Fitted zip-up. Daily layer for SF temperature shifts.',price:'$118',tag:'SF temp layer',why:'ISTP: SF changes 15° in an hour. This handles it quietly.'},{brand:'Lululemon',name:'Softstreme HR Pant',desc:'Feels like nothing, wears like a real pant.',price:'$128',tag:'Feels like nothing',why:'Taurus rising: fabric that registers as luxurious immediately.'},{brand:'Popflex',name:'Everyday Biker Short',desc:'Mid-thigh, high-waist. Under dresses or worn solo.',price:'$68',tag:'Under everything',why:'ISTP: one piece that solves multiple outfit problems silently.'},{brand:'Lululemon',name:'Cool Racerback Tank',desc:'Silky, drapes well. Active tank or base layer.',price:'$68',tag:'Base layer pivot',why:'Libra sun: elegant enough to be visible, functional enough hidden.'},{brand:'Popflex',name:'Everyday Crew Sweatshirt',desc:'Cozy, slightly oversized. Off-duty but considered.',price:'$78',tag:'Considered comfort',why:'Capricorn moon: comfort that doesn\'t abandon standards.'},{brand:'Lululemon',name:'Everywhere Belt Bag',desc:'Micro belt bag. Crane Cove, farmers market, coffee.',price:'$48',tag:'Hands-free Dogpatch',why:'ISTP: phone, card, key — hands free. The correct solution.'},{brand:'Lululemon',name:'Scuba Oversized Half-Zip',desc:'French terry half-zip. Weekend morning uniform.',price:'$138',tag:'Weekend uniform',why:'Moon Capricorn: the weekend has a uniform too.'},{brand:'Popflex',name:'High-Waist Pocket Biker',desc:'5 pockets including phone-sized. Actually functional.',price:'$78',tag:'Actually functional',why:'ISTP frustration solved: pockets that hold a real phone.'},{brand:'Lululemon',name:'Metal Vent Tech SS',desc:'Ultralight tee. The active top that wears like nothing.',price:'$78',tag:'Wears like nothing',why:'Taurus rising: ultralight fabric is a sensory decision.'},{brand:'Popflex',name:'Studio Bomber',desc:'Satin-finish bomber. Between active and out.',price:'$98',tag:'Studio to street',why:'Libra sun: moves between contexts with elegance.'}],gear:[{brand:'Lululemon',name:'Insulated Water Bottle 24oz',desc:'Keeps cold 24hr. The run desk bottle.',price:'$48',tag:'24hr cold',why:'ISTP: solves the hydration problem once with a quality object.'},{brand:'Lululemon',name:'Fast and Free Hair Ties',desc:'Coil ties that don\'t crease. The everyday hair tie.',price:'$18',tag:'No crease',why:'Venus Virgo: a detail that matters even when no one notices.'},{brand:'Lululemon',name:'Grip Yoga Mat 3mm',desc:'Natural rubber, perfect grip. The mat you don\'t replace.',price:'$98',tag:"Don't replace it",why:'Capricorn moon: buy the correct version once.'},{brand:'Lululemon',name:'The Reversible Mat 5mm',desc:'Two-sided, extra cushion. More support for longer holds.',price:'$78',tag:'Extra cushion',why:'Taurus rising: 5mm cushion registers immediately as better.'},{brand:'Popflex',name:'Booty Band Set',desc:'Three resistance levels. Adds to any run warm-up.',price:'$35',tag:'Run warm-up',why:'ISTP: compact, effective, permanent warm-up solution.'},{brand:'Lululemon',name:'Cardio Cross Trainer',desc:'Gym shoe that handles light trail and errands.',price:'$148',tag:'Cross-context trainer',why:'ISTP: one shoe, gym + trail + errands. No second pair.'},{brand:'Lululemon',name:'Run Hat',desc:'Lightweight, adjustable, ventilated.',price:'$48',tag:'Non-statement hat',why:'ISTP: solves sun/sweat without becoming an aesthetic decision.'},{brand:'Popflex',name:'Zipper Gym Bag',desc:'Clean, structured, fits a full change of clothes.',price:'$88',tag:'Studio or gym',why:'Libra sun: the gym bag that looks correct at SOHN post-run.'},{brand:'Lululemon',name:'Core 10L Backpack',desc:'10L technical. Crane Cove to desk. Holds a laptop.',price:'$148',tag:'Crane Cove to desk',why:'ISTP: the bag from 7am run to 9am desk.'},{brand:'Lululemon',name:'Yoga Block Set',desc:'Standard density, correct size. Home practice essential.',price:'$34',tag:'Home practice',why:'Capricorn moon: the home practice is as structured as the studio.'},{brand:'Lululemon',name:'Cold Cup 32oz',desc:'Straw lid, cold all day. The desk water ritual.',price:'$40',tag:'Desk water ritual',why:'Taurus rising: the object should be as satisfying as what\'s in it.'},{brand:'Popflex',name:'Workout Journal',desc:'Structured log for sets, reps, notes.',price:'$28',tag:'ISTP training log',why:'ISTP: tracking the system is as important as running it.'}]};
 
-const fashionRendered = new Set();
+const NAILS={spring:[{brand:'OPI',name:'Tiramisu for Two',color:'#d4c4b4',finish:'cream',desc:'Warm taupe nude. Skin-but-better. Dogpatch morning default.',vibe:'Effortless'},{brand:'Essie',name:'Topless & Barefoot',color:'#c8b09a',finish:'cream',desc:'Nude peach. Chosen but invisible.',vibe:'Invisible luxury'},{brand:'Chanel',name:'Ballerina',color:'#d4a89a',finish:'satin',desc:'Pale rose-beige. Libra spring mood: soft, precise.',vibe:'The only pink'},{brand:'Deborah Lippmann',name:'Naked',color:'#c4b8a0',finish:'sheer',desc:'Sheer warm beige. SF Botanical garden energy.',vibe:'Botanical elegance'},{brand:'Zoya',name:'Misty',color:'#b8c4a0',finish:'cream',desc:'Sage green-grey. Marin Headlands palette.',vibe:'Wildflower mind'},{brand:'Orly',name:'Bare Rose',color:'#e8d4c0',finish:'sheer',desc:'Peachy nude. Dimensional second skin.',vibe:'Second skin'},{brand:'Dior',name:'Abricot',color:'#d4a880',finish:'gloss',desc:'Warm apricot care-plus-color. Spring ritual.',vibe:'Dior standard'}],summer:[{brand:'Essie',name:'Eternal Optimist',color:'#c09a8a',finish:'cream',desc:'Terracotta-rose. Baker Beach energy.',vibe:'Baker Beach'},{brand:'OPI',name:'Put It in Neutral',color:'#d4c8b0',finish:'cream',desc:'Warm greige. Works with every linen piece.',vibe:'Let outfit speak'},{brand:'Nails Inc',name:'Portobello Road',color:'#b4a494',finish:'satin',desc:'Mushroom taupe. Capricorn moon never does neon.',vibe:'Understated'},{brand:'Chanel',name:'Coco',color:'#c8b090',finish:'cream',desc:"Warm golden beige. Doesn't show wear.",vibe:'Longevity'},{brand:'Zoya',name:'Veruschka',color:'#a8b490',finish:'cream',desc:'Sage green. Crane Cove mornings.',vibe:'Botanical accent'},{brand:'Dior',name:'Beige Massai',color:'#d0b8a8',finish:'gloss',desc:'Sheer beige with golden depth.',vibe:'Gold-adjacent'},{brand:'Smith & Cult',name:'Sheer Beige',color:'#c8b8a4',finish:'sheer',desc:'Market to dinner sheer.',vibe:'Market to dinner'}],autumn:[{brand:'OPI',name:'Malaga Wine',color:'#6e3228',finish:'gloss',desc:'Deep burgundy. Camel coat and cream turtleneck: perfect.',vibe:'Birthday season'},{brand:'Essie',name:'Cognac Casual',color:'#8b5a3a',finish:'cream',desc:'Deep cognac. Matches the knee-high boots.',vibe:'Capsule anchor'},{brand:'Chanel',name:'Rouge Noir',color:'#5c2820',finish:'gloss',desc:'Near-black red. Scorpio Mercury: depth always.',vibe:'Scorpio signature'},{brand:'Deborah Lippmann',name:'Across the Universe',color:'#9c6040',finish:'cream',desc:'Terracotta-rust. October birthday color.',vibe:'October birthday'},{brand:'Smith & Cult',name:'Pyre of Bacchus',color:'#4e3428',finish:'satin',desc:'Dark plum-brown. Ungrafted wine bar depth.',vibe:'Ungrafted level'},{brand:'Nars',name:'Jungle Red',color:'#7c4c3c',finish:'cream',desc:'Warm brick red. Day to First Thursday.',vibe:'Day-to-evening'},{brand:'Zoya',name:'Pepper',color:'#3c2428',finish:'gloss',desc:'Near-black plum. Maximum autumn depth.',vibe:'Maximum depth'}],winter:[{brand:'Chanel',name:'Noir Céladon',color:'#2c2c2a',finish:'satin',desc:'Near-black with green depth.',vibe:'December Capricorn'},{brand:'Zoya',name:'Willa',color:'#5a5060',finish:'cream',desc:'Dusty blue-grey. Storm light on the bay.',vibe:'Storm light'},{brand:'OPI',name:'Lincoln Park After Dark',color:'#3c2830',finish:'gloss',desc:'Deep plum-black. Third Rail in January.',vibe:'Third Rail energy'},{brand:'Essie',name:'Blanc',color:'#c8c4bc',finish:'cream',desc:'Clean white. Contrast against dark coats.',vibe:'Quiet contrast'},{brand:'Smith & Cult',name:'Dead Ringers',color:'#8c6870',finish:'satin',desc:'Dusty mauve-rose. Cashmere crewneck companion.',vibe:'Cashmere company'},{brand:'Nars',name:'Conquistador',color:'#504848',finish:'satin',desc:'Warm grey-brown. SFMOMA January restraint.',vibe:'Museum restraint'},{brand:'Deborah Lippmann',name:'Stormy Weather',color:'#6870a0',finish:'gloss',desc:'Dusty slate blue. Deeply intentional.',vibe:'Unexpected depth'}],always:[{brand:'Essie',name:'Ballet Slippers',color:'#c8b8a8',finish:'sheer',desc:'The universal nude pink. The constant.',vibe:'The constant'},{brand:'OPI',name:'Berlin There Done That',color:'#b0a090',finish:'cream',desc:'Cool taupe year-round. Understated confidence.',vibe:'Quiet confidence'},{brand:'Chanel',name:'Black Pearl',color:'#1a1a18',finish:'gloss',desc:'True black. Transcends all seasonal logic.',vibe:'Transcendent'},{brand:'Deborah Lippmann',name:'In the Groove',color:'#a8b490',finish:'satin',desc:'Muted sage. Always correct.',vibe:'Always grounded'},{brand:'Smith & Cult',name:'Sheer Luck',color:'#d0c0b0',finish:'sheer',desc:'Sheer blush-beige. The reset nail.',vibe:'Reset nail'}]};
 
-function renderFashion(category, force) {
-  if (!force && fashionRendered.has(category + currentFashionSeason)) return;
-  fashionRendered.add(category + currentFashionSeason);
-  const grid = document.getElementById(category+'-grid');
-  const loading = document.getElementById(category+'-loading');
-  if (!grid) return;
-  let items = FASHION[category] || [];
-  if (currentFashionSeason !== 'all') {
-    items = items.filter(i => i.season === currentFashionSeason || i.season === 'year-round');
-  }
-  if (loading) loading.style.display = 'none';
-  if (items.length === 0) {
-    grid.innerHTML = '<div style="padding:24px;color:var(--st);font-size:12px;letter-spacing:.1em;grid-column:1/-1">No items for this season — try "All Seasons".</div>';
-    return;
-  }
-  // Render in two batches: first 6 immediately, rest on next frame
-  const first = items.slice(0, 6);
-  const rest = items.slice(6);
-  grid.innerHTML = first.map(item => fashionCard(item)).join('');
-  if (rest.length) {
-    requestAnimationFrame(() => {
-      grid.innerHTML += rest.map(item => fashionCard(item)).join('');
-    });
-  }
-}
+let fnCurSeason='all', fnCurCat='tops', fnCurWCat='run', fnCurShape='almond', fnCurDesign='solid', fnCurNSeason='spring';
 
-function fashionCard(item) {
-  return `<div class="fashion-item">
-    <div class="fi-brand">${item.brand}</div>
-    <div class="fi-name">${item.name}</div>
-    <div class="fi-desc">${item.desc}</div>
-    <div class="fi-price">${item.price}</div>
-    <div class="fi-why">${item.why}</div>
-    <span class="fi-tag">${item.tag}</span>
-  </div>`;
-}
-
-function loadFashionCategory(category) {
-  renderFashion(category);
-}
-
-// ---- NAIL SYSTEM ----
-let currentShape = 'almond';
-let currentDesignType = 'solid';
-
-function setShape(s, btn) {
-  currentShape = s;
-  document.querySelectorAll('.shape-tab').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  renderAllNailGrids();
-}
-
-function setDesignType(d, btn) {
-  currentDesignType = d;
-  document.querySelectorAll('.dtb').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  renderAllNailGrids();
-}
-
-// SVG nail shapes - returns path for a single nail given shape
-function getNailPath(shape, w, h) {
-  const hw = w/2;
-  switch(shape) {
-    case 'almond':
-      return `M ${hw},${h} C ${0},${h*0.85} ${0},${h*0.6} ${hw},${h*0.05} C ${w},${h*0.6} ${w},${h*0.85} ${hw},${h}`;
-    case 'oval':
-      return `M ${hw},${h} C ${0},${h*0.82} ${0},${h*0.55} ${hw},${h*0.12} C ${w},${h*0.55} ${w},${h*0.82} ${hw},${h}`;
-    case 'squoval':
-      return `M ${hw},${h} C ${0},${h*0.88} ${0},${h*0.65} ${w*0.08},${h*0.18} Q ${hw},${h*0.06} ${w*0.92},${h*0.18} C ${w},${h*0.65} ${w},${h*0.88} ${hw},${h}`;
-    case 'square':
-      return `M ${hw},${h} L ${0},${h} L ${0},${h*0.18} L ${w},${h*0.18} L ${w},${h} Z`;
-    default:
-      return `M ${hw},${h} C ${0},${h*0.85} ${0},${h*0.6} ${hw},${h*0.05} C ${w},${h*0.6} ${w},${h*0.85} ${hw},${h}`;
-  }
-}
-
-// Generate SVG for a nail card showing 4 fingers
-function makeSVGNail(color, finish, designType, shape, bg) {
-  const W = 180, H = 130;
-  const nw = 28, nh = 76;
-  const positions = [18, 52, 86, 120]; // x positions for 4 nails
-  const heights = [nh*0.82, nh, nh*0.9, nh*0.75]; // vary nail sizes like a real hand
-
-  let svgNails = '';
-  positions.forEach((x, i) => {
-    const h = heights[i];
-    const y = H - h - 8;
-    const path = getNailPath(shape, nw, h);
-
-    // Base shadow
-    svgNails += `<ellipse cx="${x+nw/2}" cy="${H-6}" rx="${nw*0.45}" ry="4" fill="rgba(0,0,0,0.08)"/>`;
-
-    // Finger base (skin tone)
-    svgNails += `<rect x="${x}" y="${y + h*0.3}" width="${nw}" height="${H - y - h*0.3 - 4}" rx="3" fill="#c8a888" opacity="0.7"/>`;
-
-    // Nail shape
-    const transform = `translate(${x}, ${y})`;
-
-    // Add cuticle shadow
-    svgNails += `<g transform="${transform}">`;
-
-    // Finish-based fill
-    let fillElem = '';
-    if (finish === 'sheer') {
-      fillElem = `<defs><linearGradient id="ng${i}" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="${color}" stop-opacity="0.65"/><stop offset="100%" stop-color="${color}" stop-opacity="0.45"/></linearGradient></defs>`;
-      fillElem += `<path d="${getNailPath(shape, nw, h)}" fill="url(#ng${i})"/>`;
-    } else if (finish === 'gloss') {
-      fillElem = `<defs><linearGradient id="ng${i}" x1="0.3" y1="0" x2="0.7" y2="1"><stop offset="0%" stop-color="${lighten(color, 30)}"/><stop offset="40%" stop-color="${color}"/><stop offset="100%" stop-color="${darken(color, 15)}"/></linearGradient></defs>`;
-      fillElem += `<path d="${getNailPath(shape, nw, h)}" fill="url(#ng${i})"/>`;
-      fillElem += `<path d="M ${nw*0.25},${h*0.12} Q ${nw*0.5},${h*0.06} ${nw*0.75},${h*0.14} Q ${nw*0.75},${h*0.32} ${nw*0.5},${h*0.36} Q ${nw*0.25},${h*0.32} ${nw*0.25},${h*0.12}" fill="rgba(255,255,255,0.22)"/>`;
-    } else if (finish === 'satin') {
-      fillElem = `<defs><linearGradient id="ng${i}" x1="0.2" y1="0" x2="0.8" y2="1"><stop offset="0%" stop-color="${lighten(color, 15)}"/><stop offset="100%" stop-color="${darken(color, 8)}"/></linearGradient></defs>`;
-      fillElem += `<path d="${getNailPath(shape, nw, h)}" fill="url(#ng${i})"/>`;
-    } else {
-      fillElem = `<path d="${getNailPath(shape, nw, h)}" fill="${color}"/>`;
-    }
-
-    svgNails += fillElem;
-
-    // Design overlays
-    if (designType === 'french') {
-      // French tip
-      svgNails += `<clipPath id="nc${i}"><path d="${getNailPath(shape, nw, h)}"/></clipPath>`;
-      svgNails += `<path d="M 0,${h*0.75} Q ${nw*0.5},${h*0.68} ${nw},${h*0.75} L ${nw},${h} L 0,${h} Z" fill="rgba(250,247,242,0.88)" clip-path="url(#nc${i})"/>`;
-      svgNails += `<line x1="0" y1="${h*0.75}" x2="${nw}" y2="${h*0.75}" stroke="rgba(200,185,170,0.4)" stroke-width="0.5" clip-path="url(#nc${i})"/>`;
-    } else if (designType === 'minimal-art') {
-      svgNails += `<clipPath id="nc${i}"><path d="${getNailPath(shape, nw, h)}"/></clipPath>`;
-      if (i === 1) {
-        // Middle finger: thin gold line
-        svgNails += `<line x1="${nw*0.3}" y1="${h*0.25}" x2="${nw*0.7}" y2="${h*0.25}" stroke="#c4a96a" stroke-width="1.2" clip-path="url(#nc${i})"/>`;
-      } else if (i === 3) {
-        // Ring finger: small dot
-        svgNails += `<circle cx="${nw*0.5}" cy="${h*0.3}" r="2.5" fill="rgba(255,255,255,0.55)" clip-path="url(#nc${i})"/>`;
-      }
-    } else if (designType === 'botanical') {
-      svgNails += `<clipPath id="nc${i}"><path d="${getNailPath(shape, nw, h)}"/></clipPath>`;
-      if (i === 1) {
-        // Tiny leaf silhouette
-        svgNails += `<ellipse cx="${nw*0.4}" cy="${h*0.3}" rx="3" ry="6" fill="rgba(107,124,90,0.45)" transform="rotate(-15,${nw*0.4},${h*0.3})" clip-path="url(#nc${i})"/>`;
-        svgNails += `<ellipse cx="${nw*0.62}" cy="${h*0.32}" rx="2.5" ry="5" fill="rgba(107,124,90,0.35)" transform="rotate(12,${nw*0.62},${h*0.32})" clip-path="url(#nc${i})"/>`;
-      } else if (i === 3) {
-        svgNails += `<ellipse cx="${nw*0.5}" cy="${h*0.3}" rx="3.5" ry="7" fill="rgba(107,124,90,0.4)" transform="rotate(-8,${nw*0.5},${h*0.3})" clip-path="url(#nc${i})"/>`;
-      }
-    } else if (designType === 'negative') {
-      svgNails += `<clipPath id="nc${i}"><path d="${getNailPath(shape, nw, h)}"/></clipPath>`;
-      // Half-moon negative space at cuticle
-      svgNails += `<ellipse cx="${nw*0.5}" cy="${h*0.14}" rx="${nw*0.38}" ry="${h*0.1}" fill="#c8a888" opacity="0.55" clip-path="url(#nc${i})"/>`;
-    }
-
-    // Highlight rim on nail edge
-    svgNails += `<path d="${getNailPath(shape, nw, h)}" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>`;
-
-    svgNails += `</g>`;
+function fnShow(tab, btn) {
+  document.querySelectorAll('.fn-tab-bar > .fn-tab').forEach(b=>b.classList.toggle('active', b===btn));
+  ['fashion','workout','nails'].forEach(t=>{
+    const el=document.getElementById('fnp-'+t);
+    if(el) el.classList.toggle('active',t===tab);
   });
+}
+function fnSeason(s,btn){fnCurSeason=s;document.querySelectorAll('#fn-seasons .fn-sfilt').forEach(b=>b.classList.remove('active'));btn.classList.add('active');fnRenderFashion();}
+function fnCat(c,btn){fnCurCat=c;document.querySelectorAll('#fn-cats .fn-tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');fnRenderFashion();}
+function fnWCat(c,btn){fnCurWCat=c;document.querySelectorAll('#fn-wcats .fn-tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');fnRenderWorkout();}
+function fnShape(s,btn){fnCurShape=s;document.querySelectorAll('#fnp-nails .fn-pill').forEach(b=>{if(b.getAttribute('onclick')&&b.getAttribute('onclick').includes('fnShape'))b.classList.remove('active')});btn.classList.add('active');fnRenderNails();}
+function fnDesign(d,btn){fnCurDesign=d;document.querySelectorAll('#fnp-nails .fn-pill').forEach(b=>{if(b.getAttribute('onclick')&&b.getAttribute('onclick').includes('fnDesign'))b.classList.remove('active')});btn.classList.add('active');fnRenderNails();}
+function fnNSeason(s,btn){fnCurNSeason=s;document.querySelectorAll('#fn-nseasons .fn-tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');fnRenderNails();}
 
-  return `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
-    <rect width="${W}" height="${H}" fill="${bg}"/>
-    ${svgNails}
-  </svg>`;
+function fnCard(i){return `<div class="fn-card"><div class="fn-brand">${i.brand}</div><div class="fn-name">${i.name}</div><div class="fn-desc">${i.desc}</div><div class="fn-price">${i.price}</div><div class="fn-why">${i.why}</div><span class="fn-tag">${i.tag}</span></div>`;}
+
+function fnRenderFashion(){
+  const items=(F[fnCurCat]||[]).filter(i=>fnCurSeason==='all'||i.season===fnCurSeason||i.season==='year-round');
+  const g=document.getElementById('fn-fashion-grid');
+  g.innerHTML=items.length?items.map(fnCard).join(''):'<p style="padding:1rem;color:var(--st);font-style:italic">No items for this season — try All seasons.</p>';
+}
+function fnRenderWorkout(){
+  const items=W[fnCurWCat]||[];
+  document.getElementById('fn-workout-grid').innerHTML=items.map(fnCard).join('');
 }
 
-function lighten(hex, pct) {
-  let r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
-  r = Math.min(255, r + Math.round(pct*2.55));
-  g = Math.min(255, g + Math.round(pct*2.55));
-  b = Math.min(255, b + Math.round(pct*2.55));
-  return '#' + [r,g,b].map(v=>v.toString(16).padStart(2,'0')).join('');
+function fnNailPath(shape,w,h){const hw=w/2;if(shape==='almond')return`M${hw},${h} C0,${h*.85} 0,${h*.58} ${hw},${h*.05} C${w},${h*.58} ${w},${h*.85} ${hw},${h}`;if(shape==='oval')return`M${hw},${h} C0,${h*.82} 0,${h*.52} ${hw},${h*.1} C${w},${h*.52} ${w},${h*.82} ${hw},${h}`;if(shape==='squoval')return`M${hw},${h} C0,${h*.88} ${w*.06},${h*.62} ${w*.1},${h*.18} Q${hw},${h*.06} ${w*.9},${h*.18} C${w*.94},${h*.62} ${w},${h*.88} ${hw},${h}`;return`M0,${h*.18} L${w},${h*.18} L${w},${h} L0,${h} Z`;}
+function fnLighten(h,p){let r=parseInt(h.slice(1,3),16),g=parseInt(h.slice(3,5),16),b=parseInt(h.slice(5,7),16);return'#'+[Math.min(255,r+p*2|0),Math.min(255,g+p*2|0),Math.min(255,b+p*2|0)].map(v=>v.toString(16).padStart(2,'0')).join('');}
+function fnMakeNailSVG(color,finish,design,shape){
+  const W2=170,H2=108,nw=23,positions=[10,39,68,97],heights=[nw*2.8,nw*3.2,nw*3.0,nw*2.6];
+  let nails='';
+  positions.forEach((x,i)=>{
+    const h=heights[i],y=H2-h-5,path=fnNailPath(shape,nw,h);
+    nails+=`<ellipse cx="${x+nw/2}" cy="${H2-3}" rx="${nw*.42}" ry="3" fill="rgba(0,0,0,.07)"/>`;
+    nails+=`<rect x="${x}" y="${y+h*.32}" width="${nw}" height="${H2-y-h*.32-4}" rx="3" fill="#c0987a" opacity=".5"/>`;
+    nails+=`<g transform="translate(${x},${y})">`;
+    if(finish==='gloss'){nails+=`<defs><linearGradient id="fngl${i}" x1=".3" y1="0" x2=".7" y2="1"><stop offset="0%" stop-color="${fnLighten(color,28)}"/><stop offset="45%" stop-color="${color}"/><stop offset="100%" stop-color="${color}"/></linearGradient></defs><path d="${fnNailPath(shape,nw,h)}" fill="url(#fngl${i})"/><path d="M${nw*.26},${h*.11} Q${nw*.5},${h*.06} ${nw*.74},${h*.13} Q${nw*.74},${h*.3} ${nw*.5},${h*.34} Q${nw*.26},${h*.3} ${nw*.26},${h*.11}" fill="rgba(255,255,255,.2)"/>`;}
+    else if(finish==='satin'){nails+=`<defs><linearGradient id="fngl${i}" x1=".2" y1="0" x2=".8" y2="1"><stop offset="0%" stop-color="${fnLighten(color,14)}"/><stop offset="100%" stop-color="${color}"/></linearGradient></defs><path d="${fnNailPath(shape,nw,h)}" fill="url(#fngl${i})"/>`;}
+    else if(finish==='sheer'){nails+=`<path d="${fnNailPath(shape,nw,h)}" fill="${color}" opacity=".55"/>`;}
+    else{nails+=`<path d="${fnNailPath(shape,nw,h)}" fill="${color}"/>`;}
+    if(design==='french'){nails+=`<clipPath id="fnc${i}"><path d="${fnNailPath(shape,nw,h)}"/></clipPath><path d="M0,${h*.73} Q${nw*.5},${h*.66} ${nw},${h*.73} L${nw},${h} L0,${h} Z" fill="rgba(250,247,242,.85)" clip-path="url(#fnc${i})"/>`;}
+    else if(design==='art'&&i===1){nails+=`<clipPath id="fnc${i}"><path d="${fnNailPath(shape,nw,h)}"/></clipPath><line x1="${nw*.28}" y1="${h*.24}" x2="${nw*.72}" y2="${h*.24}" stroke="#c4a96a" stroke-width="1.1" clip-path="url(#fnc${i})"/>`;}
+    else if(design==='art'&&i===3){nails+=`<clipPath id="fnc${i}"><path d="${fnNailPath(shape,nw,h)}"/></clipPath><circle cx="${nw*.5}" cy="${h*.28}" r="2.2" fill="rgba(255,255,255,.5)" clip-path="url(#fnc${i})"/>`;}
+    else if(design==='botanical'&&(i===1||i===3)){nails+=`<clipPath id="fnc${i}"><path d="${fnNailPath(shape,nw,h)}"/></clipPath><ellipse cx="${nw*.4}" cy="${h*.3}" rx="2.5" ry="5.5" fill="rgba(107,124,90,.45)" transform="rotate(-14,${nw*.4},${h*.3})" clip-path="url(#fnc${i})"/>`;if(i===1)nails+=`<ellipse cx="${nw*.62}" cy="${h*.32}" rx="2" ry="4.5" fill="rgba(107,124,90,.35)" transform="rotate(12,${nw*.62},${h*.32})" clip-path="url(#fnc${i})"/>`;}
+    else if(design==='negative'){nails+=`<clipPath id="fnc${i}"><path d="${fnNailPath(shape,nw,h)}"/></clipPath><ellipse cx="${nw*.5}" cy="${h*.14}" rx="${nw*.36}" ry="${h*.09}" fill="#c0987a" opacity=".5" clip-path="url(#fnc${i})"/>`;}
+    nails+=`<path d="${fnNailPath(shape,nw,h)}" fill="none" stroke="rgba(255,255,255,.1)" stroke-width=".8"/></g>`;
+  });
+  return`<svg viewBox="0 0 ${W2} ${H2}" xmlns="http://www.w3.org/2000/svg" style="width:${W2}px;height:${H2}px;max-width:100%"><rect width="${W2}" height="${H2}" fill="var(--wm)"/>${nails}</svg>`;
 }
-function darken(hex, pct) {
-  let r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
-  r = Math.max(0, r - Math.round(pct*2.55));
-  g = Math.max(0, g - Math.round(pct*2.55));
-  b = Math.max(0, b - Math.round(pct*2.55));
-  return '#' + [r,g,b].map(v=>v.toString(16).padStart(2,'0')).join('');
-}
-
-const NAIL_DATA = {
-  spring: [
-    {brand:'OPI', name:'Tiramisu for Two', color:'#d4c4b4', finish:'cream', desc:'Warm taupe nude. Skin-but-better. Dogpatch morning look default.', vibe:'Effortless', bg:'#f0ebe3'},
-    {brand:'Essie', name:'Topless & Barefoot', color:'#c8b09a', finish:'cream', desc:'Nude peach. Wears invisibly but is clearly chosen. Never needs explaining.', vibe:'Invisible luxury', bg:'#ece5dc'},
-    {brand:'Chanel', name:'Ballerina', color:'#d4a89a', finish:'satin', desc:'Pale rose-beige. Libra sun spring mood: soft, precise, correct.', vibe:'The only pink', bg:'#f0e8e2'},
-    {brand:'Deborah Lippmann', name:'Naked', color:'#c4b8a0', finish:'sheer', desc:'Sheer warm beige. SF Botanical garden energy. Botanicals, always.', vibe:'Botanical elegance', bg:'#ece5d8'},
-    {brand:'Zoya', name:'Misty', color:'#b8c4a0', finish:'cream', desc:'Sage green-grey. Marin Headlands wildflower palette.', vibe:'Wildflower mind', bg:'#e4ead8'},
-    {brand:'Orly', name:'Bare Rose', color:'#e8d4c0', finish:'sheer', desc:'Peachy nude. Reads as second skin. Dimensional, not flat.', vibe:'Second skin', bg:'#f5eee5'},
-    {brand:'Dior', name:'Abricot', color:'#d4a880', finish:'gloss', desc:'The iconic care + color in one. Warm apricot sheer. Spring ritual.', vibe:'Dior standard', bg:'#ede5d8'},
-  ],
-  summer: [
-    {brand:'Essie', name:'Eternal Optimist', color:'#c09a8a', finish:'cream', desc:'Terracotta-rose. Baker Beach energy. Photographs against bay water.', vibe:'Baker Beach', bg:'#e8dcd4'},
-    {brand:'OPI', name:'Put It in Neutral', color:'#d4c8b0', finish:'cream', desc:'Warm greige. Works with every linen piece without competing.', vibe:'Let the outfit speak', bg:'#ece5d4'},
-    {brand:'Nails Inc', name:'Portobello Road', color:'#b4a494', finish:'satin', desc:'Mushroom taupe. The anti-summer nail. Capricorn moon doesn't do neon.', vibe:'Intentionally understated', bg:'#e5ddd5'},
-    {brand:'Chanel', name:'Coco', color:'#c8b090', finish:'cream', desc:'Warm golden beige. Doesn't show wear — Venus Virgo requires this.', vibe:'Longevity over novelty', bg:'#ece3d4'},
-    {brand:'Zoya', name:'Veruschka', color:'#a8b490', finish:'cream', desc:'Sage green. Crane Cove mornings. Unusual without trying.', vibe:'Botanical accent', bg:'#dce4cc'},
-    {brand:'Dior', name:'Beige Massai', color:'#d0b8a8', finish:'gloss', desc:'Warm sheer beige with golden depth. Works with the gold jewelry stack.', vibe:'Gold-adjacent', bg:'#ede4d8'},
-    {brand:'Smith & Cult', name:'Sheer Beige', color:'#c8b8a4', finish:'sheer', desc:'The SF summer sheer. Effortless for farmer's market to dinner.', vibe:'Market to dinner', bg:'#e8e0d4'},
-  ],
-  autumn: [
-    {brand:'OPI', name:'Malaga Wine', color:'#6e3228', finish:'gloss', desc:'Deep burgundy-wine. Against camel coat and cream turtleneck: perfect contrast.', vibe:'Birthday season', bg:'#d8c8c0'},
-    {brand:'Essie', name:'Cognac Casual', color:'#8b5a3a', finish:'cream', desc:'Deep cognac. Matches the knee-high boots. Completes the capsule.', vibe:'Capsule anchor', bg:'#ddd0c4'},
-    {brand:'Chanel', name:'Rouge Noir', color:'#5c2820', finish:'gloss', desc:'The near-black red. Scorpio Mercury autumn selection — depth, always.', vibe:'Scorpio signature', bg:'#ccc0b8'},
-    {brand:'Deborah Lippmann', name:'Across the Universe', color:'#9c6040', finish:'cream', desc:'Terracotta-rust. October birthday color. Crane Cove, rust coat, this nail.', vibe:'October birthday', bg:'#ddd0c0'},
-    {brand:'Smith & Cult', name:'Pyre of Bacchus', color:'#4e3428', finish:'satin', desc:'Dark plum-brown. Ungrafted wine bar level of intellectual depth.', vibe:'Ungrafted level', bg:'#c8bab0'},
-    {brand:'Nars', name:'Jungle Red', color:'#7c4c3c', finish:'cream', desc:'Warm brick red. Morning run to Museum of Craft + Design — it carries.', vibe:'Day-to-evening', bg:'#d4c4b8'},
-    {brand:'Zoya', name:'Pepper', color:'#3c2428', finish:'gloss', desc:'Near-black plum. The maximum depth autumn nail. Autumn Dogpatch dusk.', vibe:'Maximum depth', bg:'#c0b0a8'},
-  ],
-  winter: [
-    {brand:'Chanel', name:'Noir Céladon', color:'#2c2c2a', finish:'satin', desc:'Near-black with green depth. Reads black until light catches it.', vibe:'December Capricorn', bg:'#c0c0bc'},
-    {brand:'Zoya', name:'Willa', color:'#5a5060', finish:'cream', desc:'Dusty blue-grey. Winter storm light on the bay. Minimal, correct.', vibe:'Storm light', bg:'#d0ccd4'},
-    {brand:'OPI', name:'Lincoln Park After Dark', color:'#3c2830', finish:'gloss', desc:'Deep plum-black. Third Rail in January with the slate wool coat.', vibe:'Third Rail energy', bg:'#c4b8bc'},
-    {brand:'Essie', name:'Blanc', color:'#c8c4bc', finish:'cream', desc:'Clean white. Counterintuitively the winter nail — contrast against dark coats.', vibe:'Quiet contrast', bg:'#dcdad4'},
-    {brand:'Smith & Cult', name:'Dead Ringers', color:'#8c6870', finish:'satin', desc:'Dusty mauve-rose. Warm without going red. Cashmere crewneck companion.', vibe:'Cashmere company', bg:'#d8cdd0'},
-    {brand:'Nars', name:'Conquistador', color:'#504848', finish:'satin', desc:'Warm grey-brown. SFMOMA January — considered, not conspicuous.', vibe:'Museum restraint', bg:'#c8c0bc'},
-    {brand:'Deborah Lippmann', name:'Stormy Weather', color:'#6870a0', finish:'gloss', desc:'Dusty slate blue. The unusual winter choice that reads as deeply intentional.', vibe:'Unexpected depth', bg:'#ccd0e0'},
-  ],
-  always: [
-    {brand:'Essie', name:'Ballet Slippers', color:'#c8b8a8', finish:'sheer', desc:'The universal nude pink. Returns to this when all else is uncertain.', vibe:'The constant', bg:'#ece4dc'},
-    {brand:'OPI', name:'Berlin There Done That', color:'#b0a090', finish:'cream', desc:'Cool taupe year-round. Says I chose this — understated confidence.', vibe:'Quiet confidence', bg:'#e4dcd0'},
-    {brand:'Chanel', name:'Le Vernis Black Pearl', color:'#1a1a18', finish:'gloss', desc:'True black. The every-season choice. Transcends all seasonal logic.', vibe:'Transcendent', bg:'#b8b8b4'},
-    {brand:'Deborah Lippmann', name:'In the Groove', color:'#a8b490', finish:'satin', desc:'Muted sage. Taurus rising earth nail — correct regardless of season.', vibe:'Always grounded', bg:'#dce4cc'},
-    {brand:'Smith & Cult', name:'Sheer Luck', color:'#d0c0b0', finish:'sheer', desc:'Sheer blush-beige. The recovery nail — after a bold season, back to quiet.', vibe:'Reset nail', bg:'#eee6dc'},
-  ]
-};
-
-function renderNailGrid(season) {
-  const grid = document.getElementById('nail-grid-' + season);
-  if (!grid) return;
-  const items = NAIL_DATA[season] || [];
-  grid.innerHTML = items.map(item => {
-    const svg = makeSVGNail(item.color, item.finish, currentDesignType, currentShape, item.bg);
-    return `<div class="nail-card">
-      <div class="nail-visual">${svg}</div>
-      <div class="nail-info">
-        <div class="nail-brand">${item.brand}</div>
-        <div class="nail-name">${item.name}</div>
-        <div class="nail-desc">${item.desc}</div>
-        <span class="nail-finish">${item.finish.charAt(0).toUpperCase()+item.finish.slice(1)}</span>
-        <span class="nail-vibe">${item.vibe}</span>
-      </div>
-    </div>`;
-  }).join('');
+function fnRenderNails(){
+  const items=NAILS[fnCurNSeason]||[];
+  document.getElementById('fn-nail-grid').innerHTML=items.map(item=>`<div class="fn-nc"><div class="fn-nv">${fnMakeNailSVG(item.color,item.finish,fnCurDesign,fnCurShape)}</div><div class="fn-ni"><div class="fn-nb">${item.brand}</div><div class="fn-nn">${item.name}</div><div class="fn-nd">${item.desc}</div><span class="fn-nf">${item.finish} · ${item.vibe}</span></div></div>`).join('');
 }
 
-const nailRendered = new Set();
+fnRenderFashion();
+fnRenderWorkout();
+fnRenderNails();
 
-function renderNailGridLazy(season, force) {
-  const key = season + currentShape + currentDesignType;
-  if (!force && nailRendered.has(key)) return;
-  nailRendered.add(key);
-  renderNailGrid(season);
-}
-
-function renderAllNailGrids() {
-  // Only re-render the currently visible nail tab
-  const activeNail = document.querySelector('#n2-spring.active, #n2-summer.active, #n2-autumn.active, #n2-winter.active, #n2-always.active');
-  const season = activeNail ? activeNail.id.replace('n2-','') : 'spring';
-  nailRendered.clear();
-  renderNailGridLazy(season, true);
-}
-
-// Initial: render only spring (active tab)
-renderNailGrid('spring');
-
-// Auto-load tops on page load
-loadFashionCategory('tops');
 </script>
 </body>
 </html>
