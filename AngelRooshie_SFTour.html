@@ -212,6 +212,7 @@ body{font-family:'Nunito',sans-serif;color:var(--ink);
 .take-name.angel{color:#1a55a8}
 .take-name.rooshie{color:#c01870}
 .take-emoji{font-size:15px}
+.take-sign{font-size:14px;font-weight:600;opacity:.7;letter-spacing:-1px;margin-left:1px}
 .take-stars{display:flex;gap:2px}
 .take-star{font-size:16px;color:#dde7f5;cursor:inherit;transition:all .12s;line-height:1;user-select:none}
 .take-star.lit{color:var(--gold);text-shadow:0 1px 3px rgba(244,180,48,.35);transform:scale(1.05)}
@@ -345,6 +346,7 @@ body{font-family:'Nunito',sans-serif;color:var(--ink);
 #itin-head h2{font-family:'Instrument Serif',serif;font-size:26px;color:var(--ink);letter-spacing:-.6px;line-height:1}
 #itin-head h2 em{font-style:italic;background:var(--grad-coral);-webkit-background-clip:text;background-clip:text;color:transparent}
 #itin-head .h-sub{font-family:'Lora',serif;font-style:italic;font-size:11.5px;color:var(--ink3)}
+#itin-head .h-astro{font-family:'Instrument Serif',serif;font-style:italic;font-size:12px;letter-spacing:.4px;background:linear-gradient(90deg,#ff7849,#5830c0,#18b5b0);-webkit-background-clip:text;background-clip:text;color:transparent;margin-top:1px}
 #itin-head .h-roll-count{margin-top:3px;display:inline-flex;align-items:center;gap:5px;font-family:'Space Grotesk',sans-serif;font-size:10px;color:var(--ink3);font-weight:600;letter-spacing:.3px;text-transform:uppercase}
 #itin-head .h-roll-count strong{color:var(--accent);font-size:13px;font-family:'Instrument Serif',serif;font-style:italic;text-transform:none;letter-spacing:0}
 
@@ -578,7 +580,8 @@ body{font-family:'Nunito',sans-serif;color:var(--ink);
     <div id="itin-head">
       <div class="h-titleblock">
         <h2>An <em>itinerary</em>, rolled</h2>
-        <div class="h-sub">For an ISTP × xxFP kind of day</div>
+        <div class="h-sub">For a Libra ISTP × Pisces xxFP day</div>
+        <div class="h-astro">♎ × ♓ · where air meets water</div>
         <div class="h-roll-count">Rolled <strong id="head-rc">0</strong> times together</div>
       </div>
       <div class="cl-x" onclick="closeItin()">✕</div>
@@ -744,8 +747,8 @@ const OVERPASS_ENDPOINTS = [
 ];
 
 /* ══════════════════════════════════════════════════════
-   ITINERARY CONFIG  —  ISTP (hands-on, quiet, observant)
-                       × xxFP (warm, expressive, social)
+   ITINERARY CONFIG  —  Libra ISTP ♎ (hands-on, eye for beauty)
+                       × Pisces xxFP ♓ (warm, dreamy, deep-feeling)
 ══════════════════════════════════════════════════════ */
 const ITIN_MODES = {
   morning: {
@@ -791,40 +794,48 @@ const ITIN_MODES = {
 };
 
 // Vibe lines — Angel reads the craft, Rooshie reads the room
+// Libra Venus = aesthetic/balance | Pisces Neptune = water/dreamy/feeling
 const VIBE = {
   cafe: [
     {tag:'COZY + TACTILE',  text:'Slow espresso, warm light, soft hum. Angel clocks the grind and the brew method; Rooshie clocks the regulars and the energy at the next table.'},
     {tag:'MORNING RITUAL',  text:'Quiet enough to settle in, warm enough to linger. Hands-on craft for one of you, real atmosphere for the other.'},
-    {tag:'SOFT START',      text:'Low-key, no agenda. Angel maps the day; Rooshie reads the room. Both of you needed this.'}
+    {tag:'SOFT START',      text:'Low-key, no agenda. Angel maps the day; Rooshie reads the room. Both of you needed this.'},
+    {tag:'VENUS APPROVED',  text:'A space that\'s actually beautiful, not just functional. Libra eye + Pisces feeling both light up in the same room.'}
   ],
   food: [
     {tag:'SHARED PLATES',   text:'Open kitchen energy + good seats. The mechanics of cooking on display (Angel\'s thing) and the social hum of a packed room (Rooshie\'s thing).'},
     {tag:'COMFORT + STYLE', text:'Real food, real conversation. Angel approves of the technique; Rooshie befriends the server in 30 seconds.'},
-    {tag:'NEIGHBORHOOD GEM',text:'Beloved local spot — authentic, unpretentious. Calm vibe for Angel, warm regulars for Rooshie.'}
+    {tag:'NEIGHBORHOOD GEM',text:'Beloved local spot — authentic, unpretentious. Calm vibe for Angel, warm regulars for Rooshie.'},
+    {tag:'CANDLELIT',       text:'Soft light, soft music, slow service in the best way. Pisces dreamy + Libra ambiance — this is the table you stay at for three hours.'}
   ],
   bar: [
     {tag:'CRAFT + CONVO',   text:'A bartender who actually knows their stuff. Angel watches the technique; Rooshie talks to whoever sits down next.'},
     {tag:'DIM + WARM',      text:'Low light, soft buzz, a room that feels lived-in. Angel relaxes into the quiet of it; Rooshie feels the warmth of a full room.'},
-    {tag:'MAYBE LIVE MUSIC',text:'Could be a band tonight. Angel watches the players do the work; Rooshie feels the whole room come alive.'}
+    {tag:'MAYBE LIVE MUSIC',text:'Could be a band tonight. Angel watches the players do the work; Rooshie feels the whole room come alive — Pisces lives for live sound.'},
+    {tag:'BEAUTIFUL ROOM',  text:'Designed bar, real lighting, a cocktail menu with a point of view. Libra Venus energy lives here.'}
   ],
   shop: [
     {tag:'MAKERS + STORIES',text:'Tactile finds, real craftsmanship. Angel picks up every object to see how it\'s made; Rooshie picks up on the energy of the maker behind it.'},
     {tag:'BROWSE OR CHAT',  text:'Curated, calm, friendly staff. Quiet wandering or warm conversation — pick your speed, both fit.'},
-    {tag:'TREASURE HUNT',   text:'You\'ll both spot different things. Angel finds the well-made thing; Rooshie finds the one with a story.'}
+    {tag:'TREASURE HUNT',   text:'You\'ll both spot different things. Angel finds the well-made thing; Rooshie finds the one with a story.'},
+    {tag:'LIBRA APPROVED',  text:'Beauty + balance, displayed with care. The kind of shop Angel could spend an hour in just appreciating the layout.'}
   ],
   florist: [
     {tag:'SLOW BEAUTY',     text:'A space that rewards patience. Angel reads the leaves and learns the species; Rooshie picks the one that\'ll make somebody cry-happy.'},
-    {tag:'CALM POCKET',     text:'Quiet, fragrant, generous. A real reset for both of you — different reasons, same effect.'}
+    {tag:'CALM POCKET',     text:'Quiet, fragrant, generous. A real reset for both of you — different reasons, same effect.'},
+    {tag:'VENUS × NEPTUNE', text:'Libra-Venus loves the arrangement; Pisces-Neptune loves what flowers mean. Aesthetic + emotion in the same breath.'}
   ],
   nature: [
     {tag:'OPEN AIR + REAL TALK', text:'Walking pace = real conversation. Open sky for Angel; golden light and people-watching for Rooshie.'},
     {tag:'NO AGENDA',       text:'Just bay views and the two of you. Hands in pockets for one; arm around shoulders for the other.'},
-    {tag:'GOLDEN HOUR',     text:'Time it for the light. Angel notices the boats; Rooshie notices you.'}
+    {tag:'GOLDEN HOUR',     text:'Time it for the light. Angel notices the boats and the tide; Rooshie notices you.'},
+    {tag:'PISCES PARADISE', text:'Water everywhere — Pisces is genuinely happiest on a bay walk. Angel gets her breathing room, Rooshie gets the dream sequence.'}
   ],
   culture: [
     {tag:'SLOW LOOKING',    text:'Quiet observation + plenty to discuss after. Angel maps the building and the technique; Rooshie reads the emotion and the artist\'s story.'},
     {tag:'BEAUTIFUL ROOM',  text:'A space designed to slow you both down. Different things land — same long conversation afterward.'},
-    {tag:'DEEP TALK FUEL',  text:'The kind of place that gives you three hours of conversation afterward over dinner.'}
+    {tag:'DEEP TALK FUEL',  text:'The kind of place that gives you three hours of conversation afterward over dinner.'},
+    {tag:'AIR MEETS WATER', text:'Libra mind + Pisces heart in front of the same artwork. You\'ll come away with totally different readings — that\'s the fun.'}
   ]
 };
 
@@ -1038,7 +1049,7 @@ function showDetail(place) {
 
       <div class="take-card">
         <div class="take-head">
-          <div class="take-name angel"><span class="take-emoji">🛠️</span> Angel's take</div>
+          <div class="take-name angel"><span class="take-emoji">🛠️</span> Angel's take <span class="take-sign" style="color:#1a55a8">♎</span></div>
           <div class="take-stars" data-who="angel">
             ${[1,2,3,4,5].map(n=>`<span class="take-star${n<=angelTake.stars?' lit':''}" data-n="${n}" onclick="setTakeStar('${place.id}','angel',${n})">★</span>`).join('')}
           </div>
@@ -1049,7 +1060,7 @@ function showDetail(place) {
 
       <div class="take-card">
         <div class="take-head">
-          <div class="take-name rooshie"><span class="take-emoji">✨</span> Rooshie's take</div>
+          <div class="take-name rooshie"><span class="take-emoji">✨</span> Rooshie's take <span class="take-sign" style="color:#c01870">♓</span></div>
           <div class="take-stars" data-who="rooshie">
             ${[1,2,3,4,5].map(n=>`<span class="take-star${n<=rooshieTake.stars?' lit':''}" data-n="${n}" onclick="setTakeStar('${place.id}','rooshie',${n})">★</span>`).join('')}
           </div>
