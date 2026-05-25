@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Daily Ritual">
+<meta name="theme-color" content="#1e1510">
+<link rel="manifest" href="ritual-manifest.json">
+<link rel="apple-touch-icon" href="icon.svg">
+<title>Daily Ritual</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{
+  --bark:#1e1510;--bark2:#2c2018;--terra:#c4724a;
+  --sand:#e8d5b8;--cream:#faf6ef;--warm:#f2ead8;--linen:#ede5d4;
+  --dust:#9e8c78;--stone:#6e6458;--gold:#d4a85a;
+  --safe-top:env(safe-area-inset-top,0px);
+  --safe-bottom:env(safe-area-inset-bottom,0px);
+}
+html,body{height:100%;background:var(--bark);color:var(--sand);font-family:'Jost',sans-serif;font-weight:300;overscroll-behavior:none}
+
+.app-header{position:fixed;top:0;left:0;right:0;z-index:100;background:var(--bark);padding:calc(var(--safe-top) + 16px) 20px 0;border-bottom:1px solid rgba(255,255,255,.07)}
+.header-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px}
+.app-title{font-family:'Playfair Display',serif;font-size:22px;color:var(--sand);font-style:italic}
+.header-date{font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--dust)}
+
+.day-tabs{display:grid;grid-template-columns:repeat(7,1fr);gap:0;margin:0 -20px}
+.day-tab{text-align:center;padding:8px 2px 10px;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--dust);cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;-webkit-user-select:none;user-select:none}
+.day-tab:active{color:var(--sand)}
+.day-tab.active{color:var(--sand);border-bottom-color:var(--terra)}
+
+.progress-wrap{height:2px;background:rgba(255,255,255,.07);margin:0 -20px}
+.progress-fill{height:100%;background:linear-gradient(to right,var(--terra),var(--gold));transition:width .4s ease}
+
+.app-body{padding-top:calc(var(--safe-top) + 138px);padding-bottom:calc(var(--safe-bottom) + 72px);height:100%;overflow-y:auto;-webkit-overflow-scrolling:touch}
+
+.r-block{padding:0 20px;margin-bottom:4px}
+.r-time-label{font-size:8px;letter-spacing:.45em;text-transform:uppercase;color:var(--terra);padding:20px 0 10px;border-bottom:1px solid rgba(196,114,74,.15);margin-bottom:2px}
+.routine-list{list-style:none}
+
+.r-item{display:flex;align-items:flex-start;gap:14px;padding:13px 4px;border-bottom:1px solid rgba(255,255,255,.05);cursor:pointer;border-radius:2px;-webkit-user-select:none;user-select:none;transition:opacity .15s}
+.r-item:active{opacity:.7}
+
+.r-check{width:20px;height:20px;border:1.5px solid rgba(255,255,255,.2);border-radius:3px;flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.r-item.done .r-check{background:var(--terra);border-color:var(--terra)}
+.r-item.done .r-check::after{content:"✓";color:#fff;font-size:12px;font-weight:500}
+
+.r-content{flex:1;min-width:0}
+.r-title{font-size:14px;color:var(--sand);line-height:1.4;font-weight:400;transition:color .2s}
+.r-item.done .r-title{color:var(--dust);text-decoration:line-through;text-decoration-color:rgba(255,255,255,.2)}
+.r-note{font-size:11px;color:var(--stone);line-height:1.6;margin-top:4px;font-style:italic}
+.r-item.done .r-note{color:rgba(110,100,88,.5)}
+.r-tag{display:inline-block;font-size:7.5px;letter-spacing:.2em;text-transform:uppercase;padding:2px 7px;border-radius:2px;margin-top:5px}
+.r-tag.run{background:rgba(74,92,48,.25);color:#a8c890}
+.r-tag.ritual{background:rgba(196,168,90,.15);color:var(--gold)}
+.r-tag.focus{background:rgba(196,114,74,.18);color:var(--terra);font-weight:500}
+.r-tag.work{background:rgba(110,100,88,.2);color:var(--dust)}
+.r-tag.rest{background:rgba(92,122,140,.15);color:#8ab0c8}
+
+.app-footer{position:fixed;bottom:0;left:0;right:0;background:var(--bark2);border-top:1px solid rgba(255,255,255,.07);padding:12px 20px calc(var(--safe-bottom) + 12px);display:flex;align-items:center;gap:12px}
+.footer-label{font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--dust);white-space:nowrap}
+.footer-bar-wrap{flex:1;height:2px;background:rgba(255,255,255,.08);border-radius:1px;overflow:hidden}
+.footer-bar-fill{height:100%;background:linear-gradient(to right,var(--terra),var(--gold));transition:width .4s ease}
+.footer-count{font-size:11px;color:var(--terra);font-weight:500;white-space:nowrap;min-width:36px;text-align:right}
+</style>
+</head>
+<body>
+
+<div class="app-header">
+  <div class="header-top">
+    <div class="app-title">Daily Ritual</div>
+    <div class="header-date" id="today-date"></div>
+  </div>
+  <div class="day-tabs">
+    <div class="day-tab" onclick="setDay(0,this)">Mon</div>
+    <div class="day-tab" onclick="setDay(1,this)">Tue</div>
+    <div class="day-tab" onclick="setDay(2,this)">Wed</div>
+    <div class="day-tab" onclick="setDay(3,this)">Thu</div>
+    <div class="day-tab" onclick="setDay(4,this)">Fri</div>
+    <div class="day-tab" onclick="setDay(5,this)">Sat</div>
+    <div class="day-tab" onclick="setDay(6,this)">Sun</div>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-fill" id="progress-bar" style="width:0%"></div>
+  </div>
+</div>
+
+<div class="app-body">
+  <div id="routine-body"></div>
+</div>
+
+<div class="app-footer">
+  <div class="footer-label">Today</div>
+  <div class="footer-bar-wrap">
+    <div class="footer-bar-fill" id="footer-bar" style="width:0%"></div>
+  </div>
+  <div class="footer-count" id="progress-count">0 / 0</div>
+</div>
+
+<script>
+let currentDay = 0;
+const DAYS = {
+  0: [ // Monday
+    { time:'Morning', items:[
+      {t:'6:45am — Run · Crane Cove loop 4–5 miles', tag:'run', note:'No headphones first mile. Let the day begin.'},
+      {t:'7:45am — Shower, dress intentionally', tag:'ritual'},
+      {t:'8:00am — Candle lit. Desk cleared. Phone in another room.', tag:'focus', note:'Not silent. In another room. The ISTP brain cannot unsee the notification.'},
+      {t:'8:15am — Matcha ceremony · no phone · no tabs open', tag:'ritual', note:'Make it properly. The steeping time is not a phone window.'},
+      {t:'8:45am — Write one sentence: what does done look like by noon?', tag:'focus', note:'One precise target. Not a list. "Finish X ending at Y." Mercury Scorpio needs a target.'},
+    ]},
+    { time:'Deep Work · 9am–12pm', items:[
+      {t:'9:00am — One tab. One document. Nothing else visible.', tag:'focus', note:'If it is open, it will be clicked. Remove the option entirely.'},
+      {t:'9:00am — Set 25-min timer before starting', tag:'focus', note:'The timer is the game. Can you solve this before the clock? ISTP responds to this structure.'},
+      {t:'If distracted: write it down, do not act on it', tag:'focus', note:'When the pull to switch comes — write what you wanted to look at instead. Externalize it. This removes the urgency.'},
+      {t:'9:25am — 5 min break · stand, walk, water · no phone', tag:'focus', note:'The break is structural. Do not skip it or extend it.'},
+      {t:'9:30am — Second 25-min block · same rules', tag:'focus'},
+      {t:'10:00am — Third block · start with the hardest part', tag:'focus', note:'Counterintuitive: make the task harder, not easier. Mercury Scorpio stays engaged when the problem is difficult enough.'},
+      {t:'11:00am — Phone back in reach · triage only · 10 min max', tag:'work', note:'Noon is when optionality returns. Not before.'},
+    ]},
+    { time:'Work · Afternoon', items:[
+      {t:'12:30pm — Lunch + walk outside · no screens', tag:'rest'},
+      {t:'2:00pm — Calls, collaboration, admin · lower-stakes work here', tag:'work', note:'Afternoon is not for deep work. Match task type to time of day.'},
+      {t:'5:00pm — Wrap · close all tabs', tag:'work'},
+    ]},
+    { time:'Evening', items:[
+      {t:'6:00pm — Formal close · done', tag:'ritual', note:'The signal that work has ended.'},
+      {t:'6:15pm — Walk to Crane Cove · no destination', tag:'rest'},
+      {t:'7:30pm — Cook or forage dinner', tag:'ritual'},
+      {t:'9:00pm — Read. No screens after this.', tag:'rest'},
+      {t:'10:30pm — Candle out. Sleep.', tag:'ritual'},
+    ]},
+  ],
+  1: [ // Tuesday
+    { time:'Morning', items:[
+      {t:'6:45am — Run or yoga depending on body', tag:'run'},
+      {t:'8:00am — Phone in another room until noon', tag:'focus', note:'Every day, not just Monday. The fragmentation starts here if it starts anywhere.'},
+      {t:'8:20am — Matcha + 15 min journaling · no input first', tag:'ritual', note:'What needs to be solved today. Write before opening anything.'},
+      {t:'8:45am — Name the first task precisely in one sentence', tag:'focus', note:'"Complete the [specific thing], stopping when I reach [specific point]." No vague sessions.'},
+    ]},
+    { time:'Deep Work · 9–11am', items:[
+      {t:'9:00am — 25-min block · one tab, one document', tag:'focus'},
+      {t:'9:25am — Break · stand, water, no phone', tag:'focus'},
+      {t:'9:30am — 25-min block · write down distractions instead of acting', tag:'focus'},
+      {t:'10:00am — Third block · tackle the friction point head-on', tag:'focus', note:'When a task hits resistance and you want to switch — that is the exact moment to stay. The resistance is the signal.'},
+      {t:'11:00am — Calls and communication block', tag:'work'},
+    ]},
+    { time:'Afternoon & Evening', items:[
+      {t:'1:00pm — SOHN matcha · work from there if needed', tag:'ritual'},
+      {t:'4:00pm — Admin, errands, lower-stakes tasks', tag:'work'},
+      {t:'6:30pm — Formal close', tag:'ritual'},
+      {t:'7:00pm — Dinner · Piccino or cook in', tag:'rest'},
+      {t:'9:00pm — Read or music · no work', tag:'rest'},
+    ]},
+  ],
+  2: [ // Wednesday
+    { time:'Morning', items:[
+      {t:'6:45am — Run · Embarcadero south route', tag:'run'},
+      {t:'8:00am — Phone away. Matcha. One task named.', tag:'focus', note:'The Wednesday morning window is good. Protect it.'},
+      {t:'8:30am — 25-min block before the market', tag:'focus'},
+    ]},
+    { time:'Midday', items:[
+      {t:'10:30am — Warm Water Cove Farmers Market', tag:'rest', note:'Wednesday ritual. The one errand that is genuinely pleasurable.'},
+      {t:'12:00pm — Fresh lunch from market haul · no screens', tag:'ritual'},
+    ]},
+    { time:'Afternoon', items:[
+      {t:'1:30pm — Name the afternoon task before reopening anything', tag:'focus', note:'Post-lunch is the highest-risk fragmentation window. Name the task before the tabs open.'},
+      {t:'1:45pm — 25-min deep work block', tag:'focus'},
+      {t:'2:30pm — Second block or switch to collaborative work', tag:'work'},
+      {t:'5:00pm — Wrap for the day', tag:'work'},
+    ]},
+    { time:'Evening', items:[
+      {t:'6:30pm — Cook something from the market', tag:'ritual'},
+      {t:'8:00pm — Wind down · no new inputs', tag:'rest'},
+    ]},
+  ],
+  3: [ // Thursday
+    { time:'Morning', items:[
+      {t:'7:00am — Strength training or rest run', tag:'run'},
+      {t:'8:00am — Phone away. Candle. One task named.', tag:'focus'},
+      {t:'8:30am — Matcha · no phone · slower morning', tag:'ritual'},
+    ]},
+    { time:'Deep Work', items:[
+      {t:'9:30am — Complex or creative work · hardest day for deep thinking', tag:'focus', note:'Thursday is the best day for the hardest problems. The week momentum is there.'},
+      {t:'Use the 25-min block structure · write distractions not act on them', tag:'focus'},
+      {t:'If task feels too easy → make it harder. Find the real problem inside it.', tag:'focus', note:'Under-stimulation is the root cause. The fix is depth, not discipline.'},
+    ]},
+    { time:'Afternoon & Evening', items:[
+      {t:'12:30pm — Lunch with intention · step outside', tag:'rest'},
+      {t:'2:00pm — Meetings if unavoidable · admin', tag:'work'},
+      {t:'6:00pm — Museum of Craft + Design (1st Thursday)', tag:'rest', note:'First Thursday of each month.'},
+      {t:'7:00pm — Ungrafted or Third Rail if social', tag:'rest'},
+    ]},
+  ],
+  4: [ // Friday
+    { time:'Morning', items:[
+      {t:'6:45am — Long run · Presidio or Marin', tag:'run', note:'The week\'s longest run. Earn the weekend.'},
+      {t:'8:30am — Phone away. Slow matcha. One last named task.', tag:'focus'},
+      {t:'9:00am — Final deep work push · 2 blocks maximum', tag:'focus', note:'Friday morning is still good. Friday afternoon is not. Know the difference.'},
+    ]},
+    { time:'Work', items:[
+      {t:'10:00am — Lighter work · wrap open loops', tag:'work'},
+      {t:'No deep work after noon on Fridays', tag:'focus', note:'This is not weakness. This is accurate self-knowledge. Match task to time.'},
+      {t:'1:00pm — Lunch out · Piccino or neighborhood', tag:'rest'},
+    ]},
+    { time:'Evening', items:[
+      {t:'3:00pm — Personal time · reading, errand, decompress', tag:'rest'},
+      {t:'7:00pm — Dinner · wine · the right company', tag:'rest'},
+      {t:'10:00pm — No work tomorrow. Commit to this.', tag:'ritual'},
+    ]},
+  ],
+  5: [ // Saturday
+    { time:'Morning', items:[
+      {t:'7:30am — Crane Cove · no headphones', tag:'run', note:'The Saturday walk is different from the weekday run. Slower. No agenda.'},
+      {t:'9:30am — Japantown · Maruwu Seicha', tag:'ritual'},
+    ]},
+    { time:'Midday', items:[
+      {t:'11:00am — Hayes Valley browse if needed', tag:'rest'},
+      {t:'1:00pm — Late lunch · somewhere considered', tag:'rest'},
+      {t:'3:00pm — SFMOMA or SF Botanical Garden · alone', tag:'rest', note:'No agenda. Let the eyes work.'},
+    ]},
+    { time:'Evening', items:[
+      {t:'7:00pm — Dinner · early, unhurried', tag:'rest'},
+      {t:'9:30pm — Read, music, candle', tag:'ritual'},
+    ]},
+  ],
+  6: [ // Sunday
+    { time:'Morning', items:[
+      {t:'No alarm. Slow wake.', tag:'rest', note:'The one morning with no obligation.'},
+      {t:'9:00am — Home matcha ritual · long form', tag:'ritual', note:'Full ceremony. Not the weekday version.'},
+      {t:'10:30am — Walk · Noe Valley or Ocean Beach', tag:'run'},
+    ]},
+    { time:'Afternoon', items:[
+      {t:'1:00pm — Cook or forage lunch', tag:'ritual'},
+      {t:'3:00pm — Read, nap, fully offline', tag:'rest', note:'Sunday afternoon is protected. No exceptions.'},
+      {t:'6:00pm — Prep the week · 30 minutes only', tag:'ritual', note:'Clear the desk. Write Monday\'s one named task. Then stop.'},
+    ]},
+    { time:'Evening', items:[
+      {t:'7:30pm — Simple dinner', tag:'rest'},
+      {t:'8:30pm — Candle out · early night', tag:'ritual', note:'Sunday sleep is the foundation of Monday.'},
+    ]},
+  ],
+};
+
+function getStorageKey(day) { return 'routine_day_' + day + '_' + new Date().toDateString(); }
+
+function getChecked(day) {
+  try { return JSON.parse(localStorage.getItem(getStorageKey(day)) || '{}'); } catch { return {}; }
+}
+
+function setChecked(day, key, val) {
+  const c = getChecked(day);
+  c[key] = val;
+  try { localStorage.setItem(getStorageKey(day), JSON.stringify(c)); } catch {}
+}
+
+function toggleItem(day, key, li) {
+  const c = getChecked(day);
+  c[key] = !c[key];
+  try { localStorage.setItem(getStorageKey(day), JSON.stringify(c)); } catch {}
+  li.classList.toggle('done', !!c[key]);
+  li.querySelector('.r-check').classList.toggle('checked', !!c[key]);
+  recalcProgress(day);
+}
+
+function setDay(day, btn) {
+  currentDay = day;
+  document.querySelectorAll('.rd-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  renderRoutine(day);
+}
+
+function updateProgress(done, total) {
+  const pct = total ? Math.round(done/total*100) : 0;
+  document.getElementById('progress-bar').style.width = pct + '%';
+  document.getElementById('progress-count').textContent = done + ' / ' + total;
+}
+
+function renderRoutine(day) {
+  const body = document.getElementById('routine-body');
+  const blocks = DAYS[day] || [];
+  const checked = getChecked(day);
+  let html = '';
+  let totalItems = 0, doneItems = 0;
+
+  blocks.forEach(block => {
+    html += `<div class="r-block"><div class="r-time-label">${block.time}</div><ul class="routine-list">`;
+    block.items.forEach((item, idx) => {
+      const key = block.time + '_' + idx;
+      const isDone = !!checked[key];
+      if (isDone) doneItems++;
+      totalItems++;
+      html += `<li class="r-item${isDone?' done':''}" onclick="toggleItem(${day},'${key}',this)">
+        <div class="r-check${isDone?' checked':''}"></div>
+        <div class="r-content">
+          <div class="r-title">${item.t}${item.tag?`<span class="r-tag ${item.tag}">${item.tag}</span>`:''}</div>
+          ${item.note?`<div class="r-note">${item.note}</div>`:''}
+        </div>
+      </li>`;
+    });
+    html += '</ul></div>';
+  });
+
+  body.innerHTML = html;
+  updateProgress(doneItems, totalItems);
+}
+
+// Override updateProgress to drive both bars
+function updateProgress(day) {
+  const checked = getChecked(day);
+  const blocks = DAYS[day] || [];
+  const total = blocks.reduce((a, b) => a + b.items.length, 0);
+  const done = Object.values(checked).filter(Boolean).length;
+  const pct = total ? Math.round(done / total * 100) : 0;
+  const headerBar = document.getElementById('progress-bar');
+  const footerBar = document.getElementById('footer-bar');
+  const count = document.getElementById('progress-count');
+  if (headerBar) headerBar.style.width = pct + '%';
+  if (footerBar) footerBar.style.width = pct + '%';
+  if (count) count.textContent = done + ' / ' + total;
+}
+
+function init() {
+  const now = new Date();
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const dayNames = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  document.getElementById('today-date').textContent =
+    dayNames[now.getDay()] + ', ' + months[now.getMonth()] + ' ' + now.getDate();
+  const currentDay = (now.getDay() + 6) % 7; // 0=Mon
+  const tabs = document.querySelectorAll('.day-tab');
+  tabs.forEach((t, i) => { if (i === currentDay) t.classList.add('active'); });
+  renderRoutine(currentDay);
+}
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./ritual-sw.js', {scope: './'})
+      .catch(e => {});
+  });
+}
+
+init();
+</script>
+</body>
+</html>

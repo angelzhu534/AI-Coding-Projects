@@ -1,0 +1,19 @@
+{
+  "name": "Daily Ritual",
+  "short_name": "Ritual",
+  "description": "Daily routine checklist",
+  "start_url": "./daily-ritual-app.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#1e1510",
+  "theme_color": "#1e1510",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
