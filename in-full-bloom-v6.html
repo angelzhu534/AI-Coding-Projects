@@ -903,6 +903,11 @@ function switchTab(e,id){
   }
   document.getElementById(id).classList.add('active');
   e.target.classList.add('active');
+  // Lazy-render nail grids on demand
+  if(id.startsWith('n2-')) {
+    const season = id.replace('n2-','');
+    requestAnimationFrame(() => renderNailGridLazy(season));
+  }
 }
 function switchFashionTab(e,id){
   document.querySelectorAll('.fashion-tabs .tp').forEach(p=>p.classList.remove('active'));
@@ -922,10 +927,11 @@ function setFashionSeason(s, btn) {
   currentFashionSeason = s;
   document.querySelectorAll('.fst').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
+  fashionRendered.clear();
   const activeTab = document.querySelector('.fashion-tabs .tp.active');
   if (activeTab) {
     const cat = activeTab.id.replace('f-','');
-    renderFashion(cat, FASHION[cat] || []);
+    renderFashion(cat, true);
   }
 }
 
@@ -1073,7 +1079,11 @@ const FASHION = {
   ]
 };
 
-function renderFashion(category) {
+const fashionRendered = new Set();
+
+function renderFashion(category, force) {
+  if (!force && fashionRendered.has(category + currentFashionSeason)) return;
+  fashionRendered.add(category + currentFashionSeason);
   const grid = document.getElementById(category+'-grid');
   const loading = document.getElementById(category+'-loading');
   if (!grid) return;
@@ -1086,15 +1096,26 @@ function renderFashion(category) {
     grid.innerHTML = '<div style="padding:24px;color:var(--st);font-size:12px;letter-spacing:.1em;grid-column:1/-1">No items for this season — try "All Seasons".</div>';
     return;
   }
-  grid.innerHTML = items.map(item => `
-    <div class="fashion-item">
-      <div class="fi-brand">${item.brand}</div>
-      <div class="fi-name">${item.name}</div>
-      <div class="fi-desc">${item.desc}</div>
-      <div class="fi-price">${item.price}</div>
-      <div class="fi-why">${item.why}</div>
-      <span class="fi-tag">${item.tag}</span>
-    </div>`).join('');
+  // Render in two batches: first 6 immediately, rest on next frame
+  const first = items.slice(0, 6);
+  const rest = items.slice(6);
+  grid.innerHTML = first.map(item => fashionCard(item)).join('');
+  if (rest.length) {
+    requestAnimationFrame(() => {
+      grid.innerHTML += rest.map(item => fashionCard(item)).join('');
+    });
+  }
+}
+
+function fashionCard(item) {
+  return `<div class="fashion-item">
+    <div class="fi-brand">${item.brand}</div>
+    <div class="fi-name">${item.name}</div>
+    <div class="fi-desc">${item.desc}</div>
+    <div class="fi-price">${item.price}</div>
+    <div class="fi-why">${item.why}</div>
+    <span class="fi-tag">${item.tag}</span>
+  </div>`;
 }
 
 function loadFashionCategory(category) {
@@ -1301,11 +1322,25 @@ function renderNailGrid(season) {
   }).join('');
 }
 
-function renderAllNailGrids() {
-  ['spring','summer','autumn','winter','always'].forEach(s => renderNailGrid(s));
+const nailRendered = new Set();
+
+function renderNailGridLazy(season, force) {
+  const key = season + currentShape + currentDesignType;
+  if (!force && nailRendered.has(key)) return;
+  nailRendered.add(key);
+  renderNailGrid(season);
 }
 
-renderAllNailGrids();
+function renderAllNailGrids() {
+  // Only re-render the currently visible nail tab
+  const activeNail = document.querySelector('#n2-spring.active, #n2-summer.active, #n2-autumn.active, #n2-winter.active, #n2-always.active');
+  const season = activeNail ? activeNail.id.replace('n2-','') : 'spring';
+  nailRendered.clear();
+  renderNailGridLazy(season, true);
+}
+
+// Initial: render only spring (active tab)
+renderNailGrid('spring');
 
 // Auto-load tops on page load
 loadFashionCategory('tops');
