@@ -1,18 +1,62 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <rect width="512" height="512" fill="#2a3528"/>
-  <circle cx="256" cy="256" r="200" fill="none" stroke="#c4a96a" stroke-width="2"/>
-  <circle cx="256" cy="256" r="130" fill="none" stroke="#c4a96a" stroke-width="1" opacity="0.5"/>
-  <!-- Flower petals -->
-  <ellipse cx="256" cy="156" rx="22" ry="40" fill="#c4a96a" opacity="0.8"/>
-  <ellipse cx="256" cy="356" rx="22" ry="40" fill="#c4a96a" opacity="0.8"/>
-  <ellipse cx="156" cy="256" rx="40" ry="22" fill="#c4a96a" opacity="0.8"/>
-  <ellipse cx="356" cy="256" rx="40" ry="22" fill="#c4a96a" opacity="0.8"/>
-  <ellipse cx="185" cy="185" rx="22" ry="40" fill="#c4a96a" opacity="0.6" transform="rotate(45 185 185)"/>
-  <ellipse cx="327" cy="185" rx="22" ry="40" fill="#c4a96a" opacity="0.6" transform="rotate(-45 327 185)"/>
-  <ellipse cx="185" cy="327" rx="22" ry="40" fill="#c4a96a" opacity="0.6" transform="rotate(-45 185 327)"/>
-  <ellipse cx="327" cy="327" rx="22" ry="40" fill="#c4a96a" opacity="0.6" transform="rotate(45 327 327)"/>
-  <!-- Center -->
-  <circle cx="256" cy="256" r="32" fill="#c4a96a"/>
-  <circle cx="256" cy="256" r="18" fill="#2a3528"/>
-  <circle cx="256" cy="256" r="6" fill="#c4a96a"/>
+  <defs>
+    <radialGradient id="g" cx="48%" cy="42%" r="58%">
+      <stop offset="0%" stop-color="#3a6432" stop-opacity="0.7"/>
+      <stop offset="100%" stop-color="#243d22" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="512" height="512" rx="114" fill="#243d22"/>
+  <rect width="512" height="512" rx="114" fill="url(#g)"/>
+
+  <!-- Gold border ring -->
+  <rect x="16" y="16" width="480" height="480" rx="102" fill="none" stroke="#c4a85a" stroke-width="1.8" opacity="0.32"/>
+
+  <!-- Main stem -->
+  <path d="M258,420 C256,378 252,326 247,274" fill="none" stroke="#c4a85a" stroke-width="5.5" stroke-linecap="round"/>
+
+  <!-- Left leaves — 4 pairs -->
+  <path d="M249,368 C214,344 182,326 178,302 C196,292 226,310 249,340" fill="#224e1e" stroke="#2e6828" stroke-width="2"/>
+  <path d="M250,320 C212,292 178,272 176,246 C196,238 228,258 250,290" fill="#1a3e18" stroke="#266022" stroke-width="2"/>
+  <path d="M251,276 C216,244 186,222 188,196 C208,190 238,210 251,244" fill="#224e1e" stroke="#2e6828" stroke-width="2"/>
+  <path d="M252,238 C222,206 196,182 200,158 C218,152 246,172 252,206" fill="#1a3e18" stroke="#266022" stroke-width="1.6" opacity="0.85"/>
+
+  <!-- Right leaves — 4 pairs -->
+  <path d="M249,356 C284,332 316,314 320,290 C302,280 270,298 249,328" fill="#1a3e18" stroke="#266022" stroke-width="2"/>
+  <path d="M250,308 C288,280 320,260 322,234 C304,226 272,246 250,278" fill="#224e1e" stroke="#2e6828" stroke-width="2"/>
+  <path d="M251,266 C286,234 316,212 314,186 C296,180 264,200 251,234" fill="#1a3e18" stroke="#266022" stroke-width="2"/>
+  <path d="M252,228 C284,196 312,174 310,150 C292,144 262,164 252,198" fill="#224e1e" stroke="#2e6828" stroke-width="1.6" opacity="0.85"/>
+
+  <!-- Leaf veins -->
+  <path d="M249,368 C232,352 218,340 210,324" fill="none" stroke="#3a7438" stroke-width="1.1" opacity="0.48"/>
+  <path d="M250,320 C232,304 218,290 210,274" fill="none" stroke="#3a7438" stroke-width="1.1" opacity="0.48"/>
+  <path d="M249,356 C266,340 280,330 288,314" fill="none" stroke="#3a7438" stroke-width="1.1" opacity="0.48"/>
+  <path d="M250,308 C268,292 282,278 288,262" fill="none" stroke="#3a7438" stroke-width="1.1" opacity="0.48"/>
+  <path d="M251,276 C235,258 222,244 218,228" fill="none" stroke="#3a7438" stroke-width="0.9" opacity="0.4"/>
+  <path d="M251,266 C268,248 282,236 288,220" fill="none" stroke="#3a7438" stroke-width="0.9" opacity="0.4"/>
+
+  <!-- Top bud — 3 layers -->
+  <ellipse cx="247" cy="268" rx="15" ry="24" fill="#c4a85a" opacity="0.9"/>
+  <ellipse cx="247" cy="260" rx="10" ry="16" fill="#d4b86a" opacity="0.85"/>
+  <ellipse cx="247" cy="253" rx="6" ry="10" fill="#e4c87a" opacity="0.8"/>
+  <ellipse cx="247" cy="248" rx="3" ry="6" fill="#f0d48a" opacity="0.7"/>
+
+  <!-- Gold accent dots -->
+  <circle cx="178" cy="358" r="4.5" fill="#c4a85a" opacity="0.3"/>
+  <circle cx="320" cy="346" r="4.5" fill="#c4a85a" opacity="0.3"/>
+  <circle cx="188" cy="242" r="3.5" fill="#c4a85a" opacity="0.25"/>
+  <circle cx="314" cy="230" r="3.5" fill="#c4a85a" opacity="0.25"/>
+  <circle cx="200" cy="192" r="2.5" fill="#c4a85a" opacity="0.2"/>
+  <circle cx="310" cy="180" r="2.5" fill="#c4a85a" opacity="0.2"/>
+
+  <!-- Scattered pollen -->
+  <circle cx="162" cy="390" r="2.5" fill="#c4a85a" opacity="0.18"/>
+  <circle cx="342" cy="378" r="2.5" fill="#c4a85a" opacity="0.18"/>
+  <circle cx="152" cy="302" r="2" fill="#c4a85a" opacity="0.15"/>
+  <circle cx="350" cy="288" r="2" fill="#c4a85a" opacity="0.15"/>
+  <circle cx="172" cy="228" r="1.8" fill="#c4a85a" opacity="0.13"/>
+  <circle cx="335" cy="214" r="1.8" fill="#c4a85a" opacity="0.13"/>
+  <circle cx="225" cy="420" r="1.5" fill="#c4a85a" opacity="0.12"/>
+  <circle cx="285" cy="416" r="1.5" fill="#c4a85a" opacity="0.12"/>
 </svg>
