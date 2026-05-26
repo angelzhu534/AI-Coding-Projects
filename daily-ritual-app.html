@@ -14,9 +14,9 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 :root{
-  --deep:#0f1a0e;
-  --deep2:#162015;
-  --deep3:#1e2d1c;
+  --deep:#243d22;
+  --deep2:#2c4a2a;
+  --deep3:#345630;
   --terra:#c4724a;
   --terra-l:#d4926a;
   --gold:#c8a96a;
@@ -53,7 +53,7 @@ html,body{
 }
 .header-blur{
   position:absolute;inset:0;
-  background:linear-gradient(to bottom,rgba(15,26,14,.96) 70%,rgba(15,26,14,0));
+  background:linear-gradient(to bottom,rgba(36,61,34,.97) 70%,rgba(36,61,34,0));
   backdrop-filter:blur(12px);
   -webkit-backdrop-filter:blur(12px);
   z-index:-1;
@@ -176,7 +176,7 @@ html,body{
 }
 .footer-blur{
   position:absolute;inset:0;
-  background:linear-gradient(to top,rgba(15,26,14,.96) 70%,rgba(15,26,14,0));
+  background:linear-gradient(to top,rgba(36,61,34,.97) 70%,rgba(36,61,34,0));
   backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);z-index:-1;
 }
 .footer-label{font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--stone);white-space:nowrap}
@@ -191,177 +191,289 @@ html,body{
 <div class="botanical-bg">
 <svg width="100%" height="100%" viewBox="0 0 430 932" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
   <defs>
-    <radialGradient id="glow1" cx="50%" cy="30%" r="60%">
-      <stop offset="0%" stop-color="#1e3a1a" stop-opacity="0.6"/>
-      <stop offset="100%" stop-color="#0f1a0e" stop-opacity="0"/>
+    <radialGradient id="gA" cx="30%" cy="20%" r="70%">
+      <stop offset="0%" stop-color="#3a6432" stop-opacity="0.55"/>
+      <stop offset="100%" stop-color="#243d22" stop-opacity="0"/>
     </radialGradient>
-    <radialGradient id="glow2" cx="80%" cy="70%" r="50%">
-      <stop offset="0%" stop-color="#1a2e18" stop-opacity="0.5"/>
-      <stop offset="100%" stop-color="#0f1a0e" stop-opacity="0"/>
+    <radialGradient id="gB" cx="80%" cy="72%" r="55%">
+      <stop offset="0%" stop-color="#346030" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#243d22" stop-opacity="0"/>
     </radialGradient>
-    <filter id="blur-soft"><feGaussianBlur stdDeviation="1.5"/></filter>
-    <filter id="blur-leaf"><feGaussianBlur stdDeviation="0.8"/></filter>
+    <radialGradient id="gC" cx="50%" cy="50%" r="40%">
+      <stop offset="0%" stop-color="#3a6432" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#243d22" stop-opacity="0"/>
+    </radialGradient>
   </defs>
 
-  <!-- Background glows -->
-  <rect width="430" height="932" fill="#0f1a0e"/>
-  <ellipse cx="215" cy="280" rx="280" ry="320" fill="url(#glow1)"/>
-  <ellipse cx="340" cy="650" rx="220" ry="280" fill="url(#glow2)"/>
+  <!-- Base + glows -->
+  <rect width="430" height="932" fill="#243d22"/>
+  <rect width="430" height="932" fill="url(#gA)"/>
+  <rect width="430" height="932" fill="url(#gB)"/>
+  <rect width="430" height="932" fill="url(#gC)"/>
 
-  <!-- ── TOP LEFT: Large monstera-style leaf cluster ── -->
-  <g opacity="0.55" filter="url(#blur-leaf)">
-    <!-- Main large leaf -->
-    <path d="M-20,80 C20,40 80,20 120,60 C160,100 170,160 140,200 C110,240 60,250 20,230 C-20,210 -30,170 -20,80Z"
-      fill="none" stroke="#2a4a24" stroke-width="1.5"/>
-    <path d="M-20,80 C20,40 80,20 120,60 C160,100 170,160 140,200 C110,240 60,250 20,230 C-20,210 -30,170 -20,80Z"
-      fill="#1a3018" opacity="0.8"/>
-    <!-- Leaf vein -->
-    <path d="M-20,80 C40,130 90,160 140,200" fill="none" stroke="#2e5228" stroke-width="0.8" opacity="0.6"/>
-    <path d="M20,100 C40,130 55,150 60,200" fill="none" stroke="#2e5228" stroke-width="0.5" opacity="0.4"/>
-    <path d="M60,70 C70,110 85,145 90,200" fill="none" stroke="#2e5228" stroke-width="0.5" opacity="0.4"/>
-    <!-- Cut-outs -->
-    <path d="M30,140 C10,130 -5,150 10,165 C20,175 40,165 30,140Z" fill="#0f1a0e" opacity="0.7"/>
-    <path d="M80,100 C65,88 55,105 68,115 C76,122 88,110 80,100Z" fill="#0f1a0e" opacity="0.7"/>
+  <!-- ══ TOP LEFT MONSTERA CLUSTER ══ -->
+  <g opacity="0.58">
+    <path d="M-30,85 C22,32 96,14 145,62 C192,108 196,178 158,222 C120,266 58,272 14,246 C-28,220 -38,172 -30,85Z" fill="#1e3e1a" stroke="#2e5a28" stroke-width="1.2"/>
+    <path d="M-30,85 C42,148 100,184 158,222" fill="none" stroke="#3a6832" stroke-width="0.9" opacity="0.55"/>
+    <path d="M20,106 C44,148 62,178 68,226" fill="none" stroke="#3a6832" stroke-width="0.5" opacity="0.4"/>
+    <path d="M72,72 C84,116 98,158 102,218" fill="none" stroke="#3a6832" stroke-width="0.5" opacity="0.4"/>
+    <!-- fenestration holes -->
+    <path d="M30,158 C8,142 -8,166 10,182 C24,194 48,180 30,158Z" fill="#243d22" opacity="0.8"/>
+    <path d="M86,106 C66,90 54,112 70,126 C82,136 100,118 86,106Z" fill="#243d22" opacity="0.8"/>
+    <path d="M114,68 C92,52 80,74 96,88 C108,98 126,80 114,68Z" fill="#243d22" opacity="0.75"/>
+  </g>
+  <!-- Second monstera -->
+  <g opacity="0.42">
+    <path d="M-38,192 C14,162 62,174 86,220 C110,266 96,320 62,342 C28,362 -18,338 -28,292 C-38,248 -44,220 -38,192Z" fill="#183412" stroke="#28481e" stroke-width="1"/>
+    <path d="M-38,192 C18,248 60,294 62,342" fill="none" stroke="#2c5424" stroke-width="0.8" opacity="0.45"/>
+    <path d="M-38,270 C-10,254 14,266 18,290 C14,306 -8,308 -24,294Z" fill="#243d22" opacity="0.7"/>
+  </g>
+  <!-- Third monstera left -->
+  <g opacity="0.32">
+    <path d="M-18,318 C30,294 74,304 96,346 C118,388 106,442 74,462 C42,482 -4,458 -14,414 C-24,370 -22,342 -18,318Z" fill="#1e3e1a" stroke="#2e5228" stroke-width="0.8"/>
+    <path d="M-18,318 C30,376 70,418 74,462" fill="none" stroke="#2e5228" stroke-width="0.6" opacity="0.4"/>
+    <path d="M10,370 C-4,358 -16,372 -6,382 C2,390 18,378 10,370Z" fill="#243d22" opacity="0.7"/>
+  </g>
+  <!-- Fourth leaf top left, very faint -->
+  <g opacity="0.22">
+    <path d="M-25,445 C18,422 58,430 76,468 C94,506 84,554 56,572 C28,590 -12,568 -20,528 C-28,488 -26,462 -25,445Z" fill="#1a3416" stroke="#284a20" stroke-width="0.7"/>
   </g>
 
-  <!-- Second leaf top-left -->
-  <g opacity="0.4">
-    <path d="M-30,160 C10,140 50,150 70,190 C90,230 80,280 50,300 C20,320 -20,300 -30,260 C-40,220 -40,190 -30,160Z"
-      fill="#162814" opacity="0.9"/>
-    <path d="M-30,160 C20,220 50,270 50,300" fill="none" stroke="#2a4820" stroke-width="0.8" opacity="0.5"/>
+  <!-- ══ TOP RIGHT FERN CASCADE ══ -->
+  <g opacity="0.52">
+    <path d="M402,0 C388,92 364,182 332,262" fill="none" stroke="#2e5a28" stroke-width="1.5"/>
+    <g opacity="0.82"><path d="M400,16 C426,8 446,22 438,42 C430,56 412,52 400,36" fill="#162e12" stroke="#285228" stroke-width="0.7"/><path d="M400,16 C376,8 364,26 372,42 C378,56 394,50 400,36" fill="#162e12" stroke="#285228" stroke-width="0.7"/></g>
+    <g opacity="0.76"><path d="M394,52 C420,42 440,58 432,78 C424,92 406,88 394,70" fill="#162e12" stroke="#285228" stroke-width="0.7"/><path d="M394,52 C368,42 356,62 364,78 C372,92 390,86 394,70" fill="#162e12" stroke="#285228" stroke-width="0.7"/></g>
+    <g opacity="0.70"><path d="M386,90 C412,78 432,94 424,116 C416,130 398,126 386,108" fill="#162e12" stroke="#285228" stroke-width="0.7"/><path d="M386,90 C360,78 348,98 358,116 C366,130 384,124 386,108" fill="#162e12" stroke="#285228" stroke-width="0.7"/></g>
+    <g opacity="0.64"><path d="M376,130 C400,118 420,134 412,156 C404,170 386,166 376,148" fill="#162e12" stroke="#285228" stroke-width="0.6"/><path d="M376,130 C352,118 340,138 350,156 C358,170 374,164 376,148" fill="#162e12" stroke="#285228" stroke-width="0.6"/></g>
+    <g opacity="0.58"><path d="M365,172 C388,160 406,176 398,198 C390,212 374,208 365,190" fill="#162e12" stroke="#285228" stroke-width="0.6"/><path d="M365,172 C342,160 330,180 340,198 C348,212 364,206 365,190" fill="#162e12" stroke="#285228" stroke-width="0.6"/></g>
+    <g opacity="0.52"><path d="M354,214 C376,202 392,218 384,240 C376,254 360,250 354,232" fill="#162e12" stroke="#285228" stroke-width="0.5"/><path d="M354,214 C332,202 320,222 330,240 C338,254 354,248 354,232" fill="#162e12" stroke="#285228" stroke-width="0.5"/></g>
+    <g opacity="0.46"><path d="M342,256 C362,244 376,260 368,282 C360,296 346,292 342,274" fill="#162e12" stroke="#285228" stroke-width="0.5"/><path d="M342,256 C320,244 310,264 320,282 C328,296 342,290 342,274" fill="#162e12" stroke="#285228" stroke-width="0.5"/></g>
+    <g opacity="0.40"><path d="M332,294 C350,282 362,298 354,318" fill="#162e12" stroke="#285228" stroke-width="0.5"/><path d="M332,294 C312,282 302,302 312,318" fill="#162e12" stroke="#285228" stroke-width="0.5"/></g>
   </g>
 
-  <!-- ── TOP RIGHT: Delicate fern fronds ── -->
-  <g opacity="0.5">
-    <!-- Main stem -->
-    <path d="M400,0 C390,80 370,160 340,240" fill="none" stroke="#2a4820" stroke-width="1.2"/>
-    <!-- Frond pairs -->
-    <g opacity="0.7">
-      <path d="M398,20 C420,15 435,25 430,40 C425,50 410,48 398,35" fill="#162814" stroke="#2a4820" stroke-width="0.6"/>
-      <path d="M398,20 C378,15 370,28 375,40 C380,50 393,45 398,35" fill="#162814" stroke="#2a4820" stroke-width="0.6"/>
-    </g>
-    <g opacity="0.65">
-      <path d="M393,55 C415,48 432,58 428,74 C424,84 408,82 393,68" fill="#162814" stroke="#2a4820" stroke-width="0.6"/>
-      <path d="M393,55 C372,48 363,62 369,75 C375,85 388,80 393,68" fill="#162814" stroke="#2a4820" stroke-width="0.6"/>
-    </g>
-    <g opacity="0.6">
-      <path d="M386,92 C408,84 426,95 421,112 C417,122 400,119 386,105" fill="#162814" stroke="#2a4820" stroke-width="0.6"/>
-      <path d="M386,92 C364,84 355,99 362,113 C368,124 382,118 386,105" fill="#162814" stroke="#2a4820" stroke-width="0.6"/>
-    </g>
-    <g opacity="0.55">
-      <path d="M377,130 C398,122 416,133 411,150 C406,162 390,159 377,145" fill="#162814" stroke="#2a4820" stroke-width="0.5"/>
-      <path d="M377,130 C356,122 346,138 354,152 C360,163 374,157 377,145" fill="#162814" stroke="#2a4820" stroke-width="0.5"/>
-    </g>
-    <g opacity="0.5">
-      <path d="M367,168 C386,160 402,172 397,188 C393,199 378,196 367,182" fill="#162814" stroke="#2a4820" stroke-width="0.5"/>
-      <path d="M367,168 C347,160 338,176 346,190 C352,201 366,194 367,182" fill="#162814" stroke="#2a4820" stroke-width="0.5"/>
-    </g>
-    <g opacity="0.45">
-      <path d="M354,208 C372,200 387,212 382,228" fill="#162814" stroke="#2a4820" stroke-width="0.5"/>
-      <path d="M354,208 C336,200 328,216 336,230" fill="#162814" stroke="#2a4820" stroke-width="0.5"/>
-    </g>
+  <!-- ══ SECONDARY FERN — left mid ══ -->
+  <g opacity="0.38">
+    <path d="M-8,420 C28,400 70,408 88,448 C106,488 94,536 64,554" fill="none" stroke="#2a5224" stroke-width="1.2"/>
+    <g opacity="0.8"><path d="M-4,428 C12,416 28,422 26,438 C24,450 10,452 -4,440" fill="#162e12" stroke="#285228" stroke-width="0.6"/><path d="M-4,428 C-20,416 -28,426 -22,440 C-18,450 -4,450 -4,440" fill="#162e12" stroke="#285228" stroke-width="0.6"/></g>
+    <g opacity="0.72"><path d="M8,452 C24,440 40,446 38,462 C36,474 22,474 8,464" fill="#162e12" stroke="#285228" stroke-width="0.6"/><path d="M8,452 C-8,440 -16,452 -10,464 C-4,474 8,472 8,464" fill="#162e12" stroke="#285228" stroke-width="0.6"/></g>
+    <g opacity="0.62"><path d="M22,476 C38,464 54,470 52,486" fill="#162e12" stroke="#285228" stroke-width="0.5"/><path d="M22,476 C6,464 -2,476 6,488" fill="#162e12" stroke="#285228" stroke-width="0.5"/></g>
+    <g opacity="0.52"><path d="M38,498 C54,486 68,494 66,510" fill="#162e12" stroke="#285228" stroke-width="0.5"/><path d="M38,498 C22,486 16,498 24,512" fill="#162e12" stroke="#285228" stroke-width="0.5"/></g>
+    <g opacity="0.42"><path d="M54,520 C70,510 82,518 80,532" fill="#162e12" stroke="#285228" stroke-width="0.5"/></g>
   </g>
 
-  <!-- ── MIDDLE LEFT: Botanical flower stems ── -->
-  <g opacity="0.45">
-    <!-- Stem 1 -->
-    <path d="M30,400 C25,360 35,330 50,300" fill="none" stroke="#2a4820" stroke-width="1"/>
-    <!-- Flower head -->
-    <g transform="translate(50,295)">
-      <ellipse cx="0" cy="-8" rx="5" ry="10" fill="#3a1a28" opacity="0.7" transform="rotate(-30)"/>
-      <ellipse cx="8" cy="-6" rx="5" ry="10" fill="#3a1a28" opacity="0.7" transform="rotate(10)"/>
-      <ellipse cx="-8" cy="-6" rx="5" ry="10" fill="#3a1a28" opacity="0.7" transform="rotate(-70)"/>
-      <ellipse cx="5" cy="4" rx="5" ry="9" fill="#3a1a28" opacity="0.6" transform="rotate(40)"/>
-      <ellipse cx="-5" cy="4" rx="5" ry="9" fill="#3a1a28" opacity="0.6" transform="rotate(-40)"/>
-      <circle cx="0" cy="0" r="4" fill="#c4724a" opacity="0.4"/>
-    </g>
-    <!-- Leaves on stem -->
-    <path d="M35,380 C20,368 15,350 28,342 C38,336 48,348 40,362" fill="#1a2e18" opacity="0.7" stroke="#2a4820" stroke-width="0.5"/>
-    <path d="M42,355 C56,342 62,324 50,316 C40,310 30,322 36,336" fill="#1a2e18" opacity="0.6" stroke="#2a4820" stroke-width="0.5"/>
-
-    <!-- Stem 2 -->
-    <path d="M15,520 C20,480 28,450 45,430" fill="none" stroke="#2a4820" stroke-width="0.8"/>
-    <g transform="translate(45,425)">
-      <ellipse cx="0" cy="-7" rx="4" ry="8" fill="#2a3a18" opacity="0.6" transform="rotate(-20)"/>
-      <ellipse cx="7" cy="-4" rx="4" ry="8" fill="#2a3a18" opacity="0.6" transform="rotate(20)"/>
-      <ellipse cx="-7" cy="-4" rx="4" ry="8" fill="#2a3a18" opacity="0.6" transform="rotate(-60)"/>
-      <ellipse cx="0" cy="5" rx="4" ry="8" fill="#2a3a18" opacity="0.5" transform="rotate(0)"/>
-      <circle cx="0" cy="0" r="3" fill="#7a9a6e" opacity="0.4"/>
-    </g>
+  <!-- ══ MATCHA SPRIG 1 — center left ══ -->
+  <g opacity="0.48" transform="translate(22,355)">
+    <path d="M32,195 C31,168 28,132 25,98" fill="none" stroke="#c4a85a" stroke-width="1.8" stroke-linecap="round"/>
+    <path d="M25,162 C4,148 -16,140 -18,124 C-6,116 16,128 25,148" fill="#264e22" stroke="#326828" stroke-width="0.9"/>
+    <path d="M25,136 C3,118 -16,108 -16,90 C-4,84 18,98 25,118" fill="#1a3e18" stroke="#285a22" stroke-width="0.9"/>
+    <path d="M26,112 C6,92 -10,78 -8,62 C4,56 22,70 26,92" fill="#264e22" stroke="#326828" stroke-width="0.9"/>
+    <path d="M25,155 C44,140 62,132 66,116 C56,108 36,120 25,138" fill="#1a3e18" stroke="#285a22" stroke-width="0.9"/>
+    <path d="M25,128 C46,112 66,102 68,84 C58,78 38,90 25,110" fill="#264e22" stroke="#326828" stroke-width="0.9"/>
+    <path d="M26,104 C44,86 62,74 60,56 C50,52 32,66 26,86" fill="#1a3e18" stroke="#285a22" stroke-width="0.9"/>
+    <path d="M25,156 C6,142 -8,130 -6,116" fill="none" stroke="#3a7438" stroke-width="0.5" opacity="0.5"/>
+    <path d="M25,130 C8,116 -4,104 -2,90" fill="none" stroke="#3a7438" stroke-width="0.5" opacity="0.5"/>
+    <path d="M25,154 C42,140 54,132 58,118" fill="none" stroke="#3a7438" stroke-width="0.5" opacity="0.5"/>
+    <ellipse cx="25" cy="92" rx="6" ry="10" fill="#c4a85a" opacity="0.85"/>
+    <ellipse cx="25" cy="87" rx="4" ry="6.5" fill="#d4ba6a" opacity="0.8"/>
+    <circle cx="-18" cy="158" r="1.8" fill="#c4a85a" opacity="0.35"/>
+    <circle cx="66" cy="150" r="1.8" fill="#c4a85a" opacity="0.35"/>
+    <circle cx="-8" cy="102" r="1.2" fill="#c4a85a" opacity="0.3"/>
   </g>
 
-  <!-- ── RIGHT MIDDLE: Large leaf spray ── -->
-  <g opacity="0.5">
-    <!-- Big tropical leaf -->
-    <path d="M460,380 C420,360 390,380 380,420 C370,460 385,500 415,510 C445,520 470,495 470,455 C475,420 470,390 460,380Z"
-      fill="#162814" stroke="#2a4820" stroke-width="1"/>
-    <path d="M460,380 C430,430 415,470 415,510" fill="none" stroke="#2e5228" stroke-width="0.8" opacity="0.5"/>
-    <path d="M445,395 C440,430 428,458 420,490" fill="none" stroke="#2e5228" stroke-width="0.5" opacity="0.35"/>
-
-    <!-- Smaller leaf -->
-    <path d="M445,500 C415,490 395,510 400,545 C405,575 435,580 455,560 C470,544 465,514 445,500Z"
-      fill="#1a2e18" stroke="#2a4820" stroke-width="0.8" opacity="0.8"/>
-    <path d="M445,500 C425,530 415,555 400,545" fill="none" stroke="#2e5228" stroke-width="0.6" opacity="0.4"/>
+  <!-- ══ MATCHA SPRIG 2 — right mid ══ -->
+  <g opacity="0.42" transform="translate(302,468) scale(0.85)">
+    <path d="M28,172 C27,148 25,116 22,84" fill="none" stroke="#c4a85a" stroke-width="1.6" stroke-linecap="round"/>
+    <path d="M22,140 C4,126 -12,118 -14,104 C-2,96 16,108 22,128" fill="#264e22" stroke="#326828" stroke-width="0.8"/>
+    <path d="M22,114 C4,98 -12,88 -12,72 C0,66 18,80 22,100" fill="#1a3e18" stroke="#285a22" stroke-width="0.8"/>
+    <path d="M22,134 C40,120 56,112 60,96 C50,88 34,100 22,118" fill="#1a3e18" stroke="#285a22" stroke-width="0.8"/>
+    <path d="M22,108 C42,92 60,82 62,66 C52,60 34,72 22,92" fill="#264e22" stroke="#326828" stroke-width="0.8"/>
+    <path d="M22,86 C38,70 54,60 52,46 C44,42 28,54 22,74" fill="#1a3e18" stroke="#285a22" stroke-width="0.8"/>
+    <ellipse cx="22" cy="78" rx="5.5" ry="9" fill="#c4a85a" opacity="0.82"/>
+    <ellipse cx="22" cy="73" rx="3.5" ry="6" fill="#d4ba6a" opacity="0.75"/>
+    <circle cx="-14" cy="136" r="1.5" fill="#c4a85a" opacity="0.3"/>
+    <circle cx="60" cy="128" r="1.5" fill="#c4a85a" opacity="0.3"/>
   </g>
 
-  <!-- ── BOTTOM: Ground foliage ── -->
-  <g opacity="0.6">
-    <!-- Wide arching leaves from bottom left -->
-    <path d="M-20,850 C40,820 90,800 120,780 C140,768 155,770 150,790 C145,810 120,830 80,845 C40,860 0,860 -20,850Z"
-      fill="#162814" stroke="#2a4820" stroke-width="0.8"/>
-    <path d="M-20,880 C50,850 110,840 160,830 C185,824 198,828 192,846 C186,862 155,872 110,878 C65,885 15,882 -20,880Z"
-      fill="#1a3018" stroke="#2a4820" stroke-width="0.7"/>
-    <path d="M-20,920 C60,900 130,895 190,890 C220,888 235,892 228,908 C221,922 185,928 140,930 C90,932 30,928 -20,920Z"
-      fill="#162814" stroke="#2a4820" stroke-width="0.7"/>
+  <!-- ══ MATCHA SPRIG 3 — small, upper right ══ -->
+  <g opacity="0.3" transform="translate(348,145) scale(0.6) rotate(-15 20 100)">
+    <path d="M20,130 C19,110 18,88 16,66" fill="none" stroke="#c4a85a" stroke-width="1.5" stroke-linecap="round"/>
+    <path d="M16,108 C2,98 -10,92 -10,80 C-2,76 12,84 16,96" fill="#264e22" stroke="#326828" stroke-width="0.8"/>
+    <path d="M16,86 C2,74 -10,68 -10,56 C-2,52 12,60 16,72" fill="#1a3e18" stroke="#285a22" stroke-width="0.8"/>
+    <path d="M16,104 C30,94 42,88 44,76 C36,70 24,78 16,92" fill="#1a3e18" stroke="#285a22" stroke-width="0.8"/>
+    <path d="M16,82 C30,70 42,64 44,52 C36,46 24,54 16,68" fill="#264e22" stroke="#326828" stroke-width="0.8"/>
+    <ellipse cx="16" cy="60" rx="4" ry="7" fill="#c4a85a" opacity="0.78"/>
+    <ellipse cx="16" cy="56" rx="2.5" ry="4.5" fill="#d4ba6a" opacity="0.7"/>
   </g>
 
-  <!-- Bottom right leaves -->
-  <g opacity="0.55">
-    <path d="M450,870 C410,850 380,840 360,860 C340,878 348,908 375,918 C400,928 435,918 450,898 C460,884 458,870 450,870Z"
-      fill="#162814" stroke="#2a4820" stroke-width="0.8"/>
-    <path d="M430,920 C400,910 375,918 370,932" fill="none" stroke="#2a4820" stroke-width="0.7"/>
-    <path d="M460,932 C440,915 415,910 400,920 C385,928 390,940 410,940"
-      fill="#1a2e18" stroke="#2a4820" stroke-width="0.7" opacity="0.8"/>
+  <!-- ══ SCATTERED FLOWERS ══ -->
+  <!-- Flower A — top center right -->
+  <g opacity="0.32" transform="translate(210,108)">
+    <ellipse cx="0" cy="-12" rx="4.5" ry="9" fill="#3a1a22" opacity="0.75"/>
+    <ellipse cx="0" cy="-12" rx="4.5" ry="9" fill="#3a1a22" opacity="0.68" transform="rotate(51.4)"/>
+    <ellipse cx="0" cy="-12" rx="4.5" ry="9" fill="#3a1a22" opacity="0.65" transform="rotate(102.8)"/>
+    <ellipse cx="0" cy="-12" rx="4.5" ry="9" fill="#3a1a22" opacity="0.65" transform="rotate(154.2)"/>
+    <ellipse cx="0" cy="-12" rx="4.5" ry="9" fill="#3a1a22" opacity="0.65" transform="rotate(205.6)"/>
+    <ellipse cx="0" cy="-12" rx="4.5" ry="9" fill="#3a1a22" opacity="0.65" transform="rotate(257)"/>
+    <ellipse cx="0" cy="-12" rx="4.5" ry="9" fill="#3a1a22" opacity="0.65" transform="rotate(308.4)"/>
+    <circle cx="0" cy="0" r="4.5" fill="#c4a85a" opacity="0.45"/>
+    <circle cx="0" cy="0" r="2" fill="#d4ba6a" opacity="0.5"/>
+    <circle cx="0" cy="-17" r="1" fill="#c4a85a" opacity="0.2"/>
+  </g>
+  <!-- Flower B — left mid -->
+  <g opacity="0.28" transform="translate(52,528)">
+    <ellipse cx="0" cy="-10" rx="3.5" ry="7" fill="#c47a58" opacity="0.65" transform="rotate(0)"/>
+    <ellipse cx="0" cy="-10" rx="3.5" ry="7" fill="#b46848" opacity="0.6" transform="rotate(60)"/>
+    <ellipse cx="0" cy="-10" rx="3.5" ry="7" fill="#c47a58" opacity="0.6" transform="rotate(120)"/>
+    <ellipse cx="0" cy="-10" rx="3.5" ry="7" fill="#b46848" opacity="0.6" transform="rotate(180)"/>
+    <ellipse cx="0" cy="-10" rx="3.5" ry="7" fill="#c47a58" opacity="0.6" transform="rotate(240)"/>
+    <ellipse cx="0" cy="-10" rx="3.5" ry="7" fill="#b46848" opacity="0.6" transform="rotate(300)"/>
+    <circle cx="0" cy="0" r="4" fill="#c4a85a" opacity="0.45"/>
+  </g>
+  <!-- Flower C — right mid -->
+  <g opacity="0.26" transform="translate(390,348)">
+    <ellipse cx="0" cy="-9" rx="3" ry="7" fill="#c47a58" opacity="0.6" transform="rotate(0)"/>
+    <ellipse cx="0" cy="-9" rx="3" ry="7" fill="#b46848" opacity="0.55" transform="rotate(72)"/>
+    <ellipse cx="0" cy="-9" rx="3" ry="7" fill="#c47a58" opacity="0.55" transform="rotate(144)"/>
+    <ellipse cx="0" cy="-9" rx="3" ry="7" fill="#b46848" opacity="0.55" transform="rotate(216)"/>
+    <ellipse cx="0" cy="-9" rx="3" ry="7" fill="#c47a58" opacity="0.55" transform="rotate(288)"/>
+    <circle cx="0" cy="0" r="3.5" fill="#c4a85a" opacity="0.4"/>
+  </g>
+  <!-- Flower D — lower left small -->
+  <g opacity="0.22" transform="translate(78,648)">
+    <ellipse cx="0" cy="-8" rx="2.8" ry="5.5" fill="#c47a58" opacity="0.6" transform="rotate(0)"/>
+    <ellipse cx="0" cy="-8" rx="2.8" ry="5.5" fill="#b46848" opacity="0.55" transform="rotate(60)"/>
+    <ellipse cx="0" cy="-8" rx="2.8" ry="5.5" fill="#c47a58" opacity="0.55" transform="rotate(120)"/>
+    <ellipse cx="0" cy="-8" rx="2.8" ry="5.5" fill="#b46848" opacity="0.55" transform="rotate(180)"/>
+    <ellipse cx="0" cy="-8" rx="2.8" ry="5.5" fill="#c47a58" opacity="0.55" transform="rotate(240)"/>
+    <ellipse cx="0" cy="-8" rx="2.8" ry="5.5" fill="#b46848" opacity="0.55" transform="rotate(300)"/>
+    <circle cx="0" cy="0" r="3" fill="#c4a85a" opacity="0.38"/>
   </g>
 
-  <!-- ── SCATTERED SMALL FLORALS ── -->
-  <!-- Small flower top center -->
-  <g opacity="0.3" transform="translate(200,120)">
-    <circle cx="0" cy="0" r="14" fill="none" stroke="#c4724a" stroke-width="0.5" stroke-dasharray="3,6"/>
-    <ellipse cx="0" cy="-10" rx="3.5" ry="7" fill="#3a1a20" opacity="0.6"/>
-    <ellipse cx="9.5" cy="-4" rx="3.5" ry="7" fill="#3a1a20" opacity="0.6" transform="rotate(60)"/>
-    <ellipse cx="9.5" cy="4" rx="3.5" ry="7" fill="#3a1a20" opacity="0.6" transform="rotate(120)"/>
-    <ellipse cx="0" cy="10" rx="3.5" ry="7" fill="#3a1a20" opacity="0.6" transform="rotate(180)"/>
-    <ellipse cx="-9.5" cy="4" rx="3.5" ry="7" fill="#3a1a20" opacity="0.6" transform="rotate(240)"/>
-    <ellipse cx="-9.5" cy="-4" rx="3.5" ry="7" fill="#3a1a20" opacity="0.6" transform="rotate(300)"/>
-    <circle cx="0" cy="0" r="3.5" fill="#c4724a" opacity="0.35"/>
+  <!-- ══ MID PAGE LEAF SPRAYS ══ -->
+  <g opacity="0.38">
+    <path d="M-20,490 C28,466 72,474 96,516 C120,558 108,610 76,630 C44,650 0,628 -10,584 C-20,540 -22,510 -20,490Z" fill="#162e12" stroke="#285228" stroke-width="0.8"/>
+    <path d="M-20,490 C34,548 74,592 76,630" fill="none" stroke="#2c5424" stroke-width="0.7" opacity="0.4"/>
+    <path d="M4,548 C-10,534 -18,548 -8,560 C0,568 14,556 4,548Z" fill="#243d22" opacity="0.7"/>
+  </g>
+  <g opacity="0.32">
+    <path d="M412,448 C378,434 350,450 346,490 C342,530 364,562 396,566 C428,570 450,542 448,506 C446,472 430,456 412,448Z" fill="#1e3e1a" stroke="#2e5228" stroke-width="0.8"/>
+    <path d="M412,448 C386,484 372,520 396,566" fill="none" stroke="#3a6832" stroke-width="0.6" opacity="0.38"/>
+    <path d="M380,494 C366,486 358,498 366,508 C374,516 388,504 380,494Z" fill="#243d22" opacity="0.7"/>
+  </g>
+  <!-- Extra arching leaf right mid-low -->
+  <g opacity="0.28">
+    <path d="M448,600 C416,584 388,592 378,626 C368,660 384,694 412,700 C440,706 462,682 462,650 C462,620 450,606 448,600Z" fill="#162e12" stroke="#285228" stroke-width="0.7"/>
+    <path d="M448,600 C420,630 400,664 412,700" fill="none" stroke="#2c5424" stroke-width="0.5" opacity="0.35"/>
   </g>
 
-  <!-- Tiny scattered dots / seed pods -->
-  <g opacity="0.25" fill="#c8a96a">
-    <circle cx="160" cy="200" r="1.5"/>
-    <circle cx="168" cy="195" r="1"/>
-    <circle cx="155" cy="208" r="1"/>
-    <circle cx="280" cy="350" r="1.5"/>
-    <circle cx="290" cy="344" r="1"/>
-    <circle cx="272" cy="358" r="1"/>
-    <circle cx="100" cy="600" r="1.5"/>
-    <circle cx="110" cy="594" r="1"/>
-    <circle cx="320" cy="700" r="1.5"/>
-    <circle cx="328" cy="693" r="1"/>
+  <!-- ══ EXTRA MONSTERA — lower center ══ -->
+  <g opacity="0.3">
+    <path d="M130,720 C178,692 228,696 252,736 C276,776 264,830 232,850 C200,870 158,848 148,806 C138,764 136,738 130,720Z" fill="#1e3e1a" stroke="#2e5228" stroke-width="0.8"/>
+    <path d="M130,720 C186,776 230,824 232,850" fill="none" stroke="#3a6832" stroke-width="0.6" opacity="0.38"/>
+    <path d="M170,770 C152,756 140,770 150,782 C158,790 174,778 170,770Z" fill="#243d22" opacity="0.72"/>
+    <path d="M210,740 C196,726 182,738 192,750 C200,758 216,746 210,740Z" fill="#243d22" opacity="0.68"/>
   </g>
 
-  <!-- Subtle golden pollen dots -->
-  <g opacity="0.15" fill="#c8a96a">
-    <circle cx="80" cy="140" r="1"/>
-    <circle cx="92" cy="148" r="1.5"/>
-    <circle cx="75" cy="155" r="1"/>
-    <circle cx="350" cy="440" r="1.5"/>
-    <circle cx="362" cy="448" r="1"/>
-    <circle cx="345" cy="456" r="1"/>
+  <!-- ══ GROUND FOLIAGE — bottom ══ -->
+  <g opacity="0.62">
+    <path d="M-20,852 C48,818 108,802 148,782 C172,770 188,774 182,798 C176,820 144,844 96,860 C50,876 2,874 -20,852Z" fill="#162e12" stroke="#285228" stroke-width="0.8"/>
+    <path d="M-20,886 C58,852 124,840 182,828 C210,822 226,828 218,848 C210,866 174,878 126,886 C78,894 18,892 -20,886Z" fill="#1e3e1a" stroke="#285228" stroke-width="0.7"/>
+    <path d="M-20,920 C68,896 146,888 212,882 C246,879 262,886 254,904 C246,920 208,930 158,932 C105,934 24,928 -20,920Z" fill="#162e12" stroke="#285228" stroke-width="0.7"/>
+    <!-- Extra layered ground leaves -->
+    <path d="M220,898 C268,878 318,872 358,886 C382,894 390,906 378,918 C366,930 336,932 298,928 C262,924 228,912 220,898Z" fill="#1e3e1a" stroke="#285228" stroke-width="0.6"/>
+    <path d="M340,912 C376,898 412,896 434,910 C446,918 448,930 436,938 C424,946 400,944 376,938 C352,932 336,922 340,912Z" fill="#162e12" stroke="#285228" stroke-width="0.6"/>
   </g>
-</svg>
-</div>
+
+  <!-- ══ GIRAFFE — lower right corner ══ -->
+  <g opacity="0.24" transform="translate(252,705)">
+    <!-- Shadow/ground hint -->
+    <ellipse cx="88" cy="218" rx="52" ry="6" fill="#1a2e18" opacity="0.4"/>
+    <!-- Back legs -->
+    <rect x="95" y="146" width="11" height="62" rx="4" fill="#b08020"/>
+    <rect x="112" y="148" width="11" height="60" rx="4" fill="#a07018"/>
+    <!-- Hooves back -->
+    <rect x="94" y="204" width="13" height="9" rx="3" fill="#5a3808"/>
+    <rect x="111" y="204" width="13" height="9" rx="3" fill="#5a3808"/>
+    <!-- Body -->
+    <ellipse cx="82" cy="122" rx="54" ry="36" fill="#c4a030"/>
+    <!-- Front legs -->
+    <rect x="46" y="148" width="11" height="60" rx="4" fill="#b08020"/>
+    <rect x="63" y="150" width="11" height="58" rx="4" fill="#a07018"/>
+    <!-- Hooves front -->
+    <rect x="45" y="204" width="13" height="9" rx="3" fill="#5a3808"/>
+    <rect x="62" y="202" width="13" height="9" rx="3" fill="#5a3808"/>
+    <!-- Neck -->
+    <path d="M58,88 C54,62 48,36 42,12" fill="none" stroke="#c4a030" stroke-width="20" stroke-linecap="round"/>
+    <path d="M58,88 C54,62 48,36 42,12" fill="none" stroke="#b08020" stroke-width="17" stroke-linecap="round"/>
+    <!-- Neck shading -->
+    <path d="M62,85 C58,60 53,38 48,16" fill="none" stroke="#a07018" stroke-width="5" stroke-linecap="round" opacity="0.4"/>
+    <!-- Head -->
+    <ellipse cx="40" cy="8" rx="17" ry="13" fill="#c4a030"/>
+    <!-- Snout -->
+    <ellipse cx="30" cy="11" rx="11" ry="7.5" fill="#a07018"/>
+    <ellipse cx="27" cy="13" rx="4" ry="2.5" fill="#7a5010" opacity="0.6"/>
+    <!-- Nostril -->
+    <ellipse cx="24" cy="12" rx="1.5" ry="1" fill="#5a3808" opacity="0.5"/>
+    <ellipse cx="30" cy="14" rx="1.5" ry="1" fill="#5a3808" opacity="0.5"/>
+    <!-- Eye -->
+    <circle cx="46" cy="3" r="4.5" fill="#1a0e04"/>
+    <circle cx="47" cy="2" r="2" fill="#fff" opacity="0.55"/>
+    <circle cx="47.5" cy="2" r="1" fill="#1a0e04"/>
+    <!-- Eyelash hint -->
+    <path d="M43,0 C44,-2 46,-3 48,-2" fill="none" stroke="#5a3808" stroke-width="0.8" stroke-linecap="round" opacity="0.6"/>
+    <!-- Ossicones -->
+    <rect x="41" y="-8" width="5" height="13" rx="2" fill="#8a6018"/>
+    <circle cx="43" cy="-9" r="2.5" fill="#6a4810"/>
+    <rect x="50" y="-5" width="4.5" height="11" rx="2" fill="#8a6018"/>
+    <circle cx="52" cy="-6" r="2" fill="#6a4810"/>
+    <!-- Ear -->
+    <ellipse cx="35" cy="0" rx="4" ry="6" fill="#c4a030" transform="rotate(-20 35 0)"/>
+    <ellipse cx="35" cy="0" rx="2.5" ry="4" fill="#e8b84a" opacity="0.5" transform="rotate(-20 35 0)"/>
+    <!-- Mane -->
+    <path d="M55,82 C51,60 46,40 42,20" fill="none" stroke="#7a5010" stroke-width="4.5" stroke-linecap="round" opacity="0.55"/>
+    <!-- Tail -->
+    <path d="M132,110 C148,118 158,130 154,144 C151,154 142,158 138,152" fill="none" stroke="#a07018" stroke-width="5.5" stroke-linecap="round"/>
+    <ellipse cx="138" cy="154" rx="5" ry="8" fill="#6a4810"/>
+    <!-- Body patches -->
+    <ellipse cx="70" cy="106" rx="11" ry="9" fill="#8a6018" opacity="0.5"/>
+    <ellipse cx="92" cy="118" rx="10" ry="8" fill="#7a5010" opacity="0.45"/>
+    <ellipse cx="82" cy="132" rx="9" ry="7" fill="#8a6018" opacity="0.45"/>
+    <ellipse cx="108" cy="110" rx="9" ry="7" fill="#7a5010" opacity="0.42"/>
+    <ellipse cx="58" cy="120" rx="8" ry="6.5" fill="#8a6018" opacity="0.42"/>
+    <ellipse cx="96" cy="98" rx="7" ry="5.5" fill="#7a5010" opacity="0.38"/>
+    <ellipse cx="68" cy="138" rx="7" ry="5" fill="#8a6018" opacity="0.38"/>
+    <!-- Neck patches -->
+    <ellipse cx="52" cy="48" rx="6.5" ry="10" fill="#8a6018" opacity="0.48"/>
+    <ellipse cx="46" cy="68" rx="5.5" ry="8" fill="#7a5010" opacity="0.44"/>
+    <ellipse cx="54" cy="28" rx="5" ry="7.5" fill="#8a6018" opacity="0.42"/>
+    <ellipse cx="48" cy="14" rx="4" ry="6" fill="#7a5010" opacity="0.38"/>
+  </g>
+
+  <!-- ══ SCATTERED SEED PODS + POLLEN ══ -->
+  <g fill="#c8a96a">
+    <circle cx="172" cy="202" r="1.8" opacity="0.18"/>
+    <circle cx="180" cy="195" r="1.2" opacity="0.16"/>
+    <circle cx="166" cy="212" r="1.2" opacity="0.16"/>
+    <circle cx="290" cy="358" r="1.8" opacity="0.16"/>
+    <circle cx="298" cy="350" r="1.2" opacity="0.14"/>
+    <circle cx="284" cy="366" r="1.2" opacity="0.14"/>
+    <circle cx="110" cy="612" r="1.8" opacity="0.16"/>
+    <circle cx="118" cy="604" r="1.2" opacity="0.14"/>
+    <circle cx="328" cy="718" r="1.8" opacity="0.15"/>
+    <circle cx="185" cy="454" r="1.5" opacity="0.14"/>
+    <circle cx="368" cy="545" r="1.5" opacity="0.13"/>
+    <circle cx="92" cy="382" r="1.2" opacity="0.13"/>
+    <circle cx="360" cy="282" r="1.2" opacity="0.12"/>
+    <circle cx="148" cy="318" r="1.2" opacity="0.12"/>
+    <circle cx="265" cy="495" r="1.2" opacity="0.12"/>
+    <circle cx="42" cy="458" r="1.2" opacity="0.12"/>
+    <circle cx="402" cy="520" r="1.2" opacity="0.11"/>
+    <circle cx="218" cy="655" r="1.2" opacity="0.11"/>
+    <circle cx="128" cy="752" r="1.2" opacity="0.11"/>
+    <circle cx="348" cy="625" r="1.2" opacity="0.1"/>
+  </g>
+</svg></div>
 
 <div class="app-header">
   <div class="header-blur"></div>
