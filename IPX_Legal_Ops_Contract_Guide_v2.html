@@ -1,0 +1,1198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IPX Power — Legal Ops Contract Lifecycle Guide</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  --navy: #0F1F3D;
+  --navy-mid: #1A3461;
+  --blue: #2563EB;
+  --blue-light: #EFF6FF;
+  --blue-border: #BFDBFE;
+  --teal: #0D9488;
+  --teal-light: #F0FDFA;
+  --amber: #D97706;
+  --amber-light: #FFFBEB;
+  --red: #DC2626;
+  --red-light: #FEF2F2;
+  --green: #059669;
+  --green-light: #ECFDF5;
+  --purple: #7C3AED;
+  --purple-light: #EDE9FE;
+  --gray: #6B7280;
+  --gray-light: #F9FAFB;
+  --border: #E5E7EB;
+  --text: #111827;
+  --text-muted: #6B7280;
+  --sans: 'Inter', sans-serif;
+  --mono: 'JetBrains Mono', monospace;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--sans);
+  background: #F1F5F9;
+  color: var(--text);
+  min-height: 100vh;
+  padding: 2rem 1rem;
+}
+
+.page { max-width: 1140px; margin: 0 auto; }
+
+/* ── NAV TABS ── */
+.page-tabs {
+  display: flex;
+  gap: 0;
+  background: white;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  padding: 6px;
+  margin-bottom: 1.5rem;
+  overflow-x: auto;
+}
+.ptab {
+  flex-shrink: 0;
+  padding: 0.5rem 1.25rem;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  font-family: var(--sans);
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.ptab:hover { background: var(--gray-light); color: var(--text); }
+.ptab.active { background: var(--navy); color: white; }
+.pview { display: none; }
+.pview.active { display: block; }
+
+/* ── HEADER ── */
+.header {
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%);
+  border-radius: 16px;
+  padding: 2.5rem 3rem;
+  margin-bottom: 1.5rem;
+  position: relative;
+  overflow: hidden;
+}
+.header::before {
+  content: ''; position: absolute; top: -40px; right: -40px;
+  width: 200px; height: 200px; border-radius: 50%;
+  background: rgba(255,255,255,0.04);
+}
+.header::after {
+  content: ''; position: absolute; bottom: -60px; right: 80px;
+  width: 140px; height: 140px; border-radius: 50%;
+  background: rgba(255,255,255,0.03);
+}
+.header-eyebrow {
+  font-size: 0.7rem; font-family: var(--mono);
+  text-transform: uppercase; letter-spacing: 0.12em;
+  color: rgba(255,255,255,0.5); margin-bottom: 0.5rem;
+}
+.header h1 { font-size: 1.6rem; font-weight: 700; color: white; margin-bottom: 0.5rem; letter-spacing: -0.02em; }
+.header p { font-size: 0.875rem; color: rgba(255,255,255,0.65); max-width: 600px; line-height: 1.6; }
+.header-tags { display: flex; gap: 0.5rem; margin-top: 1.25rem; flex-wrap: wrap; }
+.header-tag {
+  font-size: 0.7rem; font-family: var(--mono);
+  padding: 0.25rem 0.625rem; border-radius: 100px;
+  background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.75);
+}
+
+.critical {
+  background: #FEF2F2; border: 1.5px solid #FECACA; border-radius: 10px;
+  padding: 1rem 1.25rem; margin-bottom: 1.5rem; font-size: 0.82rem;
+  color: #991B1B; display: flex; gap: 0.75rem; align-items: flex-start;
+  line-height: 1.6; font-weight: 500;
+}
+
+.slabel {
+  font-size: 0.65rem; font-family: var(--mono); text-transform: uppercase;
+  letter-spacing: 0.1em; color: var(--text-muted); margin-bottom: 0.875rem;
+  margin-top: 2rem; display: flex; align-items: center; gap: 0.5rem;
+}
+.slabel::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+/* ── PROCESS FLOW ── */
+.flow-wrap {
+  background: white; border-radius: 12px; border: 1px solid var(--border);
+  padding: 1.5rem; margin-bottom: 1rem; overflow-x: auto;
+}
+.flow { display: flex; align-items: stretch; gap: 0; min-width: 700px; }
+.flow-step { flex: 1; display: flex; flex-direction: column; align-items: center; position: relative; }
+.flow-step::after {
+  content: '→'; position: absolute; right: -10px; top: 20px;
+  color: var(--blue); font-size: 1rem; font-weight: 600; z-index: 2;
+}
+.flow-step:last-child::after { display: none; }
+.flow-bubble {
+  width: 44px; height: 44px; border-radius: 50%; background: var(--navy);
+  color: white; display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 0.9rem; margin-bottom: 0.625rem;
+  border: 3px solid white; box-shadow: 0 0 0 2px var(--navy); flex-shrink: 0;
+}
+.flow-label { font-size: 0.72rem; font-weight: 600; text-align: center; color: var(--navy); line-height: 1.3; margin-bottom: 0.25rem; padding: 0 0.25rem; }
+.flow-sub { font-size: 0.65rem; font-family: var(--mono); text-align: center; color: var(--text-muted); }
+.flow-tool { font-size: 0.62rem; background: var(--blue-light); color: var(--blue); padding: 0.15rem 0.5rem; border-radius: 100px; margin-top: 0.375rem; font-family: var(--mono); }
+
+/* ── CONTRACT TYPE CARDS ── */
+.type-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.875rem; margin-bottom: 0.5rem; }
+.type-card { background: white; border-radius: 12px; border: 1.5px solid var(--border); overflow: hidden; transition: box-shadow 0.2s; }
+.type-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+.type-header { padding: 1rem 1.25rem 0.875rem; display: flex; align-items: center; gap: 0.75rem; }
+.type-icon { width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0; }
+.type-title { font-size: 0.88rem; font-weight: 600; color: var(--navy); line-height: 1.3; }
+.type-sub { font-size: 0.72rem; color: var(--text-muted); margin-top: 0.1rem; }
+.type-body { padding: 0 1.25rem 1.25rem; display: flex; flex-direction: column; gap: 0.75rem; }
+.type-divider { height: 1px; background: var(--border); }
+.type-row-label { font-size: 0.62rem; font-family: var(--mono); text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 0.3rem; }
+.type-row-value { font-size: 0.79rem; color: var(--text); line-height: 1.5; }
+.risk-badge { display: inline-flex; align-items: center; gap: 0.375rem; font-size: 0.7rem; font-family: var(--mono); font-weight: 500; padding: 0.2rem 0.6rem; border-radius: 100px; }
+
+/* ── SIGNING AUTHORITY ── */
+.auth-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border-radius: 12px; overflow: hidden; border: 1px solid var(--border); }
+.auth-block { padding: 1rem 1.25rem; text-align: center; border-right: 1px solid var(--border); }
+.auth-block:last-child { border-right: none; }
+.auth-range { font-size: 0.75rem; font-family: var(--mono); font-weight: 500; margin-bottom: 0.375rem; }
+.auth-who { font-size: 0.75rem; color: var(--text-muted); line-height: 1.4; margin-bottom: 0.375rem; }
+.auth-sig { font-size: 0.7rem; font-family: var(--mono); font-weight: 600; }
+
+/* ── STEPS ── */
+.steps { display: flex; flex-direction: column; gap: 0.875rem; }
+.step { display: grid; grid-template-columns: 48px 1fr; gap: 1rem; position: relative; }
+.step-left { display: flex; flex-direction: column; align-items: center; }
+.step-num {
+  width: 40px; height: 40px; border-radius: 12px; background: var(--navy); color: white;
+  display: flex; align-items: center; justify-content: center; font-weight: 700;
+  font-size: 0.85rem; flex-shrink: 0; z-index: 1; position: relative;
+}
+.step-connector { width: 2px; background: linear-gradient(to bottom, var(--navy), var(--border)); flex: 1; margin: 4px 0; opacity: 0.3; }
+.step:last-child .step-connector { display: none; }
+.step-card { background: white; border-radius: 12px; border: 1px solid var(--border); padding: 1.25rem 1.5rem; }
+.step-title { font-size: 0.9rem; font-weight: 600; color: var(--navy); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.625rem; }
+.step-emoji { font-size: 1rem; }
+.tool-tag { font-size: 0.65rem; font-family: var(--mono); padding: 0.15rem 0.5rem; border-radius: 100px; margin-left: auto; }
+.checklist { display: flex; flex-direction: column; gap: 0.5rem; }
+.ci { display: flex; gap: 0.625rem; align-items: flex-start; font-size: 0.81rem; color: var(--text); line-height: 1.5; }
+.cb { width: 16px; height: 16px; border: 1.5px solid var(--navy); border-radius: 4px; flex-shrink: 0; margin-top: 1px; }
+.tip { font-size: 0.78rem; padding: 0.625rem 0.875rem; border-radius: 8px; margin-top: 0.875rem; line-height: 1.6; border-left: 3px solid; }
+.tip-blue { background: var(--blue-light); color: #1E40AF; border-color: var(--blue); }
+.tip-amber { background: var(--amber-light); color: #92400E; border-color: var(--amber); }
+.tip-green { background: var(--green-light); color: #065F46; border-color: var(--green); }
+.tip-red { background: var(--red-light); color: #991B1B; border-color: var(--red); }
+
+/* ── DOC GRID ── */
+.doc-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin-top: 0.875rem; }
+.doc-col { background: var(--gray-light); border-radius: 10px; padding: 1rem 1.125rem; border: 1px solid var(--border); }
+.doc-col-title { font-size: 0.76rem; font-weight: 600; color: var(--navy); margin-bottom: 0.625rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border); }
+.di { font-size: 0.76rem; color: var(--text); padding: 0.25rem 0; display: flex; gap: 0.5rem; align-items: flex-start; line-height: 1.4; }
+.di::before { content: "—"; color: var(--text-muted); flex-shrink: 0; }
+
+/* ── POST-EXECUTION ── */
+.post-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.875rem; margin-top: 0.875rem; }
+.post-card { border-radius: 10px; padding: 1rem 1.125rem; border: 1.5px solid; }
+.post-title { font-size: 0.82rem; font-weight: 600; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem; }
+.post-items { display: flex; flex-direction: column; gap: 0.375rem; }
+.post-item { font-size: 0.78rem; line-height: 1.5; display: flex; gap: 0.5rem; }
+.post-item::before { content: "→"; flex-shrink: 0; }
+
+/* ── ALERT GRID ── */
+.alert-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border-radius: 12px; overflow: hidden; border: 1px solid var(--border); margin-top: 0.875rem; }
+.alert-block { padding: 1rem 1.125rem; border-right: 1px solid var(--border); }
+.alert-block:last-child { border-right: none; }
+.alert-days { font-size: 1.1rem; font-weight: 700; font-family: var(--mono); margin-bottom: 0.25rem; }
+.alert-label { font-size: 0.72rem; color: var(--text-muted); margin-bottom: 0.625rem; line-height: 1.4; }
+.alert-items { display: flex; flex-direction: column; gap: 0.3rem; }
+.alert-item { font-size: 0.73rem; color: var(--text); line-height: 1.4; display: flex; gap: 0.375rem; }
+.alert-item::before { content: "·"; color: var(--text-muted); flex-shrink: 0; }
+
+/* ── SLA TABLE ── */
+.sla-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 0; border-radius: 12px; overflow: hidden; border: 1px solid var(--border); margin-top: 0.875rem; }
+.sla-header { background: var(--navy); color: white; font-size: 0.7rem; font-family: var(--mono); font-weight: 500; padding: 0.625rem 0.875rem; text-transform: uppercase; letter-spacing: 0.06em; }
+.sla-cell { font-size: 0.78rem; padding: 0.625rem 0.875rem; border-top: 1px solid var(--border); border-right: 1px solid var(--border); color: var(--text); }
+.sla-cell:nth-child(4n) { border-right: none; }
+.sla-header:last-child { border-right: none; }
+.sla-cell.contract-type { font-weight: 500; color: var(--navy); }
+.sla-cell.mono { font-family: var(--mono); font-size: 0.73rem; }
+
+/* ── EVISORT ── */
+.evisort-card { background: white; border-radius: 12px; border: 1px solid var(--border); padding: 1.5rem; }
+.evisort-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.875rem; margin-top: 0.875rem; }
+.evisort-item { background: var(--navy); border-radius: 10px; padding: 1rem 1.125rem; color: white; }
+.evisort-item-title { font-size: 0.78rem; font-weight: 600; margin-bottom: 0.375rem; opacity: 0.9; }
+.evisort-item-body { font-size: 0.73rem; opacity: 0.65; line-height: 1.5; }
+
+/* ── FOOTER ── */
+.footer { background: var(--navy); border-radius: 12px; padding: 1.5rem 2rem; margin-top: 2rem; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem; }
+.footer-col-label { font-size: 0.65rem; font-family: var(--mono); text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.45); margin-bottom: 0.375rem; }
+.footer-col-value { font-size: 0.875rem; color: rgba(255,255,255,0.85); font-weight: 500; }
+.footer-col-sub { font-size: 0.75rem; color: rgba(255,255,255,0.45); margin-top: 0.25rem; }
+
+/* ════════════════════════════════════════════
+   YEAR CALENDAR
+   ════════════════════════════════════════════ */
+.cal-legend {
+  display: flex; gap: 1.25rem; flex-wrap: wrap; align-items: center;
+  background: white; border-radius: 10px; border: 1px solid var(--border);
+  padding: 0.75rem 1rem; margin-bottom: 1rem; font-size: 0.75rem; color: var(--text-muted);
+}
+.leg-item { display: flex; align-items: center; gap: 0.375rem; }
+.leg-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+
+.year-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.875rem; }
+.month-card { background: white; border-radius: 12px; border: 1px solid var(--border); overflow: hidden; }
+.month-header {
+  background: var(--navy); color: white; padding: 0.625rem 0.875rem;
+  font-size: 0.8rem; font-weight: 600; letter-spacing: 0.01em;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.month-header .month-count {
+  font-size: 0.65rem; font-family: var(--mono); opacity: 0.6;
+  background: rgba(255,255,255,0.1); padding: 0.1rem 0.4rem; border-radius: 4px;
+}
+.cal-body { padding: 0.5rem 0.625rem 0.625rem; }
+.dow-row { display: grid; grid-template-columns: repeat(7,1fr); margin-bottom: 0.2rem; }
+.dow { font-size: 0.6rem; font-family: var(--mono); color: var(--text-muted); text-align: center; padding: 0.2rem 0; font-weight: 500; }
+.days-row { display: grid; grid-template-columns: repeat(7,1fr); gap: 1px; }
+.cday {
+  font-size: 0.65rem; text-align: center; padding: 0.18rem 0.05rem;
+  border-radius: 4px; cursor: default; position: relative; min-height: 28px;
+  display: flex; flex-direction: column; align-items: center; color: var(--text-muted);
+}
+.cday.has-event { cursor: pointer; color: var(--text); }
+.cday.has-event:hover { background: var(--gray-light); }
+.cday .dnum { line-height: 1.3; font-size: 0.65rem; }
+.cday.today .dnum {
+  background: var(--navy); color: white; border-radius: 50%;
+  width: 16px; height: 16px; display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 0.62rem;
+}
+.cday.out-month { opacity: 0.28; pointer-events: none; }
+.event-dots { display: flex; gap: 1.5px; margin-top: 2px; justify-content: center; flex-wrap: wrap; max-width: 22px; }
+.edot { width: 4px; height: 4px; border-radius: 50%; flex-shrink: 0; }
+.edot-red    { background: #DC2626; }
+.edot-amber  { background: #D97706; }
+.edot-green  { background: #059669; }
+.edot-blue   { background: #2563EB; }
+.edot-purple { background: #7C3AED; }
+
+/* Event tooltip */
+#ev-tooltip {
+  position: fixed; z-index: 999; background: var(--navy); color: white;
+  border-radius: 10px; padding: 0.75rem 1rem; font-size: 0.75rem;
+  max-width: 260px; pointer-events: none; display: none; line-height: 1.5;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+}
+#ev-tooltip .tt-date { font-family: var(--mono); font-size: 0.65rem; opacity: 0.6; margin-bottom: 0.375rem; }
+#ev-tooltip .tt-event { display: flex; gap: 0.5rem; align-items: flex-start; padding: 0.2rem 0; }
+#ev-tooltip .tt-badge {
+  font-size: 0.6rem; font-family: var(--mono); padding: 0.1rem 0.4rem;
+  border-radius: 4px; white-space: nowrap; flex-shrink: 0; margin-top: 1px;
+}
+
+/* Upcoming deadlines sidebar */
+.cal-layout { display: grid; grid-template-columns: 1fr 300px; gap: 1rem; align-items: start; }
+.upcoming-panel { background: white; border-radius: 12px; border: 1px solid var(--border); overflow: hidden; position: sticky; top: 1rem; }
+.upcoming-panel-header { background: var(--navy); color: white; padding: 0.875rem 1rem; font-size: 0.8rem; font-weight: 600; }
+.upcoming-panel-header span { font-size: 0.65rem; font-family: var(--mono); opacity: 0.6; display: block; margin-top: 0.2rem; }
+.upcoming-list { max-height: 560px; overflow-y: auto; }
+.upcoming-item { padding: 0.75rem 1rem; border-bottom: 1px solid var(--border); display: flex; gap: 0.75rem; align-items: flex-start; }
+.upcoming-item:last-child { border-bottom: none; }
+.upcoming-item:hover { background: var(--gray-light); }
+.ui-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 4px; }
+.ui-text {}
+.ui-title { font-size: 0.78rem; font-weight: 500; color: var(--text); line-height: 1.4; }
+.ui-meta { font-size: 0.68rem; font-family: var(--mono); color: var(--text-muted); margin-top: 0.2rem; display: flex; gap: 0.5rem; align-items: center; }
+.ui-days-out {
+  font-size: 0.62rem; font-family: var(--mono); padding: 0.1rem 0.4rem;
+  border-radius: 4px; font-weight: 600;
+}
+.days-past    { background: #F1F5F9; color: #6B7280; }
+.days-urgent  { background: #FEF2F2; color: #DC2626; }
+.days-warn    { background: #FFFBEB; color: #D97706; }
+.days-ok      { background: #ECFDF5; color: #059669; }
+.days-future  { background: #EFF6FF; color: #2563EB; }
+
+/* ════════════════════════════════════════════
+   ONBOARDING GUIDE
+   ════════════════════════════════════════════ */
+.ob-progress-bar { background: var(--border); border-radius: 4px; height: 6px; overflow: hidden; margin-bottom: 1.5rem; }
+.ob-progress-fill { height: 100%; background: linear-gradient(90deg, var(--navy), var(--blue)); border-radius: 4px; transition: width 0.4s ease; }
+.ob-progress-label { font-size: 0.72rem; font-family: var(--mono); color: var(--text-muted); margin-bottom: 0.375rem; display: flex; justify-content: space-between; }
+
+.ob-week-tabs { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+.ob-wtab {
+  padding: 0.5rem 1rem; border-radius: 8px; border: 1px solid var(--border);
+  background: white; font-family: var(--sans); font-size: 0.78rem; font-weight: 500;
+  color: var(--text-muted); cursor: pointer; transition: all 0.15s;
+}
+.ob-wtab:hover { border-color: var(--navy); color: var(--navy); }
+.ob-wtab.active { background: var(--navy); color: white; border-color: var(--navy); }
+.ob-wtab.done { opacity: 0.55; }
+.ob-wview { display: none; }
+.ob-wview.active { display: block; }
+
+.ob-section-title {
+  font-size: 1.1rem; font-weight: 700; color: var(--navy); margin-bottom: 0.5rem;
+  display: flex; align-items: center; gap: 0.625rem;
+}
+.ob-section-sub { font-size: 0.84rem; color: var(--text-muted); margin-bottom: 1.25rem; line-height: 1.6; }
+
+.ob-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.875rem; margin-bottom: 1.25rem; }
+.ob-card { background: white; border-radius: 12px; border: 1px solid var(--border); padding: 1.25rem; }
+.ob-card-title { font-size: 0.88rem; font-weight: 600; color: var(--navy); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem; }
+.ob-card p { font-size: 0.8rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 0.5rem; }
+.ob-card ul { padding-left: 1rem; }
+.ob-card li { font-size: 0.8rem; color: var(--text); line-height: 1.7; }
+
+.ob-checklist { display: flex; flex-direction: column; gap: 0; }
+.ob-ci {
+  display: flex; align-items: flex-start; gap: 0.75rem; padding: 0.75rem 0;
+  border-bottom: 1px solid var(--border); cursor: pointer;
+}
+.ob-ci:last-child { border-bottom: none; }
+.ob-ci input[type=checkbox] { margin-top: 2px; flex-shrink: 0; width: 15px; height: 15px; accent-color: var(--navy); cursor: pointer; }
+.ob-ci-text { font-size: 0.82rem; color: var(--text); line-height: 1.5; }
+.ob-ci-sub { font-size: 0.72rem; color: var(--text-muted); margin-top: 0.2rem; }
+.ob-ci.done .ob-ci-text { text-decoration: line-through; color: var(--text-muted); }
+
+.ob-highlight {
+  border-radius: 10px; padding: 1rem 1.25rem; margin: 0.875rem 0;
+  font-size: 0.82rem; line-height: 1.6; border-left: 3px solid;
+}
+.ob-h-blue   { background: var(--blue-light); color: #1E40AF; border-color: var(--blue); }
+.ob-h-amber  { background: var(--amber-light); color: #92400E; border-color: var(--amber); }
+.ob-h-green  { background: var(--green-light); color: #065F46; border-color: var(--green); }
+.ob-h-navy   { background: #EFF3FB; color: var(--navy); border-color: var(--navy); }
+
+.key-person { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 0; border-bottom: 1px solid var(--border); }
+.key-person:last-child { border-bottom: none; }
+.kp-avatar {
+  width: 38px; height: 38px; border-radius: 50%; background: var(--navy);
+  color: white; display: flex; align-items: center; justify-content: center;
+  font-size: 0.75rem; font-weight: 700; flex-shrink: 0;
+}
+.kp-name { font-size: 0.85rem; font-weight: 600; color: var(--navy); }
+.kp-role { font-size: 0.73rem; color: var(--text-muted); }
+.kp-note { font-size: 0.73rem; color: var(--text); margin-top: 0.15rem; line-height: 1.4; }
+
+.tool-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 0.625rem; margin-top: 0.875rem; }
+.tool-item { background: white; border-radius: 10px; border: 1px solid var(--border); padding: 0.875rem; }
+.tool-item-name { font-size: 0.82rem; font-weight: 600; color: var(--navy); margin-bottom: 0.35rem; }
+.tool-item-desc { font-size: 0.73rem; color: var(--text-muted); line-height: 1.5; }
+.tool-item-access { font-size: 0.65rem; font-family: var(--mono); color: var(--blue); margin-top: 0.375rem; }
+
+.glossary-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 0.625rem; margin-top: 0.875rem; }
+.gloss-item { background: white; border-radius: 8px; border: 1px solid var(--border); padding: 0.75rem 0.875rem; }
+.gloss-term { font-size: 0.78rem; font-weight: 600; color: var(--navy); font-family: var(--mono); margin-bottom: 0.25rem; }
+.gloss-def { font-size: 0.73rem; color: var(--text-muted); line-height: 1.5; }
+
+/* responsive */
+@media (max-width: 900px) {
+  .cal-layout { grid-template-columns: 1fr; }
+  .year-grid { grid-template-columns: repeat(3, 1fr); }
+  .ob-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 768px) {
+  .type-grid, .doc-grid, .post-grid, .evisort-grid { grid-template-columns: 1fr; }
+  .auth-strip, .alert-grid, .sla-grid { grid-template-columns: 1fr; }
+  .footer { grid-template-columns: 1fr; }
+  .header { padding: 1.5rem; }
+  .year-grid { grid-template-columns: repeat(2, 1fr); }
+  .tool-row, .glossary-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-eyebrow">Legal Operations · Internal Reference</div>
+    <h1>Contract Lifecycle Guide</h1>
+    <p>How agreements move through IPX Power — from intake to execution to ongoing obligation tracking. Legal ops owns the operational layer; attorneys own the substantive legal work.</p>
+    <div class="header-tags">
+      <span class="header-tag">Evisort</span>
+      <span class="header-tag">Relativity</span>
+      <span class="header-tag">DocuSign</span>
+      <span class="header-tag">Google Workspace</span>
+      <span class="header-tag">Slack</span>
+    </div>
+  </div>
+
+  <!-- PAGE TABS -->
+  <div class="page-tabs">
+    <button class="ptab active" onclick="switchView('guide')">📋 Contract Guide</button>
+    <button class="ptab" onclick="switchView('calendar')">📅 2026 Deadline Calendar</button>
+    <button class="ptab" onclick="switchView('onboarding')">🎓 Onboarding Guide</button>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       VIEW 1: CONTRACT GUIDE (original content)
+       ══════════════════════════════════════════ -->
+  <div id="view-guide" class="pview active">
+
+    <div class="critical">
+      ⚠ No work may begin and no invoices may be processed until a fully executed agreement is in place. All contracts must be routed through legal ops before execution. Do not give vendors or counterparties a verbal start date before the contract is signed.
+    </div>
+
+    <div class="slabel">End-to-end contract lifecycle</div>
+    <div class="flow-wrap">
+      <div class="flow">
+        <div class="flow-step"><div class="flow-bubble">1</div><div class="flow-label">Business Team Request</div><div class="flow-sub">Intake via form or Slack</div><div class="flow-tool">Evisort intake</div></div>
+        <div class="flow-step"><div class="flow-bubble">2</div><div class="flow-label">Legal Ops Triage</div><div class="flow-sub">Classify · Route · Track</div><div class="flow-tool">Evisort</div></div>
+        <div class="flow-step"><div class="flow-bubble">3</div><div class="flow-label">Attorney Review & Negotiation</div><div class="flow-sub">Legal judgment · Redlines</div><div class="flow-tool">Google Docs</div></div>
+        <div class="flow-step"><div class="flow-bubble">4</div><div class="flow-label">Internal Approval</div><div class="flow-sub">Signing authority check</div><div class="flow-tool">Evisort workflow</div></div>
+        <div class="flow-step"><div class="flow-bubble">5</div><div class="flow-label">Execution</div><div class="flow-sub">DocuSign routing</div><div class="flow-tool">DocuSign</div></div>
+        <div class="flow-step"><div class="flow-bubble">6</div><div class="flow-label">Storage & Tagging</div><div class="flow-sub">Archive · Tag · Metadata</div><div class="flow-tool">Evisort</div></div>
+        <div class="flow-step"><div class="flow-bubble">7</div><div class="flow-label">Obligation Tracking</div><div class="flow-sub">Milestones · Alerts · Renewals</div><div class="flow-tool">Evisort + Slack</div></div>
+      </div>
+    </div>
+
+    <div class="slabel">Contract types — identify before routing</div>
+    <div class="type-grid">
+      <div class="type-card">
+        <div class="type-header"><div class="type-icon" style="background:#EFF6FF">⚡</div><div><div class="type-title">Power Purchase Agreement</div><div class="type-sub">PPA · Core commercial contract</div></div></div>
+        <div class="type-body">
+          <div><div class="type-row-label">What it is</div><div class="type-row-value">Long-term commitment to deliver power to a utility or corporate buyer. 15–20 year term with performance milestones, capacity guarantees, and liquidated damages.</div></div>
+          <div class="type-divider"></div>
+          <div><div class="type-row-label">Key obligations to track</div><div class="type-row-value">Commercial Operation Date (COD), capacity guarantees, availability requirements, augmentation triggers, renewal windows</div></div>
+          <div class="type-divider"></div>
+          <div><div class="type-row-label">Risk level</div><div><span class="risk-badge" style="background:#FEF2F2;color:#991B1B">🔴 High — missed COD = liquidated damages</span></div></div>
+        </div>
+      </div>
+      <div class="type-card">
+        <div class="type-header"><div class="type-icon" style="background:#ECFDF5">🌾</div><div><div class="type-title">Land Lease / Easement</div><div class="type-sub">Real estate · Project site</div></div></div>
+        <div class="type-body">
+          <div><div class="type-row-label">What it is</div><div class="type-row-value">Long-term lease of hundreds of acres from private landowners for each solar project site. Often 25–40 year terms with renewal options.</div></div>
+          <div class="type-divider"></div>
+          <div><div class="type-row-label">Key obligations to track</div><div class="type-row-value">Renewal option windows, rent escalation schedules, amendment history, construction commencement dates, access rights</div></div>
+          <div class="type-divider"></div>
+          <div><div class="type-row-label">Risk level</div><div><span class="risk-badge" style="background:#FEF2F2;color:#991B1B">🔴 High — missed renewal = loss of project site</span></div></div>
+        </div>
+      </div>
+      <div class="type-card">
+        <div class="type-header"><div class="type-icon" style="background:#F0FDFA">🔌</div><div><div class="type-title">Interconnection Agreement</div><div class="type-sub">CAISO / ERCOT · Grid connection</div></div></div>
+        <div class="type-body">
+          <div><div class="type-row-label">What it is</div><div class="type-row-value">Governs how IPX connects its solar/battery projects to the CAISO or ERCOT grid. Defines cost-sharing for grid upgrades and technical requirements.</div></div>
+          <div class="type-divider"></div>
+          <div><div class="type-row-label">Key obligations to track</div><div class="type-row-value">Queue position milestones, study completion dates, cost allocation deadlines, execution windows</div></div>
+          <div class="type-divider"></div>
+          <div><div class="type-row-label">Risk level</div><div><span class="risk-badge" style="background:#FEF2F2;color:#991B1B">🔴 High — missed milestone = lost queue position</span></div></div>
+        </div>
+      </div>
+      <div class="type-card">
+        <div class="type-header"><div class="type-icon" style="background:#FFFBEB">🏗️</div><div><div class="type-title">EPC Contract</div><div class="type-sub">Engineering · Procurement · Construction</div></div></div>
+        <div class="type-body">
+          <div><div class="type-row-label">What it is</div><div class="type-row-value">Contract with contractors who build solar and battery storage projects. Defines scope, schedule, price, and performance guarantees.</div></div>
+          <div class="type-divider"></div>
+          <div><div class="type-row-label">Key obligations to track</div><div class="type-row-value">COD milestone, liquidated damages provisions, warranty periods, change order log, performance testing schedule</div></div>
+          <div class="type-divider"></div>
+          <div><div class="type-row-label">Risk level</div><div><span class="risk-badge" style="background:#FFFBEB;color:#92400E">🟡 Medium-High — delay claims and cost overruns</span></div></div>
+        </div>
+      </div>
+      <div class="type-card">
+        <div class="type-header"><div class="type-icon" style="background:#EDE9FE">🏦</div><div><div class="type-title">Project Finance Agreement</div><div class="type-sub">Debt · Tax equity · Lender obligations</div></div></div>
+        <div class="type-body">
+          <div><div class="type-row-label">What it is</div><div class="type-row-value">Complex debt and equity financing for each project — often hundreds of millions. Governed by loan/credit agreements with lenders and institutional investors.</div></div>
+          <div class="type-divider"></div>
+          <div><div class="type-row-label">Key obligations to track</div><div class="type-row-value">Quarterly lender reporting, covenant compliance, draw conditions, insurance requirements, maturity dates</div></div>
+          <div class="type-divider"></div>
+          <div><div class="type-row-label">Risk level</div><div><span class="risk-badge" style="background:#FEF2F2;color:#991B1B">🔴 High — covenant breach = technical default</span></div></div>
+        </div>
+      </div>
+      <div class="type-card">
+        <div class="type-header"><div class="type-icon" style="background:#F9FAFB">⚖️</div><div><div class="type-title">Outside Counsel / Vendor</div><div class="type-sub">Law firms · Consultants · Service providers</div></div></div>
+        <div class="type-body">
+          <div><div class="type-row-label">What it is</div><div class="type-row-value">Engagement letters with law firms and vendor agreements with consultants and service providers. Governs scope, rates, billing guidelines, and conflict waivers.</div></div>
+          <div class="type-divider"></div>
+          <div><div class="type-row-label">Key obligations to track</div><div class="type-row-value">Billing guideline compliance, budget vs actuals per matter, rate agreement renewals, invoice review cadence</div></div>
+          <div class="type-divider"></div>
+          <div><div class="type-row-label">Risk level</div><div><span class="risk-badge" style="background:#ECFDF5;color:#065F46">🟢 Medium — spend overruns, guideline violations</span></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slabel">Signing authority thresholds</div>
+    <div class="auth-strip">
+      <div class="auth-block" style="background:#F0FDF4"><div class="auth-range" style="color:#059669">$0 — $50K</div><div class="auth-who">Director or Department Head</div><div class="auth-sig" style="color:#059669">1 signature</div></div>
+      <div class="auth-block" style="background:#EFF6FF"><div class="auth-range" style="color:#2563EB">$50K — $250K</div><div class="auth-who">Director + Head of Legal Ops or GC</div><div class="auth-sig" style="color:#2563EB">2 signatures</div></div>
+      <div class="auth-block" style="background:#FFFBEB"><div class="auth-range" style="color:#D97706">$250K — $1M</div><div class="auth-who">GC + CFO or COO</div><div class="auth-sig" style="color:#D97706">2 signatures</div></div>
+      <div class="auth-block" style="background:#FEF2F2"><div class="auth-range" style="color:#DC2626">Over $1M</div><div class="auth-who">CLO + CFO + CEO sign-off</div><div class="auth-sig" style="color:#DC2626">3 signatures</div></div>
+    </div>
+
+    <div class="slabel">Step-by-step — legal ops process</div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-left"><div class="step-num">1</div><div class="step-connector"></div></div>
+        <div class="step-card">
+          <div class="step-title"><span class="step-emoji">📥</span> Contract Intake<span class="tool-tag" style="background:#EFF6FF;color:#2563EB">Evisort intake form</span></div>
+          <div class="checklist">
+            <div class="ci"><div class="cb"></div>Business team submits request via Evisort intake form or Slack — legal ops routes from there</div>
+            <div class="ci"><div class="cb"></div>Identify contract type — PPA, land lease, EPC, project finance, vendor, NDA</div>
+            <div class="ci"><div class="cb"></div>Confirm requesting party, counterparty, estimated value, and target execution date</div>
+            <div class="ci"><div class="cb"></div>Check if a template exists in Evisort or if this is a counterparty paper situation</div>
+            <div class="ci"><div class="cb"></div>Create the matter in Evisort and assign to the right attorney based on contract type</div>
+          </div>
+          <div class="tip tip-blue">All contract requests come through legal ops first — teams should not go directly to attorneys. This is how we maintain visibility and tracking across all active agreements.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-left"><div class="step-num">2</div><div class="step-connector"></div></div>
+        <div class="step-card">
+          <div class="step-title"><span class="step-emoji">📋</span> Documentation Collection<span class="tool-tag" style="background:#F0FDFA;color:#0D9488">Google Drive / Evisort</span></div>
+          <div class="doc-grid">
+            <div class="doc-col"><div class="doc-col-title">⚡ PPAs & Commercial</div><div class="di">Project details — capacity, location, COD target</div><div class="di">Counterparty information and signatory details</div><div class="di">FERC market-based rate status confirmation</div><div class="di">CAISO/ERCOT interconnection status</div><div class="di">Insurance requirements per agreement</div></div>
+            <div class="doc-col"><div class="doc-col-title">🌾 Land & Real Estate</div><div class="di">Legal property description and APN</div><div class="di">Title search and survey</div><div class="di">Landowner identification and contact</div><div class="di">Access rights and construction timeline</div><div class="di">Existing encumbrances or liens</div></div>
+            <div class="doc-col"><div class="doc-col-title">⚖️ Vendors & Outside Counsel</div><div class="di">W-9 and entity documentation</div><div class="di">Certificate of Insurance</div><div class="di">Scope of work and fee structure</div><div class="di">Signatory name, title, and email for DocuSign</div><div class="di">Conflict check (outside counsel)</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-left"><div class="step-num">3</div><div class="step-connector"></div></div>
+        <div class="step-card">
+          <div class="step-title"><span class="step-emoji">🔍</span> Attorney Review & Negotiation<span class="tool-tag" style="background:#EDE9FE;color:#7C3AED">Attorney-owned</span></div>
+          <div class="checklist">
+            <div class="ci"><div class="cb"></div>Attorney reviews and redlines — legal ops tracks status in Evisort and follows up if stalled</div>
+            <div class="ci"><div class="cb"></div>Coordinate scheduling of negotiation calls between parties if needed</div>
+            <div class="ci"><div class="cb"></div>Maintain version control in Evisort — tag each redline version with date and party</div>
+            <div class="ci"><div class="cb"></div>Flag to requesting business team when review is taking longer than the agreed SLA</div>
+            <div class="ci"><div class="cb"></div>Confirm final form is approved by attorney before moving to internal approval</div>
+          </div>
+          <div class="tip tip-amber">Legal ops does not participate in substantive legal negotiation. Our role here is tracking status, maintaining version control, and making sure nothing stalls without visibility.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-left"><div class="step-num">4</div><div class="step-connector"></div></div>
+        <div class="step-card">
+          <div class="step-title"><span class="step-emoji">✅</span> Internal Approval & Signing Authority Check<span class="tool-tag" style="background:#EFF6FF;color:#2563EB">Evisort workflow</span></div>
+          <div class="checklist">
+            <div class="ci"><div class="cb"></div>Confirm contract value and identify required signatories per the signing authority matrix above</div>
+            <div class="ci"><div class="cb"></div>Route for internal approval in Evisort — notify required approvers via Slack with deadline</div>
+            <div class="ci"><div class="cb"></div>Follow up on pending approvals after 48 hours — escalate to Janelle if unresponsive beyond 5 days</div>
+            <div class="ci"><div class="cb"></div>Confirm Finance has approved any budget implications before final sign-off</div>
+            <div class="ci"><div class="cb"></div>Once all internal approvals are collected, move to DocuSign execution</div>
+          </div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-left"><div class="step-num">5</div><div class="step-connector"></div></div>
+        <div class="step-card">
+          <div class="step-title"><span class="step-emoji">✍️</span> Execution via DocuSign<span class="tool-tag" style="background:#ECFDF5;color:#059669">DocuSign</span></div>
+          <div class="checklist">
+            <div class="ci"><div class="cb"></div>Create DocuSign envelope with the final approved version of the agreement</div>
+            <div class="ci"><div class="cb"></div>Route in correct signing order — internal signatories first, then counterparty</div>
+            <div class="ci"><div class="cb"></div>Confirm counterparty signatory name, title, and email match the agreement</div>
+            <div class="ci"><div class="cb"></div>Monitor DocuSign queue daily — follow up with any signatory pending more than 48 hours</div>
+            <div class="ci"><div class="cb"></div>Download and store fully executed agreement immediately upon completion</div>
+          </div>
+          <div class="tip tip-red">Do not allow work to begin while DocuSign is in progress. A pending signature is not an executed contract. This is the most common source of unauthorized work starting before execution.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-left"><div class="step-num">6</div><div class="step-connector"></div></div>
+        <div class="step-card">
+          <div class="step-title"><span class="step-emoji">🗂️</span> Storage, Tagging & Obligation Entry<span class="tool-tag" style="background:#EFF6FF;color:#2563EB">Evisort</span></div>
+          <div class="checklist">
+            <div class="ci"><div class="cb"></div>Upload executed agreement to Evisort — tag with contract type, counterparty, project, and value</div>
+            <div class="ci"><div class="cb"></div>Enter all key dates — effective date, expiration, renewal windows, COD, milestones</div>
+            <div class="ci"><div class="cb"></div>Set automated alerts in Evisort at 180/90/60/30 days before all key dates</div>
+            <div class="ci"><div class="cb"></div>Notify the relevant business team that the contract is executed and provide key dates</div>
+            <div class="ci"><div class="cb"></div>For project finance agreements — flag quarterly lender reporting obligations in Finance's calendar</div>
+            <div class="ci"><div class="cb"></div>Save a copy to Relativity if the agreement may be relevant to any active or anticipated litigation</div>
+          </div>
+          <div class="tip tip-green">This step is where most contract management breaks down. An unsigned agreement stored without obligation dates entered is just a file — not a managed contract. Every executed agreement must have all key dates in Evisort before this step is complete.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-left"><div class="step-num">7</div><div class="step-connector"></div></div>
+        <div class="step-card">
+          <div class="step-title"><span class="step-emoji">📡</span> Ongoing Obligation Tracking & Stakeholder Communication<span class="tool-tag" style="background:#EFF6FF;color:#2563EB">Evisort + Slack</span></div>
+          <div class="post-grid">
+            <div class="post-card" style="background:#FEF2F2;border-color:#FECACA">
+              <div class="post-title" style="color:#991B1B">🔴 High-priority obligations</div>
+              <div class="post-items">
+                <div class="post-item" style="color:#991B1B">PPA commercial operation dates — flag at 180/90/60/30 days to Operations and attorney</div>
+                <div class="post-item" style="color:#991B1B">Land lease renewal option windows — flag 12 months out, must exercise within window</div>
+                <div class="post-item" style="color:#991B1B">Project finance covenant compliance — quarterly reporting to lenders</div>
+                <div class="post-item" style="color:#991B1B">CAISO interconnection queue milestones — track per project</div>
+              </div>
+            </div>
+            <div class="post-card" style="background:#FFFBEB;border-color:#FDE68A">
+              <div class="post-title" style="color:#92400E">🟡 Medium-priority obligations</div>
+              <div class="post-items">
+                <div class="post-item" style="color:#92400E">EPC milestone payment confirmations — coordinate with Operations</div>
+                <div class="post-item" style="color:#92400E">PPA augmentation triggers — monitor capacity vs contracted thresholds</div>
+                <div class="post-item" style="color:#92400E">Rent escalation schedule on land leases — confirm applied correctly</div>
+                <div class="post-item" style="color:#92400E">Outside counsel engagement renewals — review before auto-renewal</div>
+              </div>
+            </div>
+          </div>
+          <div class="tip tip-blue" style="margin-top:0.875rem">Push information proactively — Finance, Development, and Commercial should not need to ask legal ops for contract status. Build Slack alerts so teams get what they need automatically.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slabel">Alert windows — configure in Evisort</div>
+    <div class="alert-grid">
+      <div class="alert-block" style="background:#FEF2F2;border-right-color:#FECACA"><div class="alert-days" style="color:#DC2626">180</div><div class="alert-label">days out — early action required</div><div class="alert-items"><div class="alert-item">Land lease renewal windows</div><div class="alert-item">PPA COD dates</div><div class="alert-item">Project finance maturity</div><div class="alert-item">Outside counsel panel review</div></div></div>
+      <div class="alert-block" style="background:#FFFBEB;border-right-color:#FDE68A"><div class="alert-days" style="color:#D97706">90</div><div class="alert-label">days out — attorneys engage now</div><div class="alert-items"><div class="alert-item">FERC regulatory filings</div><div class="alert-item">Lender reporting — Finance begins prep</div><div class="alert-item">CPUC compliance filings</div><div class="alert-item">COD milestone check with Operations</div></div></div>
+      <div class="alert-block" style="background:#FFFBEB;border-right-color:#FDE68A"><div class="alert-days" style="color:#D97706">60</div><div class="alert-label">days out — escalate if not in progress</div><div class="alert-items"><div class="alert-item">Any filing where prep hasn't started</div><div class="alert-item">Contract renewals not yet engaged</div><div class="alert-item">DocuSign pending 2+ weeks</div><div class="alert-item">FEOC documentation gaps</div></div></div>
+      <div class="alert-block" style="background:#F0FDF4"><div class="alert-days" style="color:#059669">30</div><div class="alert-label">days out — final check, escalate to Jen</div><div class="alert-items"><div class="alert-item">All filings in review or submitted</div><div class="alert-item">Lender reports in attorney review</div><div class="alert-item">Renewals negotiated and executing</div><div class="alert-item">Anything off track — flag immediately</div></div></div>
+    </div>
+
+    <div class="slabel">SLAs with business teams — legal ops turnaround commitments</div>
+    <div class="sla-grid">
+      <div class="sla-header">Contract type</div><div class="sla-header">Intake → attorney</div><div class="sla-header">Review turnaround</div><div class="sla-header">Execution target</div>
+      <div class="sla-cell contract-type">NDA / Confidentiality Agreement</div><div class="sla-cell mono">Same day</div><div class="sla-cell mono">2–3 business days</div><div class="sla-cell mono">3–5 business days</div>
+      <div class="sla-cell contract-type">Vendor / Service Agreement</div><div class="sla-cell mono">1 business day</div><div class="sla-cell mono">5–7 business days</div><div class="sla-cell mono">7–10 business days</div>
+      <div class="sla-cell contract-type">Outside Counsel Engagement</div><div class="sla-cell mono">1 business day</div><div class="sla-cell mono">3–5 business days</div><div class="sla-cell mono">5–7 business days</div>
+      <div class="sla-cell contract-type">O&M Agreement</div><div class="sla-cell mono">1 business day</div><div class="sla-cell mono">10–15 business days</div><div class="sla-cell mono">15–20 business days</div>
+      <div class="sla-cell contract-type">EPC Contract</div><div class="sla-cell mono">1 business day</div><div class="sla-cell mono">TBD by complexity</div><div class="sla-cell mono">Coordinate with attorney</div>
+      <div class="sla-cell contract-type">PPA / Land Lease / Project Finance</div><div class="sla-cell mono">Same day</div><div class="sla-cell mono">TBD by complexity</div><div class="sla-cell mono">Coordinate with attorney</div>
+    </div>
+
+    <div class="slabel">Evisort — how we use it</div>
+    <div class="evisort-card">
+      <div style="font-size:0.875rem;color:var(--text-muted);line-height:1.6">Evisort is our CLM platform — the single source of truth for all IPX agreements. Every executed contract must be in Evisort with proper tagging and obligation dates entered. If it's not in Evisort, it doesn't exist from a legal ops perspective.</div>
+      <div class="evisort-grid">
+        <div class="evisort-item"><div class="evisort-item-title">📥 Intake & Routing</div><div class="evisort-item-body">All contract requests route through Evisort. Classify by type, assign to attorney, track status. Business teams should not go directly to attorneys.</div></div>
+        <div class="evisort-item"><div class="evisort-item-title">📄 Storage & Tagging</div><div class="evisort-item-body">Every executed agreement stored with consistent tagging — contract type, counterparty, project, value, effective date, expiration, key milestones.</div></div>
+        <div class="evisort-item"><div class="evisort-item-title">⏰ Obligation Tracking</div><div class="evisort-item-body">Automated alerts at 180/90/60/30 days before every key date. Renewal windows, COD dates, lender reporting, milestones — all tracked here.</div></div>
+        <div class="evisort-item"><div class="evisort-item-title">📊 Reporting & KPIs</div><div class="evisort-item-body">Weekly contract status reports to business teams. Quarterly KPI reports to Jen and CLO — matter volume, spend, turnaround times, expiring agreements.</div></div>
+        <div class="evisort-item"><div class="evisort-item-title">⚖️ Outside Counsel</div><div class="evisort-item-body">All outside counsel engagement letters in Evisort. Track billing rates, budget vs actuals per matter, billing guideline compliance, and renewal dates.</div></div>
+        <div class="evisort-item"><div class="evisort-item-title">🔄 Renewal Management</div><div class="evisort-item-body">No contract should surprise us at renewal. Every agreement has a renewal window tracked and alerts firing well in advance so attorneys have time to engage.</div></div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <div><div class="footer-col-label">Head of Legal Operations</div><div class="footer-col-value">Janelle</div><div class="footer-col-sub">Primary contact for all contract intake and legal ops questions</div></div>
+      <div><div class="footer-col-label">General Counsel</div><div class="footer-col-value">Jen Manter</div><div class="footer-col-sub">Escalation for high-value agreements and sensitive matters</div></div>
+      <div><div class="footer-col-label">Primary tools</div><div class="footer-col-value">Evisort · DocuSign · Relativity</div><div class="footer-col-sub">Google Workspace · Slack for coordination</div></div>
+    </div>
+
+  </div><!-- /view-guide -->
+
+  <!-- ══════════════════════════════════════════
+       VIEW 2: YEAR CALENDAR
+       ══════════════════════════════════════════ -->
+  <div id="view-calendar" class="pview">
+
+    <div class="cal-legend">
+      <strong style="font-size:0.75rem;color:var(--text)">2026 Contract Deadlines</strong>
+      <span style="width:1px;height:16px;background:var(--border)"></span>
+      <span class="leg-item"><span class="leg-dot edot-red"></span> High-risk deadline</span>
+      <span class="leg-item"><span class="leg-dot edot-amber"></span> Filing / reporting</span>
+      <span class="leg-item"><span class="leg-dot edot-green"></span> Renewal window</span>
+      <span class="leg-item"><span class="leg-dot edot-blue"></span> Milestone / review</span>
+      <span class="leg-item"><span class="leg-dot edot-purple"></span> Lender / finance</span>
+    </div>
+
+    <div class="cal-layout">
+      <div id="year-cal"></div>
+      <div class="upcoming-panel">
+        <div class="upcoming-panel-header">
+          Upcoming deadlines
+          <span>Next 180 days from today</span>
+        </div>
+        <div class="upcoming-list" id="upcoming-list"></div>
+      </div>
+    </div>
+
+  </div><!-- /view-calendar -->
+
+  <!-- ══════════════════════════════════════════
+       VIEW 3: ONBOARDING GUIDE
+       ══════════════════════════════════════════ -->
+  <div id="view-onboarding" class="pview">
+
+    <div class="ob-progress-label">
+      <span id="ob-prog-label">Onboarding progress</span>
+      <span id="ob-prog-pct">0% complete</span>
+    </div>
+    <div class="ob-progress-bar"><div class="ob-progress-fill" id="ob-prog-fill" style="width:0%"></div></div>
+
+    <div class="ob-week-tabs">
+      <button class="ob-wtab active" onclick="obWeek(0)">Before Day 1</button>
+      <button class="ob-wtab" onclick="obWeek(1)">Week 1 — Orientation</button>
+      <button class="ob-wtab" onclick="obWeek(2)">Week 2 — Tools & Process</button>
+      <button class="ob-wtab" onclick="obWeek(3)">Week 3 — Live Work</button>
+      <button class="ob-wtab" onclick="obWeek(4)">Month 2+ — Mastery</button>
+    </div>
+
+    <!-- WEEK 0: Before Day 1 -->
+    <div class="ob-wview active" id="ob-w0">
+      <div class="ob-section-title">🗓️ Before Day 1 — Get Ready</div>
+      <div class="ob-section-sub">Complete this before your first day. Access requests and reading will make Week 1 much smoother.</div>
+      <div class="ob-grid">
+        <div class="ob-card">
+          <div class="ob-card-title">🔑 Access to request</div>
+          <div class="ob-checklist" data-group="w0-access">
+            <label class="ob-ci"><input type="checkbox" onchange="obCheck(this)"><div><div class="ob-ci-text">Evisort — primary CLM platform</div><div class="ob-ci-sub">Ask Janelle for admin-level access</div></div></label>
+            <label class="ob-ci"><input type="checkbox" onchange="obCheck(this)"><div><div class="ob-ci-text">DocuSign — execution and signing</div><div class="ob-ci-sub">IT provisioning via Slack #it-help</div></div></label>
+            <label class="ob-ci"><input type="checkbox" onchange="obCheck(this)"><div><div class="ob-ci-text">Relativity — litigation document management</div><div class="ob-ci-sub">Request from Legal Ops team</div></div></label>
+            <label class="ob-ci"><input type="checkbox" onchange="obCheck(this)"><div><div class="ob-ci-text">Google Workspace (Drive, Docs, Calendar)</div><div class="ob-ci-sub">Standard IT provisioning on day 1</div></div></label>
+            <label class="ob-ci"><input type="checkbox" onchange="obCheck(this)"><div><div class="ob-ci-text">Slack — join #legal-ops, #contracts, #general</div><div class="ob-ci-sub">Janelle will add you to private channels</div></div></label>
+          </div>
+        </div>
+        <div class="ob-card">
+          <div class="ob-card-title">📖 Pre-reading</div>
+          <div class="ob-checklist" data-group="w0-read">
+            <label class="ob-ci"><input type="checkbox" onchange="obCheck(this)"><div><div class="ob-ci-text">This contract lifecycle guide — read all sections</div><div class="ob-ci-sub">You're already here — good start</div></div></label>
+            <label class="ob-ci"><input type="checkbox" onchange="obCheck(this)"><div><div class="ob-ci-text">IPX Power company overview deck</div><div class="ob-ci-sub">Google Drive › Company › Overview</div></div></label>
+            <label class="ob-ci"><input type="checkbox" onchange="obCheck(this)"><div><div class="ob-ci-text">Active project portfolio summary</div><div class="ob-ci-sub">Ask Janelle for the latest version</div></div></label>
+            <label class="ob-ci"><input type="checkbox" onchange="obCheck(this)"><div><div class="ob-ci-text">Outside counsel billing guidelines</div><div class="ob-ci-sub">Legal Ops folder on Google Drive</div></div></label>
+          </div>
+        </div>
+      </div>
+      <div class="ob-highlight ob-h-navy">
+        <strong>Who to know from day one:</strong> Janelle is your primary manager and the person to go to for anything contract or process-related. Jen Manter (GC) is the escalation point for sensitive matters. Finance (CFO team) is a key stakeholder for any contract with budget implications.
+      </div>
+    </div>
+
+    <!-- WEEK 1 -->
+    <div class="ob-wview" id="ob-w1">
+      <div class="ob-section-title">👋 Week 1 — Orientation & Context</div>
+      <div class="ob-section-sub">Get the lay of the land. Meet the key people, understand what IPX does, and start learning how contracts fit into the business.</div>
+
+      <div class="ob-grid">
+        <div class="ob-card">
+          <div class="ob-card-title">🏢 Key people to meet</div>
+          <div class="key-person"><div class="kp-avatar">JA</div><div><div class="kp-name">Janelle</div><div class="kp-role">Head of Legal Operations</div><div class="kp-note">Your manager. Owns all contract process, Evisort admin, and the legal ops team.</div></div></div>
+          <div class="key-person"><div class="kp-avatar">JM</div><div><div class="kp-name">Jen Manter</div><div class="kp-role">General Counsel</div><div class="kp-note">Oversees all legal. Escalation point for high-value contracts and sensitive matters.</div></div></div>
+          <div class="key-person"><div class="kp-avatar">FN</div><div><div class="kp-name">Finance Team (CFO)</div><div class="kp-role">Financial approvals</div><div class="kp-note">Approves budget implications before final sign-off on any agreement.</div></div></div>
+          <div class="key-person"><div class="kp-avatar">OA</div><div><div class="kp-name">Operations & Development</div><div class="kp-role">Primary business teams</div><div class="kp-note">Primary source of contract requests. Will rely on you for status updates.</div></div></div>
+        </div>
+        <div class="ob-card">
+          <div class="ob-card-title">⚡ What IPX Power does</div>
+          <p>IPX Power develops, owns, and operates utility-scale solar and battery storage projects. The legal ops team supports a complex contract portfolio spanning decades-long PPAs, hundreds of land leases, EPC construction contracts, and project finance agreements worth hundreds of millions of dollars.</p>
+          <p>Every project has a lifecycle: development → permitting → financing → construction → commercial operation → long-term O&M. Legal ops touches every stage through contracts.</p>
+          <div class="ob-highlight ob-h-amber">Missing a deadline in this business has real consequences — a missed land lease renewal window can mean losing a project site. A missed PPA COD triggers liquidated damages. Take every deadline seriously.</div>
+        </div>
+      </div>
+
+      <div class="ob-card" style="margin-top:0.875rem">
+        <div class="ob-card-title">📅 Week 1 checklist</div>
+        <div class="ob-checklist" data-group="w1">
+          <label class="ob-ci"><input type="checkbox" onchange="obCheck(this)"><div><div class="ob-ci-text">Introduction meeting with Janelle — walkthrough of current active matters</div></div></label>
+          <label class="ob-ci"><input type="checkbox" onchange="obCheck(this)"><div><div class="ob-ci-text">Meet Jen Manter and the attorney team</div><div class="ob-ci-sub">Understand who handles which contract types</div></div></label>
+          <label class="ob-ci"><input type="checkbox" onchange="obCheck(this)"><div><div class="ob-ci-text">Get a tour of the current Evisort contract library</div><div class="ob-ci-sub">Review how existing contracts are tagged and organized</div></div></label>
+          <label class="ob-ci"><input type="checkbox" onchange="obCheck(this)"><div><div class="ob-ci-text">Review the active project portfolio — understand which projects are in which lifecycle stage</div></div></label>
+          <label class="ob-ci"><input type="checkbox" onchange="obCheck(this)"><div><div class="ob-ci-text">Shadow Janelle on at least one intake request end-to-end</div></div></label>
+          <label class="ob-ci"><input type="checkbox" onchange="obCheck(this)"><div><div class="ob-ci-text">Join weekly legal ops team meeting</div></div></label>
+        </div>
+      </div>
+    </div>
+
+    <!-- WEEK 2 -->
+    <div class="ob-wview" id="ob-w2">
+      <div class="ob-section-title">🛠️ Week 2 — Tools & Process Deep Dive</div>
+      <div class="ob-section-sub">Get hands-on with Evisort, DocuSign, and the full contract workflow. By the end of this week you should be able to run a straightforward intake to execution independently.</div>
+
+      <div class="tool-row">
+        <div class="tool-item">
+          <div class="tool-item-name">📁 Evisort</div>
+          <div class="tool-item-desc">CLM platform. Source of truth for all contracts. Handles intake, storage, obligation tracking, alerts, and reporting.</div>
+          <div class="tool-item-access">Access via Evisort SSO</div>
+        </div>
+        <div class="tool-item">
+          <div class="tool-item-name">✍️ DocuSign</div>
+          <div class="tool-item-desc">Electronic signature platform. Used for all contract executions. Route internal signatories first, then counterparty.</div>
+          <div class="tool-item-access">docusign.com · company SSO</div>
+        </div>
+        <div class="tool-item">
+          <div class="tool-item-name">⚖️ Relativity</div>
+          <div class="tool-item-desc">Litigation document management. Contracts that may be relevant to active or anticipated litigation are stored here in addition to Evisort.</div>
+          <div class="tool-item-access">Request credentials from Legal Ops</div>
+        </div>
+        <div class="tool-item">
+          <div class="tool-item-name">📂 Google Drive</div>
+          <div class="tool-item-desc">Working documents, redlines, templates, and billing guidelines live here during the drafting and negotiation phase.</div>
+          <div class="tool-item-access">drive.google.com · company SSO</div>
+        </div>
+        <div class="tool-item">
+          <div class="tool-item-name">💬 Slack</div>
+          <div class="tool-item-desc">Primary coordination channel. #legal-ops for internal, #contracts for cross-team requests, direct channels for attorney coordination.</div>
+          <div class="tool-item-access">slack.com · company SSO</div>
+        </div>
+        <div class="tool-item">
+          <div class="tool-item-name">📊 Google Workspace</div>
+          <div class="tool-item-desc">Sheets for tracking, Calendar for deadline management, Docs for drafts and memos. Part of daily workflow alongside Evisort.</div>
+          <div class="tool-item-access">Standard company account</div>
+        </div>
+      </div>
+
+      <div class="ob-card" style="margin-top:1rem">
+        <div class="ob-card-title">🎯 Week 2 checklist</div>
+        <div class="ob-checklist" data-group="w2">
+          <label class="ob-ci"><input type="checkbox" onchange="obCheck(this)"><div><div class="ob-ci-text">Complete Evisort onboarding — intake form, tagging, alert setup, reporting</div><div class="ob-ci-sub">Janelle will walk you through the admin settings</div></div></label>
+          <label class="ob-ci"><input type="checkbox" onchange="obCheck(this)"><div><div class="ob-ci-text">Create a test DocuSign envelope and route through signing</div><div class="ob-ci-sub">Practice the internal-first signing order before going live</div></div></label>
+          <label class="ob-ci"><input type="checkbox" onchange="obCheck(this)"><div><div class="ob-ci-text">Review 3 existing executed contracts in Evisort end-to-end — study the tagging and obligation entries</div></div></label>
+          <label class="ob-ci"><input type="checkbox" onchange="obCheck(this)"><div><div class="ob-ci-text">Review the signing authority matrix and confirm you can identify required signatories for any contract value</div></div></label>
+          <label class="ob-ci"><input type="checkbox" onchange="obCheck(this)"><div><div class="ob-ci-text">Understand the SLA table — know what turnaround times you're committing to for each contract type</div></div></label>
+          <label class="ob-ci"><input type="checkbox" onchange="obCheck(this)"><div><div class="ob-ci-text">Set up your own Evisort alert filters for the 180/90/60/30-day windows</div></div></label>
+          <label class="ob-ci"><input type="checkbox" onchange="obCheck(this)"><div><div class="ob-ci-text">Review the outside counsel billing guidelines document</div></div></label>
+        </div>
+      </div>
+    </div>
+
+    <!-- WEEK 3 -->
+    <div class="ob-wview" id="ob-w3">
+      <div class="ob-section-title">🚀 Week 3 — Live Work with Support</div>
+      <div class="ob-section-sub">Start handling real intake requests independently, with Janelle available to review your work. This is where the learning accelerates.</div>
+
+      <div class="ob-card">
+        <div class="ob-card-title">✅ Week 3 checklist</div>
+        <div class="ob-checklist" data-group="w3">
+          <label class="ob-ci"><input type="checkbox" onchange="obCheck(this)"><div><div class="ob-ci-text">Handle your first intake request independently — vendor agreement or NDA is a good start</div><div class="ob-ci-sub">Have Janelle review your Evisort entry before closing the matter</div></div></label>
+          <label class="ob-ci"><input type="checkbox" onchange="obCheck(this)"><div><div class="ob-ci-text">Run your first DocuSign execution from envelope creation to signed copy uploaded to Evisort</div></div></label>
+          <label class="ob-ci"><input type="checkbox" onchange="obCheck(this)"><div><div class="ob-ci-text">Attend one attorney negotiation call as an observer — understand how legal ops supports without participating in legal judgment</div></div></label>
+          <label class="ob-ci"><input type="checkbox" onchange="obCheck(this)"><div><div class="ob-ci-text">Run the weekly contract status report in Evisort and distribute to business teams</div></div></label>
+          <label class="ob-ci"><input type="checkbox" onchange="obCheck(this)"><div><div class="ob-ci-text">Review all active alert items (180/90/60/30-day windows) and confirm nothing is falling through</div></div></label>
+          <label class="ob-ci"><input type="checkbox" onchange="obCheck(this)"><div><div class="ob-ci-text">Review one PPA and one land lease in Evisort — understand what obligations are tracked and how alerts are set</div></div></label>
+          <label class="ob-ci"><input type="checkbox" onchange="obCheck(this)"><div><div class="ob-ci-text">End of week check-in with Janelle — what's working, what questions remain</div></div></label>
+        </div>
+      </div>
+
+      <div class="ob-highlight ob-h-green" style="margin-top:0.875rem">
+        <strong>The golden rule of legal ops:</strong> If it's not in Evisort with obligation dates entered, it doesn't exist. An executed contract without dates tracked is a liability waiting to happen. Before closing any matter, confirm every key date is in the system and alerts are set.
+      </div>
+    </div>
+
+    <!-- MONTH 2+ -->
+    <div class="ob-wview" id="ob-w4">
+      <div class="ob-section-title">🎓 Month 2+ — Building Mastery</div>
+      <div class="ob-section-sub">By month 2 you should be running intake to execution independently. This phase is about depth — understanding the complex contract types and building relationships with stakeholders.</div>
+
+      <div class="ob-grid">
+        <div class="ob-card">
+          <div class="ob-card-title">📈 Month 2 goals</div>
+          <div class="ob-checklist" data-group="m2">
+            <label class="ob-ci"><input type="checkbox" onchange="obCheck(this)"><div><div class="ob-ci-text">Run all standard intake-to-execution independently (NDAs, vendors, outside counsel engagements)</div></div></label>
+            <label class="ob-ci"><input type="checkbox" onchange="obCheck(this)"><div><div class="ob-ci-text">Deep dive into PPA structure — review an active PPA with Janelle and map all tracked obligations</div></div></label>
+            <label class="ob-ci"><input type="checkbox" onchange="obCheck(this)"><div><div class="ob-ci-text">Understand the project finance reporting cycle — what Finance needs and when</div></div></label>
+            <label class="ob-ci"><input type="checkbox" onchange="obCheck(this)"><div><div class="ob-ci-text">Build a relationship with the Development and Operations teams — understand their contract needs</div></div></label>
+            <label class="ob-ci"><input type="checkbox" onchange="obCheck(this)"><div><div class="ob-ci-text">Own the weekly status report — compile, format, and distribute independently</div></div></label>
+          </div>
+        </div>
+        <div class="ob-card">
+          <div class="ob-card-title">🏆 90-day milestones</div>
+          <div class="ob-checklist" data-group="d90">
+            <label class="ob-ci"><input type="checkbox" onchange="obCheck(this)"><div><div class="ob-ci-text">Zero missed alerts — no Evisort deadline passes without proactive stakeholder notification</div></div></label>
+            <label class="ob-ci"><input type="checkbox" onchange="obCheck(this)"><div><div class="ob-ci-text">SLA compliance — all standard contracts hitting turnaround commitments</div></div></label>
+            <label class="ob-ci"><input type="checkbox" onchange="obCheck(this)"><div><div class="ob-ci-text">Completed quarterly KPI report to Jen and CLO with Janelle's guidance</div></div></label>
+            <label class="ob-ci"><input type="checkbox" onchange="obCheck(this)"><div><div class="ob-ci-text">Comfortable supporting complex contracts (PPAs, land leases) as the ops owner alongside attorney</div></div></label>
+            <label class="ob-ci"><input type="checkbox" onchange="obCheck(this)"><div><div class="ob-ci-text">Outside counsel billing review cycle — reviewed at least one monthly invoice batch against billing guidelines</div></div></label>
+          </div>
+        </div>
+      </div>
+
+      <div class="slabel" style="margin-top:1.5rem">Industry glossary — terms you'll encounter constantly</div>
+      <div class="glossary-grid">
+        <div class="gloss-item"><div class="gloss-term">COD</div><div class="gloss-def">Commercial Operation Date — when a solar/battery project starts delivering power commercially. Missing this in a PPA triggers liquidated damages.</div></div>
+        <div class="gloss-item"><div class="gloss-term">PPA</div><div class="gloss-def">Power Purchase Agreement — long-term contract committing IPX to deliver power to a buyer (utility or corporate).</div></div>
+        <div class="gloss-item"><div class="gloss-term">CAISO</div><div class="gloss-def">California ISO — the grid operator for most of California. IPX projects in CA interconnect through CAISO's queue process.</div></div>
+        <div class="gloss-item"><div class="gloss-term">ERCOT</div><div class="gloss-def">Electric Reliability Council of Texas — the Texas grid operator. Projects in TX interconnect through ERCOT.</div></div>
+        <div class="gloss-item"><div class="gloss-term">EPC</div><div class="gloss-def">Engineering, Procurement & Construction — the contract type for companies that build IPX's projects. EPC contractors are responsible for construction timelines and performance.</div></div>
+        <div class="gloss-item"><div class="gloss-term">Tax equity</div><div class="gloss-def">A form of project finance where investors provide capital in exchange for federal tax credits (ITC/PTC) generated by the solar project.</div></div>
+        <div class="gloss-item"><div class="gloss-term">FERC</div><div class="gloss-def">Federal Energy Regulatory Commission — federal regulator for wholesale electricity markets. IPX must maintain market-based rate authorization for its projects.</div></div>
+        <div class="gloss-item"><div class="gloss-term">Liquidated damages (LD)</div><div class="gloss-def">Pre-agreed damages in a contract for specific failures (e.g. missing COD). Critical to track because they can be large and automatic.</div></div>
+        <div class="gloss-item"><div class="gloss-term">CLM</div><div class="gloss-def">Contract Lifecycle Management — the software category Evisort belongs to. Covers intake through obligation tracking.</div></div>
+        <div class="gloss-item"><div class="gloss-term">FEOC</div><div class="gloss-def">Foreign Entity of Concern — IRA-related compliance requirement affecting supply chain documentation for projects claiming ITC/PTC credits.</div></div>
+        <div class="gloss-item"><div class="gloss-term">Covenant</div><div class="gloss-def">A binding obligation in a project finance agreement — e.g. maintaining certain financial ratios. Breach = technical default.</div></div>
+        <div class="gloss-item"><div class="gloss-term">ITC / PTC</div><div class="gloss-def">Investment Tax Credit / Production Tax Credit — federal tax credits under the IRA that make solar and battery projects financially viable. Drive project finance structure.</div></div>
+      </div>
+    </div>
+
+  </div><!-- /view-onboarding -->
+
+</div><!-- /page -->
+
+<!-- EVENT TOOLTIP -->
+<div id="ev-tooltip"></div>
+
+<script>
+// ── TAB SWITCHING ──────────────────────────────────────────────────────────
+function switchView(v) {
+  document.querySelectorAll('.pview').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.ptab').forEach(el => el.classList.remove('active'));
+  document.getElementById('view-' + v).classList.add('active');
+  event.currentTarget.classList.add('active');
+  if (v === 'calendar' && !document.getElementById('year-cal').hasChildNodes()) buildCalendar();
+}
+
+// ── ONBOARDING TABS ────────────────────────────────────────────────────────
+function obWeek(i) {
+  document.querySelectorAll('.ob-wview').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.ob-wtab').forEach(el => el.classList.remove('active'));
+  document.getElementById('ob-w' + i).classList.add('active');
+  document.querySelectorAll('.ob-wtab')[i].classList.add('active');
+}
+
+// ── ONBOARDING PROGRESS ────────────────────────────────────────────────────
+function obCheck(cb) {
+  const item = cb.closest('.ob-ci');
+  item.classList.toggle('done', cb.checked);
+  updateObProgress();
+  // save to localStorage
+  const allBoxes = document.querySelectorAll('#view-onboarding input[type=checkbox]');
+  const state = Array.from(allBoxes).map(b => b.checked);
+  try { localStorage.setItem('ipx_ob_progress', JSON.stringify(state)); } catch(e) {}
+}
+function updateObProgress() {
+  const all = document.querySelectorAll('#view-onboarding input[type=checkbox]');
+  const done = Array.from(all).filter(b => b.checked).length;
+  const pct = Math.round(done / all.length * 100);
+  document.getElementById('ob-prog-fill').style.width = pct + '%';
+  document.getElementById('ob-prog-pct').textContent = pct + '% complete (' + done + '/' + all.length + ')';
+}
+function restoreObProgress() {
+  try {
+    const saved = JSON.parse(localStorage.getItem('ipx_ob_progress') || '[]');
+    const all = document.querySelectorAll('#view-onboarding input[type=checkbox]');
+    all.forEach((b, i) => {
+      if (saved[i]) {
+        b.checked = true;
+        b.closest('.ob-ci').classList.add('done');
+      }
+    });
+    updateObProgress();
+  } catch(e) {}
+}
+document.addEventListener('DOMContentLoaded', restoreObProgress);
+
+// ── CALENDAR DATA ──────────────────────────────────────────────────────────
+// TODAY = 2026-05-21
+const TODAY = new Date(2026, 4, 21); // month is 0-indexed
+
+const EVENTS = [
+  // Jan
+  { date: '2026-01-15', type: 'purple', label: 'Q4 lender report due — all project finance' },
+  { date: '2026-01-20', type: 'amber',  label: 'FERC market-based rate annual compliance review' },
+  { date: '2026-01-31', type: 'blue',   label: 'Outside counsel rate agreement renewals — review' },
+
+  // Feb
+  { date: '2026-02-01', type: 'green',  label: 'Ranchero Solar land lease renewal window opens (180-day mark)' },
+  { date: '2026-02-14', type: 'amber',  label: 'CPUC compliance filing — annual disclosure' },
+  { date: '2026-02-28', type: 'blue',   label: 'EPC milestone review — Desert Sun Phase 1' },
+
+  // Mar
+  { date: '2026-03-01', type: 'red',    label: 'Ranchero Solar PPA — COD 180-day alert fires' },
+  { date: '2026-03-15', type: 'purple', label: 'Q1 lender reporting prep begins — Finance' },
+  { date: '2026-03-20', type: 'amber',  label: 'FERC filing deadline — updated capacity statement' },
+  { date: '2026-03-31', type: 'blue',   label: 'Outside counsel billing review — Q1 invoices' },
+
+  // Apr
+  { date: '2026-04-01', type: 'green',  label: 'Mesa Verde land lease renewal option window — 90-day alert' },
+  { date: '2026-04-10', type: 'red',    label: 'Ranchero Solar PPA — COD 90-day milestone check with Ops' },
+  { date: '2026-04-15', type: 'purple', label: 'Q1 lender reports due — submit to all lenders' },
+  { date: '2026-04-22', type: 'amber',  label: 'CPUC interconnection study payment deadline — Desert Sun' },
+
+  // May
+  { date: '2026-05-01', type: 'red',    label: 'Ranchero Solar PPA — COD 60-day escalation if not on track' },
+  { date: '2026-05-15', type: 'green',  label: 'Ranchero Solar land lease renewal — 90-day window alert' },
+  { date: '2026-05-20', type: 'blue',   label: 'EPC performance test — Desert Sun Phase 1 scheduled' },
+  { date: '2026-05-21', type: 'amber',  label: 'TODAY — monthly status report to all business teams' },
+  { date: '2026-05-29', type: 'purple', label: 'Tax equity investor quarterly report — Desert Sun' },
+
+  // Jun
+  { date: '2026-06-01', type: 'red',    label: 'Ranchero Solar PPA — COD 30-day final check, escalate to Jen' },
+  { date: '2026-06-10', type: 'green',  label: 'Mesa Verde land lease renewal — option must be exercised' },
+  { date: '2026-06-15', type: 'blue',   label: 'CAISO interconnection queue milestone — Desert Sun Phase 2' },
+  { date: '2026-06-30', type: 'red',    label: '🔴 Ranchero Solar PPA — COD TARGET DATE' },
+
+  // Jul
+  { date: '2026-07-01', type: 'purple', label: 'Q2 lender reporting cycle opens' },
+  { date: '2026-07-10', type: 'amber',  label: 'FERC annual compliance filing deadline' },
+  { date: '2026-07-15', type: 'purple', label: 'Q2 lender reports due' },
+  { date: '2026-07-20', type: 'green',  label: 'Barrel Creek land lease renewal window opens (180-day mark)' },
+  { date: '2026-07-31', type: 'blue',   label: 'Outside counsel billing review — Q2 invoices' },
+
+  // Aug
+  { date: '2026-08-01', type: 'red',    label: 'Desert Sun Phase 2 — COD 180-day alert' },
+  { date: '2026-08-15', type: 'amber',  label: 'CPUC compliance filing — semi-annual' },
+  { date: '2026-08-20', type: 'blue',   label: 'EPC milestone review — Barrel Creek Phase 1' },
+
+  // Sep
+  { date: '2026-09-01', type: 'green',  label: 'Barrel Creek land lease renewal — 90-day window alert' },
+  { date: '2026-09-10', type: 'purple', label: 'Q3 lender reporting prep begins' },
+  { date: '2026-09-15', type: 'amber',  label: 'FERC quarterly filing — all projects' },
+  { date: '2026-09-30', type: 'purple', label: 'Q3 lender reports due' },
+
+  // Oct
+  { date: '2026-10-01', type: 'red',    label: 'Desert Sun Phase 2 — COD 90-day milestone check' },
+  { date: '2026-10-10', type: 'green',  label: 'Barrel Creek land lease renewal — option window closes' },
+  { date: '2026-10-15', type: 'blue',   label: 'CAISO interconnection queue milestone — Barrel Creek' },
+  { date: '2026-10-20', type: 'amber',  label: 'Annual outside counsel panel review — all firms' },
+  { date: '2026-10-31', type: 'blue',   label: 'Outside counsel billing review — Q3 invoices' },
+
+  // Nov
+  { date: '2026-11-01', type: 'red',    label: 'Desert Sun Phase 2 — COD 60-day escalation check' },
+  { date: '2026-11-15', type: 'amber',  label: 'CPUC compliance filing — annual preparation' },
+  { date: '2026-11-20', type: 'purple', label: 'Q4 lender reporting prep begins' },
+  { date: '2026-11-30', type: 'blue',   label: 'EPC warranty period review — Ranchero Solar Phase 1' },
+
+  // Dec
+  { date: '2026-12-01', type: 'red',    label: 'Desert Sun Phase 2 — COD 30-day final check' },
+  { date: '2026-12-10', type: 'green',  label: 'Sundance Ridge land lease renewal window opens' },
+  { date: '2026-12-15', type: 'purple', label: 'Q4 lender reports due' },
+  { date: '2026-12-31', type: 'red',    label: '🔴 Desert Sun Phase 2 — COD TARGET DATE' },
+];
+
+// build lookup
+const evMap = {};
+EVENTS.forEach(e => {
+  if (!evMap[e.date]) evMap[e.date] = [];
+  evMap[e.date].push(e);
+});
+
+// ── BUILD CALENDAR ─────────────────────────────────────────────────────────
+function buildCalendar() {
+  const container = document.getElementById('year-cal');
+  const grid = document.createElement('div');
+  grid.className = 'year-grid';
+
+  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const dows = ['Su','Mo','Tu','We','Th','Fr','Sa'];
+
+  for (let m = 0; m < 12; m++) {
+    const card = document.createElement('div');
+    card.className = 'month-card';
+
+    const evCount = EVENTS.filter(e => {
+      const d = new Date(e.date + 'T12:00:00');
+      return d.getFullYear() === 2026 && d.getMonth() === m;
+    }).length;
+
+    card.innerHTML = `
+      <div class="month-header">
+        ${months[m]} 2026
+        ${evCount > 0 ? `<span class="month-count">${evCount} events</span>` : ''}
+      </div>
+      <div class="cal-body">
+        <div class="dow-row">${dows.map(d=>`<div class="dow">${d}</div>`).join('')}</div>
+        <div class="days-row" id="days-${m}"></div>
+      </div>`;
+    grid.appendChild(card);
+
+    const daysEl = card.querySelector('.days-row');
+    const firstDay = new Date(2026, m, 1).getDay();
+    const daysInMonth = new Date(2026, m+1, 0).getDate();
+    const prevDays = new Date(2026, m, 0).getDate();
+
+    // prev month padding
+    for (let d = firstDay - 1; d >= 0; d--) {
+      const cell = document.createElement('div');
+      cell.className = 'cday out-month';
+      cell.innerHTML = `<span class="dnum">${prevDays - d}</span>`;
+      daysEl.appendChild(cell);
+    }
+
+    // this month
+    for (let d = 1; d <= daysInMonth; d++) {
+      const dateStr = `2026-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+      const evs = evMap[dateStr] || [];
+      const isToday = (m === 4 && d === 21); // May 21
+
+      const cell = document.createElement('div');
+      cell.className = 'cday' + (evs.length ? ' has-event' : '') + (isToday ? ' today' : '');
+      if (evs.length) {
+        const dots = evs.map(e => `<span class="edot edot-${e.type}"></span>`).join('');
+        cell.innerHTML = `<span class="dnum">${d}</span><div class="event-dots">${dots}</div>`;
+        cell.addEventListener('mouseenter', (ev) => showTooltip(ev, dateStr, evs));
+        cell.addEventListener('mouseleave', hideTooltip);
+      } else {
+        cell.innerHTML = `<span class="dnum">${d}</span>`;
+      }
+      daysEl.appendChild(cell);
+    }
+
+    // next month padding
+    const total = firstDay + daysInMonth;
+    const remaining = total % 7 === 0 ? 0 : 7 - (total % 7);
+    for (let d = 1; d <= remaining; d++) {
+      const cell = document.createElement('div');
+      cell.className = 'cday out-month';
+      cell.innerHTML = `<span class="dnum">${d}</span>`;
+      daysEl.appendChild(cell);
+    }
+  }
+
+  container.appendChild(grid);
+  buildUpcoming();
+}
+
+// ── TOOLTIP ────────────────────────────────────────────────────────────────
+const tooltip = document.getElementById('ev-tooltip');
+const typeLabels = { red: 'HIGH RISK', amber: 'FILING', green: 'RENEWAL', blue: 'MILESTONE', purple: 'FINANCE' };
+const typeColors = { red: '#FEF2F2', amber: '#FFFBEB', green: '#ECFDF5', blue: '#EFF6FF', purple: '#EDE9FE' };
+const typeTextColors = { red: '#991B1B', amber: '#92400E', green: '#065F46', blue: '#1E40AF', purple: '#5B21B6' };
+
+function showTooltip(ev, dateStr, evs) {
+  const d = new Date(dateStr + 'T12:00:00');
+  const label = d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+  tooltip.innerHTML = `<div class="tt-date">${label}</div>` +
+    evs.map(e => `<div class="tt-event"><span class="tt-badge" style="background:${typeColors[e.type]};color:${typeTextColors[e.type]}">${typeLabels[e.type]}</span>${e.label}</div>`).join('');
+  tooltip.style.display = 'block';
+  positionTooltip(ev);
+}
+function positionTooltip(ev) {
+  const x = ev.clientX + 12;
+  const y = ev.clientY - 8;
+  tooltip.style.left = Math.min(x, window.innerWidth - 280) + 'px';
+  tooltip.style.top = Math.min(y, window.innerHeight - 120) + 'px';
+}
+function hideTooltip() { tooltip.style.display = 'none'; }
+document.addEventListener('mousemove', e => {
+  if (tooltip.style.display === 'block') positionTooltip(e);
+});
+
+// ── UPCOMING LIST ──────────────────────────────────────────────────────────
+function buildUpcoming() {
+  const list = document.getElementById('upcoming-list');
+  const now = TODAY;
+  const cutoff = new Date(now);
+  cutoff.setDate(cutoff.getDate() + 180);
+
+  const upcoming = EVENTS.filter(e => {
+    const d = new Date(e.date + 'T12:00:00');
+    return d >= now && d <= cutoff;
+  }).sort((a, b) => a.date.localeCompare(b.date));
+
+  upcoming.forEach(e => {
+    const d = new Date(e.date + 'T12:00:00');
+    const diff = Math.round((d - now) / 86400000);
+    let daysClass = 'days-future';
+    if (diff === 0) daysClass = 'days-urgent';
+    else if (diff <= 14) daysClass = 'days-urgent';
+    else if (diff <= 30) daysClass = 'days-warn';
+    else if (diff <= 60) daysClass = 'days-ok';
+
+    const dateStr = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    const daysStr = diff === 0 ? 'Today' : diff === 1 ? '1 day' : diff + ' days';
+
+    const item = document.createElement('div');
+    item.className = 'upcoming-item';
+    item.innerHTML = `
+      <div class="ui-dot edot-${e.type}"></div>
+      <div class="ui-text">
+        <div class="ui-title">${e.label}</div>
+        <div class="ui-meta">
+          <span>${dateStr}</span>
+          <span class="ui-days-out ${daysClass}">${daysStr}</span>
+        </div>
+      </div>`;
+    list.appendChild(item);
+  });
+}
+</script>
+</body>
+</html>
