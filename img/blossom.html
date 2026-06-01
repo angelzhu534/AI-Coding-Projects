@@ -870,14 +870,10 @@ const GUIDE_SCRIPTS = {
 var DEFAULT_PROXY = 'https://fancy-boat-5426.angel-zhu534.workers.dev';
 
 // ── PIN GATE ─────────────────────────────────────────────────────────
-// Set your PIN by replacing the hash below.
-// To generate: open browser console and run: hashPin('yourpin')
-// then paste the result as OWNER_HASH.
-var OWNER_HASH = 'de51c5a3a5ce1137872fd1d95632885411ade67c4e52e791749592fa1d7fc364'; // e.g. 'a665a45920422f9d417e4867efdc4fb8'
+var OWNER_TOKEN = 'Ymxvb21fYmxvc3NvbTI1';
 
-async function hashPin(pin) {
-  var buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(pin));
-  return Array.from(new Uint8Array(buf)).map(function(b){ return b.toString(16).padStart(2,'0'); }).join('');
+function checkPin(pin) {
+  try { return btoa('bloom_' + pin) === OWNER_TOKEN; } catch(e) { return false; }
 }
 
 function isOwnerUnlocked() {
@@ -1861,16 +1857,12 @@ function hidePinEntry() {
   document.getElementById('pinEntry').style.display = 'none';
   document.getElementById('apiSettingsMain').style.display = 'block';
 }
-async function submitPin() {
+function submitPin() {
   var pin = document.getElementById('pinInput').value;
   if (!pin) return;
-  var hash = await hashPin(pin);
-  if (hash === OWNER_HASH) {
+  if (checkPin(pin)) {
     try { localStorage.setItem('bloom_owner', '1'); } catch(e) {}
     closeApiSettings();
-    // Brief confirmation
-    var gear = document.querySelector('[onclick="openApiSettings()"]');
-    if (gear) { gear.textContent = '⚙'; }
   } else {
     document.getElementById('pinError').textContent = 'Incorrect PIN';
     document.getElementById('pinInput').value = '';
