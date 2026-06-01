@@ -650,7 +650,7 @@ body {
 <audio id="lofiAudio" loop preload="none" playsinline
   src="https://angelzhu534.github.io/AI-Coding-Projects/leberch-lofi-516620.mp3"
   style="position:fixed;width:1px;height:1px;opacity:0.01;bottom:0;left:0">
-</audio><div style="position:fixed;top:60px;left:0;right:0;z-index:0;pointer-events:none;overflow:hidden">
+</audio><div style="position:fixed;top:94px;left:0;right:0;z-index:0;pointer-events:none;overflow:hidden">
   <!-- Image 3: Tigger, Piglet, Pooh, Eeyore — top strip -->
   <img src="./oh-bother-winnie-pooh-public-domain-gore-too-john-rizvi.webp" loading="lazy"
        alt="E.H. Shepard original illustration - Tigger Piglet Pooh Eeyore"
@@ -1003,13 +1003,28 @@ function toggleLofi() {
   if (lofiPlaying) {
     audio.pause();
     setMusicOff();
-  } else {
-    audio.play().then(function() {
-      setMusicOn();
-    }).catch(function(err) {
-      console.warn('lofi play error:', err);
-    });
+    return;
   }
+  // Load on first play (preload=none means it hasn't fetched yet)
+  if (audio.readyState === 0) {
+    audio.load();
+  }
+  var btn = document.getElementById('musicBtn');
+  if (btn) { btn.style.opacity = '.5'; }
+  audio.play().then(function() {
+    setMusicOn();
+    if (btn) btn.style.opacity = '1';
+  }).catch(function(err) {
+    if (btn) btn.style.opacity = '1';
+    setMusicOff();
+    // Show brief error in button label
+    var lbl = document.getElementById('musicLabel');
+    if (lbl) {
+      lbl.textContent = 'error';
+      setTimeout(function() { lbl.textContent = 'lofi'; }, 2500);
+    }
+    console.warn('lofi play error:', err);
+  });
 }
 
 
@@ -1491,8 +1506,9 @@ async function generateMeal(type) {
         noteHtml +
         '<div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px;padding-top:10px;border-top:1px solid rgba(168,120,80,.1)">' +
           '<div style="text-align:left;cursor:pointer;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--dust)" onclick="generateMeal(&quot;' + type + '&quot;)">↺ Try another</div>' +
-          (tokenLine ? '<div style="font-size:9px;letter-spacing:.03em;color:var(--dust);opacity:.5">' + tokenLine + '</div>' : '') +
+          '<button id="saveBtn-' + type + '" onclick="handleSaveToSheets(&quot;' + type + '&quot;)" style="font-family:Jost,sans-serif;font-size:10px;font-weight:400;letter-spacing:.08em;text-transform:uppercase;color:var(--sage);background:none;border:1px solid rgba(90,120,72,.3);border-radius:20px;padding:5px 12px;cursor:pointer">↑ Save</button>' +
         '</div>' +
+        (tokenLine ? '<div style="text-align:right;padding:4px 0 0;font-size:9px;color:var(--dust);opacity:.5">' + tokenLine + '</div>' : '') +
       '</div>';
   } catch(e) {
     var msg = (e && e.message) ? e.message : 'Unknown error';
@@ -1659,6 +1675,10 @@ function openApiSettings() {
   input.value = stored;
   apiInputHint(stored);
   input.addEventListener('input', function() { apiInputHint(this.value.trim()); });
+  try {
+    document.getElementById('sheetsIdInput').value = localStorage.getItem('bloom_sheets_id') || '';
+    document.getElementById('sheetsKeyInput').value = localStorage.getItem('bloom_sheets_key') || '';
+  } catch(e) {}
   // session usage
   var cost = (sessionTokens.input / 1e6 * TOKEN_COST.input) +
              (sessionTokens.output / 1e6 * TOKEN_COST.output);
@@ -1677,13 +1697,127 @@ function saveApiSettings() {
   try {
     if (val) { localStorage.setItem('bloom_api', val); }
     else      { localStorage.removeItem('bloom_api'); }
+    var sid = document.getElementById('sheetsIdInput').value.trim();
+    var skey = document.getElementById('sheetsKeyInput').value.trim();
+    if (sid)  { localStorage.setItem('bloom_sheets_id',  sid);  } else { localStorage.removeItem('bloom_sheets_id'); }
+    if (skey) { localStorage.setItem('bloom_sheets_key', skey); } else { localStorage.removeItem('bloom_sheets_key'); }
   } catch(e) {}
   closeApiSettings();
 }
 function clearApiSettings() {
-  try { localStorage.removeItem('bloom_api'); } catch(e) {}
+  try {
+    localStorage.removeItem('bloom_api');
+    localStorage.removeItem('bloom_sheets_id');
+    localStorage.removeItem('bloom_sheets_key');
+  } catch(e) {}
   document.getElementById('proxyInput').value = '';
+  document.getElementById('sheetsIdInput').value = '';
+  document.getElementById('sheetsKeyInput').value = '';
   closeApiSettings();
+}
+
+// ── GOOGLE SHEETS SYNC ───────────────────────────────────────────────
+var recipeCounter = 0;
+try { recipeCounter = parseInt(localStorage.getItem('bloom_recipe_count') || '0'); } catch(e) {}
+
+async function saveToSheets(meal, type) {
+  var spreadsheetId = '';
+  var apiKey = '';
+  try {
+    spreadsheetId = localStorage.getItem('bloom_sheets_id') || '';
+    apiKey        = localStorage.getItem('bloom_sheets_key') || '';
+  } catch(e) {}
+
+  if (!spreadsheetId || !apiKey) {
+    alert('Add your Google Spreadsheet ID and API key in ⚙ Settings first.');
+    return;
+  }
+
+  recipeCounter++;
+  try { localStorage.setItem('bloom_recipe_count', String(recipeCounter)); } catch(e) {}
+
+  var label = type.charAt(0).toUpperCase() + type.slice(1);
+  var tabName = 'Recipe ' + String(recipeCounter).padStart(2,'0') + ' — ' + label;
+
+  // Build rows: header + ingredients + blank + steps + blank + note
+  var rows = [
+    [meal.name || ''],
+    [meal.cuisine || '', (meal.serves||'') + ' · ' + (meal.time||'') + (meal.difficulty ? ' · ' + meal.difficulty : '')],
+    [meal.why || meal.why_tonight || meal.description || ''],
+    [''],
+    ['INGREDIENTS'],
+  ];
+  if (Array.isArray(meal.ingredients)) {
+    meal.ingredients.forEach(function(ing) {
+      if (typeof ing === 'object') {
+        rows.push([(ing.amount||'') + ' ' + (ing.unit||''), ing.item||'']);
+      } else {
+        rows.push([String(ing)]);
+      }
+    });
+  }
+  rows.push(['']);
+  rows.push(['METHOD']);
+  if (Array.isArray(meal.steps)) {
+    meal.steps.forEach(function(s) {
+      rows.push([(s.n||'') + '.', s.text || String(s)]);
+    });
+  }
+  if (meal.note) { rows.push(['']); rows.push(['NOTE', meal.note]); }
+
+  try {
+    // Step 1: Add a new sheet tab
+    var addSheetResp = await fetch(
+      'https://sheets.googleapis.com/v4/spreadsheets/' + spreadsheetId + ':batchUpdate?key=' + apiKey,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ requests: [{ addSheet: { properties: { title: tabName } } }] })
+      }
+    );
+    if (!addSheetResp.ok) {
+      var e = await addSheetResp.json();
+      throw new Error(e.error && e.error.message || 'Could not create tab');
+    }
+
+    // Step 2: Write data into new tab
+    var writeResp = await fetch(
+      'https://sheets.googleapis.com/v4/spreadsheets/' + spreadsheetId +
+      '/values/' + encodeURIComponent(tabName + '!A1') +
+      ':append?valueInputOption=RAW&key=' + apiKey,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ values: rows })
+      }
+    );
+    if (!writeResp.ok) {
+      var e2 = await writeResp.json();
+      throw new Error(e2.error && e2.error.message || 'Could not write data');
+    }
+
+    return tabName; // success
+  } catch(err) {
+    recipeCounter--; // roll back counter on failure
+    try { localStorage.setItem('bloom_recipe_count', String(recipeCounter)); } catch(e2) {}
+    throw err;
+  }
+}
+
+function handleSaveToSheets(type) {
+  var meal = currentMeals[type];
+  if (!meal) return;
+  var btn = document.getElementById('saveBtn-' + type);
+  if (btn) { btn.textContent = 'Saving...'; btn.style.opacity = '.6'; btn.disabled = true; }
+  saveToSheets(meal, type).then(function(tabName) {
+    if (btn) { btn.textContent = '✓ Saved'; btn.style.color = 'var(--sage)'; btn.style.opacity = '1'; btn.disabled = false; }
+  }).catch(function(err) {
+    if (btn) { btn.textContent = '⚠ Error'; btn.style.color = 'var(--terra)'; btn.style.opacity = '1'; btn.disabled = false; }
+    setTimeout(function() {
+      if (btn) { btn.textContent = '↑ Save'; btn.style.color = 'var(--sage)'; }
+    }, 3000);
+    console.error('Sheets save error:', err);
+  });
 }
 </script>
 
@@ -1702,6 +1836,14 @@ function clearApiSettings() {
     <input id="proxyInput" type="text" placeholder="sk-ant-… · sk-… · https://…"
       style="width:100%;box-sizing:border-box;font-family:Jost,sans-serif;font-size:12px;padding:10px 12px;border:1px solid rgba(168,120,80,.3);border-radius:10px;background:var(--bg);color:var(--ink);outline:none;margin-bottom:6px">
     <div id="apiTypeHint" style="font-size:10px;color:var(--sage);margin-bottom:14px;min-height:16px"></div>
+    <div style="font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--terra);margin-bottom:6px">Google Sheets sync</div>
+    <input id="sheetsIdInput" type="text" placeholder="Spreadsheet ID (from URL)"
+      style="width:100%;box-sizing:border-box;font-family:Jost,sans-serif;font-size:12px;padding:8px 12px;border:1px solid rgba(168,120,80,.3);border-radius:10px;background:var(--bg);color:var(--ink);outline:none;margin-bottom:6px">
+    <input id="sheetsKeyInput" type="text" placeholder="Google API key"
+      style="width:100%;box-sizing:border-box;font-family:Jost,sans-serif;font-size:12px;padding:8px 12px;border:1px solid rgba(168,120,80,.3);border-radius:10px;background:var(--bg);color:var(--ink);outline:none;margin-bottom:4px">
+    <div style="font-family:Jost,sans-serif;font-size:10px;color:var(--dust);margin-bottom:14px;line-height:1.7">
+      Recipes save as individual tabs named<br><em>Recipe 01 — Dinner</em>, <em>Recipe 02 — Lunch</em> etc.
+    </div>
     <div style="font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--terra);margin-bottom:6px">Session usage</div>
     <div id="sessionUsageDisplay" style="font-family:Jost,sans-serif;font-size:11px;color:var(--stone);margin-bottom:18px;background:rgba(168,120,80,.07);border-radius:8px;padding:8px 10px"></div>
     <div style="display:flex;gap:10px">
