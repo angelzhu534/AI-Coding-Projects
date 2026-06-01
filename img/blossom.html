@@ -873,7 +873,7 @@ var DEFAULT_PROXY = 'https://fancy-boat-5426.angel-zhu534.workers.dev';
 // Set your PIN by replacing the hash below.
 // To generate: open browser console and run: hashPin('yourpin')
 // then paste the result as OWNER_HASH.
-var OWNER_HASH = 'de51c5a3a5ce1137872fd1d95632885411ade67c4e52e791749592fa1d7fc364'; // e.g. 'a665a45920422f9d417e4867efdc4fb8'
+var OWNER_HASH = '0de51c5a3a5ce1137872fd1d95632885411ade67c4e52e791749592fa1d7fc364'; // e.g. 'a665a45920422f9d417e4867efdc4fb8'
 
 async function hashPin(pin) {
   var buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(pin));
