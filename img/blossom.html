@@ -45,8 +45,8 @@ body {
 
 /* ── HEADER ── */
 .app-header {
-  position: fixed; top:0; left:0; right:0; z-index:100;
-  padding: calc(var(--safe-top) + 14px) 22px 12px;
+  position: fixed; top: calc(var(--safe-top) + 42px); left:0; right:0; z-index:100;
+  padding: 14px 22px 12px;
   background: rgba(245,237,224,.94);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
@@ -69,8 +69,8 @@ body {
 
 /* ── MAIN ── */
 .main {
-  padding-top: calc(var(--safe-top) + 70px);
-  padding-bottom: calc(var(--safe-bot) + 100px);
+  padding-top: calc(var(--safe-top) + 112px);
+  padding-bottom: calc(var(--safe-bot) + 20px);
   max-width: 480px; margin: 0 auto;
 }
 
@@ -321,8 +321,8 @@ body {
 
 /* ── AUDIO STATUS BAR ── */
 .audio-bar {
-  position: fixed; bottom: var(--safe-bot); left:0; right:0; z-index:200;
-  padding: 12px 20px calc(var(--safe-bot) + 8px);
+  position: fixed; bottom:0; left:0; right:0; z-index:200;
+  padding: 12px 20px calc(var(--safe-bot) + 12px);
   background: rgba(245,237,224,.96);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
@@ -400,17 +400,17 @@ body {
 
 /* ── TAB BAR ── */
 .tab-bar {
-  position: fixed; bottom:0; left:0; right:0; z-index:100;
+  position: fixed; top:0; left:0; right:0; z-index:101;
   background: rgba(245,237,224,.97);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border-top: 1px solid rgba(168,120,80,.15);
+  border-bottom: 1px solid rgba(168,120,80,.15);
   display: flex;
-  padding-bottom: var(--safe-bot);
+  padding-top: var(--safe-top);
 }
 .tab-item {
   flex: 1; display: flex; flex-direction: column;
-  align-items: center; padding: 10px 4px 6px;
+  align-items: center; padding: 8px 4px 8px;
   cursor: pointer; transition: opacity .15s;
   border: none; background: none;
 }
@@ -590,7 +590,7 @@ body {
 .main, .app-header, .tab-bar, .audio-bar, #apiOverlay {
   position: relative; z-index: 1;
 }
-.app-header, .tab-bar, .audio-bar { z-index: 100; }
+.app-header { z-index: 100; } .tab-bar { z-index: 102; } .audio-bar { z-index: 100; }
 #apiOverlay { z-index: 999; }
 
 
@@ -688,29 +688,6 @@ body {
 <!-- LOFI AUDIO — YouTube iframe (hidden, audio only) -->
 
 
-<!-- HEADER -->
-<div class="app-header">
-  <div class="header-inner">
-    <div class="app-title">In Full Bloom</div>
-    <div style="display:flex;align-items:center;gap:10px">
-      <button id="musicBtn" onclick="toggleLofi()"
-        style="background:rgba(184,92,56,.1);border:1px solid rgba(184,92,56,.2);
-               border-radius:20px;padding:5px 14px;font-family:Jost,sans-serif;
-               font-size:10px;font-weight:400;letter-spacing:.08em;
-               color:var(--terra);cursor:pointer;display:flex;align-items:center;gap:6px">
-        <span id="musicIcon">♪</span><span id="musicLabel">lofi</span>
-      </button>
-      <div class="live-time" id="liveTime">--:--</div>
-    </div>
-  </div>
-</div>
-
-<!-- MAIN -->
-<div class="main" id="mainContent">
-  <!-- content injected by JS -->
-</div>
-
-
 <!-- TAB BAR -->
 <div class="tab-bar">
   <button class="tab-item active" onclick="switchTab('today')" id="tab-today">
@@ -734,6 +711,29 @@ body {
     <div class="tab-label">Guide</div>
   </button>
 </div>
+
+<!-- HEADER -->
+<div class="app-header">
+  <div class="header-inner">
+    <div class="app-title">In Full Bloom</div>
+    <div style="display:flex;align-items:center;gap:10px">
+      <button id="musicBtn" onclick="toggleLofi()"
+        style="background:rgba(184,92,56,.1);border:1px solid rgba(184,92,56,.2);
+               border-radius:20px;padding:5px 14px;font-family:Jost,sans-serif;
+               font-size:10px;font-weight:400;letter-spacing:.08em;
+               color:var(--terra);cursor:pointer;display:flex;align-items:center;gap:6px">
+        <span id="musicIcon">♪</span><span id="musicLabel">lofi</span>
+      </button>
+      <div class="live-time" id="liveTime">--:--</div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main" id="mainContent">
+  <!-- content injected by JS -->
+</div>
+
 
 <script>
 // ── DATA ─────────────────────────────────────────────────────────────
@@ -866,7 +866,13 @@ const GUIDE_SCRIPTS = {
 
 // ── CONFIG ────────────────────────────────────────────────────────────
 // Replace with your Cloudflare Worker URL after deploying bloom-worker.js
-var ANTHROPIC_PROXY = 'https://fancy-boat-5426.angel-zhu534.workers.dev';
+// ── API CONFIG ───────────────────────────────────────────────────────
+// Your Cloudflare Worker proxies requests to Anthropic.
+// Users can optionally enter their OWN Cloudflare Worker URL.
+var DEFAULT_PROXY = 'https://fancy-boat-5426.angel-zhu534.workers.dev';
+function getProxy() {
+  try { return localStorage.getItem('bloom_proxy') || DEFAULT_PROXY; } catch(e) { return DEFAULT_PROXY; }
+}
 
 // ── STATE ─────────────────────────────────────────────────────────────
 
@@ -1316,6 +1322,21 @@ if (!mealHistory.lunch) mealHistory.lunch = [];
 if (!mealHistory.dinner) mealHistory.dinner = [];
 
 var currentMeals = { breakfast: null, lunch: null, dinner: null };
+// ── TOKEN TRACKING ────────────────────────────────────────────────────
+var sessionTokens = { input: 0, output: 0, calls: 0 };
+// claude-sonnet-4-5 pricing per million tokens (as of 2025)
+var TOKEN_COST = { input: 3.00, output: 15.00 };
+function trackTokens(usage) {
+  if (!usage) return '';
+  sessionTokens.input  += (usage.input_tokens  || 0);
+  sessionTokens.output += (usage.output_tokens || 0);
+  sessionTokens.calls  += 1;
+  var cost = (sessionTokens.input / 1e6 * TOKEN_COST.input) +
+             (sessionTokens.output / 1e6 * TOKEN_COST.output);
+  return 'This call: ' + (usage.input_tokens||0) + ' in · ' +
+         (usage.output_tokens||0) + ' out' +
+         ' · Session total: $' + cost.toFixed(4);
+}
 
 var MEAL_PROMPTS = {
   breakfast: function() {
@@ -1375,7 +1396,7 @@ async function generateMeal(type) {
   if (container) container.innerHTML = '<div style="padding:20px;text-align:center;font-style:italic;color:var(--stone);font-size:15px">Thinking... (~10 seconds)</div>';
 
   try {
-    var response = await fetch(ANTHROPIC_PROXY, {
+    var response = await fetch(getProxy(), {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -1393,12 +1414,13 @@ async function generateMeal(type) {
     var text = data.content[0].text.replace(/```json|```/g, '').trim();
     var meal = JSON.parse(text);
     currentMeals[type] = meal;
+    var tokenLine = trackTokens(data.usage);
 
     mealHistory[type].push(meal.name);
     if (mealHistory[type].length > 15) mealHistory[type] = mealHistory[type].slice(-15);
     try { localStorage.setItem('bloom_meals', JSON.stringify(mealHistory)); } catch(e) {}
 
-    var sfSpot = meal.sf_spot ? '<div style="margin-top:8px;font-size:11px;letter-spacing:.06em;color:var(--sage)">✦ Try in SF: ' + meal.sf_spot + '</div>' : '';
+    var sfSpot = '';
     var difficultyLine = meal.difficulty ? '<div class="dinner-card-time-item"><span>' + meal.difficulty + '</span>Difficulty</div>' : '';
 
     if (container) container.innerHTML =
@@ -1415,6 +1437,7 @@ async function generateMeal(type) {
           difficultyLine +
         '</div>' +
         '<div style="text-align:center;padding:10px 0 0;cursor:pointer;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--dust)" onclick="generateMeal(&quot;' + type + '&quot;)">Try another →</div>' +
+        (tokenLine ? '<div style="text-align:center;padding:4px 0 2px;font-size:9px;letter-spacing:.04em;color:var(--dust);opacity:.6">' + tokenLine + '</div>' : '') +
       '</div>';
   } catch(e) {
     var msg = (e && e.message) ? e.message : 'Unknown error';
@@ -1427,85 +1450,7 @@ async function generateMeal(type) {
   if (btn) { btn.textContent = '↺ New suggestion'; btn.style.opacity = '1'; }
 }
 
-// ── SF LIVE CONTENT ───────────────────────────────────────────────────
-var sfCache = null;
-var sfCacheTime = 0;
 
-async function loadSFContent() {
-  var container = document.getElementById('sfContent');
-  if (!container) return;
-
-  // Use cache if < 3 hours old
-  if (sfCache && (Date.now() - sfCacheTime) < 10800000) {
-    container.innerHTML = sfCache; return;
-  }
-
-  container.innerHTML = '<div style="padding:20px;text-align:center;font-style:italic;color:var(--stone)">Checking what&#39;s on in SF...</div>';
-
-  var today = new Date();
-  var month = today.toLocaleString('en-US', { month: 'long' });
-  var dayOfWeek = today.toLocaleString('en-US', { weekday: 'long' });
-
-  try {
-    var response = await fetch(ANTHROPIC_PROXY, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-5',
-        max_tokens: 800,
-        tools: [{ type: 'web_search_20250305', name: 'web_search' }],
-        messages: [{
-          role: 'user',
-          content: 'It is ' + dayOfWeek + ' in ' + month + ' 2026 in San Francisco. Search for: (1) what is currently at SFMOMA or de Young museum this week, (2) what produce is in season at SF farmers markets right now, (3) one food/restaurant event or popup happening in SF this week. Return as JSON only, no markdown: {"museums":[{"name":"venue name","exhibition":"current show name","note":"one short interesting note"}],"seasonal_produce":["item1","item2","item3","item4"],"event":{"name":"event name","where":"location","note":"one sentence"}}'
-        }]
-      })
-    });
-    var data = await response.json();
-    var textBlock = data.content.filter(function(b) { return b.type === 'text'; })[0];
-    if (!textBlock) throw new Error('no text');
-    var text = textBlock.text.replace(/```json|```/g, '').trim();
-    var sf = JSON.parse(text);
-
-    var html = '';
-
-    if (sf.museums && sf.museums.length) {
-      sf.museums.forEach(function(m) {
-        html += '<div class="money-card" style="border-left-color:var(--sage)">' +
-          '<div class="money-card-label">' + m.name + '</div>' +
-          '<div class="money-card-title">' + m.exhibition + '</div>' +
-          '<div class="money-card-text">' + (m.note || '') + '</div>' +
-        '</div>';
-      });
-    }
-
-    if (sf.seasonal_produce && sf.seasonal_produce.length) {
-      html += '<div class="money-card" style="border-left-color:var(--terra)">' +
-        '<div class="money-card-label">Warm Water Cove · Farmers Market</div>' +
-        '<div class="money-card-title">In season now</div>' +
-        '<div class="money-card-text" style="display:block">' + sf.seasonal_produce.join('  ·  ') + '</div>' +
-      '</div>';
-    }
-
-    if (sf.event) {
-      html += '<div class="money-card" style="border-left-color:var(--gold)">' +
-        '<div class="money-card-label">This week</div>' +
-        '<div class="money-card-title">' + sf.event.name + '</div>' +
-        '<div class="money-card-text">' + sf.event.where + '</div>' +
-        '<div class="money-card-action">' + (sf.event.note || '') + '</div>' +
-      '</div>';
-    }
-
-    sfCache = html;
-    sfCacheTime = Date.now();
-    container.innerHTML = html || '<div style="padding:16px;font-style:italic;color:var(--stone)">No events found right now.</div>';
-
-  } catch(e) {
-    var msg = (e && e.message) ? e.message : 'Unknown error';
-    if (container) container.innerHTML = '<div style="padding:16px;font-size:13px;color:var(--stone)">' + msg.slice(0,150) + '</div>';
-  }
-}
 
 // ── RENDER FOOD TAB ───────────────────────────────────────────────────
 function renderDinner() {
@@ -1539,23 +1484,7 @@ function renderDinner() {
       '</div>';
   });
 
-  // SF live section - built via DOM to avoid quote issues
   document.getElementById('mainContent').innerHTML = html;
-  var sfWrap = document.createElement('div');
-  sfWrap.style.margin = '12px 12px 0';
-  sfWrap.innerHTML = [
-    '<div style="font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--dust);margin-bottom:8px">What\'s on in SF</div>',
-    '<div id="sfContent"></div>',
-    '<div style="text-align:center;padding:8px 0;cursor:pointer;font-size:10px;letter-spacing:.06em;color:var(--dust)" onclick="loadSFContent()">&#8635; Refresh</div>'
-  ].join('');
-  document.getElementById('mainContent').appendChild(sfWrap);
-
-  // Auto-suggest dinner when tab opens (lazy - only first time)
-  if (!window._dinnerHasLoaded) {
-    window._dinnerHasLoaded = true;
-    setTimeout(function() { generateMeal('dinner'); }, 50);
-    setTimeout(function() { loadSFContent(); }, 100);
-  }
 }
 
 function toggleGuide(el) {
@@ -1655,6 +1584,64 @@ if ('serviceWorker' in navigator) {
     });
   });
 }
+
+// ── API SETTINGS OVERLAY ─────────────────────────────────────────────
+function openApiSettings() {
+  var el = document.getElementById('apiOverlay');
+  el.style.display = 'flex';
+  var stored = '';
+  try { stored = localStorage.getItem('bloom_proxy') || ''; } catch(e) {}
+  document.getElementById('proxyInput').value = stored;
+  // show session usage
+  var cost = (sessionTokens.input / 1e6 * TOKEN_COST.input) +
+             (sessionTokens.output / 1e6 * TOKEN_COST.output);
+  document.getElementById('sessionUsageDisplay').innerHTML =
+    sessionTokens.calls === 0
+      ? 'No API calls this session.'
+      : sessionTokens.calls + ' call' + (sessionTokens.calls > 1 ? 's' : '') +
+        ' · ' + sessionTokens.input + ' input tokens · ' +
+        sessionTokens.output + ' output tokens<br>' +
+        'Estimated cost: <strong>$' + cost.toFixed(4) + '</strong>';
+}
+function closeApiSettings() {
+  document.getElementById('apiOverlay').style.display = 'none';
+}
+function saveApiSettings() {
+  var val = document.getElementById('proxyInput').value.trim();
+  try {
+    if (val) { localStorage.setItem('bloom_proxy', val); }
+    else      { localStorage.removeItem('bloom_proxy'); }
+  } catch(e) {}
+  closeApiSettings();
+}
+function clearApiSettings() {
+  try { localStorage.removeItem('bloom_proxy'); } catch(e) {}
+  document.getElementById('proxyInput').value = '';
+  closeApiSettings();
+}
 </script>
+
+<!-- API SETTINGS OVERLAY -->
+<div id="apiOverlay" style="display:none;position:fixed;inset:0;z-index:999;background:rgba(42,30,20,.7);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);align-items:center;justify-content:center">
+  <div style="background:var(--cream);border-radius:20px;padding:28px 24px;max-width:340px;width:90%;margin:0 auto">
+    <div style="font-family:Cormorant Garamond,serif;font-size:22px;font-style:italic;color:var(--terra);margin-bottom:6px">API Settings</div>
+    <div style="font-family:Jost,sans-serif;font-size:11px;color:var(--stone);margin-bottom:18px;line-height:1.7">
+      By default this app uses a shared Cloudflare Worker.<br>
+      Enter your own Worker URL to use your own Anthropic API key.
+    </div>
+    <div style="font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--terra);margin-bottom:6px">Cloudflare Worker URL</div>
+    <input id="proxyInput" type="url" placeholder="https://your-worker.workers.dev"
+      style="width:100%;box-sizing:border-box;font-family:Jost,sans-serif;font-size:12px;padding:10px 12px;border:1px solid rgba(168,120,80,.3);border-radius:10px;background:var(--bg);color:var(--ink);outline:none;margin-bottom:10px">
+    <div style="font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--terra);margin-bottom:6px">Session usage</div>
+    <div id="sessionUsageDisplay" style="font-family:Jost,sans-serif;font-size:11px;color:var(--stone);margin-bottom:18px;background:rgba(168,120,80,.07);border-radius:8px;padding:8px 10px"></div>
+    <div style="display:flex;gap:10px">
+      <button onclick="saveApiSettings()" style="flex:1;font-family:Jost,sans-serif;font-size:11px;font-weight:400;letter-spacing:.1em;text-transform:uppercase;background:var(--terra);color:#fff;border:none;border-radius:50px;padding:10px;cursor:pointer">Save</button>
+      <button onclick="closeApiSettings()" style="font-family:Jost,sans-serif;font-size:11px;font-weight:400;letter-spacing:.1em;text-transform:uppercase;background:none;color:var(--stone);border:1px solid rgba(168,120,80,.3);border-radius:50px;padding:10px 16px;cursor:pointer">Cancel</button>
+    </div>
+    <div style="text-align:center;margin-top:14px">
+      <button onclick="clearApiSettings()" style="font-family:Jost,sans-serif;font-size:10px;color:var(--dust);background:none;border:none;cursor:pointer;letter-spacing:.06em">Reset to default</button>
+    </div>
+  </div>
+</div>
 </body>
 </html>
