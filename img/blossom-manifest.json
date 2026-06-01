@@ -1,0 +1,11 @@
+{
+  "name": "Blossom",
+  "short_name": "Blossom",
+  "start_url": "./blossom.html",
+  "display": "standalone",
+  "background_color": "#f5ede0",
+  "theme_color": "#c8a882",
+  "icons": [
+    { "src": "./blossom-icon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}
