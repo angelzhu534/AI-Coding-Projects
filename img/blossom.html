@@ -869,18 +869,40 @@ const GUIDE_SCRIPTS = {
 // ── API CONFIG ───────────────────────────────────────────────────────
 var DEFAULT_PROXY = 'https://fancy-boat-5426.angel-zhu534.workers.dev';
 
+// ── PIN GATE ─────────────────────────────────────────────────────────
+// Set your PIN by replacing the hash below.
+// To generate: open browser console and run: hashPin('yourpin')
+// then paste the result as OWNER_HASH.
+var OWNER_HASH = 'REPLACE_WITH_YOUR_HASH'; // e.g. 'a665a45920422f9d417e4867efdc4fb8'
+
+async function hashPin(pin) {
+  var buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(pin));
+  return Array.from(new Uint8Array(buf)).map(function(b){ return b.toString(16).padStart(2,'0'); }).join('');
+}
+
+function isOwnerUnlocked() {
+  try { return localStorage.getItem('bloom_owner') === '1'; } catch(e) { return false; }
+}
+
 function getApiConfig() {
+  // Owner (PIN verified) always uses the default Worker
+  if (isOwnerUnlocked()) return { type: 'worker', url: DEFAULT_PROXY };
   var stored = '';
   try { stored = localStorage.getItem('bloom_api') || ''; } catch(e) {}
-  if (!stored) return { type: 'worker', url: DEFAULT_PROXY };
+  // Everyone else must have entered their own key
+  if (!stored) return { type: 'none' };
   if (stored.startsWith('sk-ant-')) return { type: 'anthropic', key: stored };
   if (stored.startsWith('sk-'))     return { type: 'openai',    key: stored };
-  // treat anything else as a Worker URL
   return { type: 'worker', url: stored };
 }
 
 async function callApi(prompt) {
   var cfg = getApiConfig();
+  if (cfg.type === 'none') {
+    // No key set — show settings overlay
+    openApiSettings(true);
+    throw new Error('Please enter your API key in Settings to use this feature.');
+  }
   if (cfg.type === 'openai') {
     var resp = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
@@ -1666,9 +1688,15 @@ function apiInputHint(val) {
   else if (val.startsWith('http')) hint.textContent = '✓ Worker URL detected';
   else hint.textContent = '⚠ Not recognised — expecting sk-ant-…, sk-…, or https://…';
 }
-function openApiSettings() {
+function openApiSettings(forced) {
   var el = document.getElementById('apiOverlay');
   el.style.display = 'flex';
+  // Show/hide sections based on owner status
+  var owner = isOwnerUnlocked();
+  document.getElementById('ownerBadge').style.display = owner ? 'block' : 'none';
+  document.getElementById('apiSettingsMain').style.display = owner ? 'none' : 'block';
+  document.getElementById('pinEntry').style.display = 'none';
+  document.getElementById('resetBtn').textContent = owner ? 'Sign out' : 'Clear settings';
   var stored = '';
   try { stored = localStorage.getItem('bloom_api') || ''; } catch(e) {}
   var input = document.getElementById('proxyInput');
@@ -1709,6 +1737,7 @@ function clearApiSettings() {
     localStorage.removeItem('bloom_api');
     localStorage.removeItem('bloom_sheets_id');
     localStorage.removeItem('bloom_sheets_key');
+    localStorage.removeItem('bloom_owner');
   } catch(e) {}
   document.getElementById('proxyInput').value = '';
   document.getElementById('sheetsIdInput').value = '';
@@ -1819,23 +1848,69 @@ function handleSaveToSheets(type) {
     console.error('Sheets save error:', err);
   });
 }
+
+// ── PIN ENTRY ─────────────────────────────────────────────────────────
+function showPinEntry() {
+  document.getElementById('apiSettingsMain').style.display = 'none';
+  document.getElementById('pinEntry').style.display = 'block';
+  document.getElementById('pinInput').value = '';
+  document.getElementById('pinError').textContent = '';
+  setTimeout(function(){ document.getElementById('pinInput').focus(); }, 100);
+}
+function hidePinEntry() {
+  document.getElementById('pinEntry').style.display = 'none';
+  document.getElementById('apiSettingsMain').style.display = 'block';
+}
+async function submitPin() {
+  var pin = document.getElementById('pinInput').value;
+  if (!pin) return;
+  var hash = await hashPin(pin);
+  if (hash === OWNER_HASH) {
+    try { localStorage.setItem('bloom_owner', '1'); } catch(e) {}
+    closeApiSettings();
+    // Brief confirmation
+    var gear = document.querySelector('[onclick="openApiSettings()"]');
+    if (gear) { gear.textContent = '⚙'; }
+  } else {
+    document.getElementById('pinError').textContent = 'Incorrect PIN';
+    document.getElementById('pinInput').value = '';
+  }
+}
+// Allow Enter key in PIN field
+document.addEventListener('DOMContentLoaded', function() {
+  var pinInput = document.getElementById('pinInput');
+  if (pinInput) pinInput.addEventListener('keydown', function(e){ if(e.key==='Enter') submitPin(); });
+});
 </script>
 
 <!-- API SETTINGS OVERLAY -->
 <div id="apiOverlay" style="display:none;position:fixed;inset:0;z-index:999;background:rgba(42,30,20,.7);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);align-items:center;justify-content:center">
   <div style="background:var(--cream);border-radius:20px;padding:28px 24px;max-width:340px;width:90%;margin:0 auto">
     <div style="font-family:Cormorant Garamond,serif;font-size:22px;font-style:italic;color:var(--terra);margin-bottom:6px">API Settings</div>
-    <div style="font-family:Jost,sans-serif;font-size:11px;color:var(--stone);margin-bottom:16px;line-height:1.8">
-      Paste one of the following:<br>
-      <span style="color:var(--terra)">sk-ant-…</span> — Anthropic API key<br>
-      <span style="color:var(--terra)">sk-…</span> — OpenAI API key<br>
-      <span style="color:var(--terra)">https://…</span> — your own Cloudflare Worker<br>
-      <span style="opacity:.6">Leave empty to use the shared Worker.</span>
+    <div id="ownerBadge" style="display:none;font-family:Jost,sans-serif;font-size:10px;letter-spacing:.08em;color:var(--sage);background:rgba(90,120,72,.1);border-radius:20px;padding:4px 12px;margin-bottom:12px;text-align:center">✓ Using owner API</div>
+    <div id="apiSettingsMain">
+      <div style="font-family:Jost,sans-serif;font-size:11px;color:var(--stone);margin-bottom:16px;line-height:1.8">
+        Enter your own API key to use this app.<br>
+        <span style="color:var(--terra)">sk-ant-…</span> — Anthropic<br>
+        <span style="color:var(--terra)">sk-…</span> — OpenAI<br>
+        <span style="color:var(--terra)">https://…</span> — Cloudflare Worker
+      </div>
+      <div style="font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--terra);margin-bottom:6px">Your API key or Worker URL</div>
+      <input id="proxyInput" type="text" placeholder="sk-ant-… · sk-… · https://…"
+        style="width:100%;box-sizing:border-box;font-family:Jost,sans-serif;font-size:12px;padding:10px 12px;border:1px solid rgba(168,120,80,.3);border-radius:10px;background:var(--bg);color:var(--ink);outline:none;margin-bottom:6px">
+      <div id="apiTypeHint" style="font-size:10px;color:var(--sage);margin-bottom:8px;min-height:16px"></div>
+      <div style="text-align:center;margin-bottom:12px">
+        <button onclick="showPinEntry()" style="font-family:Jost,sans-serif;font-size:10px;color:var(--dust);background:none;border:none;cursor:pointer;letter-spacing:.06em">Have a PIN? →</button>
+      </div>
     </div>
-    <div style="font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--terra);margin-bottom:6px">Key or Worker URL</div>
-    <input id="proxyInput" type="text" placeholder="sk-ant-… · sk-… · https://…"
-      style="width:100%;box-sizing:border-box;font-family:Jost,sans-serif;font-size:12px;padding:10px 12px;border:1px solid rgba(168,120,80,.3);border-radius:10px;background:var(--bg);color:var(--ink);outline:none;margin-bottom:6px">
-    <div id="apiTypeHint" style="font-size:10px;color:var(--sage);margin-bottom:14px;min-height:16px"></div>
+    <div id="pinEntry" style="display:none;margin-bottom:12px">
+      <div style="font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--terra);margin-bottom:6px">Owner PIN</div>
+      <input id="pinInput" type="password" placeholder="Enter PIN"
+        style="width:100%;box-sizing:border-box;font-family:Jost,sans-serif;font-size:14px;padding:10px 12px;border:1px solid rgba(168,120,80,.3);border-radius:10px;background:var(--bg);color:var(--ink);outline:none;margin-bottom:6px;letter-spacing:.3em">
+      <div id="pinError" style="font-size:10px;color:var(--terra);margin-bottom:8px;min-height:14px"></div>
+      <button onclick="submitPin()" style="width:100%;font-family:Jost,sans-serif;font-size:11px;font-weight:400;letter-spacing:.1em;text-transform:uppercase;background:var(--terra);color:#fff;border:none;border-radius:50px;padding:10px;cursor:pointer;margin-bottom:8px">Unlock</button>
+      <div style="text-align:center"><button onclick="hidePinEntry()" style="font-family:Jost,sans-serif;font-size:10px;color:var(--dust);background:none;border:none;cursor:pointer">← Back</button></div>
+    </div>
     <div style="font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--terra);margin-bottom:6px">Google Sheets sync</div>
     <input id="sheetsIdInput" type="text" placeholder="Spreadsheet ID (from URL)"
       style="width:100%;box-sizing:border-box;font-family:Jost,sans-serif;font-size:12px;padding:8px 12px;border:1px solid rgba(168,120,80,.3);border-radius:10px;background:var(--bg);color:var(--ink);outline:none;margin-bottom:6px">
@@ -1851,7 +1926,7 @@ function handleSaveToSheets(type) {
       <button onclick="closeApiSettings()" style="font-family:Jost,sans-serif;font-size:11px;font-weight:400;letter-spacing:.1em;text-transform:uppercase;background:none;color:var(--stone);border:1px solid rgba(168,120,80,.3);border-radius:50px;padding:10px 16px;cursor:pointer">Cancel</button>
     </div>
     <div style="text-align:center;margin-top:14px">
-      <button onclick="clearApiSettings()" style="font-family:Jost,sans-serif;font-size:10px;color:var(--dust);background:none;border:none;cursor:pointer;letter-spacing:.06em">Reset to shared Worker</button>
+      <button onclick="clearApiSettings()" style="font-family:Jost,sans-serif;font-size:10px;color:var(--dust);background:none;border:none;cursor:pointer;letter-spacing:.06em" id="resetBtn">Clear settings</button>
     </div>
   </div>
 </div>
