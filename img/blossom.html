@@ -867,11 +867,55 @@ const GUIDE_SCRIPTS = {
 // ── CONFIG ────────────────────────────────────────────────────────────
 // Replace with your Cloudflare Worker URL after deploying bloom-worker.js
 // ── API CONFIG ───────────────────────────────────────────────────────
-// Your Cloudflare Worker proxies requests to Anthropic.
-// Users can optionally enter their OWN Cloudflare Worker URL.
 var DEFAULT_PROXY = 'https://fancy-boat-5426.angel-zhu534.workers.dev';
-function getProxy() {
-  try { return localStorage.getItem('bloom_proxy') || DEFAULT_PROXY; } catch(e) { return DEFAULT_PROXY; }
+
+function getApiConfig() {
+  var stored = '';
+  try { stored = localStorage.getItem('bloom_api') || ''; } catch(e) {}
+  if (!stored) return { type: 'worker', url: DEFAULT_PROXY };
+  if (stored.startsWith('sk-ant-')) return { type: 'anthropic', key: stored };
+  if (stored.startsWith('sk-'))     return { type: 'openai',    key: stored };
+  // treat anything else as a Worker URL
+  return { type: 'worker', url: stored };
+}
+
+async function callApi(prompt) {
+  var cfg = getApiConfig();
+  if (cfg.type === 'openai') {
+    var resp = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + cfg.key },
+      body: JSON.stringify({ model: 'gpt-4o-mini', max_tokens: 1200,
+        messages: [{ role: 'user', content: prompt }] })
+    });
+    var d = await resp.json();
+    if (!resp.ok) throw new Error((d.error && d.error.message) || 'OpenAI error ' + resp.status);
+    // normalise to Anthropic shape
+    var usage = { input_tokens: d.usage.prompt_tokens, output_tokens: d.usage.completion_tokens };
+    return { text: d.choices[0].message.content, usage: usage };
+  } else if (cfg.type === 'anthropic') {
+    var resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json',
+                 'x-api-key': cfg.key, 'anthropic-version': '2023-06-01' },
+      body: JSON.stringify({ model: 'claude-haiku-4-5-20251001', max_tokens: 1200,
+        messages: [{ role: 'user', content: prompt }] })
+    });
+    var d = await resp.json();
+    if (!resp.ok) throw new Error((d.error && d.error.message) || 'Anthropic error ' + resp.status);
+    return { text: d.content[0].text, usage: d.usage };
+  } else {
+    // Cloudflare Worker (default)
+    var resp = await fetch(cfg.url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ model: 'claude-haiku-4-5-20251001', max_tokens: 1200,
+        messages: [{ role: 'user', content: prompt }] })
+    });
+    var d = await resp.json();
+    if (!resp.ok) throw new Error((d.error && d.error.message) || 'Worker error ' + resp.status);
+    return { text: d.content[0].text, usage: d.usage };
+  }
 }
 
 // ── STATE ─────────────────────────────────────────────────────────────
@@ -1324,8 +1368,8 @@ if (!mealHistory.dinner) mealHistory.dinner = [];
 var currentMeals = { breakfast: null, lunch: null, dinner: null };
 // ── TOKEN TRACKING ────────────────────────────────────────────────────
 var sessionTokens = { input: 0, output: 0, calls: 0 };
-// claude-sonnet-4-5 pricing per million tokens (as of 2025)
-var TOKEN_COST = { input: 3.00, output: 15.00 };
+// Approximate blended pricing — Anthropic haiku / OpenAI gpt-4o-mini
+var TOKEN_COST = { input: 0.15, output: 0.60 };
 function trackTokens(usage) {
   if (!usage) return '';
   sessionTokens.input  += (usage.input_tokens  || 0);
@@ -1350,8 +1394,8 @@ var MEAL_PROMPTS = {
       "No sweet breakfasts. She wants something considered. Weekday, 10-25 min.",
       "Recently had: " + recent + ". Do NOT repeat those.",
       "Pick freely across any cuisine that fits her profile.",
-      "Suggest ONE breakfast. JSON only, no markdown:",
-      '{"name":"","cuisine":"","description":"one sentence why this feels right this morning","time":"15 min","ingredients":["","",""],"method":"two sentences on technique","why":"one phrase"}'
+      "Return a FULL recipe with all steps and exact quantities. JSON only, no markdown, no preamble:",
+      '{"name":"","cuisine":"","why":"one phrase why this fits","serves":"1","time":"15 min","ingredients":[{"amount":"1","unit":"tbsp","item":"olive oil"}],"steps":[{"n":1,"text":"Full step here."}],"note":"optional tip"}'
     ].join(' ');
     return profile;
   },
@@ -1366,8 +1410,8 @@ var MEAL_PROMPTS = {
       "Real flavour, satisfying but not heavy, 20-30 min or a great nearby spot.",
       "She gets bored — she wants variety, not defaults.",
       "Recently had: " + recent + ". Do NOT repeat those.",
-      "Suggest ONE lunch. JSON only:",
-      '{"name":"","cuisine":"","description":"one sentence","time":"20 min","ingredients":["","",""],"method":"two sentences","why":"one phrase","sf_spot":"optional: real SF area known for this type"}'
+      "Return a FULL recipe with all steps and exact quantities. JSON only, no markdown, no preamble:",
+      '{"name":"","cuisine":"","why":"one phrase","serves":"1-2","time":"25 min","ingredients":[{"amount":"1","unit":"cup","item":"ingredient"}],"steps":[{"n":1,"text":"Full step here."}],"note":"optional tip"}'
     ].join(' ');
     return profile;
   },
@@ -1383,7 +1427,7 @@ var MEAL_PROMPTS = {
       "She loves fermented elements, fat used properly, acidity to balance, dishes with a story.",
       "1-2 people, 30-60 min weeknight. Not looking for safe or predictable. Range freely across all cuisines.",
       "Recently had: " + recent + ". Do NOT repeat those.",
-      "Suggest ONE dinner. JSON only:",
+      "Return a FULL recipe with all steps and exact quantities. JSON only, no markdown, no preamble:",
       '{"name":"","cuisine":"","description":"two sentences on why right tonight","time":"40 min","difficulty":"Medium","ingredients":["","","","",""],"method":"three sentences on key technique","why_tonight":"one sentence"}'
     ].join(' ');
     return profile;
@@ -1396,48 +1440,59 @@ async function generateMeal(type) {
   if (container) container.innerHTML = '<div style="padding:20px;text-align:center;font-style:italic;color:var(--stone);font-size:15px">Thinking... (~10 seconds)</div>';
 
   try {
-    var response = await fetch(getProxy(), {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'model: 'claude-haiku-4-5-20251001',
-        max_tokens: 600,
-        messages: [{ role: 'user', content: MEAL_PROMPTS[type]() }]
-      })
-    });
-    var data = await response.json();
-    if (!response.ok || !data.content) {
-      throw new Error((data.error && data.error.message) || 'API error ' + response.status);
-    }
-    var text = data.content[0].text.replace(/```json|```/g, '').trim();
+    var result = await callApi(MEAL_PROMPTS[type]());
+    var text = result.text.replace(/```json|```/g, '').trim();
     var meal = JSON.parse(text);
     currentMeals[type] = meal;
-    var tokenLine = trackTokens(data.usage);
+    var tokenLine = trackTokens(result.usage);
 
     mealHistory[type].push(meal.name);
     if (mealHistory[type].length > 15) mealHistory[type] = mealHistory[type].slice(-15);
     try { localStorage.setItem('bloom_meals', JSON.stringify(mealHistory)); } catch(e) {}
 
-    var sfSpot = '';
-    var difficultyLine = meal.difficulty ? '<div class="dinner-card-time-item"><span>' + meal.difficulty + '</span>Difficulty</div>' : '';
+    // Build ingredients list
+    var ingHtml = '';
+    if (Array.isArray(meal.ingredients)) {
+      meal.ingredients.forEach(function(ing) {
+        if (typeof ing === 'object') {
+          ingHtml += '<li>' + [ing.amount, ing.unit, ing.item].filter(Boolean).join(' ') + '</li>';
+        } else {
+          ingHtml += '<li>' + ing + '</li>';
+        }
+      });
+    }
+    // Build numbered steps
+    var stepsHtml = '';
+    if (Array.isArray(meal.steps)) {
+      meal.steps.forEach(function(s) {
+        var num = s.n || '';
+        var txt = s.text || s;
+        stepsHtml += '<div style="display:flex;gap:10px;margin-bottom:10px">' +
+          '<div style="font-family:Cormorant Garamond,serif;font-size:18px;color:var(--terra);flex-shrink:0;line-height:1.3">' + num + '</div>' +
+          '<div style="font-family:Cormorant Garamond,serif;font-size:15px;color:var(--ink);line-height:1.7">' + txt + '</div>' +
+          '</div>';
+      });
+    } else {
+      stepsHtml = '<div style="font-family:Cormorant Garamond,serif;font-size:15px;color:var(--ink);line-height:1.7">' + (meal.method || '') + '</div>';
+    }
+    var difficultyLine = meal.difficulty ? ' · ' + meal.difficulty : '';
+    var noteHtml = meal.note ? '<div style="margin-top:12px;padding:10px 12px;background:rgba(168,120,80,.07);border-radius:8px;font-family:Cormorant Garamond,serif;font-size:13px;font-style:italic;color:var(--stone);line-height:1.6">✦ ' + meal.note + '</div>' : '';
 
     if (container) container.innerHTML =
       '<div class="dinner-card">' +
         '<div class="dinner-card-cuisine">' + meal.cuisine + '</div>' +
         '<div class="dinner-card-name">' + meal.name + '</div>' +
-        '<div class="dinner-card-desc">' + (meal.description || '') + '</div>' +
-        '<div class="dinner-card-ingredients">' + meal.ingredients.join(' · ') + '</div>' +
-        '<div class="dinner-card-steps">' + meal.method + '</div>' +
-        '<div style="margin-top:10px;font-size:14px;font-style:italic;color:var(--terra)">' + (meal.why || meal.why_tonight || '') + '</div>' +
-        sfSpot +
-        '<div style="display:flex;gap:12px;margin-top:10px;padding-top:10px;border-top:1px solid rgba(168,120,80,.1)">' +
-          '<div class="dinner-card-time-item"><span>' + meal.time + '</span>Time</div>' +
-          difficultyLine +
+        '<div style="font-size:11px;color:var(--dust);margin-bottom:10px">' + (meal.serves||'') + ' · ' + (meal.time||'') + difficultyLine + '</div>' +
+        '<div style="font-family:Cormorant Garamond,serif;font-size:15px;font-style:italic;color:var(--stone);margin-bottom:14px;line-height:1.65">' + (meal.why || meal.why_tonight || meal.description || '') + '</div>' +
+        '<div style="font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--terra);margin-bottom:8px">Ingredients</div>' +
+        '<ul style="padding-left:16px;margin:0 0 16px;font-family:Jost,sans-serif;font-size:12px;font-weight:300;color:var(--stone);line-height:2">' + ingHtml + '</ul>' +
+        '<div style="font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--terra);margin-bottom:10px">Method</div>' +
+        stepsHtml +
+        noteHtml +
+        '<div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px;padding-top:10px;border-top:1px solid rgba(168,120,80,.1)">' +
+          '<div style="text-align:left;cursor:pointer;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--dust)" onclick="generateMeal(&quot;' + type + '&quot;)">↺ Try another</div>' +
+          (tokenLine ? '<div style="font-size:9px;letter-spacing:.03em;color:var(--dust);opacity:.5">' + tokenLine + '</div>' : '') +
         '</div>' +
-        '<div style="text-align:center;padding:10px 0 0;cursor:pointer;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--dust)" onclick="generateMeal(&quot;' + type + '&quot;)">Try another →</div>' +
-        (tokenLine ? '<div style="text-align:center;padding:4px 0 2px;font-size:9px;letter-spacing:.04em;color:var(--dust);opacity:.6">' + tokenLine + '</div>' : '') +
       '</div>';
   } catch(e) {
     var msg = (e && e.message) ? e.message : 'Unknown error';
@@ -1586,21 +1641,32 @@ if ('serviceWorker' in navigator) {
 }
 
 // ── API SETTINGS OVERLAY ─────────────────────────────────────────────
+function apiInputHint(val) {
+  var hint = document.getElementById('apiTypeHint');
+  if (!hint) return;
+  if (!val) { hint.textContent = ''; return; }
+  if (val.startsWith('sk-ant-')) hint.textContent = '✓ Anthropic key detected';
+  else if (val.startsWith('sk-'))  hint.textContent = '✓ OpenAI key detected';
+  else if (val.startsWith('http')) hint.textContent = '✓ Worker URL detected';
+  else hint.textContent = '⚠ Not recognised — expecting sk-ant-…, sk-…, or https://…';
+}
 function openApiSettings() {
   var el = document.getElementById('apiOverlay');
   el.style.display = 'flex';
   var stored = '';
-  try { stored = localStorage.getItem('bloom_proxy') || ''; } catch(e) {}
-  document.getElementById('proxyInput').value = stored;
-  // show session usage
+  try { stored = localStorage.getItem('bloom_api') || ''; } catch(e) {}
+  var input = document.getElementById('proxyInput');
+  input.value = stored;
+  apiInputHint(stored);
+  input.addEventListener('input', function() { apiInputHint(this.value.trim()); });
+  // session usage
   var cost = (sessionTokens.input / 1e6 * TOKEN_COST.input) +
              (sessionTokens.output / 1e6 * TOKEN_COST.output);
   document.getElementById('sessionUsageDisplay').innerHTML =
     sessionTokens.calls === 0
       ? 'No API calls this session.'
       : sessionTokens.calls + ' call' + (sessionTokens.calls > 1 ? 's' : '') +
-        ' · ' + sessionTokens.input + ' input tokens · ' +
-        sessionTokens.output + ' output tokens<br>' +
+        ' · ' + sessionTokens.input + ' in · ' + sessionTokens.output + ' out<br>' +
         'Estimated cost: <strong>$' + cost.toFixed(4) + '</strong>';
 }
 function closeApiSettings() {
@@ -1609,13 +1675,13 @@ function closeApiSettings() {
 function saveApiSettings() {
   var val = document.getElementById('proxyInput').value.trim();
   try {
-    if (val) { localStorage.setItem('bloom_proxy', val); }
-    else      { localStorage.removeItem('bloom_proxy'); }
+    if (val) { localStorage.setItem('bloom_api', val); }
+    else      { localStorage.removeItem('bloom_api'); }
   } catch(e) {}
   closeApiSettings();
 }
 function clearApiSettings() {
-  try { localStorage.removeItem('bloom_proxy'); } catch(e) {}
+  try { localStorage.removeItem('bloom_api'); } catch(e) {}
   document.getElementById('proxyInput').value = '';
   closeApiSettings();
 }
@@ -1625,13 +1691,17 @@ function clearApiSettings() {
 <div id="apiOverlay" style="display:none;position:fixed;inset:0;z-index:999;background:rgba(42,30,20,.7);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);align-items:center;justify-content:center">
   <div style="background:var(--cream);border-radius:20px;padding:28px 24px;max-width:340px;width:90%;margin:0 auto">
     <div style="font-family:Cormorant Garamond,serif;font-size:22px;font-style:italic;color:var(--terra);margin-bottom:6px">API Settings</div>
-    <div style="font-family:Jost,sans-serif;font-size:11px;color:var(--stone);margin-bottom:18px;line-height:1.7">
-      By default this app uses a shared Cloudflare Worker.<br>
-      Enter your own Worker URL to use your own Anthropic API key.
+    <div style="font-family:Jost,sans-serif;font-size:11px;color:var(--stone);margin-bottom:16px;line-height:1.8">
+      Paste one of the following:<br>
+      <span style="color:var(--terra)">sk-ant-…</span> — Anthropic API key<br>
+      <span style="color:var(--terra)">sk-…</span> — OpenAI API key<br>
+      <span style="color:var(--terra)">https://…</span> — your own Cloudflare Worker<br>
+      <span style="opacity:.6">Leave empty to use the shared Worker.</span>
     </div>
-    <div style="font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--terra);margin-bottom:6px">Cloudflare Worker URL</div>
-    <input id="proxyInput" type="url" placeholder="https://your-worker.workers.dev"
-      style="width:100%;box-sizing:border-box;font-family:Jost,sans-serif;font-size:12px;padding:10px 12px;border:1px solid rgba(168,120,80,.3);border-radius:10px;background:var(--bg);color:var(--ink);outline:none;margin-bottom:10px">
+    <div style="font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--terra);margin-bottom:6px">Key or Worker URL</div>
+    <input id="proxyInput" type="text" placeholder="sk-ant-… · sk-… · https://…"
+      style="width:100%;box-sizing:border-box;font-family:Jost,sans-serif;font-size:12px;padding:10px 12px;border:1px solid rgba(168,120,80,.3);border-radius:10px;background:var(--bg);color:var(--ink);outline:none;margin-bottom:6px">
+    <div id="apiTypeHint" style="font-size:10px;color:var(--sage);margin-bottom:14px;min-height:16px"></div>
     <div style="font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--terra);margin-bottom:6px">Session usage</div>
     <div id="sessionUsageDisplay" style="font-family:Jost,sans-serif;font-size:11px;color:var(--stone);margin-bottom:18px;background:rgba(168,120,80,.07);border-radius:8px;padding:8px 10px"></div>
     <div style="display:flex;gap:10px">
@@ -1639,7 +1709,7 @@ function clearApiSettings() {
       <button onclick="closeApiSettings()" style="font-family:Jost,sans-serif;font-size:11px;font-weight:400;letter-spacing:.1em;text-transform:uppercase;background:none;color:var(--stone);border:1px solid rgba(168,120,80,.3);border-radius:50px;padding:10px 16px;cursor:pointer">Cancel</button>
     </div>
     <div style="text-align:center;margin-top:14px">
-      <button onclick="clearApiSettings()" style="font-family:Jost,sans-serif;font-size:10px;color:var(--dust);background:none;border:none;cursor:pointer;letter-spacing:.06em">Reset to default</button>
+      <button onclick="clearApiSettings()" style="font-family:Jost,sans-serif;font-size:10px;color:var(--dust);background:none;border:none;cursor:pointer;letter-spacing:.06em">Reset to shared Worker</button>
     </div>
   </div>
 </div>
