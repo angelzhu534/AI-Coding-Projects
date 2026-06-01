@@ -43,8 +43,8 @@ body {
 /* ── HEADER ── */
 .app-header {
   position: fixed; top:0; left:0; right:0; z-index:100;
-  padding: calc(var(--safe-top) + 14px) 22px 12px;
-  background: rgba(245,237,224,.94);
+  padding: calc(var(--safe-top) + 10px) 18px 0;
+  background: rgba(245,237,224,.96);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border-bottom: 1px solid rgba(168,120,80,.12);
@@ -65,9 +65,445 @@ body {
 
 /* ── MAIN ── */
 .main {
-  padding-top: calc(var(--safe-top) + 70px);
-  padding-bottom: calc(var(--safe-bot) + 100px);
+  position: fixed;
+  top: calc(var(--safe-top) + 90px);
+  bottom: calc(var(--safe-bot) + 12px);
+  left: 0; right: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   max-width: 480px; margin: 0 auto;
+  padding-bottom: 24px;
+}
+
+/* ── NOW CARD ── */
+.now-section { padding: 24px 20px 0; }
+.now-label {
+  font-family: 'Jost', sans-serif; font-size: 9px; font-weight: 400;
+  letter-spacing: .22em; text-transform: uppercase; color: var(--terra);
+  margin-bottom: 10px;
+}
+.now-card {
+  background: var(--terra);
+  border-radius: 16px;
+  padding: 24px 24px 20px;
+  position: relative; overflow: hidden;
+  box-shadow: 0 8px 32px rgba(184,92,56,.22);
+}
+.now-card::before {
+  content: '';
+  position: absolute; top:-30px; right:-30px;
+  width: 140px; height: 140px; border-radius: 50%;
+  background: rgba(255,255,255,.08);
+}
+.now-card::after {
+  content: '';
+  position: absolute; bottom:-20px; left:20px;
+  width: 80px; height: 80px; border-radius: 50%;
+  background: rgba(255,255,255,.05);
+}
+.now-time-badge {
+  display: inline-block;
+  font-family: 'Jost', sans-serif; font-size: 11px; font-weight: 300;
+  letter-spacing: .12em; text-transform: uppercase;
+  color: rgba(255,255,255,.7); margin-bottom: 10px;
+}
+.now-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 26px; font-weight: 400; color: #fff;
+  line-height: 1.2; margin-bottom: 8px;
+}
+.now-note {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 15px; font-style: italic;
+  color: rgba(255,255,255,.8); line-height: 1.65;
+  margin-bottom: 18px;
+}
+.now-tag {
+  display: inline-block;
+  font-family: 'Jost', sans-serif; font-size: 9px; font-weight: 400;
+  letter-spacing: .12em; text-transform: uppercase;
+  padding: 3px 10px; border-radius: 20px;
+  background: rgba(255,255,255,.18); color: rgba(255,255,255,.9);
+  margin-bottom: 18px;
+}
+.now-actions {
+  display: flex; gap: 10px; align-items: center;
+}
+.btn-play {
+  display: flex; align-items: center; gap: 8px;
+  background: rgba(255,255,255,.18);
+  border: 1px solid rgba(255,255,255,.3);
+  border-radius: 50px; padding: 10px 20px;
+  font-family: 'Jost', sans-serif; font-size: 12px; font-weight: 400;
+  letter-spacing: .08em; color: #fff; cursor: pointer;
+  transition: background .2s;
+  flex: 1; justify-content: center;
+}
+.btn-play:active { background: rgba(255,255,255,.28); }
+.btn-play .play-icon { font-size: 14px; }
+.btn-next {
+  display: flex; align-items: center;
+  background: rgba(255,255,255,.1);
+  border: 1px solid rgba(255,255,255,.2);
+  border-radius: 50px; padding: 10px 14px;
+  font-family: 'Jost', sans-serif; font-size: 18px;
+  color: rgba(255,255,255,.8); cursor: pointer;
+  transition: background .2s;
+}
+.btn-next:active { background: rgba(255,255,255,.2); }
+
+/* ── PROGRESS BAR ── */
+.day-progress { padding: 16px 20px 0; }
+.progress-label {
+  display: flex; justify-content: space-between;
+  font-family: 'Jost', sans-serif; font-size: 10px; font-weight: 300;
+  color: var(--dust); letter-spacing: .08em; margin-bottom: 6px;
+}
+.progress-track {
+  height: 3px; background: rgba(168,120,80,.15); border-radius: 2px; overflow: hidden;
+}
+.progress-fill {
+  height: 100%; background: linear-gradient(to right, var(--terra), var(--gold));
+  border-radius: 2px; transition: width .5s ease;
+}
+
+/* ── INTENTION BANNER ── */
+.intention-banner {
+  margin: 20px 20px 0;
+  background: var(--cream);
+  border-radius: 12px;
+  padding: 16px 18px;
+  border: 1px solid rgba(168,120,80,.15);
+  display: flex; align-items: flex-start; gap: 12px;
+}
+.intention-icon { font-size: 20px; flex-shrink: 0; }
+.intention-text {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 16px; font-style: italic; color: var(--stone);
+  line-height: 1.65;
+}
+.intention-label {
+  font-family: 'Jost', sans-serif; font-size: 9px; font-weight: 400;
+  letter-spacing: .18em; text-transform: uppercase; color: var(--terra);
+  margin-bottom: 3px;
+}
+
+/* ── SECTION HEADERS ── */
+.sched-section-header {
+  padding: 24px 20px 8px;
+  display: flex; align-items: center; gap: 10px;
+}
+.sched-section-name {
+  font-family: 'Jost', sans-serif; font-size: 9px; font-weight: 400;
+  letter-spacing: .2em; text-transform: uppercase; color: var(--dust);
+}
+.sched-section-line {
+  flex: 1; height: 1px; background: rgba(168,120,80,.15);
+}
+
+/* ── BLOCK CARDS ── */
+.blocks-list { padding: 0 12px; }
+.block-card {
+  display: flex; gap: 0; margin-bottom: 6px;
+  border-radius: 12px; overflow: hidden;
+  background: var(--cream);
+  border: 1px solid rgba(168,120,80,.1);
+  cursor: pointer;
+  transition: transform .15s, box-shadow .15s;
+  position: relative;
+}
+.block-card:active { transform: scale(.98); }
+.block-card.is-now {
+  border-color: rgba(184,92,56,.35);
+  box-shadow: 0 3px 14px rgba(184,92,56,.12);
+}
+.block-card.past { opacity: .5; }
+.block-card.playing {
+  border-color: var(--terra);
+  box-shadow: 0 4px 18px rgba(184,92,56,.2);
+}
+
+.block-accent {
+  width: 4px; flex-shrink: 0;
+  background: rgba(168,120,80,.15);
+}
+.block-card.is-now .block-accent { background: var(--terra); }
+.block-card.tag-run .block-accent { background: var(--sage); }
+.block-card.tag-ritual .block-accent { background: var(--gold); }
+.block-card.tag-matcha .block-accent { background: #6a8a48; }
+.block-card.tag-focus .block-accent { background: #4a7a68; }
+.block-card.tag-rest .block-accent { background: #9a7a88; }
+.block-card.tag-sacred .block-accent { background: var(--terra); }
+
+.block-inner {
+  flex: 1; padding: 12px 14px 10px;
+}
+.block-top {
+  display: flex; justify-content: space-between;
+  align-items: flex-start; margin-bottom: 3px;
+}
+.block-time {
+  font-family: 'Jost', sans-serif; font-size: 10px; font-weight: 300;
+  color: var(--dust); letter-spacing: .06em;
+}
+.block-pill {
+  font-family: 'Jost', sans-serif; font-size: 8px; font-weight: 400;
+  letter-spacing: .1em; text-transform: uppercase;
+  padding: 2px 7px; border-radius: 10px;
+}
+.pill-run    { background: rgba(90,120,72,.12); color: var(--sage); }
+.pill-ritual { background: rgba(160,120,48,.1); color: var(--gold); }
+.pill-matcha { background: rgba(90,130,60,.12); color: #5a8840; }
+.pill-focus  { background: rgba(60,110,100,.1); color: #4a8878; }
+.pill-rest   { background: rgba(140,100,120,.1); color: #8a6878; }
+.pill-sacred { background: rgba(184,92,56,.1); color: var(--terra); }
+
+.block-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 16px; font-weight: 400; color: var(--ink);
+  line-height: 1.3; margin-bottom: 3px;
+}
+.block-note {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 13px; font-style: italic; color: var(--stone);
+  line-height: 1.6; display: none;
+}
+.block-card.expanded .block-note { display: block; }
+.block-play-btn {
+  display: none; margin-top: 8px;
+}
+.block-card.expanded .block-play-btn { display: flex; }
+.block-play-btn button {
+  font-family: 'Jost', sans-serif; font-size: 10px; font-weight: 400;
+  letter-spacing: .1em; text-transform: uppercase;
+  color: var(--terra); background: none; border: 1px solid rgba(184,92,56,.3);
+  border-radius: 20px; padding: 5px 12px; cursor: pointer;
+}
+.block-play-btn button:active { background: rgba(184,92,56,.08); }
+
+/* ── AUDIO WAVE INDICATOR ── */
+.wave-indicator {
+  display: none; align-items: center; gap: 2px; margin-left: 8px;
+}
+.block-card.playing .wave-indicator { display: flex; }
+.wave-bar {
+  width: 2px; background: var(--terra); border-radius: 1px;
+  animation: wave 0.8s ease-in-out infinite;
+}
+.wave-bar:nth-child(1) { height: 6px; animation-delay: 0s; }
+.wave-bar:nth-child(2) { height: 10px; animation-delay: 0.15s; }
+.wave-bar:nth-child(3) { height: 7px; animation-delay: 0.3s; }
+.wave-bar:nth-child(4) { height: 12px; animation-delay: 0.1s; }
+@keyframes wave {
+  0%,100% { transform: scaleY(1); }
+  50% { transform: scaleY(0.4); }
+}
+
+/* ── DAY SELECTOR ── */
+.day-selector {
+  padding: 6px 20px 0;
+  display: flex; gap: 6px; overflow-x: auto;
+  scrollbar-width: none;
+}
+.day-selector::-webkit-scrollbar { display: none; }
+.day-btn {
+  flex-shrink: 0;
+  font-family: 'Jost', sans-serif; font-size: 10px; font-weight: 400;
+  letter-spacing: .1em; text-transform: uppercase;
+  padding: 7px 14px; border-radius: 20px;
+  border: 1px solid rgba(168,120,80,.2);
+  background: transparent; color: var(--dust); cursor: pointer;
+  transition: all .18s;
+}
+.day-btn.active {
+  background: var(--terra); border-color: var(--terra);
+  color: #fff; box-shadow: 0 3px 10px rgba(184,92,56,.2);
+}
+
+/* ── AUDIO STATUS BAR ── */
+.audio-bar {
+  position: fixed; bottom: var(--safe-bot); left:0; right:0; z-index:200;
+  padding: 12px 20px calc(var(--safe-bot) + 8px);
+  background: rgba(245,237,224,.96);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-top: 1px solid rgba(168,120,80,.12);
+  display: flex; align-items: center; gap: 12px;
+  max-width: 100%;
+}
+.audio-bar.hidden { display: none; }
+.audio-now-playing {
+  flex: 1;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 14px; font-style: italic; color: var(--stone);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.audio-stop-btn {
+  font-family: 'Jost', sans-serif; font-size: 10px; font-weight: 400;
+  letter-spacing: .1em; text-transform: uppercase;
+  color: var(--terra); background: rgba(184,92,56,.08);
+  border: 1px solid rgba(184,92,56,.2);
+  border-radius: 20px; padding: 6px 14px; cursor: pointer;
+  flex-shrink: 0;
+}
+.audio-mini-wave {
+  display: flex; gap: 2px; align-items: center; flex-shrink: 0;
+}
+.audio-mini-wave .wave-bar { background: var(--terra); }
+
+/* ── EIGHT HABITS TAB ── */
+.habits-section { padding: 8px 12px 0; }
+.habit-item {
+  display: flex; gap: 14px; padding: 14px 14px;
+  background: var(--cream); border-radius: 12px;
+  border: 1px solid rgba(168,120,80,.1);
+  margin-bottom: 6px; cursor: pointer;
+  transition: transform .15s;
+}
+.habit-item:active { transform: scale(.98); }
+.habit-num {
+  font-family: 'Cormorant Garamond', serif; font-size: 28px;
+  font-weight: 300; color: rgba(184,92,56,.2); line-height: 1;
+  flex-shrink: 0; width: 32px;
+}
+.habit-content {}
+.habit-title-sm {
+  font-family: 'Cormorant Garamond', serif; font-size: 17px;
+  font-weight: 400; color: var(--ink); margin-bottom: 2px;
+}
+.habit-tag-sm {
+  font-family: 'Jost', sans-serif; font-size: 9px; font-weight: 300;
+  color: var(--dust); letter-spacing: .04em;
+}
+.habit-body-sm {
+  display: none; margin-top: 10px; padding-top: 10px;
+  border-top: 1px solid rgba(168,120,80,.1);
+}
+.habit-item.open .habit-body-sm { display: block; }
+.habit-body-text {
+  font-family: 'Cormorant Garamond', serif; font-size: 15px;
+  color: var(--stone); line-height: 1.75; margin-bottom: 8px;
+}
+.habit-body-practice {
+  font-family: 'Cormorant Garamond', serif; font-size: 14px;
+  font-style: italic; color: var(--terra); line-height: 1.7;
+  padding: 8px 12px; background: rgba(184,92,56,.06);
+  border-radius: 8px; border-left: 2px solid var(--terra);
+}
+.habit-speak-btn {
+  margin-top: 10px;
+  font-family: 'Jost', sans-serif; font-size: 10px; font-weight: 400;
+  letter-spacing: .1em; text-transform: uppercase;
+  color: var(--terra); background: none;
+  border: 1px solid rgba(184,92,56,.25); border-radius: 20px;
+  padding: 6px 14px; cursor: pointer;
+}
+
+/* ── TAB BAR ── */
+.tab-bar {
+  display: flex;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  gap: 6px;
+  padding: 8px 18px 10px;
+}
+.tab-bar::-webkit-scrollbar { display: none; }
+.tab-item {
+  flex-shrink: 0;
+  background: transparent;
+  border: 1px solid rgba(168,120,80,.22);
+  border-radius: 20px;
+  padding: 5px 14px;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 13px;
+  font-weight: 400;
+  font-style: italic;
+  letter-spacing: .04em;
+  color: var(--stone);
+  cursor: pointer;
+  transition: all .15s;
+  white-space: nowrap;
+}
+.tab-item.active {
+  background: var(--terra);
+  border-color: var(--terra);
+  color: #fff;
+}!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="In Full Bloom">
+<link rel="manifest" href="./blossom-manifest.json">
+<link rel="apple-touch-icon" href="./blossom-icon.svg">
+<title>Blossom</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Jost:wght@200;300;400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:     #f5ede0;
+  --bg2:    #ede0cc;
+  --terra:  #b85c38;
+  --terra-l:#d4835a;
+  --gold:   #a07830;
+  --sage:   #5a7848;
+  --sage-l: #7a9868;
+  --cream:  #faf6ee;
+  --ink:    #2a1e14;
+  --stone:  #6a5a48;
+  --dust:   #9a8878;
+  --petal:  #e8c0a8;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bot: env(safe-area-inset-bottom, 0px);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Jost', sans-serif;
+  font-weight: 300;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── HEADER ── */
+.app-header {
+  position: fixed; top:0; left:0; right:0; z-index:100;
+  padding: calc(var(--safe-top) + 10px) 18px 0;
+  background: rgba(245,237,224,.96);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(168,120,80,.12);
+}
+.header-inner {
+  display: flex; align-items: center; justify-content: space-between;
+  max-width: 480px; margin: 0 auto;
+}
+.app-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 17px; font-weight: 400; font-style: italic;
+  color: var(--terra); letter-spacing: .02em;
+}
+.live-time {
+  font-family: 'Jost', sans-serif; font-size: 13px; font-weight: 300;
+  color: var(--stone); letter-spacing: .06em;
+}
+
+/* ── MAIN ── */
+.main {
+  position: fixed;
+  top: calc(var(--safe-top) + 90px);
+  bottom: calc(var(--safe-bot) + 12px);
+  left: 0; right: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  max-width: 480px; margin: 0 auto;
+  padding-bottom: 24px;
 }
 
 /* ── NOW CARD ── */
@@ -691,10 +1127,17 @@ body {
                border-radius:20px;padding:5px 14px;font-family:Jost,sans-serif;
                font-size:10px;font-weight:400;letter-spacing:.08em;
                color:var(--terra);cursor:pointer;display:flex;align-items:center;gap:6px">
-        <span id="musicIcon">♪</span><span id="musicLabel">lofi</span>
+        <span id="musicIcon">&#9834;</span><span id="musicLabel">lofi</span>
       </button>
       <div class="live-time" id="liveTime">--:--</div>
     </div>
+  </div>
+  <div class="tab-bar">
+    <button class="tab-item active" onclick="switchTab('today')" id="tab-today">Today</button>
+    <button class="tab-item" onclick="switchTab('habits')" id="tab-habits">Habits</button>
+    <button class="tab-item" onclick="switchTab('money')" id="tab-money">Money</button>
+    <button class="tab-item" onclick="switchTab('dinner')" id="tab-dinner">Food</button>
+    <button class="tab-item" onclick="switchTab('voice')" id="tab-voice">Guide</button>
   </div>
 </div>
 
@@ -705,28 +1148,13 @@ body {
 
 
 <!-- TAB BAR -->
-<div class="tab-bar">
-  <button class="tab-item active" onclick="switchTab('today')" id="tab-today">
-    <div class="tab-icon">☀️</div>
-    <div class="tab-label">Today</div>
-  </button>
-  <button class="tab-item" onclick="switchTab('habits')" id="tab-habits">
-    <div class="tab-icon">✦</div>
-    <div class="tab-label">Habits</div>
-  </button>
-  <button class="tab-item" onclick="switchTab('money')" id="tab-money">
-    <div class="tab-icon">◈</div>
-    <div class="tab-label">Money</div>
-  </button>
-  <button class="tab-item" onclick="switchTab('dinner')" id="tab-dinner">
-    <div class="tab-icon">🍽</div>
-    <div class="tab-label">Food</div>
-  </button>
-  <button class="tab-item" onclick="switchTab('voice')" id="tab-voice">
-    <div class="tab-icon">◉</div>
-    <div class="tab-label">Guide</div>
-  </button>
-</div>
+<script>
+// Stubs so early taps/init don't crash before main script parses
+function switchTab(t){var e=document.getElementById("mainContent");if(e)e.innerHTML="<div style=\"padding:40px;text-align:center;font-style:italic;color:#a8836e\">Loading...</div>";}
+function renderKeySetup(){}
+function renderToday(){}
+</script>
+
 
 <script>
 // ── DATA ─────────────────────────────────────────────────────────────
@@ -859,6 +1287,21 @@ const GUIDE_SCRIPTS = {
 
 // ── CONFIG ────────────────────────────────────────────────────────────
 // Replace with your Cloudflare Worker URL after deploying bloom-worker.js
+// API key — stored in localStorage, set on first launch
+var ANTHROPIC_KEY = null;
+try { ANTHROPIC_KEY = localStorage.getItem('bloom_api_key'); } catch(e) {}
+
+function getApiKey() { return ANTHROPIC_KEY; }
+function saveApiKey(key) {
+  ANTHROPIC_KEY = key.trim();
+  try { localStorage.setItem('bloom_api_key', ANTHROPIC_KEY); } catch(e) {}
+}
+function clearApiKey() {
+  ANTHROPIC_KEY = null;
+  try { localStorage.removeItem('bloom_api_key'); } catch(e) {}
+}
+
+// Your personal worker URL (for your own use)
 var ANTHROPIC_PROXY = 'https://fancy-boat-5426.angel-zhu534.workers.dev';
 
 // ── STATE ─────────────────────────────────────────────────────────────
@@ -1019,6 +1462,13 @@ function renderMoney() {
   });
 
   document.getElementById('mainContent').innerHTML = html;
+
+  // API key settings link at bottom of guide tab
+  var settingsLink = document.createElement('div');
+  settingsLink.style.cssText = 'text-align:center;padding:16px 0 4px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--dust);cursor:pointer';
+  settingsLink.textContent = '⚙  API Key Settings';
+  settingsLink.onclick = function() { showKeySettings(); };
+  document.getElementById('mainContent').appendChild(settingsLink);
 }
 
 function toggleMoney(i) {
@@ -1368,17 +1818,28 @@ async function generateMeal(type) {
   if (container) container.innerHTML = '<div style="padding:20px;text-align:center;font-style:italic;color:var(--stone);font-size:15px">Thinking... (~10 seconds)</div>';
 
   try {
-    var response = await fetch(ANTHROPIC_PROXY, {
+    var controller = new AbortController();
+    var timer = setTimeout(function() { controller.abort(); }, 20000);
+    var apiKey = getApiKey();
+    var useProxy = !apiKey;
+    var endpoint = useProxy ? ANTHROPIC_PROXY : 'https://api.anthropic.com/v1/messages';
+    var headers = { 'Content-Type': 'application/json' };
+    if (apiKey) {
+      headers['x-api-key'] = apiKey;
+      headers['anthropic-version'] = '2023-06-01';
+      headers['anthropic-dangerous-direct-browser-access'] = 'true';
+    }
+    var response = await fetch(endpoint, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      signal: controller.signal,
+      headers: headers,
       body: JSON.stringify({
         model: 'claude-sonnet-4-5',
-        max_tokens: 600,
+        max_tokens: 500,
         messages: [{ role: 'user', content: MEAL_PROMPTS[type]() }]
       })
     });
+    clearTimeout(timer);
     var data = await response.json();
     if (!response.ok || !data.content) {
       throw new Error((data.error && data.error.message) || 'API error ' + response.status);
@@ -1420,85 +1881,6 @@ async function generateMeal(type) {
   if (btn) { btn.textContent = '↺ New suggestion'; btn.style.opacity = '1'; }
 }
 
-// ── SF LIVE CONTENT ───────────────────────────────────────────────────
-var sfCache = null;
-var sfCacheTime = 0;
-
-async function loadSFContent() {
-  var container = document.getElementById('sfContent');
-  if (!container) return;
-
-  // Use cache if < 3 hours old
-  if (sfCache && (Date.now() - sfCacheTime) < 10800000) {
-    container.innerHTML = sfCache; return;
-  }
-
-  container.innerHTML = '<div style="padding:20px;text-align:center;font-style:italic;color:var(--stone)">Checking what&#39;s on in SF...</div>';
-
-  var today = new Date();
-  var month = today.toLocaleString('en-US', { month: 'long' });
-  var dayOfWeek = today.toLocaleString('en-US', { weekday: 'long' });
-
-  try {
-    var response = await fetch(ANTHROPIC_PROXY, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-5',
-        max_tokens: 800,
-        tools: [{ type: 'web_search_20250305', name: 'web_search' }],
-        messages: [{
-          role: 'user',
-          content: 'It is ' + dayOfWeek + ' in ' + month + ' 2026 in San Francisco. Search for: (1) what is currently at SFMOMA or de Young museum this week, (2) what produce is in season at SF farmers markets right now, (3) one food/restaurant event or popup happening in SF this week. Return as JSON only, no markdown: {"museums":[{"name":"venue name","exhibition":"current show name","note":"one short interesting note"}],"seasonal_produce":["item1","item2","item3","item4"],"event":{"name":"event name","where":"location","note":"one sentence"}}'
-        }]
-      })
-    });
-    var data = await response.json();
-    var textBlock = data.content.filter(function(b) { return b.type === 'text'; })[0];
-    if (!textBlock) throw new Error('no text');
-    var text = textBlock.text.replace(/```json|```/g, '').trim();
-    var sf = JSON.parse(text);
-
-    var html = '';
-
-    if (sf.museums && sf.museums.length) {
-      sf.museums.forEach(function(m) {
-        html += '<div class="money-card" style="border-left-color:var(--sage)">' +
-          '<div class="money-card-label">' + m.name + '</div>' +
-          '<div class="money-card-title">' + m.exhibition + '</div>' +
-          '<div class="money-card-text">' + (m.note || '') + '</div>' +
-        '</div>';
-      });
-    }
-
-    if (sf.seasonal_produce && sf.seasonal_produce.length) {
-      html += '<div class="money-card" style="border-left-color:var(--terra)">' +
-        '<div class="money-card-label">Warm Water Cove · Farmers Market</div>' +
-        '<div class="money-card-title">In season now</div>' +
-        '<div class="money-card-text" style="display:block">' + sf.seasonal_produce.join('  ·  ') + '</div>' +
-      '</div>';
-    }
-
-    if (sf.event) {
-      html += '<div class="money-card" style="border-left-color:var(--gold)">' +
-        '<div class="money-card-label">This week</div>' +
-        '<div class="money-card-title">' + sf.event.name + '</div>' +
-        '<div class="money-card-text">' + sf.event.where + '</div>' +
-        '<div class="money-card-action">' + (sf.event.note || '') + '</div>' +
-      '</div>';
-    }
-
-    sfCache = html;
-    sfCacheTime = Date.now();
-    container.innerHTML = html || '<div style="padding:16px;font-style:italic;color:var(--stone)">No events found right now.</div>';
-
-  } catch(e) {
-    var msg = (e && e.message) ? e.message : 'Unknown error';
-    if (container) container.innerHTML = '<div style="padding:16px;font-size:13px;color:var(--stone)">' + msg.slice(0,150) + '</div>';
-  }
-}
 
 // ── RENDER FOOD TAB ───────────────────────────────────────────────────
 function renderDinner() {
@@ -1532,23 +1914,115 @@ function renderDinner() {
       '</div>';
   });
 
-  // SF live section - built via DOM to avoid quote issues
-  document.getElementById('mainContent').innerHTML = html;
-  var sfWrap = document.createElement('div');
-  sfWrap.style.margin = '12px 12px 0';
-  sfWrap.innerHTML = [
-    '<div style="font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--dust);margin-bottom:8px">What\'s on in SF</div>',
-    '<div id="sfContent"></div>',
-    '<div style="text-align:center;padding:8px 0;cursor:pointer;font-size:10px;letter-spacing:.06em;color:var(--dust)" onclick="loadSFContent()">&#8635; Refresh</div>'
-  ].join('');
-  document.getElementById('mainContent').appendChild(sfWrap);
 
-  // Auto-suggest dinner when tab opens
-  generateMeal('dinner');
 
-  // Load SF content
-  loadSFContent();
+
+// ── API KEY SETUP ─────────────────────────────────────────────────────
+function renderKeySetup() {
+  var el = document.getElementById('mainContent');
+  el.innerHTML = '';
+  var wrap = document.createElement('div');
+  wrap.style.cssText = 'padding:40px 24px;max-width:400px;margin:0 auto';
+
+  var title = document.createElement('div');
+  title.style.cssText = 'font-family:Cormorant Garamond,serif;font-size:28px;color:var(--ink);margin-bottom:8px';
+  title.textContent = 'Welcome to Blossom';
+
+  var desc = document.createElement('div');
+  desc.style.cssText = 'font-size:13px;color:var(--stone);line-height:1.7;margin-bottom:28px';
+  desc.innerHTML = 'To use meal suggestions, add your Anthropic API key. Get one free at <a href="https://console.anthropic.com" target="_blank" style="color:var(--terra)">console.anthropic.com</a> — costs pennies per use.';
+
+  var input = document.createElement('input');
+  input.id = 'keyInput';
+  input.type = 'password';
+  input.placeholder = 'sk-ant-api03-...';
+  input.style.cssText = 'width:100%;padding:14px 16px;border:1px solid rgba(168,120,80,.3);border-radius:12px;background:var(--cream);font-family:Jost,sans-serif;font-size:14px;color:var(--ink);outline:none;display:block;margin-bottom:12px';
+
+  var btn = document.createElement('button');
+  btn.style.cssText = 'width:100%;padding:14px;background:var(--terra);color:#fff;border:none;border-radius:12px;font-family:Jost,sans-serif;font-size:13px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;margin-bottom:12px';
+  btn.textContent = 'Save and continue';
+  btn.onclick = function() { submitApiKey(); };
+
+  var skip = document.createElement('div');
+  skip.style.cssText = 'text-align:center;font-size:12px;color:var(--dust);cursor:pointer';
+  skip.textContent = 'Skip — use without meal suggestions';
+  skip.onclick = function() { skipKeySetup(); };
+
+  wrap.appendChild(title);
+  wrap.appendChild(desc);
+  wrap.appendChild(input);
+  wrap.appendChild(btn);
+  wrap.appendChild(skip);
+  el.appendChild(wrap);
 }
+
+function submitApiKey() {
+  var val = document.getElementById('keyInput').value.trim();
+  if (!val || !val.startsWith('sk-')) {
+    document.getElementById('keyInput').style.borderColor = 'var(--terra)';
+    return;
+  }
+  saveApiKey(val);
+  switchTab('today');
+}
+
+function skipKeySetup() {
+  try { localStorage.setItem('bloom_key_skipped', '1'); } catch(e) {}
+  switchTab('today');
+}
+
+function showKeySettings() {
+  var el = document.getElementById('mainContent');
+  el.innerHTML = '';
+  var wrap = document.createElement('div');
+  wrap.style.cssText = 'padding:28px 24px';
+
+  var title = document.createElement('div');
+  title.style.cssText = 'font-family:Cormorant Garamond,serif;font-size:22px;color:var(--ink);margin-bottom:16px';
+  title.textContent = 'API Key';
+
+  var status = document.createElement('div');
+  status.style.cssText = 'font-size:13px;color:var(--stone);margin-bottom:16px';
+  status.textContent = ANTHROPIC_KEY ? 'Key saved: ' + ANTHROPIC_KEY.slice(0,12) + '...' : 'No key saved.';
+
+  var input = document.createElement('input');
+  input.id = 'keyInput2';
+  input.type = 'password';
+  input.placeholder = 'sk-ant-api03-...';
+  input.style.cssText = 'width:100%;padding:14px 16px;border:1px solid rgba(168,120,80,.3);border-radius:12px;background:var(--cream);font-family:Jost,sans-serif;font-size:14px;color:var(--ink);outline:none;display:block;margin-bottom:12px';
+
+  var btn = document.createElement('button');
+  btn.style.cssText = 'width:100%;padding:14px;background:var(--terra);color:#fff;border:none;border-radius:12px;font-family:Jost,sans-serif;font-size:13px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer';
+  btn.textContent = 'Update key';
+  btn.onclick = function() {
+    var v = document.getElementById('keyInput2').value.trim();
+    if (v && v.startsWith('sk-')) { saveApiKey(v); switchTab('today'); }
+    else { input.style.borderColor = 'var(--terra)'; }
+  };
+
+  wrap.appendChild(title);
+  wrap.appendChild(status);
+  wrap.appendChild(input);
+  wrap.appendChild(btn);
+
+  if (ANTHROPIC_KEY) {
+    var clr = document.createElement('div');
+    clr.style.cssText = 'text-align:center;font-size:12px;color:var(--dust);cursor:pointer;margin-top:10px';
+    clr.textContent = 'Remove key';
+    clr.onclick = function() { clearApiKey(); switchTab('today'); };
+    wrap.appendChild(clr);
+  }
+  el.appendChild(wrap);
+}
+
+function updateApiKey() {
+  var v = document.getElementById('keyInput2');
+  if (!v) return;
+  var val = v.value.trim();
+  if (val && val.startsWith('sk-')) { saveApiKey(val); switchTab('today'); }
+  else { v.style.borderColor = 'var(--terra)'; }
+}
+
 
 function toggleGuide(el) {
   var panel = el.nextElementSibling;
@@ -1626,6 +2100,8 @@ function updateClock() {
 setInterval(updateClock, 30000);
 updateClock();
 
+}
+
 // ── AUTO-REFRESH CURRENT BLOCK ────────────────────────────────────────
 setInterval(() => {
   if (currentTab === 'today') {
@@ -1635,9 +2111,17 @@ setInterval(() => {
 }, 60000);
 
 // ── INIT ──────────────────────────────────────────────────────────────
-// ResponsiveVoice handles voice loading automatically
-
-renderToday();
+// Direct init — runs after all functions above are defined
+(function init() {
+  var skipped = false;
+  try { skipped = !!localStorage.getItem('bloom_key_skipped'); } catch(e) {}
+  if (!ANTHROPIC_KEY && !skipped) {
+    switchTab('today');
+    renderKeySetup();
+  } else {
+    switchTab('today');
+  }
+})();
 </script>
 </body>
 </html>
