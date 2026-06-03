@@ -10,10 +10,7 @@
 <link rel="apple-touch-icon" href="./blossom-icon.svg">
 <title>Blossom</title>
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="dns-prefetch" href="https://fancy-boat-5426.angel-zhu534.workers.dev">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Jost:wght@200;300;400&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Jost:wght@200;300;400&display=swap" rel="stylesheet">
 <style>
 :root {
   --bg:     #f5ede0;
@@ -37,7 +34,7 @@
 body {
   background: var(--bg);
   color: var(--ink);
-  font-family: 'Jost', 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Jost', sans-serif;
   font-weight: 300;
   min-height: 100vh;
   overflow-x: hidden;
@@ -51,7 +48,6 @@ body {
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border-bottom: 1px solid rgba(168,120,80,.12);
-  will-change: transform;
 }
 .header-inner {
   display: flex; align-items: center; justify-content: space-between;
@@ -63,21 +59,21 @@ body {
   color: var(--terra); letter-spacing: .02em;
 }
 .live-time {
-  font-family: 'Jost', 'Helvetica Neue', Arial, sans-serif; font-size: 13px; font-weight: 300;
+  font-family: 'Jost', sans-serif; font-size: 13px; font-weight: 300;
   color: var(--stone); letter-spacing: .06em;
 }
 
 /* ── MAIN ── */
 .main {
   padding-top: calc(var(--safe-top) + 112px);
-  padding-bottom: calc(var(--safe-bot) + 20px);
+  padding-bottom: calc(var(--safe-bot) + 24px);
   max-width: 480px; margin: 0 auto;
 }
 
 /* ── NOW CARD ── */
 .now-section { padding: 24px 20px 0; }
 .now-label {
-  font-family: 'Jost', 'Helvetica Neue', Arial, sans-serif; font-size: 9px; font-weight: 400;
+  font-family: 'Jost', sans-serif; font-size: 9px; font-weight: 400;
   letter-spacing: .22em; text-transform: uppercase; color: var(--terra);
   margin-bottom: 10px;
 }
@@ -102,7 +98,7 @@ body {
 }
 .now-time-badge {
   display: inline-block;
-  font-family: 'Jost', 'Helvetica Neue', Arial, sans-serif; font-size: 11px; font-weight: 300;
+  font-family: 'Jost', sans-serif; font-size: 11px; font-weight: 300;
   letter-spacing: .12em; text-transform: uppercase;
   color: rgba(255,255,255,.7); margin-bottom: 10px;
 }
@@ -119,7 +115,7 @@ body {
 }
 .now-tag {
   display: inline-block;
-  font-family: 'Jost', 'Helvetica Neue', Arial, sans-serif; font-size: 9px; font-weight: 400;
+  font-family: 'Jost', sans-serif; font-size: 9px; font-weight: 400;
   letter-spacing: .12em; text-transform: uppercase;
   padding: 3px 10px; border-radius: 20px;
   background: rgba(255,255,255,.18); color: rgba(255,255,255,.9);
@@ -133,7 +129,7 @@ body {
   background: rgba(255,255,255,.18);
   border: 1px solid rgba(255,255,255,.3);
   border-radius: 50px; padding: 10px 20px;
-  font-family: 'Jost', 'Helvetica Neue', Arial, sans-serif; font-size: 12px; font-weight: 400;
+  font-family: 'Jost', sans-serif; font-size: 12px; font-weight: 400;
   letter-spacing: .08em; color: #fff; cursor: pointer;
   transition: background .2s;
   flex: 1; justify-content: center;
@@ -145,7 +141,7 @@ body {
   background: rgba(255,255,255,.1);
   border: 1px solid rgba(255,255,255,.2);
   border-radius: 50px; padding: 10px 14px;
-  font-family: 'Jost', 'Helvetica Neue', Arial, sans-serif; font-size: 18px;
+  font-family: 'Jost', sans-serif; font-size: 18px;
   color: rgba(255,255,255,.8); cursor: pointer;
   transition: background .2s;
 }
@@ -155,7 +151,7 @@ body {
 .day-progress { padding: 16px 20px 0; }
 .progress-label {
   display: flex; justify-content: space-between;
-  font-family: 'Jost', 'Helvetica Neue', Arial, sans-serif; font-size: 10px; font-weight: 300;
+  font-family: 'Jost', sans-serif; font-size: 10px; font-weight: 300;
   color: var(--dust); letter-spacing: .08em; margin-bottom: 6px;
 }
 .progress-track {
@@ -182,7 +178,7 @@ body {
   line-height: 1.65;
 }
 .intention-label {
-  font-family: 'Jost', 'Helvetica Neue', Arial, sans-serif; font-size: 9px; font-weight: 400;
+  font-family: 'Jost', sans-serif; font-size: 9px; font-weight: 400;
   letter-spacing: .18em; text-transform: uppercase; color: var(--terra);
   margin-bottom: 3px;
 }
@@ -193,7 +189,7 @@ body {
   display: flex; align-items: center; gap: 10px;
 }
 .sched-section-name {
-  font-family: 'Jost', 'Helvetica Neue', Arial, sans-serif; font-size: 9px; font-weight: 400;
+  font-family: 'Jost', sans-serif; font-size: 9px; font-weight: 400;
   letter-spacing: .2em; text-transform: uppercase; color: var(--dust);
 }
 .sched-section-line {
@@ -242,11 +238,11 @@ body {
   align-items: flex-start; margin-bottom: 3px;
 }
 .block-time {
-  font-family: 'Jost', 'Helvetica Neue', Arial, sans-serif; font-size: 10px; font-weight: 300;
+  font-family: 'Jost', sans-serif; font-size: 10px; font-weight: 300;
   color: var(--dust); letter-spacing: .06em;
 }
 .block-pill {
-  font-family: 'Jost', 'Helvetica Neue', Arial, sans-serif; font-size: 8px; font-weight: 400;
+  font-family: 'Jost', sans-serif; font-size: 8px; font-weight: 400;
   letter-spacing: .1em; text-transform: uppercase;
   padding: 2px 7px; border-radius: 10px;
 }
@@ -273,7 +269,7 @@ body {
 }
 .block-card.expanded .block-play-btn { display: flex; }
 .block-play-btn button {
-  font-family: 'Jost', 'Helvetica Neue', Arial, sans-serif; font-size: 10px; font-weight: 400;
+  font-family: 'Jost', sans-serif; font-size: 10px; font-weight: 400;
   letter-spacing: .1em; text-transform: uppercase;
   color: var(--terra); background: none; border: 1px solid rgba(184,92,56,.3);
   border-radius: 20px; padding: 5px 12px; cursor: pointer;
@@ -307,7 +303,7 @@ body {
 .day-selector::-webkit-scrollbar { display: none; }
 .day-btn {
   flex-shrink: 0;
-  font-family: 'Jost', 'Helvetica Neue', Arial, sans-serif; font-size: 10px; font-weight: 400;
+  font-family: 'Jost', sans-serif; font-size: 10px; font-weight: 400;
   letter-spacing: .1em; text-transform: uppercase;
   padding: 7px 14px; border-radius: 20px;
   border: 1px solid rgba(168,120,80,.2);
@@ -338,7 +334,7 @@ body {
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 .audio-stop-btn {
-  font-family: 'Jost', 'Helvetica Neue', Arial, sans-serif; font-size: 10px; font-weight: 400;
+  font-family: 'Jost', sans-serif; font-size: 10px; font-weight: 400;
   letter-spacing: .1em; text-transform: uppercase;
   color: var(--terra); background: rgba(184,92,56,.08);
   border: 1px solid rgba(184,92,56,.2);
@@ -371,7 +367,7 @@ body {
   font-weight: 400; color: var(--ink); margin-bottom: 2px;
 }
 .habit-tag-sm {
-  font-family: 'Jost', 'Helvetica Neue', Arial, sans-serif; font-size: 9px; font-weight: 300;
+  font-family: 'Jost', sans-serif; font-size: 9px; font-weight: 300;
   color: var(--dust); letter-spacing: .04em;
 }
 .habit-body-sm {
@@ -391,7 +387,7 @@ body {
 }
 .habit-speak-btn {
   margin-top: 10px;
-  font-family: 'Jost', 'Helvetica Neue', Arial, sans-serif; font-size: 10px; font-weight: 400;
+  font-family: 'Jost', sans-serif; font-size: 10px; font-weight: 400;
   letter-spacing: .1em; text-transform: uppercase;
   color: var(--terra); background: none;
   border: 1px solid rgba(184,92,56,.25); border-radius: 20px;
@@ -402,23 +398,21 @@ body {
 .tab-bar {
   position: fixed; top:0; left:0; right:0; z-index:101;
   background: rgba(245,237,224,.97);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
   border-bottom: 1px solid rgba(168,120,80,.15);
-  display: flex;
-  padding-top: var(--safe-top);
+  display: flex; padding-top: var(--safe-top);
 }
 .tab-item {
   flex: 1; display: flex; flex-direction: column;
-  align-items: center; padding: 8px 4px 8px;
+  align-items: center; padding: 10px 4px 6px;
   cursor: pointer; transition: opacity .15s;
   border: none; background: none;
 }
 .tab-item:active { opacity: .6; }
-.tab-icon { font-size: 20px; margin-bottom: 2px; }
+.tab-icon { font-size: 17px; margin-bottom: 1px; }
 .tab-label {
-  font-family: 'Jost', 'Helvetica Neue', Arial, sans-serif; font-size: 9px; font-weight: 400;
-  letter-spacing: .08em; text-transform: uppercase; color: var(--dust);
+  font-family: 'Jost', sans-serif; font-size: 9px; font-weight: 400;
+  letter-spacing: .05em; text-transform: uppercase; color: var(--dust);
 }
 .tab-item.active .tab-label { color: var(--terra); }
 .tab-item.active .tab-icon { filter: none; }
@@ -440,12 +434,12 @@ body {
   margin-bottom: 6px;
 }
 .quote-source {
-  font-family: 'Jost', 'Helvetica Neue', Arial, sans-serif; font-size: 9px; font-weight: 300;
+  font-family: 'Jost', sans-serif; font-size: 9px; font-weight: 300;
   color: var(--dust); letter-spacing: .1em; text-transform: uppercase;
 }
 .quote-speak {
   margin-top: 12px;
-  font-family: 'Jost', 'Helvetica Neue', Arial, sans-serif; font-size: 10px; font-weight: 400;
+  font-family: 'Jost', sans-serif; font-size: 10px; font-weight: 400;
   letter-spacing: .1em; text-transform: uppercase;
   color: var(--terra); background: none;
   border: 1px solid rgba(184,92,56,.25); border-radius: 20px;
@@ -590,30 +584,17 @@ body {
 .main, .app-header, .tab-bar, .audio-bar, #apiOverlay {
   position: relative; z-index: 1;
 }
-.app-header { z-index: 100; } .tab-bar { z-index: 102; } .audio-bar { z-index: 100; }
+.app-header, .tab-bar, .audio-bar { z-index: 100; }
 #apiOverlay { z-index: 999; }
 
 
 /* ── TAB BACKGROUNDS ── */
 .tab-bg {
   position: fixed; inset: 0; z-index: 0; pointer-events: none;
-  overflow: hidden;
+  display: none; overflow: hidden;
   background: #f5ede0;
-  opacity: 0;
-  transition: opacity 0.35s ease;
-  pointer-events: none;
-  visibility: hidden;
 }
-.tab-bg.active {
-  opacity: 1;
-  visibility: visible;
-}
-.tab-bg img {
-  position: absolute;
-  pointer-events: none;
-  user-select: none;
-  -webkit-user-select: none;
-}
+.tab-bg.active { display: block; }
 .main { position: relative; z-index: 1; }
 
 
@@ -641,6 +622,36 @@ body {
   50% { transform:scaleY(0.35); }
 }
 
+
+/* ── WELLNESS TAB ── */
+.sleep-card { margin:10px 12px 0; background:linear-gradient(135deg,rgba(80,60,120,.06),rgba(60,50,100,.04)); border-radius:16px; padding:16px 18px; border:1px solid rgba(100,80,160,.12); }
+.sleep-section-title { font-size:9px; letter-spacing:.18em; text-transform:uppercase; color:var(--terra); margin-bottom:10px; }
+.sleep-time-row { display:flex; gap:10px; margin-bottom:14px; }
+.sleep-time-block { flex:1; background:rgba(168,120,80,.07); border-radius:10px; padding:10px 12px; text-align:center; }
+.sleep-time-label { font-family:'Jost',sans-serif; font-size:9px; letter-spacing:.1em; text-transform:uppercase; color:var(--dust); margin-bottom:4px; }
+.sleep-time-input { font-family:'Cormorant Garamond',serif; font-size:22px; color:var(--ink); background:none; border:none; outline:none; width:100%; text-align:center; cursor:pointer; }
+.sleep-rating-row,.sleep-energy-row { display:flex; justify-content:space-between; margin-bottom:12px; gap:5px; }
+.sleep-rating-btn,.sleep-energy-btn { flex:1; padding:8px 0; border-radius:10px; border:1px solid rgba(168,120,80,.2); background:none; cursor:pointer; font-size:15px; transition:background .15s; }
+.sleep-rating-btn.selected { background:rgba(184,92,56,.15); border-color:var(--terra); }
+.sleep-energy-btn.selected { background:rgba(90,120,72,.15); border-color:var(--sage); }
+.sleep-week-chart { display:flex; align-items:flex-end; gap:4px; height:56px; margin-bottom:6px; }
+.sleep-week-col { flex:1; display:flex; flex-direction:column; align-items:center; gap:2px; }
+.sleep-week-fill { width:100%; border-radius:3px 3px 0 0; background:linear-gradient(to top,rgba(184,92,56,.45),rgba(184,92,56,.15)); }
+.sleep-week-lbl { font-family:'Jost',sans-serif; font-size:7px; color:var(--dust); letter-spacing:.04em; text-transform:uppercase; }
+.sleep-log-row { display:flex; align-items:center; justify-content:space-between; padding:7px 0; border-bottom:1px solid rgba(168,120,80,.07); }
+.supp-item { display:flex; align-items:center; justify-content:space-between; padding:10px 0; border-bottom:1px solid rgba(168,120,80,.07); }
+.supp-check { width:28px; height:28px; border-radius:50%; border:1.5px solid rgba(168,120,80,.3); display:flex; align-items:center; justify-content:center; cursor:pointer; background:transparent; flex-shrink:0; font-size:14px; transition:all .2s; }
+.supp-check.done { background:var(--sage); border-color:var(--sage); color:#fff; }
+.fitness-day { margin-bottom:8px; border-radius:12px; overflow:hidden; background:var(--cream); border:1px solid rgba(168,120,80,.1); }
+.fitness-day-header { display:flex; align-items:center; justify-content:space-between; padding:12px 14px; cursor:pointer; }
+.fitness-day-name { font-family:'Cormorant Garamond',serif; font-size:17px; color:var(--ink); }
+.fitness-day-tag { font-family:'Jost',sans-serif; font-size:9px; letter-spacing:.1em; text-transform:uppercase; color:var(--dust); background:rgba(168,120,80,.08); border-radius:10px; padding:3px 8px; }
+.fitness-day-body { display:none; padding:0 14px 14px; border-top:1px solid rgba(168,120,80,.08); }
+.fitness-day.open .fitness-day-body { display:block; }
+.fitness-exercise { padding:8px 0; border-bottom:1px solid rgba(168,120,80,.06); }
+.fitness-exercise:last-child { border-bottom:none; }
+.fitness-ex-name { font-family:'Cormorant Garamond',serif; font-size:15px; color:var(--ink); margin-bottom:2px; }
+.fitness-ex-detail { font-family:'Jost',sans-serif; font-size:11px; font-weight:300; color:var(--stone); line-height:1.6; }
 </style>
 </head>
 <body>
@@ -650,39 +661,49 @@ body {
 <audio id="lofiAudio" loop preload="none" playsinline
   src="./leberch-lofi-516620.mp3"
   style="position:fixed;width:1px;height:1px;opacity:0.01;bottom:0;left:0">
-</audio><div style="position:fixed;top:94px;left:0;right:0;z-index:0;pointer-events:none;overflow:hidden">
+</audio><div style="position:fixed;top:60px;left:0;right:0;z-index:0;pointer-events:none;overflow:hidden">
   <!-- Image 3: Tigger, Piglet, Pooh, Eeyore — top strip -->
-  <img src="./oh-bother-winnie-pooh-public-domain-gore-too-john-rizvi.webp" loading="lazy"
+  <img src="./oh-bother-winnie-pooh-public-domain-gore-too-john-rizvi.webp"
        alt="E.H. Shepard original illustration - Tigger Piglet Pooh Eeyore"
-       style="width:100%;max-width:480px;display:block;margin:0 auto;opacity:0.08;mix-blend-mode:multiply;filter:sepia(0.15) contrast(1.05) brightness(1.1)">
+       style="width:100%;max-width:480px;display:block;margin:0 auto;opacity:0.09;mix-blend-mode:multiply;filter:sepia(0.2) contrast(1.1)">
 </div>
 
 
 <!-- TAB BACKGROUNDS — 5 distinct Shepard scenes (public domain 1926 E.H. Shepard) -->
 <div id="tabBg-today" class="tab-bg active">
-  <img src="./winnie-the-pooh_68.jpg" loading="lazy"
+  <img src="./winnie-the-pooh_68.jpg"
     alt="Shepard illustration"
-    style="position:absolute;bottom:72px;left:50%;transform:translateX(-50%);width:100%;max-width:520px;opacity:0.13;mix-blend-mode:multiply;filter:sepia(0.1) contrast(1.1) brightness(1.05)">
+    style="position:absolute;bottom:80px;left:50%;transform:translateX(-50%);
+           width:100%;max-width:480px;opacity:0.16;mix-blend-mode:multiply;
+           filter:sepia(0.15) contrast(1.05)">
 </div>
 <div id="tabBg-habits" class="tab-bg">
-  <img src="./oh-bother-winnie-pooh-public-domain-gore-too-john-rizvi.webp" loading="lazy"
+  <img src="./oh-bother-winnie-pooh-public-domain-gore-too-john-rizvi.webp"
     alt="Shepard illustration"
-    style="position:absolute;top:55%;left:50%;transform:translate(-50%,-50%);width:130%;max-width:600px;opacity:0.1;mix-blend-mode:multiply;filter:sepia(0.15) contrast(1.1) brightness(1.1)">
+    style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+           width:140%;max-width:640px;opacity:0.14;mix-blend-mode:multiply;
+           filter:sepia(0.2) contrast(1.08)">
 </div>
 <div id="tabBg-money" class="tab-bg">
-  <img src="./winnie-the-pooh_68.jpg" loading="lazy"
+  <img src="./winnie-the-pooh_68.jpg"
     alt="Shepard illustration"
-    style="position:absolute;top:80px;left:50%;transform:translateX(-50%) scaleX(-1);width:100%;max-width:480px;opacity:0.1;mix-blend-mode:multiply;filter:sepia(0.1) contrast(1.1)">
+    style="position:absolute;top:60px;left:50%;transform:translateX(-50%) scaleX(-1);
+           width:100%;max-width:480px;opacity:0.13;mix-blend-mode:multiply;
+           filter:sepia(0.1) contrast(1.05)">
 </div>
 <div id="tabBg-dinner" class="tab-bg">
-  <img src="./8bcbc5ab-255c-4fb2-898f-beaf21d9b1e4_780x440.jpg" loading="lazy"
+  <img src="./8bcbc5ab-255c-4fb2-898f-beaf21d9b1e4_780x440.jpg"
     alt="Shepard illustration"
-    style="position:absolute;bottom:80px;right:-20px;width:85%;max-width:400px;opacity:0.18;mix-blend-mode:multiply;filter:sepia(0.1) contrast(1.05) saturate(0.7)">
+    style="position:absolute;bottom:60px;right:-10px;
+           width:90%;max-width:430px;opacity:0.16;mix-blend-mode:multiply;
+           filter:sepia(0.25) contrast(1.1)">
 </div>
 <div id="tabBg-voice" class="tab-bg">
-  <img src="./oh-bother-winnie-pooh-public-domain-gore-too-john-rizvi.webp" loading="lazy"
+  <img src="./oh-bother-winnie-pooh-public-domain-gore-too-john-rizvi.webp"
     alt="Shepard illustration"
-    style="position:absolute;top:70px;left:50%;transform:translateX(-50%);width:110%;max-width:500px;opacity:0.1;mix-blend-mode:multiply;filter:sepia(0.2) contrast(1.0) brightness(1.05)">
+    style="position:absolute;top:60px;left:50%;transform:translateX(-50%);
+           width:100%;max-width:480px;opacity:0.09;mix-blend-mode:multiply;
+           filter:sepia(0.3) contrast(0.95)">
 </div>
 
 <!-- LOFI AUDIO — YouTube iframe (hidden, audio only) -->
@@ -710,6 +731,10 @@ body {
     <div class="tab-icon">◉</div>
     <div class="tab-label">Guide</div>
   </button>
+  <button class="tab-item" onclick="switchTab('sleep')" id="tab-sleep">
+    <div class="tab-icon">🌙</div>
+    <div class="tab-label">Wellness</div>
+  </button>
 </div>
 
 <!-- HEADER -->
@@ -736,101 +761,93 @@ body {
 
 
 <script>
-// ── DATA ─────────────────────────────────────────────────────────────
+
+// ── SCHEDULE DATA ─────────────────────────────────────────────────────
 const SCHEDULE = {
-  0: [ // Monday
-    { t:'6:00', title:'Skincare · morning routine', note:'SPF 50 non-negotiable. Taurus rising takes the body seriously before anything else.', tag:'ritual', m:360 },
-    { t:'6:30', title:'Run · Crane Cove · 4–5 miles', note:'No headphones first mile. This is the primary processing window of the day. Let the overnight density decompress before the input begins.', tag:'run', m:390 },
-    { t:'7:30', title:'Shower · dress with intention', note:'Not rushed. Taurus rising requires a considered start. The clothes are already correct — this is the act of putting them on deliberately.', tag:'ritual', m:450 },
-    { t:'8:00', title:'Candle lit · desk cleared · phone away', note:'Phone in another room. Not silenced. In another room. Silenced still means reachable.', tag:'ritual', m:480 },
-    { t:'8:15', title:'Matcha ceremony', note:'Make it properly. The steeping time is not a phone window. This is the transition between the morning and the day.', tag:'matcha', m:495 },
-    { t:'8:45', title:'Name one task for the morning', note:'One precise target. What does done look like by noon? Not a list — Mercury Scorpio needs a single excavation direction.', tag:'focus', m:525 },
-    { t:'9:00', title:'Deep work block one · 25 minutes', note:'One tab. One document. Nothing else visible. When it hits resistance, stay. That is the exact moment to stay.', tag:'focus', m:540 },
-    { t:'9:30', title:'Deep work block two · 25 minutes', note:'Write distractions down instead of acting on them. The idea will still be there at noon.', tag:'focus', m:570 },
-    { t:'10:00', title:'Deep work block three · 25 minutes', note:'Start with the hardest part of the task. Make it harder, not easier. The friction is where the real work lives.', tag:'focus', m:600 },
-    { t:'11:00', title:'Phone returns · triage only · 10 minutes', note:'Noon is when optionality returns. Not before. This is the boundary that makes the morning possible.', m:660 },
-    { t:'12:30', title:'Lunch · walk outside · no screens', note:'Step outside. The body has been at a desk for three hours. Taurus rising needs air and movement mid-day.', tag:'rest', m:750 },
-    { t:'14:00', title:'Calls · collaboration · admin', note:'Afternoon cognitive energy is lower. Schedule the social and collaborative things here.', m:840 },
-    { t:'17:00', title:'Formal close · all tabs shut', note:'Signal that work has ended. The Capricorn moon needs a clear boundary between work and not-work or it keeps processing in the background all evening.', tag:'ritual', m:1020 },
-    { t:'18:00', title:'Walk · no destination', note:'Not the processing run. This is Taurus rising in the physical world with nowhere to be. Let it be exactly this.', tag:'rest', m:1080 },
-    { t:'19:30', title:'Cook or forage dinner', note:'Wednesday market haul feeds Monday if planned correctly. Piccino if not.', m:1170 },
-    { t:'20:30', title:'Show · one episode', note:'Mindhunter, The Americans, Better Call Saul rotation. Something serious with craft. The evening is curated, not ambient.', m:1230 },
-    { t:'21:45', title:'Skincare · night routine', note:'Oil cleanse, retinol or niacinamide, moisturiser, lip and eye. Always. This is not optional.', tag:'ritual', m:1305 },
-    { t:'22:00', title:'Read · no screens', note:'Physical book. The transition to sleep needs something that is not a screen. Non-negotiable for sleep quality and morning quality.', tag:'rest', m:1320 },
-    { t:'22:30', title:'Candle out · sleep', note:'The day is done. Everything that needed to be done has been done. The rest can wait for the version of you that 8 hours produces.', tag:'sacred', m:1350 },
+  0: [
+    { t:'6:00',  title:'Skincare · morning routine', note:'SPF 50 non-negotiable. Taurus rising takes the body seriously before anything else.', tag:'ritual', m:360 },
+    { t:'6:30',  title:'Run · Crane Cove · 4–5 miles', note:'No headphones first mile. This is the primary processing window of the day.', tag:'run', m:390 },
+    { t:'7:30',  title:'Shower · dress with intention', note:'Not rushed. The clothes are already correct — this is the act of putting them on deliberately.', tag:'ritual', m:450 },
+    { t:'8:00',  title:'Candle lit · desk cleared · phone away', note:'Phone in another room. Not silenced. In another room.', tag:'ritual', m:480 },
+    { t:'8:15',  title:'Matcha ceremony', note:'Make it properly. The steeping time is not a phone window.', tag:'matcha', m:495 },
+    { t:'8:45',  title:'Name one task for the morning', note:'One precise target. What does done look like by noon?', tag:'focus', m:525 },
+    { t:'9:00',  title:'Deep work block one · 25 minutes', note:'One tab. One document. Nothing else visible.', tag:'focus', m:540 },
+    { t:'9:30',  title:'Deep work block two · 25 minutes', note:'Write distractions down instead of acting on them.', tag:'focus', m:570 },
+    { t:'10:00', title:'Deep work block three · 25 minutes', note:'Start with the hardest part of the task.', tag:'focus', m:600 },
+    { t:'11:00', title:'Phone returns · triage only · 10 minutes', note:'Noon is when optionality returns. Not before.', m:660 },
+    { t:'12:30', title:'Lunch · walk outside · no screens', note:'Step outside. Taurus rising needs air and movement mid-day.', tag:'rest', m:750 },
+    { t:'14:00', title:'Calls · collaboration · admin', note:'Afternoon cognitive energy is lower. Schedule the social things here.', m:840 },
+    { t:'17:00', title:'Formal close · all tabs shut', note:'Signal that work has ended.', tag:'ritual', m:1020 },
+    { t:'18:00', title:'Walk · no destination', note:'Not the processing run. This is Taurus rising with nowhere to be.', tag:'rest', m:1080 },
+    { t:'19:30', title:'Cook or forage dinner', note:'Wednesday market haul feeds Monday if planned correctly.', m:1170 },
+    { t:'20:30', title:'Show · one episode', note:'Something serious with craft.', m:1230 },
+    { t:'21:45', title:'Skincare · night routine', note:'Oil cleanse, retinol or niacinamide, moisturiser. Always.', tag:'ritual', m:1305 },
+    { t:'22:00', title:'Read · no screens', note:'Physical book. Non-negotiable for sleep quality.', tag:'rest', m:1320 },
+    { t:'22:30', title:'Candle out · sleep', note:'The day is done.', tag:'sacred', m:1350 },
   ],
-  1: [ // Tuesday
-    { t:'6:30', title:'Skincare · morning', tag:'ritual', m:390 },
-    { t:'6:45', title:'Run or yoga · listen to the body', note:'Tuesday is the day to listen to what the body needs rather than running the default. Yoga is not a lesser option. It is a different processing format.', tag:'run', m:405 },
-    { t:'8:20', title:'Matcha · 15 minutes journaling', note:'What needs solving today. Not what is on the list — what is actually unresolved. Write before opening anything.', tag:'matcha', m:500 },
-    { t:'8:45', title:'Name the first task precisely', note:'Complete X, stopping when I reach Y. Not a vague session — the specific deliverable, the specific stopping point.', tag:'focus', m:525 },
-    { t:'9:00', title:'Three deep work blocks', note:'Tuesday has the best analytical energy of the week. This is the day for the hard legal analysis, the complex writing, the thing that requires Mercury Scorpio at full capacity.', tag:'focus', m:540 },
+  1: [
+    { t:'6:30',  title:'Skincare · morning', tag:'ritual', m:390 },
+    { t:'6:45',  title:'Run or yoga · listen to the body', note:'Tuesday is the day to listen to what the body needs.', tag:'run', m:405 },
+    { t:'8:20',  title:'Matcha · 15 minutes journaling', note:'What needs solving today. Write before opening anything.', tag:'matcha', m:500 },
+    { t:'8:45',  title:'Name the first task precisely', note:'Complete X, stopping when I reach Y.', tag:'focus', m:525 },
+    { t:'9:00',  title:'Three deep work blocks', note:'Tuesday has the best analytical energy of the week.', tag:'focus', m:540 },
     { t:'12:30', title:'Lunch · no screens · outside', tag:'rest', m:750 },
-    { t:'13:00', title:'Matcha at SOHN · work from there', note:'Change of scene for the afternoon. Taurus rising benefits from a different physical environment for different mental modes.', m:780 },
     { t:'14:00', title:'Calls · admin · lighter tasks', m:840 },
     { t:'18:30', title:'Formal close', tag:'ritual', m:1110 },
     { t:'19:00', title:'Dinner · Piccino or cook in', m:1140 },
-    { t:'20:15', title:'Show · The Crown / Mad Men / The Wire', m:1215 },
-    { t:'21:30', title:'Skincare night · read or music', note:'Tuesday is a high-output day. The nervous system needs genuine transition, not more input.', tag:'ritual', m:1290 },
+    { t:'21:30', title:'Skincare night · read or music', tag:'ritual', m:1290 },
   ],
-  2: [ // Wednesday
-    { t:'6:30', title:'Skincare · morning', tag:'ritual', m:390 },
-    { t:'6:45', title:'Run · Embarcadero south route', note:'The Wednesday run processes the first half of the week before the second half begins.', tag:'run', m:405 },
-    { t:'8:00', title:'Matcha · one task named and completed', note:'The specific satisfaction of completing one thing before the market. It means the market is earned rather than avoidant.', tag:'matcha', m:480 },
-    { t:'10:30', title:'Farmers Market · Warm Water Cove', note:'Not an errand. The specific pleasure of choosing quality in the physical world, knowing the producers, selecting with attention. This is the Wednesday ritual.', tag:'sacred', m:630 },
-    { t:'12:00', title:'Fresh lunch from the market', note:'What was just purchased, prepared simply. Something excellent eaten with full attention. This is Taurus rising at its most natural.', tag:'rest', m:720 },
-    { t:'13:45', title:'Deep work block · afternoon', note:'Name the afternoon task before reopening any tabs. Post-lunch is the highest fragmentation risk of the day.', tag:'focus', m:825 },
-    { t:'14:30', title:'Collaborative work or second block', m:870 },
+  2: [
+    { t:'6:30',  title:'Skincare · morning', tag:'ritual', m:390 },
+    { t:'6:45',  title:'Run · Embarcadero south route', note:'The Wednesday run processes the first half of the week.', tag:'run', m:405 },
+    { t:'8:00',  title:'Matcha · one task named and completed', tag:'matcha', m:480 },
+    { t:'10:30', title:'Farmers Market · Warm Water Cove', note:'Not an errand. The Wednesday ritual in its full form.', tag:'sacred', m:630 },
+    { t:'12:00', title:'Fresh lunch from the market', note:'What was just purchased, prepared simply.', tag:'rest', m:720 },
+    { t:'13:45', title:'Deep work block · afternoon', tag:'focus', m:825 },
     { t:'17:00', title:'Wrap for the day', tag:'ritual', m:1020 },
-    { t:'18:30', title:'Cook from market haul', note:'The Wednesday market feeding the Wednesday dinner. The ritual in its full form — chosen this morning, eaten tonight.', tag:'sacred', m:1110 },
-    { t:'21:00', title:'Skincare night · wind down', note:'Retinol night. Ceramide moisturiser. No new inputs after this.', tag:'ritual', m:1260 },
+    { t:'18:30', title:'Cook from market haul', tag:'sacred', m:1110 },
+    { t:'21:00', title:'Skincare night · wind down', tag:'ritual', m:1260 },
   ],
-  3: [ // Thursday
-    { t:'6:30', title:'Skincare · morning', tag:'ritual', m:390 },
-    { t:'6:30', title:'Strength training · 2 hours', note:'Two full hours. This is the specific physical investment the week builds toward. Lift heavy. Rest fully between sets. The full two hours is what produces the result.', tag:'run', m:390 },
-    { t:'8:30', title:'Matcha · slower morning', note:'Thursday morning is slower than Monday and Tuesday. This is correct. The best thinking day does not begin at speed.', tag:'matcha', m:510 },
-    { t:'9:30', title:'Complex work · best thinking of the week', note:'The highest-difficulty intellectual problem of the week belongs here. The analysis that needs the most of her. Use 25-minute blocks. If the task feels too easy, find the real problem inside it.', tag:'focus', m:570 },
-    { t:'12:30', title:'Lunch with intention · step outside', note:'Thursday lunch is the specific mid-week check-in with the body. How is the week sitting? What does the afternoon need?', tag:'rest', m:750 },
+  3: [
+    { t:'6:30',  title:'Skincare · morning', tag:'ritual', m:390 },
+    { t:'6:30',  title:'Strength training · 2 hours', note:'Two full hours. Lift heavy. Rest fully between sets.', tag:'run', m:390 },
+    { t:'8:30',  title:'Matcha · slower morning', tag:'matcha', m:510 },
+    { t:'9:30',  title:'Complex work · best thinking of the week', note:'The highest-difficulty intellectual problem of the week belongs here.', tag:'focus', m:570 },
+    { t:'12:30', title:'Lunch with intention · step outside', tag:'rest', m:750 },
     { t:'14:00', title:'Meetings if unavoidable · admin', m:840 },
-    { t:'18:00', title:'Museum of Craft and Design · first Thursday', note:'In the calendar permanently. Non-negotiable. Not a reward for a productive day — the Libra sun gets this on a reliable schedule.', tag:'sacred', m:1080 },
-    { t:'20:30', title:'Show · Chernobyl / True Detective / Ozark', note:'Something serious and specific. Thursday evening has earned something with weight.', m:1230 },
+    { t:'18:00', title:'Museum of Craft and Design · first Thursday', note:'In the calendar permanently. Non-negotiable.', tag:'sacred', m:1080 },
     { t:'21:45', title:'Skincare · night routine', tag:'ritual', m:1305 },
   ],
-  4: [ // Friday
-    { t:'6:30', title:'Skincare · morning', tag:'ritual', m:390 },
-    { t:'6:00', title:'Long run · Presidio or Marin headlands · 2 hours', note:'Two full hours. The Marin headlands: the air, the view, the elevation. Whatever the week held, the run processes it completely. This is the physical close of the work week.', tag:'run', m:360 },
-    { t:'8:30', title:'Slow matcha · phone still away', note:'Friday morning still has good energy and it belongs to the morning. Not to the notifications that arrived while she was running.', tag:'matcha', m:510 },
-    { t:'9:00', title:'Final deep work · two blocks maximum', note:'No deep work after noon on Fridays. This is the rule and it is correct. The morning has one last focused window.', tag:'focus', m:540 },
-    { t:'10:00', title:'Lighter work · wrap open loops', note:'Friday afternoon is for closing, not opening. No new projects started. No new analysis begun. The week wraps cleanly.', m:600 },
-    { t:'13:00', title:'Lunch out · Piccino or neighborhood', note:'Friday lunch is the specific marker that the work week is over. Eat somewhere considered.', m:780 },
-    { t:'15:00', title:'Personal time · reading · errands · decompress', note:'This block is hers. Not productive in the output sense. Taurus rising decompressing from five days of Saturn-mode operation.', tag:'rest', m:900 },
-    { t:'17:00', title:'Transition · free block · no agenda', note:'Unstructured. No agenda. The week is done. This two-hour window is the specific breathing room the storyboard protects.', tag:'rest', m:1020 },
-    { t:'19:00', title:'Dinner · wine · right company', note:'Friday earns this. The person across the table matters on Friday evenings. Not the loud group. The right one or two people, somewhere excellent.', tag:'sacred', m:1140 },
-    { t:'21:00', title:'Film · full feature', note:'No Country for Old Men, Parasite, There Will Be Blood rotation. Something complete. The Friday film is a ritual, not content consumption.', m:1260 },
+  4: [
+    { t:'6:00',  title:'Long run · Presidio or Marin headlands · 2 hours', note:'Two full hours. Whatever the week held, the run processes it completely.', tag:'run', m:360 },
+    { t:'8:30',  title:'Slow matcha · phone still away', tag:'matcha', m:510 },
+    { t:'9:00',  title:'Final deep work · two blocks maximum', tag:'focus', m:540 },
+    { t:'10:00', title:'Lighter work · wrap open loops', note:'Friday afternoon is for closing, not opening.', m:600 },
+    { t:'13:00', title:'Lunch out · Piccino or neighborhood', note:'Friday lunch is the marker that the work week is over.', m:780 },
+    { t:'15:00', title:'Personal time · reading · errands · decompress', tag:'rest', m:900 },
+    { t:'19:00', title:'Dinner · wine · right company', note:'Friday earns this.', tag:'sacred', m:1140 },
     { t:'21:30', title:'Skincare · night · retinol or exfoliant', tag:'ritual', m:1290 },
   ],
-  5: [ // Saturday
-    { t:'7:30', title:'Walk · Crane Cove · no headphones', note:'Slower than the weekday. No processing agenda. This walk is for Taurus rising to be in the physical world with no output required.', tag:'rest', m:450 },
-    { t:'8:30', title:'Skincare · extended · facial massage', note:'Saturday morning skincare is the full version. Not the efficient weekday version. Taurus rising takes care of the body it inhabits.', tag:'ritual', m:510 },
-    { t:'9:30', title:'Matcha · Japantown · Maruwu Seicha', note:'The Saturday matcha is the real ceremony. The specific quality of going to the place that does it correctly, sitting with it fully, not rushing any part of it.', tag:'matcha', m:570 },
-    { t:'11:00', title:'Bookshop · Hayes Valley or Dogpatch', note:'City Lights, Dog Eared. No list. No mission. Presence in the physical world of things worth owning.', m:660 },
-    { t:'13:00', title:'Late lunch · somewhere considered', note:"The Saturday lunch is one of the week's best meals. Not rushed. Not ambient. Piccino, Rintaro, Al's Place.", m:780 },
-    { t:'15:00', title:'SFMOMA or SF Botanical Garden · alone', note:'No agenda except the specific attention the Libra sun and Taurus rising both require from aesthetic experience. She goes slowly. She leaves when full, not when she has seen everything.', tag:'sacred', m:900 },
+  5: [
+    { t:'7:30',  title:'Walk · Crane Cove · no headphones', tag:'rest', m:450 },
+    { t:'8:30',  title:'Skincare · extended · facial massage', tag:'ritual', m:510 },
+    { t:'9:30',  title:'Matcha · Japantown · Maruwu Seicha', tag:'matcha', m:570 },
+    { t:'11:00', title:'Bookshop · Hayes Valley or Dogpatch', note:'City Lights, Dog Eared. No list. No mission.', m:660 },
+    { t:'13:00', title:'Late lunch · somewhere considered', note:"Piccino, Rintaro, Al's Place.", m:780 },
+    { t:'15:00', title:'SFMOMA or SF Botanical Garden · alone', tag:'sacred', m:900 },
     { t:'19:00', title:'Dinner · early · unhurried', m:1140 },
-    { t:'20:30', title:'Show or film · Saturday evening', note:'Something she has been meaning to watch. The specific thing, not the next thing in a queue.', m:1230 },
     { t:'22:00', title:'Skincare night extended · sheet mask', tag:'ritual', m:1320 },
   ],
-  6: [ // Sunday
-    { t:'No alarm', title:'Slow wake · 8:30–9:00', note:'This is the specific gift of Sunday. The body wakes when it is ready. The Capricorn moon does not set an alarm. One morning of organic rhythm each week.', tag:'rest', m:510 },
-    { t:'9:00', title:'Matcha · home · long form ceremony', note:'Not the weekday version. The full ceremony. No phone. No agenda. The matcha is the morning on Sunday rather than the preparation for the morning.', tag:'matcha', m:540 },
-    { t:'10:30', title:'Walk · Noe Valley or Ocean Beach', note:'The Sunday walk is the longest and most unstructured of the week. Ocean Beach for the specific quality of the Pacific — the cold, the grey, the scale of it.', tag:'rest', m:630 },
-    { t:'13:00', title:'Cook lunch · intuitive · no recipe required', note:'Sunday cooking is intuitive rather than structured. What is in the refrigerator, what looks correct today.', m:780 },
-    { t:'15:00', title:'Read · nap · fully offline', note:"Sunday afternoon is protected. Three hours of genuine disengagement from every output-producing activity. This is not wasted time. It is the foundation of the following week.", tag:'rest', m:900 },
-    { t:'18:00', title:'Prep the week · 30 minutes only', note:"Clear the desk. Write Monday's one named task. Review what the week requires. Then stop. More than 30 minutes is anxiety management, not planning.", m:1080 },
-    { t:'19:30', title:'Simple dinner', note:'Good bread, excellent cheese, the olive oil that came from the right place. The week has fed her well. Tonight is intentionally simple.', m:1170 },
-    { t:'20:30', title:'Show · light · nothing intense', note:'The Wire rewatch. A documentary. Nothing that requires full Mercury Scorpio engagement on a Sunday night. The week begins tomorrow.', m:1230 },
-    { t:'21:30', title:'Skincare night · full Sunday version', note:"Sunday is the week's best skincare night. The ceramides, the retinol, the eye cream, the specific attention the skin gets when there is time for it.", tag:'ritual', m:1290 },
-    { t:'21:50', title:'Candle out · early night', note:"Sunday sleep is Monday's foundation. The Capricorn moon knows this even when the Libra sun wants to read until midnight.", tag:'sacred', m:1310 },
+  6: [
+    { t:'No alarm', title:'Slow wake · 8:30–9:00', note:'This is the specific gift of Sunday.', tag:'rest', m:510 },
+    { t:'9:00',  title:'Matcha · home · long form ceremony', tag:'matcha', m:540 },
+    { t:'10:30', title:'Walk · Noe Valley or Ocean Beach', tag:'rest', m:630 },
+    { t:'13:00', title:'Cook lunch · intuitive · no recipe required', m:780 },
+    { t:'15:00', title:'Read · nap · fully offline', note:'Three hours of genuine disengagement. This is not wasted time.', tag:'rest', m:900 },
+    { t:'18:00', title:"Prep the week · 30 minutes only", note:"Clear the desk. Write Monday's one named task. Then stop.", m:1080 },
+    { t:'19:30', title:'Simple dinner', note:'Good bread, excellent cheese, the right olive oil.', m:1170 },
+    { t:'21:30', title:'Skincare night · full Sunday version', tag:'ritual', m:1290 },
+    { t:'21:50', title:'Candle out · early night', note:"Sunday sleep is Monday's foundation.", tag:'sacred', m:1310 },
   ]
 };
 
@@ -847,1080 +864,585 @@ const INTENTIONS = [
 ];
 
 const HABITS_DATA = [
-  { n:'01', title:'Stop Earning Rest', tag:'Taurus rising requires pleasure as infrastructure', text:'The Capricorn moon runs a deficit-and-reward accounting where pleasure comes after productivity. Taurus rising does not work this way. The Sunday offline is not a reward for the week — it is the thing that makes the next week possible.', practice:'Treat recovery as part of the standard, not as departure from it. She does not need to earn every hour of her own life.' },
-  { n:'02', title:'Feed the Libra Sun Deliberately', tag:'The sun sign is not a footnote', text:'Her daily architecture is almost entirely Saturn-built. Her actual sun sign — Libra — needs beauty and connection and aesthetic experience for its own sake. Not in service of productivity. As a genuine baseline need.', practice:'Ask once a week: what did I do this week that the Libra sun wanted, not what the Capricorn moon needed?' },
-  { n:'03', title:'Say the Positive Conclusion Out Loud', tag:'The accounting runs in both directions', text:'Her Capricorn moon runs the accounting in both directions but only the corrections surface externally. The people she loves receive her corrections and miss her regard.', practice:'One specific true positive thing named per day. The exact detail noticed. Mercury Scorpio precision applied to the positive register.' },
-  { n:'04', title:'Let Mercury Scorpio Be Wrong Faster', tag:'The 22-year-old conclusion is not required now', text:'Once she reaches a conclusion she holds it with the stability of something that was not reached easily. Revision requires more evidence than formation did.', practice:'Quarterly audit of three conclusions currently held that have not been tested recently. Not to change them — to see if they still hold.' },
-  { n:'05', title:'Stop Preparing for the Saturn Return', tag:'The present moment needs practicing', text:'She has been in preparation mode for years. The habit of living toward a future self rather than in the current one is the specific pattern the Saturn return will ask her to examine.', practice:'One day per month with no agenda. Whatever Taurus rising wants. Not as rest that enables future productivity — as the present moment for its own sake.' },
-  { n:'06', title:'The Body Is Information, Not an Instrument', tag:'Taurus rising is experience first', text:'Her ISTP and Capricorn moon relate to the body primarily as something that enables output. Taurus rising has a completely different relationship — the body is primary experience.', practice:'Once per week, do something purely for the physical sensation of it. Swim because of how it feels. Eat something extraordinary because it is extraordinary.' },
-  { n:'07', title:'Bring the Real Self to the Relationship', tag:'He cannot build toward what he cannot see', text:'Mercury Scorpio presents conclusions rather than process. He receives the polished result and misses the person in the middle of something unresolved.', practice:'Once per week: name something currently in the middle of — genuinely unresolved, not yet concluded. A decision not yet made.' },
-  { n:'08', title:'She Is Allowed to Not Know Yet', tag:'The not-knowing is the work', text:'The question of who she actually is underneath the architecture is the question of her 26th year. The not-knowing is not a gap in the plan. It is the plan.', practice:"When performing certainty about something actually uncertain — stop and name the uncertainty privately. The Capricorn moon is allowed to have questions." },
+  { n:'01', title:'Stop Earning Rest', tag:'Taurus rising requires pleasure as infrastructure', text:'The Capricorn moon runs a deficit-and-reward accounting where pleasure comes after productivity. Taurus rising does not work this way.', practice:'Treat recovery as part of the standard, not as departure from it.' },
+  { n:'02', title:'Feed the Libra Sun Deliberately', tag:'The sun sign is not a footnote', text:'Her daily architecture is almost entirely Saturn-built. Her actual sun sign needs beauty and connection for its own sake.', practice:'Ask once a week: what did I do this week that the Libra sun wanted?' },
+  { n:'03', title:'Say the Positive Conclusion Out Loud', tag:'The accounting runs in both directions', text:'Her Capricorn moon runs the accounting in both directions but only the corrections surface externally.', practice:'One specific true positive thing named per day.' },
+  { n:'04', title:'Let Mercury Scorpio Be Wrong Faster', tag:'The 22-year-old conclusion is not required now', text:'Once she reaches a conclusion she holds it with stability. Revision requires more evidence than formation did.', practice:'Quarterly audit of three conclusions currently held that have not been tested recently.' },
+  { n:'05', title:'Stop Preparing for the Saturn Return', tag:'The present moment needs practicing', text:'She has been in preparation mode for years. The habit of living toward a future self rather than in the current one.', practice:'One day per month with no agenda. Whatever Taurus rising wants.' },
+  { n:'06', title:'The Body Is Information, Not an Instrument', tag:'Taurus rising is experience first', text:'Her ISTP and Capricorn moon relate to the body primarily as something that enables output.', practice:'Once per week, do something purely for the physical sensation of it.' },
+  { n:'07', title:'Bring the Real Self to the Relationship', tag:'He cannot build toward what he cannot see', text:'Mercury Scorpio presents conclusions rather than process. He receives the polished result and misses the person in the middle of something unresolved.', practice:'Once per week: name something currently in the middle of — genuinely unresolved.' },
+  { n:'08', title:'She Is Allowed to Not Know Yet', tag:'The not-knowing is the work', text:'The question of who she actually is underneath the architecture is the question of her 26th year.', practice:'When performing certainty about something actually uncertain — stop and name the uncertainty privately.' },
 ];
 
 const GUIDE_SCRIPTS = {
-  morning: "Good morning. The morning belongs to you. Before you open anything, before the phone, before the tabs — take one breath and name one thing. What does done look like by noon? One thing. That is the direction. The rest can wait until noon, and noon is when optionality returns. The matcha is next. Make it properly. The steeping time is not a phone window. This is the transition between the night and the day. When you sit down to work, the first 25 minutes belong to the hardest thing. Not the most urgent — the hardest. When it hits resistance, stay. That is the exact moment to stay.",
-  midday: "You have done the deep work. The morning belonged to Mercury Scorpio at full capacity. Now the afternoon belongs to the lighter things — the calls, the collaboration, the administrative work that does not require the morning's precision. Step outside for lunch. The body has been at a desk for three hours and Taurus rising needs air and movement or the afternoon is compromised. No screens with the food. Let the morning decompress. You will return to the desk with more than you left with.",
-  evening: "The formal close is the signal that the day has ended. Close all tabs. The work is done. Whatever remains will still be there tomorrow, and the version of you that eight hours of sleep produces will do it better than the version of you running on the residue of today. The evening belongs to restoration — the walk, the food, something worth watching, and the specific quality of quiet that Taurus rising requires to process what the day produced. The candle out is the punctuation. The day is complete.",
-  sunday: "Sunday afternoon is protected. Three hours of genuine disengagement from every output-producing activity. This is not wasted time. This is the foundation of Monday. Read something that has nothing to do with the trajectory. Nap if the body asks for it. The prep for the week is thirty minutes, not more. Clear the desk. Write Monday's one named task. Then close the notebook and leave it alone. Sunday sleep is Monday's foundation. The Capricorn moon knows this even when the Libra sun wants to read until midnight."
+  morning: "Good morning. The morning belongs to you. Before you open anything, before the phone, before the tabs — take one breath and name one thing. What does done look like by noon? One thing. That is the direction.",
+  midday: "You have done the deep work. The morning belonged to Mercury Scorpio at full capacity. Now the afternoon belongs to the lighter things — the calls, the collaboration, the administrative work.",
+  evening: "The formal close is the signal that the day has ended. Close all tabs. The work is done. Whatever remains will still be there tomorrow.",
+  sunday: "Sunday afternoon is protected. Three hours of genuine disengagement from every output-producing activity. This is not wasted time. This is the foundation of Monday."
 };
 
-// ── CONFIG ────────────────────────────────────────────────────────────
-// Replace with your Cloudflare Worker URL after deploying bloom-worker.js
-// ── API CONFIG ───────────────────────────────────────────────────────
-var DEFAULT_PROXY = 'https://fancy-boat-5426.angel-zhu534.workers.dev';
-
-// ── PIN GATE ─────────────────────────────────────────────────────────
-var OWNER_TOKEN = 'Ymxvb21fYmxvc3NvbTI1';
-
-function checkPin(pin) {
-  try { return btoa('bloom_' + pin) === OWNER_TOKEN; } catch(e) { return false; }
-}
-
-function isOwnerUnlocked() {
-  try { return localStorage.getItem('bloom_owner') === '1'; } catch(e) { return false; }
-}
-
-function getApiConfig() {
-  // Owner (PIN verified) always uses the default Worker
-  if (isOwnerUnlocked()) return { type: 'worker', url: DEFAULT_PROXY };
-  var stored = '';
-  try { stored = localStorage.getItem('bloom_api') || ''; } catch(e) {}
-  // Everyone else must have entered their own key
-  if (!stored) return { type: 'none' };
-  if (stored.startsWith('sk-ant-')) return { type: 'anthropic', key: stored };
-  if (stored.startsWith('sk-'))     return { type: 'openai',    key: stored };
-  return { type: 'worker', url: stored };
-}
-
-async function callApi(prompt) {
-  var cfg = getApiConfig();
-  if (cfg.type === 'none') {
-    // No key set — show settings overlay
-    openApiSettings(true);
-    throw new Error('Please enter your API key in Settings to use this feature.');
-  }
-  if (cfg.type === 'openai') {
-    var resp = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + cfg.key },
-      body: JSON.stringify({ model: 'gpt-4o-mini', max_tokens: 1200,
-        messages: [{ role: 'user', content: prompt }] })
-    });
-    var d = await resp.json();
-    if (!resp.ok) throw new Error((d.error && d.error.message) || 'OpenAI error ' + resp.status);
-    // normalise to Anthropic shape
-    var usage = { input_tokens: d.usage.prompt_tokens, output_tokens: d.usage.completion_tokens };
-    return { text: d.choices[0].message.content, usage: usage };
-  } else if (cfg.type === 'anthropic') {
-    var resp = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json',
-                 'x-api-key': cfg.key, 'anthropic-version': '2023-06-01' },
-      body: JSON.stringify({ model: 'claude-haiku-4-5-20251001', max_tokens: 1200,
-        messages: [{ role: 'user', content: prompt }] })
-    });
-    var d = await resp.json();
-    if (!resp.ok) throw new Error((d.error && d.error.message) || 'Anthropic error ' + resp.status);
-    return { text: d.content[0].text, usage: d.usage };
-  } else {
-    // Cloudflare Worker (default)
-    var resp = await fetch(cfg.url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ model: 'claude-haiku-4-5-20251001', max_tokens: 1200,
-        messages: [{ role: 'user', content: prompt }] })
-    });
-    var d = await resp.json();
-    if (!resp.ok) throw new Error((d.error && d.error.message) || 'Worker error ' + resp.status);
-    return { text: d.content[0].text, usage: d.usage };
-  }
-}
-
 // ── STATE ─────────────────────────────────────────────────────────────
-
-
-
-let currentDay = new Date().getDay(); // 0=Sun,1=Mon...6=Sat
-// Convert JS day (0=Sun) to our index (0=Mon)
+let currentDay = new Date().getDay();
 let viewDay = currentDay === 0 ? 6 : currentDay - 1;
 let currentTab = 'today';
 
 // ── UTILS ─────────────────────────────────────────────────────────────
-function nowMinutes() {
-  const d = new Date();
-  return d.getHours() * 60 + d.getMinutes();
-}
-
+function nowMinutes() { const d = new Date(); return d.getHours() * 60 + d.getMinutes(); }
 function findCurrentBlock(dayIdx) {
-  const blocks = SCHEDULE[dayIdx] || [];
-  const now = nowMinutes();
-  let current = null;
-  for (let i = 0; i < blocks.length; i++) {
-    if (blocks[i].m <= now) current = i;
-    else break;
-  }
-  return current;
+  const blocks = SCHEDULE[dayIdx] || []; const now = nowMinutes(); let cur = null;
+  for (let i = 0; i < blocks.length; i++) { if (blocks[i].m <= now) cur = i; else break; }
+  return cur;
 }
-
 function formatTime() {
-  const d = new Date();
-  const h = d.getHours(), m = d.getMinutes();
-  const ampm = h >= 12 ? 'pm' : 'am';
-  const h12 = h % 12 || 12;
-  return `${h12}:${String(m).padStart(2,'0')} ${ampm}`;
+  const d = new Date(), h = d.getHours(), m = d.getMinutes();
+  return `${h%12||12}:${String(m).padStart(2,'0')} ${h>=12?'pm':'am'}`;
 }
-
 function dayProgress(dayIdx) {
-  const blocks = SCHEDULE[dayIdx] || [];
-  if (!blocks.length) return 0;
-  const now = nowMinutes();
-  const first = blocks[0].m;
-  const last = blocks[blocks.length-1].m + 30;
-  return Math.min(100, Math.max(0, ((now - first) / (last - first)) * 100));
+  const blocks = SCHEDULE[dayIdx] || []; if (!blocks.length) return 0;
+  const now = nowMinutes(), first = blocks[0].m, last = blocks[blocks.length-1].m + 30;
+  return Math.min(100, Math.max(0, ((now-first)/(last-first))*100));
 }
-
-// ── SPEECH ────────────────────────────────────────────────────────────
-
-
-
-
-
-
-
-
-
-
-
-
-// ── LOFI MUSIC — YouTube ─────────────────────────────────────────────
-// ── LOFI MUSIC — real MP3 via <audio> element ───────────────────────
-let lofiPlaying = false;
-
-function setMusicOn() {
-  lofiPlaying = true;
-  var btn = document.getElementById('musicBtn');
-  document.getElementById('musicIcon').innerHTML = '<span class="music-wave"><span></span><span></span><span></span></span>';
-  document.getElementById('musicLabel').textContent = 'on';
-  btn.style.background = 'rgba(90,120,72,.15)';
-  btn.style.borderColor = 'rgba(90,120,72,.3)';
-  btn.style.color = 'var(--sage)';
-}
-function setMusicOff() {
-  lofiPlaying = false;
-  var btn = document.getElementById('musicBtn');
-  document.getElementById('musicIcon').textContent = '\u266a';
-  document.getElementById('musicLabel').textContent = 'lofi';
-  btn.style.background = 'rgba(184,92,56,.1)';
-  btn.style.borderColor = 'rgba(184,92,56,.2)';
-  btn.style.color = 'var(--terra)';
-}
-
-function toggleLofi() {
-  var audio = document.getElementById('lofiAudio');
-  if (!audio) return;
-  if (lofiPlaying) {
-    audio.pause();
-    setMusicOff();
-    return;
-  }
-  // Load on first play (preload=none means it hasn't fetched yet)
-  if (audio.readyState === 0) {
-    audio.load();
-  }
-  var btn = document.getElementById('musicBtn');
-  if (btn) { btn.style.opacity = '.5'; }
-  audio.play().then(function() {
-    setMusicOn();
-    if (btn) btn.style.opacity = '1';
-  }).catch(function(err) {
-    if (btn) btn.style.opacity = '1';
-    setMusicOff();
-    // Show brief error in button label
-    var lbl = document.getElementById('musicLabel');
-    if (lbl) {
-      lbl.textContent = 'error';
-      setTimeout(function() { lbl.textContent = 'lofi'; }, 2500);
-    }
-    console.warn('lofi play error:', err);
-  });
-}
-
-
 
 // ── DONE STATE ────────────────────────────────────────────────────────
 const DONE_KEY = 'bloom_done_v1';
 let doneBlocks = {};
 try { doneBlocks = JSON.parse(localStorage.getItem(DONE_KEY) || '{}'); } catch(e) {}
-
 function toggleDone(dayIdx, blockIdx, event) {
   event.stopPropagation();
   const key = dayIdx + '_' + blockIdx;
-  if (doneBlocks[key]) delete doneBlocks[key];
-  else doneBlocks[key] = 1;
+  if (doneBlocks[key]) delete doneBlocks[key]; else doneBlocks[key] = 1;
   try { localStorage.setItem(DONE_KEY, JSON.stringify(doneBlocks)); } catch(e) {}
   const card = document.getElementById('block-' + dayIdx + '-' + blockIdx);
   if (!card) return;
-  const check = card.querySelector('.block-check');
-  const done = !!doneBlocks[key];
+  const check = card.querySelector('.block-check'), done = !!doneBlocks[key];
   if (check) check.classList.toggle('checked', done);
   card.classList.toggle('done', done);
 }
-
-function isDone(dayIdx, blockIdx) {
-  return !!doneBlocks[dayIdx + '_' + blockIdx];
-}
-
-// Reset at midnight
+function isDone(dayIdx, blockIdx) { return !!doneBlocks[dayIdx + '_' + blockIdx]; }
 (function() {
-  const today = new Date().toDateString();
-  const last = localStorage.getItem('bloom_reset_day');
-  if (last !== today) {
-    doneBlocks = {};
-    try { localStorage.setItem(DONE_KEY, '{}'); localStorage.setItem('bloom_reset_day', today); } catch(e) {}
-  }
+  const today = new Date().toDateString(), last = localStorage.getItem('bloom_reset_day');
+  if (last !== today) { doneBlocks = {}; try { localStorage.setItem(DONE_KEY,'{}'); localStorage.setItem('bloom_reset_day',today); } catch(e){} }
 })();
 
-// ── MONEY DATA ────────────────────────────────────────────────────────
-const MONEY_HABITS = [
-  { label:'Daily', title:'Before any purchase over $80', text:'One question before the card comes out: is this the thing itself, or the feeling of the thing? Taurus rising spends on the sensation of quality. The sensation is not the standard. She knows the difference.', action:'Pause 30 seconds. If the answer is sensation — wait 24 hours.' },
-  { label:'Weekday rule', title:'Phone purchases during work hours', text:'If spending happens from the phone between 9am and 5pm on a weekday, it is almost certainly Mercury Scorpio avoiding the hard thing at the desk. The shopping app provides the sensation of decision-making without requiring the thing she is avoiding.', action:'Any purchase made from phone during work hours: come back to it at 6pm. If still wanted, buy it then.' },
-  { label:'Monthly · First Sunday', title:'The Three-Column Audit', text:'Open the bank statement. Every transaction over $30: Correct (worth it, deliberate), Sensation (felt right but was not), Drift (happened without a real decision). The Drift column is where the money actually goes.', action:'20 minutes. Three columns. Reduce the Drift total next month.' },
-  { label:'Monthly · Last Sunday', title:'Subscription Audit', text:'Every subscription: was it actively used in the past 30 days? Not passively available — actively used. Taurus rising justifies each one individually. The Capricorn moon needs to audit them together.', action:'Cancel everything unused. Re-subscribe deliberately if still wanted.' },
-  { label:'Monthly', title:'Three Named Financial Targets', text:'Not a general savings account — the Japan fund, the MBA fund, the owned home fund. The specificity is what makes it executable. A vague savings goal is not a goal.', action:'Name three targets with specific dollar amounts. Fund them automatically on the 1st.' },
-  { label:'Monthly · Last Sunday', title:'Financial Review · One Hour', text:'Savings rate, investment balance, emergency fund, trajectory toward each named target. Numbers looked at honestly, once, then closed.', action:'One hour. The actual numbers. Not an approximation.' },
-  { label:'Quarterly', title:'Career Investment Budget', text:'The one spending category that should increase: things that compound toward the CFO chapter. GMAT prep, professional memberships, the conference that puts her in the right room at 30. These are not expenses — they are the trajectory being funded.', action:'Designate $150–300/month as a career investment line item. Separate. Not optional.' },
-  { label:'Always', title:'The Phone-Spend Link', text:'Frivolous spending and phone procrastination are the same pattern wearing different clothes. When the real processing is blocked, Mercury Scorpio routes through consumption. One pattern, not two problems.', action:'Notice when you open a shopping app during work hours. That is the signal. Return to the desk.' },
-];
-
-function renderMoney() {
-  const dayOfWeek = new Date().getDay();
-  const dayOfMonth = new Date().getDate();
-  let todayIdx = 0;
-  if (dayOfMonth <= 7 && dayOfWeek === 0) todayIdx = 2;
-  else if (dayOfMonth >= 24 && dayOfWeek === 0) todayIdx = 5;
-  else if (dayOfMonth === 1) todayIdx = 4;
-
-  let html = "<div style='padding:16px 20px 4px'><p style='font-family:Cormorant Garamond,serif;font-size:18px;font-style:italic;color:var(--stone);line-height:1.75;margin-bottom:4px'>Financial habits that compound.</p><p style='font-family:Jost,sans-serif;font-size:11px;font-weight:300;color:var(--dust);letter-spacing:.04em;margin-bottom:16px'>The Capricorn moon builds wealth slowly, deliberately, on a timeline that extends beyond this year.</p></div>";
-
-  html += '<div style="margin:0 12px 12px;background:linear-gradient(135deg,rgba(160,120,48,.08),rgba(184,92,56,.06));border-radius:12px;padding:14px 16px;border:1px solid rgba(160,120,48,.15);display:flex;align-items:flex-start;gap:10px"><div style="font-size:18px;flex-shrink:0">✦</div><div><div style="font-family:Jost,sans-serif;font-size:9px;font-weight:400;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:4px">Today\'s reminder</div><div style="font-family:Cormorant Garamond,serif;font-size:15px;color:var(--stone);line-height:1.7;font-style:italic">' + MONEY_HABITS[todayIdx].title + ': ' + MONEY_HABITS[todayIdx].action + '</div></div></div>';
-
-  MONEY_HABITS.forEach(function(h, i) {
-    html += '<div class="money-card" onclick="toggleMoney(' + i + ')" id="mc-' + i + '"><div class="money-card-label">' + h.label + '</div><div class="money-card-title">' + h.title + '</div><div class="money-card-text" id="mt-' + i + '" style="display:none">' + h.text + '</div><div class="money-card-action">→ ' + h.action + '</div></div>';
-  });
-
-  document.getElementById('mainContent').innerHTML = html;
+// ── API CONFIG ────────────────────────────────────────────────────────
+var DEFAULT_PROXY = 'https://fancy-boat-5426.angel-zhu534.workers.dev';
+var OWNER_TOKEN = 'Ymxvb21fYmxvc3NvbTI1';
+function checkPin(pin) { try { return btoa('bloom_' + pin) === OWNER_TOKEN; } catch(e) { return false; } }
+function isOwnerUnlocked() { try { return localStorage.getItem('bloom_owner') === '1'; } catch(e) { return false; } }
+function getApiConfig() {
+  if (isOwnerUnlocked()) return { type:'worker', url:DEFAULT_PROXY };
+  var stored = ''; try { stored = localStorage.getItem('bloom_api') || ''; } catch(e) {}
+  if (!stored) return { type:'none' };
+  if (stored.startsWith('sk-ant-')) return { type:'anthropic', key:stored };
+  if (stored.startsWith('sk-'))     return { type:'openai',    key:stored };
+  return { type:'worker', url:stored };
 }
-
-function toggleMoney(i) {
-  var el = document.getElementById('mt-' + i);
-  if (!el) return;
-  var open = el.style.display !== 'none';
-  document.querySelectorAll('[id^="mt-"]').forEach(function(e) { e.style.display = 'none'; });
-  if (!open) el.style.display = 'block';
-}
-
-// ── DINNER ENGINE ─────────────────────────────────────────────────────
-try { dinnerHistory = JSON.parse(localStorage.getItem('bloom_dinners') || '[]'); } catch(e) {}
-
-
-
-function poohDivider(character) {
-  const chars = {
-    pooh: `<svg width="60" height="50" viewBox="0 0 60 50" xmlns="http://www.w3.org/2000/svg" opacity="0.45">
-      <g stroke="#5c3a1e" fill="none" stroke-linecap="round" stroke-width="1.5">
-        <!-- Pooh sitting - simple Shepard sketch -->
-        <ellipse cx="30" cy="32" rx="18" ry="14" fill="#f5d280" opacity="0.25"/>
-        <circle cx="30" cy="16" r="12" fill="#f5d280" opacity="0.25"/>
-        <ellipse cx="30" cy="20" rx="7" ry="4.5"/>
-        <circle cx="27" cy="20" r="1.5" fill="#5c3a1e"/>
-        <circle cx="33" cy="20" r="1.5" fill="#5c3a1e"/>
-        <path d="M22,10 C19,4 22,0 25,6" stroke-width="1.5"/>
-        <path d="M38,10 C41,4 38,0 35,6" stroke-width="1.5"/>
-        <path d="M25,10 C27,8 33,8 35,10" stroke-width="1.2"/>
-        <circle cx="24" cy="12" r="2.5" fill="#5c3a1e"/>
-        <circle cx="36" cy="12" r="2.5" fill="#5c3a1e"/>
-        <!-- tummy -->
-        <path d="M16,28 C18,36 42,36 44,28" stroke-width="1" opacity="0.5"/>
-        <!-- arms holding honey pot -->
-        <path d="M14,28 C10,32 12,38 16,36" stroke-width="1.5"/>
-        <path d="M46,28 C50,32 48,38 44,36" stroke-width="1.5"/>
-        <!-- small honey pot -->
-        <path d="M22,38 C21,40 21,45 30,46 C39,45 39,40 38,38 Z" stroke-width="1.2"/>
-        <path d="M21,37 C23,35 37,35 39,37" stroke-width="1.2"/>
-        <text x="24" y="44" font-family="Georgia" font-size="5" fill="#5c3a1e" stroke="none">HUN</text>
-        <!-- legs -->
-        <path d="M20,44 L18,50" stroke-width="2"/>
-        <path d="M40,44 L42,50" stroke-width="2"/>
-      </g>
-    </svg>`,
-    piglet: '<svg width="30" height="40" viewBox="0 0 30 40" xmlns="http://www.w3.org/2000/svg" opacity="0.4"><g stroke="#5c3a1e" fill="none" stroke-linecap="round"><path d="M6,8 C4,10 3,16 3,22 C3,32 7,38 15,38 C23,38 27,32 27,22 C27,16 26,10 24,8 Z" stroke-width="1.5"/><path d="M5,6 C7,3 23,3 25,6" stroke-width="2"/><path d="M13,6 C13,2 14,-2 13,-5" stroke-width="2" stroke="#c4870a"/><circle cx="13" cy="-7" r="3.5" stroke="#c4870a" fill="#f5d280" opacity="0.6"/><path d="M27,18 C31,16 32,22 30,26" stroke-width="1.4"/></g></svg>',
-    honey: `<svg width="30" height="40" viewBox="0 0 30 40" xmlns="http://www.w3.org/2000/svg" opacity="0.4">
-      <g stroke="#5c3a1e" fill="none" stroke-linecap="round">
-        <path d="M6,8 C4,10 3,16 3,22 C3,32 7,38 15,38 C23,38 27,32 27,22 C27,16 26,10 24,8 Z" stroke-width="1.5"/>
-        <path d="M5,6 C7,3 23,3 25,6" stroke-width="2"/>
-        <text x="7" y="26" font-family="Georgia" font-size="7" fill="#c4870a" stroke="none" opacity="0.8">HUN</text>
-        <path d="M13,6 C13,2 14,-2 13,-5" stroke-width="2" stroke="#c4870a"/>
-        <circle cx="13" cy="-7" r="3.5" stroke="#c4870a" fill="#f5d280" opacity="0.6"/>
-        <path d="M27,18 C31,16 32,22 30,26" stroke-width="1.4"/>
-      </g>
-    </svg>`,
-    piglet: '<svg width="30" height="40" viewBox="0 0 30 40" xmlns=\"http://www.w3.org/2000/svg\" opacity=\"0.4\"><g stroke=\"#5c3a1e\" fill=\"none\" stroke-linecap=\"round\"><path d=\"M6,8 C4,10 3,16 3,22 C3,32 7,38 15,38 C23,38 27,32 27,22 C27,16 26,10 24,8 Z\" stroke-width=\"1.5\"/></g></svg>',
-  };
-}
-
-function poohSectionDivider(text, character) {
-  return '<div class="pooh-divider">' +
-    '<div class="pooh-divider-line"></div>' +
-    poohDivider(character || 'honey') +
-    '<div class="pooh-divider-text">' + text + '</div>' +
-    '<div class="pooh-divider-line"></div>' +
-    '</div>';
-}
-
-// ── RENDER TODAY TAB ─────────────────────────────────────────────────
-function renderToday() {
-  const blocks = SCHEDULE[viewDay] || [];
-  const now = nowMinutes();
-  const currentIdx = findCurrentBlock(viewDay);
-  const progress = dayProgress(viewDay);
-  const today = new Date();
-  const isToday = viewDay === (today.getDay() === 0 ? 6 : today.getDay() - 1);
-  const currentBlock = currentIdx !== null ? blocks[currentIdx] : null;
-  const nextBlock = currentIdx !== null && currentIdx + 1 < blocks.length ? blocks[currentIdx + 1] : null;
-
-  const intentionText = INTENTIONS[viewDay];
-
-  let html = `
-    <div class="now-section">
-      <div class="now-label">${isToday ? 'Right Now' : DAY_NAMES[viewDay]}</div>
-  `;
-
-  if (currentBlock && isToday) {
-    html += `
-      <div class="now-card">
-        <div class="now-time-badge">${currentBlock.t} · ${DAY_NAMES[viewDay]}</div>
-        <div class="now-title">${currentBlock.title}</div>
-        ${currentBlock.note ? `<div class="now-note">${currentBlock.note}</div>` : ''}
-        ${currentBlock.tag ? `<div class="now-tag">${currentBlock.tag}</div>` : ''}
-        <div class="now-actions">
-          <button class="btn-play" style="display:none">
-            ▶ Play guide
-          </button>
-          ${nextBlock ? `<button class="btn-next" onclick="scrollToNext()" title="Next">›</button>` : ''}
-        </div>
-      </div>
-    `;
+async function callApi(prompt) {
+  var cfg = getApiConfig();
+  if (cfg.type === 'none') { openApiSettings(); throw new Error('Please enter your API key in ⚙ Settings.'); }
+  var url, headers, body;
+  if (cfg.type === 'openai') {
+    url = 'https://api.openai.com/v1/chat/completions';
+    headers = { 'Content-Type':'application/json', 'Authorization':'Bearer '+cfg.key };
+    body = JSON.stringify({ model:'gpt-4o-mini', max_tokens:1400, messages:[{role:'user',content:prompt}] });
+  } else if (cfg.type === 'anthropic') {
+    url = 'https://api.anthropic.com/v1/messages';
+    headers = { 'Content-Type':'application/json', 'x-api-key':cfg.key, 'anthropic-version':'2023-06-01' };
+    body = JSON.stringify({ model:'claude-haiku-4-5-20251001', max_tokens:1400, messages:[{role:'user',content:prompt}] });
   } else {
-    html += `
-      <div class="now-card" style="background:var(--sage)">
-        <div class="now-time-badge">${DAY_NAMES[viewDay]}</div>
-        <div class="now-title">View the full schedule below</div>
-        <div class="now-note">Tap any block to expand it and hear it read aloud.</div>
-        <div class="now-actions">
-          <button class="btn-play" onclick="void(0)" style="display:none" style="background:rgba(255,255,255,.18)">
-            <span class="play-icon">▶</span> Morning guide
-          </button>
-        </div>
-      </div>
-    `;
+    url = cfg.url; headers = { 'Content-Type':'application/json' };
+    body = JSON.stringify({ model:'claude-haiku-4-5-20251001', max_tokens:1400, messages:[{role:'user',content:prompt}] });
   }
-
-  html += `</div>`;
-
-  if (isToday) {
-    html += `
-      <div class="day-progress">
-        <div class="progress-label">
-          <span>Day progress</span>
-          <span>${Math.round(progress)}%</span>
-        </div>
-        <div class="progress-track">
-          <div class="progress-fill" style="width:${progress}%"></div>
-        </div>
-      </div>
-    `;
-  }
-
-  // Day selector
-  html += `<div class="day-selector">`;
-  DAY_NAMES.forEach((name, i) => {
-    html += `<button class="day-btn ${i===viewDay?'active':''}" onclick="changeDay(${i})">${name.slice(0,3)}</button>`;
-  });
-  html += `</div>`;
-
-  // Intention
-  html += `
-    <div class="intention-banner">
-      <div class="intention-icon">✦</div>
-      <div>
-        <div class="intention-label">Today's intention</div>
-        <div class="intention-text">${intentionText}</div>
-      </div>
-    </div>
-  `;
-
-  // Blocks grouped
-  const sections = ['Morning','Work','Afternoon','Evening'];
-  const sectionRanges = [[0,720],[720,960],[960,1080],[1080,1440]];
-
-  sectionRanges.forEach(([start, end], si) => {
-    const sectionBlocks = blocks.filter(b => b.m >= start && b.m < end);
-    if (!sectionBlocks.length) return;
-
-    html += `
-      <div class="sched-section-header">
-        <span class="sched-section-name">${sections[si]}</span>
-        <div class="sched-section-line"></div>
-      </div>
-      <div class="blocks-list">
-    `;
-
-    sectionBlocks.forEach((block, bi) => {
-      const globalIdx = blocks.indexOf(block);
-      const isPast = isToday && block.m < now - 15;
-      const isNow = isToday && globalIdx === currentIdx;
-      const tagClass = block.tag ? `tag-${block.tag}` : '';
-      const pillClass = block.tag ? `pill-${block.tag}` : '';
-      const blockDone = isDone(viewDay, globalIdx);
-      html += `
-        <div class="block-card ${tagClass} ${isPast?'past':''} ${isNow?'is-now':''} ${blockDone?'done':''}"
-             id="block-${viewDay}-${globalIdx}"
-             onclick="toggleBlock(this, ${viewDay}, ${globalIdx})">
-          <div class="block-accent"></div>
-          <div class="block-check ${blockDone?'checked':''}"
-               onclick="toggleDone(${viewDay}, ${globalIdx}, event)"></div>
-          <div class="block-inner">
-            <div class="block-top">
-              <div class="block-time">${block.t}</div>
-              <div style="display:flex;align-items:center;gap:6px">
-                <div class="wave-indicator">
-                  <div class="wave-bar"></div><div class="wave-bar"></div>
-                  <div class="wave-bar"></div><div class="wave-bar"></div>
-                </div>
-                ${block.tag ? `<span class="block-pill ${pillClass}">${block.tag}</span>` : ''}
-              </div>
-            </div>
-            <div class="block-title">${block.title}</div>
-            <div class="block-note">${block.note || ''}</div>
-
-          </div>
-        </div>
-      `;
-    });
-
-    html += `</div>`;
-  });
-
-  document.getElementById('mainContent').innerHTML = html;
-
-  // Store current block ref for now-card speak
-  window._currentBlock = currentBlock;
-
-  // Add Pooh between now card and schedule
-  html += poohSectionDivider('the hundred acre wood', 'pooh');
+  var resp = await fetch(url, { method:'POST', headers:headers, body:body });
+  var d = await resp.json();
+  if (!resp.ok) throw new Error((d.error&&d.error.message)||'API error '+resp.status);
+  if (cfg.type === 'openai') return { text:d.choices[0].message.content, usage:{input_tokens:d.usage.prompt_tokens,output_tokens:d.usage.completion_tokens} };
+  return { text:d.content[0].text, usage:d.usage };
 }
 
-
-
-
-
-
-
-
-function toggleBlock(el, dayIdx, blockIdx) {
-  const wasExpanded = el.classList.contains('expanded');
-  document.querySelectorAll('.block-card.expanded').forEach(c => c.classList.remove('expanded'));
-  if (!wasExpanded) {
-    el.classList.add('expanded');
-    el.scrollIntoView({ behavior:'smooth', block:'nearest' });
-  }
-}
-
-function changeDay(idx) {
-  viewDay = idx;
-  renderToday();
-}
-
-function scrollToNext() {
-  const nowIdx = findCurrentBlock(viewDay);
-  if (nowIdx !== null) {
-    const next = document.getElementById(`block-${viewDay}-${nowIdx+1}`);
-    if (next) next.scrollIntoView({ behavior:'smooth', block:'center' });
-  }
-}
-
-// ── RENDER HABITS TAB ─────────────────────────────────────────────────
-function renderHabits() {
-  let html = `<div style="padding:12px 20px 0"><p style="font-family:Cormorant Garamond,serif;font-size:17px;font-style:italic;color:var(--stone);line-height:1.75;margin-bottom:16px">Eight specific corrections. Small enough to execute, significant enough to compound over years. Tap any to expand. Tap the speak button to hear it.</p></div>`;
-
-  html += `<div class="habits-section">`;
-  HABITS_DATA.forEach((h, i) => {
-    html += `
-      <div class="habit-item" id="habit-${i}" onclick="toggleHabit(${i})">
-        <div class="habit-num">${h.n}</div>
-        <div class="habit-content">
-          <div class="habit-title-sm">${h.title}</div>
-          <div class="habit-tag-sm">${h.tag}</div>
-          <div class="habit-body-sm">
-            <p class="habit-body-text">${h.text}</p>
-            <p class="habit-body-practice">${h.practice}</p>
-          </div>
-        </div>
-      </div>
-    `;
-  });
-  html += `</div>`;
-
-  document.getElementById('mainContent').innerHTML = html;
-}
-
-function toggleHabit(idx) {
-  const el = document.getElementById(`habit-${idx}`);
-  const wasOpen = el.classList.contains('open');
-  document.querySelectorAll('.habit-item.open').forEach(h => h.classList.remove('open'));
-  if (!wasOpen) {
-    el.classList.add('open');
-    el.scrollIntoView({ behavior:'smooth', block:'nearest' });
-  }
-}
-
-
-
-// ── RENDER VOICE GUIDE TAB ────────────────────────────────────────────
-
-
-
-
-// ── FOOD TAB DATA ─────────────────────────────────────────────────────
-var mealHistory = JSON.parse(localStorage.getItem('bloom_meals') || '{}');
-// { breakfast: [...], lunch: [...], dinner: [...] }
-if (!mealHistory.breakfast) mealHistory.breakfast = [];
-if (!mealHistory.lunch) mealHistory.lunch = [];
-if (!mealHistory.dinner) mealHistory.dinner = [];
-
-var currentMeals = { breakfast: null, lunch: null, dinner: null };
 // ── TOKEN TRACKING ────────────────────────────────────────────────────
-var sessionTokens = { input: 0, output: 0, calls: 0 };
-// Approximate blended pricing — Anthropic haiku / OpenAI gpt-4o-mini
-var TOKEN_COST = { input: 0.15, output: 0.60 };
+var sessionTokens = { input:0, output:0, calls:0 };
+var TOKEN_COST = { input:0.15, output:0.60 };
 function trackTokens(usage) {
   if (!usage) return '';
-  sessionTokens.input  += (usage.input_tokens  || 0);
-  sessionTokens.output += (usage.output_tokens || 0);
-  sessionTokens.calls  += 1;
-  var cost = (sessionTokens.input / 1e6 * TOKEN_COST.input) +
-             (sessionTokens.output / 1e6 * TOKEN_COST.output);
-  return 'This call: ' + (usage.input_tokens||0) + ' in · ' +
-         (usage.output_tokens||0) + ' out' +
-         ' · Session total: $' + cost.toFixed(4);
+  sessionTokens.input += (usage.input_tokens||0);
+  sessionTokens.output += (usage.output_tokens||0);
+  sessionTokens.calls += 1;
+  var cost = (sessionTokens.input/1e6*TOKEN_COST.input)+(sessionTokens.output/1e6*TOKEN_COST.output);
+  return (usage.input_tokens||0)+' in · '+(usage.output_tokens||0)+' out · $'+cost.toFixed(4);
 }
+
+// ── MEAL DATA ─────────────────────────────────────────────────────────
+var mealHistory = JSON.parse(localStorage.getItem('bloom_meals') || '{}');
+if (!mealHistory.breakfast) mealHistory.breakfast = [];
+if (!mealHistory.lunch)     mealHistory.lunch     = [];
+if (!mealHistory.dinner)    mealHistory.dinner    = [];
+if (!mealHistory.dessert)   mealHistory.dessert   = [];
+var currentMeals = { breakfast:null, lunch:null, dinner:null, dessert:null };
 
 var MEAL_PROMPTS = {
   breakfast: function() {
-    var recent = mealHistory.breakfast.slice(-4).join(', ') || 'nothing on record';
-    var profile = [
-      "You know this person's palate deeply. She is 26, SF Dogpatch, Libra sun, Taurus rising, ISTP.",
-      "Her breakfast range: soft-boiled egg on rice, ricotta toast with olive oil, miso soup with tofu,",
-      "Greek yogurt with honey and walnuts, Korean-style egg wrap, avocado with chili flakes and lime,",
-      "Italian frittata, shakshuka, ful medames, congee with ginger and scallion, labneh with za'atar,",
-      "tamago gohan, sardines on toast, a proper Turkish menemen.",
-      "No sweet breakfasts. She wants something considered. Weekday, 10-25 min.",
-      "Recently had: " + recent + ". Do NOT repeat those.",
-      "Pick freely across any cuisine that fits her profile.",
-      "Return a FULL recipe with all steps and exact quantities. JSON only, no markdown, no preamble:",
-      '{"name":"","cuisine":"","why":"one phrase why this fits","serves":"1","time":"15 min","ingredients":[{"amount":"1","unit":"tbsp","item":"olive oil"}],"steps":[{"n":1,"text":"Full step here."}],"note":"optional tip"}'
-    ].join(' ');
-    return profile;
+    var r = mealHistory.breakfast.slice(-5).join(', ') || 'none';
+    return "You know this person deeply. She is 26, SF Dogpatch, Libra sun, Taurus rising, ISTP. Breakfast range: soft-boiled egg on rice, ricotta toast, miso with tofu, Greek yogurt with honey, Korean egg wrap, avocado with chili, frittata, shakshuka, ful medames, congee, labneh za'atar, tamago gohan, sardines on toast, Turkish menemen, Palestinian musakhan eggs, Japanese dashimaki, Egyptian ful with egg. No sweet breakfasts. Considered, savory, 10-25 min. Recently had: "+r+". Do NOT repeat. Return a FULL recipe. JSON only, no markdown: {\"name\":\"\",\"cuisine\":\"\",\"why\":\"one phrase\",\"serves\":\"1\",\"time\":\"15 min\",\"ingredients\":[{\"amount\":\"1\",\"unit\":\"tbsp\",\"item\":\"olive oil\"}],\"steps\":[{\"n\":1,\"text\":\"Step here.\"}],\"note\":\"optional tip\"}";
   },
   lunch: function() {
-    var recent = mealHistory.lunch.slice(-4).join(', ') || 'nothing on record';
-    var profile = [
-      "You know this person's palate deeply. She is 26, SF Dogpatch, Libra sun, Taurus rising, ISTP.",
-      "Her lunch range is genuinely wide: Vietnamese bun cha, spicy Korean bibimbap, Italian pasta aglio e olio,",
-      "Lebanese fattoush with good pita, Thai larb, French lentil salad, Turkish eggs with yogurt and chili butter,",
-      "Sichuan cold sesame noodles, Nicoise, tacos al pastor, tahini grain bowl, Persian herb rice,",
-      "Moroccan carrot salad, Egyptian koshari, Georgian bean stew.",
-      "Real flavour, satisfying but not heavy, 20-30 min or a great nearby spot.",
-      "She gets bored — she wants variety, not defaults.",
-      "Recently had: " + recent + ". Do NOT repeat those.",
-      "Return a FULL recipe with all steps and exact quantities. JSON only, no markdown, no preamble:",
-      '{"name":"","cuisine":"","why":"one phrase","serves":"1-2","time":"25 min","ingredients":[{"amount":"1","unit":"cup","item":"ingredient"}],"steps":[{"n":1,"text":"Full step here."}],"note":"optional tip"}'
-    ].join(' ');
-    return profile;
+    var r = mealHistory.lunch.slice(-5).join(', ') || 'none';
+    return "You know this person deeply. She is 26, SF Dogpatch, Libra sun, Taurus rising, ISTP. Lunch range: Vietnamese bun cha, Korean bibimbap, pasta aglio e olio, Lebanese fattoush, Thai larb, French lentil salad, Turkish eggs with yogurt chili butter, Sichuan cold sesame noodles, Nicoise, tacos al pastor, tahini grain bowl, Persian herb rice, Moroccan carrot salad, Egyptian koshari, Georgian bean stew, Singaporean laksa, Burmese tea leaf salad, Israeli sabich, Filipino kare-kare, Yemeni saltah. Real flavour, not heavy, 20-30 min. Recently had: "+r+". Do NOT repeat. Return a FULL recipe. JSON only, no markdown: {\"name\":\"\",\"cuisine\":\"\",\"why\":\"one phrase\",\"serves\":\"1-2\",\"time\":\"25 min\",\"ingredients\":[{\"amount\":\"1\",\"unit\":\"cup\",\"item\":\"ingredient\"}],\"steps\":[{\"n\":1,\"text\":\"Step here.\"}],\"note\":\"optional tip\"}";
   },
   dinner: function() {
-    var recent = mealHistory.dinner.slice(-4).join(', ') || 'nothing on record';
-    var profile = [
-      "You know this person's palate deeply. She is 26, SF Dogpatch, Libra sun, Taurus rising, ISTP.",
-      "Her dinner range: cacio e pepe, Korean jjimdak, Taiwanese three-cup chicken, Persian kuku sabzi,",
-      "Vietnamese caramelised pork, Spanish pil-pil cod, Sichuan mapo tofu, French duck confit,",
-      "Georgian walnut chicken, mole negro, bouillabaisse, Ottolenghi roasted vegetables,",
-      "Iraqi masgouf, Jordanian lamb mansaf, Tunisian shakshuka with merguez, Gujarati dal,",
-      "Ligurian trofie al pesto, Basque piperade with eggs, Japanese kakuni.",
-      "She loves fermented elements, fat used properly, acidity to balance, dishes with a story.",
-      "1-2 people, 30-60 min weeknight. Not looking for safe or predictable. Range freely across all cuisines.",
-      "Recently had: " + recent + ". Do NOT repeat those.",
-      "Return a FULL recipe with all steps and exact quantities. JSON only, no markdown, no preamble:",
-      '{"name":"","cuisine":"","description":"two sentences on why right tonight","time":"40 min","difficulty":"Medium","ingredients":["","","","",""],"method":"three sentences on key technique","why_tonight":"one sentence"}'
-    ].join(' ');
-    return profile;
+    var r = mealHistory.dinner.slice(-5).join(', ') || 'none';
+    return "You know this person deeply. She is 26, SF Dogpatch, Libra sun, Taurus rising, ISTP. Dinner range: cacio e pepe, Korean jjimdak, Taiwanese three-cup chicken, Persian kuku sabzi, Vietnamese caramelised pork, Spanish pil-pil cod, Sichuan mapo tofu, French duck confit, Georgian walnut chicken, mole negro, Ottolenghi vegetables, Iraqi masgouf, Jordanian mansaf, Tunisian shakshuka with merguez, Gujarati dal, Ligurian trofie al pesto, Basque piperade, Japanese kakuni, Moroccan bastilla, Sri Lankan black pork curry, Yemeni mandi, Ethiopian tibs, Peruvian lomo saltado. She loves fermented elements, fat used properly, acidity, dishes with story. 1-2 people, 30-60 min. Recently had: "+r+". Do NOT repeat. Return a FULL recipe. JSON only, no markdown: {\"name\":\"\",\"cuisine\":\"\",\"why\":\"one sentence why tonight\",\"serves\":\"2\",\"time\":\"45 min\",\"difficulty\":\"Medium\",\"ingredients\":[{\"amount\":\"2\",\"unit\":\"tbsp\",\"item\":\"olive oil\"}],\"steps\":[{\"n\":1,\"text\":\"Step here.\"}],\"note\":\"optional tip\"}";
+  },
+  dessert: function() {
+    var r = mealHistory.dessert.slice(-5).join(', ') || 'none';
+    return "You know this person deeply. She is 26, SF Dogpatch, Libra sun, Taurus rising, ISTP. She gravitates toward desserts with restraint — not overly sweet, technically interesting, with story. Range: Japanese mochi, French tarte tatin, Moroccan bastilla with almonds, Italian panna cotta, Middle Eastern knafeh, Persian sholeh zard, Taiwanese tang yuan, Greek loukoumades, Vietnamese che ba mau, Mexican cajeta crepes, Turkish kazandibi, Japanese warabi mochi, Indian gulab jamun, Lebanese atayef, Spanish crema catalana, Egyptian om ali, Korean bingsu, Basque burnt cheesecake. No heavy American-style desserts. Something considered and beautiful. Recently had: "+r+". Do NOT repeat. Return a FULL recipe. JSON only, no markdown: {\"name\":\"\",\"cuisine\":\"\",\"why\":\"one phrase\",\"serves\":\"2\",\"time\":\"30 min\",\"difficulty\":\"Easy\",\"ingredients\":[{\"amount\":\"1\",\"unit\":\"cup\",\"item\":\"ingredient\"}],\"steps\":[{\"n\":1,\"text\":\"Step here.\"}],\"note\":\"optional tip or variation\"}";
   }
 };
-async function generateMeal(type) {
-  var btn = document.getElementById('mealBtn-' + type);
-  var container = document.getElementById('mealResult-' + type);
-  if (btn) { btn.textContent = 'Finding...'; btn.style.opacity = '.7'; }
-  if (container) container.innerHTML = '<div style="padding:20px;text-align:center;font-style:italic;color:var(--stone);font-size:15px">Thinking... (~10 seconds)</div>';
 
+async function generateMeal(type) {
+  var btn = document.getElementById('mealBtn-'+type);
+  var container = document.getElementById('mealResult-'+type);
+  if (btn) { btn.textContent='Finding...'; btn.style.opacity='.7'; btn.disabled=true; }
+  if (container) container.innerHTML = '<div style="padding:20px;text-align:center;font-family:Cormorant Garamond,serif;font-style:italic;color:var(--stone);font-size:15px">Thinking... (~10 sec)</div>';
   try {
     var result = await callApi(MEAL_PROMPTS[type]());
-    var text = result.text.replace(/```json|```/g, '').trim();
+    var text = result.text.replace(/```json|```/g,'').trim();
     var meal = JSON.parse(text);
     currentMeals[type] = meal;
     var tokenLine = trackTokens(result.usage);
-
     mealHistory[type].push(meal.name);
-    if (mealHistory[type].length > 15) mealHistory[type] = mealHistory[type].slice(-15);
+    if (mealHistory[type].length > 20) mealHistory[type] = mealHistory[type].slice(-20);
     try { localStorage.setItem('bloom_meals', JSON.stringify(mealHistory)); } catch(e) {}
-
-    // Build ingredients list
     var ingHtml = '';
     if (Array.isArray(meal.ingredients)) {
       meal.ingredients.forEach(function(ing) {
-        if (typeof ing === 'object') {
-          ingHtml += '<li>' + [ing.amount, ing.unit, ing.item].filter(Boolean).join(' ') + '</li>';
-        } else {
-          ingHtml += '<li>' + ing + '</li>';
-        }
+        if (typeof ing === 'object') ingHtml += '<li>'+[ing.amount,ing.unit,ing.item].filter(Boolean).join(' ')+'</li>';
+        else ingHtml += '<li>'+ing+'</li>';
       });
     }
-    // Build numbered steps
     var stepsHtml = '';
     if (Array.isArray(meal.steps)) {
       meal.steps.forEach(function(s) {
-        var num = s.n || '';
-        var txt = s.text || s;
-        stepsHtml += '<div style="display:flex;gap:10px;margin-bottom:10px">' +
-          '<div style="font-family:Cormorant Garamond,serif;font-size:18px;color:var(--terra);flex-shrink:0;line-height:1.3">' + num + '</div>' +
-          '<div style="font-family:Cormorant Garamond,serif;font-size:15px;color:var(--ink);line-height:1.7">' + txt + '</div>' +
-          '</div>';
+        stepsHtml += '<div style="display:flex;gap:10px;margin-bottom:10px">'+
+          '<div style="font-family:Cormorant Garamond,serif;font-size:18px;color:var(--terra);flex-shrink:0;line-height:1.3">'+(s.n||'')+'</div>'+
+          '<div style="font-family:Cormorant Garamond,serif;font-size:15px;color:var(--ink);line-height:1.7">'+(s.text||s)+'</div></div>';
       });
     } else {
-      stepsHtml = '<div style="font-family:Cormorant Garamond,serif;font-size:15px;color:var(--ink);line-height:1.7">' + (meal.method || '') + '</div>';
+      stepsHtml = '<div style="font-family:Cormorant Garamond,serif;font-size:15px;color:var(--ink);line-height:1.7">'+(meal.method||'')+'</div>';
     }
-    var difficultyLine = meal.difficulty ? ' · ' + meal.difficulty : '';
-    var noteHtml = meal.note ? '<div style="margin-top:12px;padding:10px 12px;background:rgba(168,120,80,.07);border-radius:8px;font-family:Cormorant Garamond,serif;font-size:13px;font-style:italic;color:var(--stone);line-height:1.6">✦ ' + meal.note + '</div>' : '';
-
+    var noteHtml = meal.note ? '<div style="margin-top:12px;padding:10px 12px;background:rgba(168,120,80,.07);border-radius:8px;font-family:Cormorant Garamond,serif;font-size:13px;font-style:italic;color:var(--stone);line-height:1.6">✦ '+meal.note+'</div>' : '';
+    var diffLine = meal.difficulty ? ' · '+meal.difficulty : '';
     if (container) container.innerHTML =
-      '<div class="dinner-card">' +
-        '<div class="dinner-card-cuisine">' + meal.cuisine + '</div>' +
-        '<div class="dinner-card-name">' + meal.name + '</div>' +
-        '<div style="font-size:11px;color:var(--dust);margin-bottom:10px">' + (meal.serves||'') + ' · ' + (meal.time||'') + difficultyLine + '</div>' +
-        '<div style="font-family:Cormorant Garamond,serif;font-size:15px;font-style:italic;color:var(--stone);margin-bottom:14px;line-height:1.65">' + (meal.why || meal.why_tonight || meal.description || '') + '</div>' +
-        '<div style="font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--terra);margin-bottom:8px">Ingredients</div>' +
-        '<ul style="padding-left:16px;margin:0 0 16px;font-family:Jost,sans-serif;font-size:12px;font-weight:300;color:var(--stone);line-height:2">' + ingHtml + '</ul>' +
-        '<div style="font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--terra);margin-bottom:10px">Method</div>' +
-        stepsHtml +
-        noteHtml +
-        '<div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px;padding-top:10px;border-top:1px solid rgba(168,120,80,.1)">' +
-          '<div style="text-align:left;cursor:pointer;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--dust)" onclick="generateMeal(&quot;' + type + '&quot;)">↺ Try another</div>' +
-          '<button id="saveBtn-' + type + '" onclick="handleSaveToSheets(&quot;' + type + '&quot;)" style="font-family:Jost,sans-serif;font-size:10px;font-weight:400;letter-spacing:.08em;text-transform:uppercase;color:var(--sage);background:none;border:1px solid rgba(90,120,72,.3);border-radius:20px;padding:5px 12px;cursor:pointer">↑ Save</button>' +
-        '</div>' +
-        (tokenLine ? '<div style="text-align:right;padding:4px 0 0;font-size:9px;color:var(--dust);opacity:.5">' + tokenLine + '</div>' : '') +
+      '<div class="dinner-card">'+
+        '<div class="dinner-card-cuisine">'+(meal.cuisine||'')+'</div>'+
+        '<div class="dinner-card-name">'+(meal.name||'')+'</div>'+
+        '<div style="font-size:11px;color:var(--dust);margin-bottom:10px">'+(meal.serves||'')+' · '+(meal.time||'')+diffLine+'</div>'+
+        '<div style="font-family:Cormorant Garamond,serif;font-size:15px;font-style:italic;color:var(--stone);margin-bottom:14px;line-height:1.65">'+(meal.why||meal.why_tonight||meal.description||'')+'</div>'+
+        '<div style="font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--terra);margin-bottom:8px">Ingredients</div>'+
+        '<ul style="padding-left:16px;margin:0 0 16px;font-family:Jost,sans-serif;font-size:12px;font-weight:300;color:var(--stone);line-height:2">'+ingHtml+'</ul>'+
+        '<div style="font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--terra);margin-bottom:10px">Method</div>'+
+        stepsHtml+noteHtml+
+        '<div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px;padding-top:10px;border-top:1px solid rgba(168,120,80,.1)">'+
+          '<div style="cursor:pointer;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--dust)" onclick="generateMeal(&quot;'+type+'&quot;)">↺ Try another</div>'+
+          '<button id="saveBtn-'+type+'" onclick="handleSaveToSheets(&quot;'+type+'&quot;)" style="font-family:Jost,sans-serif;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--sage);background:none;border:1px solid rgba(90,120,72,.3);border-radius:20px;padding:5px 12px;cursor:pointer">↑ Save</button>'+
+        '</div>'+
+        (tokenLine?'<div style="text-align:right;padding:4px 0 0;font-size:9px;color:var(--dust);opacity:.5">'+tokenLine+'</div>':'')+
       '</div>';
   } catch(e) {
-    var msg = (e && e.message) ? e.message : 'Unknown error';
-    if (container) container.innerHTML = '<div style="padding:16px;font-size:13px;color:var(--stone);text-align:center">' +
-      '<div style="margin-bottom:6px">⚠ ' + msg.slice(0, 150) + '</div>' +
-      '<div style="font-size:11px;opacity:.6">Tap to retry</div>' +
-      '</div>';
-    if (container) container.onclick = function() { container.onclick=null; generateMeal(type); };
+    var msg = (e&&e.message)?e.message:'Unknown error';
+    if (container) {
+      container.innerHTML = '<div style="padding:16px;font-size:13px;color:var(--stone);text-align:center">⚠ '+msg.slice(0,150)+'<br><span style="font-size:11px;opacity:.6">Tap to retry</span></div>';
+      container.onclick = function(){ container.onclick=null; generateMeal(type); };
+    }
   }
-  if (btn) { btn.textContent = '↺ New suggestion'; btn.style.opacity = '1'; }
+  if (btn) { btn.textContent='✦ Suggest'; btn.style.opacity='1'; btn.disabled=false; }
 }
-
-
 
 // ── RENDER FOOD TAB ───────────────────────────────────────────────────
 function renderDinner() {
-  var hour = new Date().getHours();
   var meals = [
-    { type: 'breakfast', icon: '☀️', label: 'Breakfast', sub: 'Morning · 15–25 min', color: 'var(--gold)' },
-    { type: 'lunch',     icon: '🍱', label: 'Lunch',     sub: 'Midday · 20–30 min',  color: 'var(--sage)' },
-    { type: 'dinner',    icon: '🌙', label: 'Dinner',    sub: 'Evening · 30–60 min', color: 'var(--terra)' }
+    { type:'breakfast', icon:'☀️', label:'Breakfast', sub:'Morning · 15–25 min',  color:'var(--gold)'  },
+    { type:'lunch',     icon:'🍱', label:'Lunch',     sub:'Midday · 20–30 min',   color:'var(--sage)'  },
+    { type:'dinner',    icon:'🌙', label:'Dinner',    sub:'Evening · 30–60 min',  color:'var(--terra)' },
+    { type:'dessert',   icon:'🍮', label:'Dessert',   sub:'Any time · 20–40 min', color:'var(--gold)'  },
   ];
-
-  var html = '<div style="padding:16px 20px 4px">' +
-    '<p style="font-family:Cormorant Garamond,serif;font-size:18px;font-style:italic;color:var(--stone);line-height:1.75;margin-bottom:4px">What should she eat?</p>' +
-    '<p style="font-family:Jost,sans-serif;font-size:11px;font-weight:300;color:var(--dust);letter-spacing:.04em;margin-bottom:12px">Matched to her palate. Tap any meal to get a suggestion.</p>' +
-  '</div>';
-
+  var html = '<div style="padding:16px 20px 4px"><p style="font-family:Cormorant Garamond,serif;font-size:18px;font-style:italic;color:var(--stone);line-height:1.75;margin-bottom:4px">What should she eat?</p><p style="font-family:Jost,sans-serif;font-size:11px;font-weight:300;color:var(--dust);letter-spacing:.04em;margin-bottom:12px">Matched to her palate. Tap any meal to get a full recipe.</p></div>';
   meals.forEach(function(m) {
-    html +=
-      '<div style="margin:0 12px 4px;background:var(--cream);border-radius:14px;border:1px solid rgba(168,120,80,.12);border-left:4px solid ' + m.color + ';padding:14px 16px">' +
-        '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">' +
-          '<div>' +
-            '<div style="font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--dust);margin-bottom:3px">' + m.sub + '</div>' +
-            '<div style="font-family:Cormorant Garamond,serif;font-size:20px;color:var(--ink)">' + m.icon + '  ' + m.label + '</div>' +
-          '</div>' +
-          '<button id="mealBtn-' + m.type + '" onclick="generateMeal(&quot;' + m.type + '&quot;)" ' +
-            'style="font-family:Jost,sans-serif;font-size:10px;font-weight:400;letter-spacing:.08em;text-transform:uppercase;' +
-            'color:#fff;background:' + m.color + ';border:none;border-radius:20px;padding:7px 14px;cursor:pointer">' +
-            '✦ Suggest' +
-          '</button>' +
-        '</div>' +
-        '<div id="mealResult-' + m.type + '"></div>' +
-      '</div>';
+    html += '<div style="margin:0 12px 8px;background:var(--cream);border-radius:14px;border:1px solid rgba(168,120,80,.12);border-left:4px solid '+m.color+';padding:14px 16px">'+
+      '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">'+
+        '<div><div style="font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--dust);margin-bottom:3px">'+m.sub+'</div>'+
+        '<div style="font-family:Cormorant Garamond,serif;font-size:20px;color:var(--ink)">'+m.icon+'  '+m.label+'</div></div>'+
+        '<button id="mealBtn-'+m.type+'" onclick="generateMeal(&quot;'+m.type+'&quot;)" style="font-family:Jost,sans-serif;font-size:10px;font-weight:400;letter-spacing:.08em;text-transform:uppercase;color:#fff;background:'+m.color+';border:none;border-radius:20px;padding:7px 14px;cursor:pointer">✦ Suggest</button>'+
+      '</div><div id="mealResult-'+m.type+'"></div></div>';
   });
-
   document.getElementById('mainContent').innerHTML = html;
 }
 
-function toggleGuide(el) {
-  var panel = el.nextElementSibling;
-  panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
-}
-
-function renderVoice() {
-  var hour = new Date().getHours();
-  var defaultKey = 'morning';
-  if (hour >= 12 && hour < 17) defaultKey = 'midday';
-  else if (hour >= 17) defaultKey = 'evening';
-  if (new Date().getDay() === 0) defaultKey = 'sunday';
-
-  var guides = [
-    { key:'morning', icon:'🌅', title:'Morning Guide',     desc:'The first two hours. Matcha, deep work, direction.' },
-    { key:'midday',  icon:'☀',  title:'Midday Check-In',  desc:'The afternoon reset. Lunch outside, lighter work.' },
-    { key:'evening', icon:'🌙', title:'Evening Wind-Down', desc:'The formal close. Walk, transition into rest.' },
-    { key:'sunday',  icon:'🕯', title:'Sunday Guide',      desc:'The protected afternoon. Offline, honest, present.' }
-  ];
-
-  var html = '<div style="padding:16px 20px 4px">' +
-    '<p style="font-family:Cormorant Garamond,serif;font-size:18px;font-style:italic;color:var(--stone);line-height:1.75;margin-bottom:4px">Read a guide for the time of day.</p>' +
-    '<p style="font-family:Jost,sans-serif;font-size:11px;font-weight:300;color:var(--dust);letter-spacing:.04em;margin-bottom:16px">Tap a card to expand the script.</p>' +
-  '</div>';
-
-  guides.forEach(function(g) {
-    var isRec = g.key === defaultKey;
-    var script = (GUIDE_SCRIPTS[g.key] || '').replace(/</g,'&lt;');
-    var bg  = isRec ? 'var(--terra)' : 'var(--cream)';
-    var bdr = isRec ? 'transparent' : 'rgba(168,120,80,.15)';
-    var clr = isRec ? '#fff' : 'var(--ink)';
-    var sub = isRec ? 'rgba(255,255,255,.75)' : 'var(--stone)';
-    var scriptClr = isRec ? 'rgba(255,255,255,.9)' : 'var(--stone)';
-    var divBdr = isRec ? 'rgba(255,255,255,.15)' : 'rgba(168,120,80,.1)';
-    var nowBadge = isRec ? '<div style="font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.8);background:rgba(255,255,255,.15);border-radius:10px;padding:3px 8px">Now</div>' : '';
-    html +=
-      '<div style="margin:0 12px 10px;background:' + bg + ';border-radius:14px;border:1px solid ' + bdr + ';overflow:hidden">' +
-        '<div onclick="toggleGuide(this)" style="display:flex;align-items:center;gap:14px;padding:18px 20px;cursor:pointer">' +
-          '<div style="font-size:26px">' + g.icon + '</div>' +
-          '<div style="flex:1">' +
-            '<div style="font-family:Cormorant Garamond,serif;font-size:19px;color:' + clr + '">' + g.title + '</div>' +
-            '<div style="font-size:12px;color:' + sub + ';margin-top:3px">' + g.desc + '</div>' +
-          '</div>' + nowBadge +
-        '</div>' +
-        '<div style="display:none;padding:0 20px 18px;border-top:1px solid ' + divBdr + '">' +
-          '<p style="font-family:Cormorant Garamond,serif;font-size:16px;line-height:1.9;color:' + scriptClr + ';margin:12px 0 0;white-space:pre-line">' + script + '</p>' +
-        '</div>' +
-      '</div>';
-  });
-
-  document.getElementById('mainContent').innerHTML = html;
-}
-
-function switchTab(tab) {
-  currentTab = tab;
-  document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
-  var tabEl = document.getElementById('tab-' + tab);
-  if (tabEl) tabEl.classList.add('active');
-  // Swap background
-  document.querySelectorAll('.tab-bg').forEach(b => b.classList.remove('active'));
-  var bg = document.getElementById('tabBg-' + tab);
-  if (bg) bg.classList.add('active');
-  // Render content
-  if (tab === 'today') renderToday();
-  else if (tab === 'habits') renderHabits();
-  else if (tab === 'money') renderMoney();
-  else if (tab === 'dinner') renderDinner();
-  else if (tab === 'voice') renderVoice();
-}
-
-// ── CLOCK ─────────────────────────────────────────────────────────────
-function updateClock() {
-  document.getElementById('liveTime').textContent = formatTime();
-}
-setInterval(updateClock, 30000);
-updateClock();
-
-// ── AUTO-REFRESH CURRENT BLOCK ────────────────────────────────────────
-setInterval(() => {
-  if (currentTab === 'today') {
-    const isToday = viewDay === (new Date().getDay() === 0 ? 6 : new Date().getDay() - 1);
-    if (isToday) renderToday();
-  }
-}, 60000);
-
-// ── INIT ──────────────────────────────────────────────────────────────
-// ResponsiveVoice handles voice loading automatically
-
-renderToday();
-
-// ── SERVICE WORKER (PWA cache for instant repeat loads) ───────────────
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', function() {
-    navigator.serviceWorker.register('./blossom-sw.js').catch(function(e) {
-      console.log('SW registration skipped:', e.message);
-    });
-  });
-}
-
-// ── API SETTINGS OVERLAY ─────────────────────────────────────────────
-function apiInputHint(val) {
-  var hint = document.getElementById('apiTypeHint');
-  if (!hint) return;
-  if (!val) { hint.textContent = ''; return; }
-  if (val.startsWith('sk-ant-')) hint.textContent = '✓ Anthropic key detected';
-  else if (val.startsWith('sk-'))  hint.textContent = '✓ OpenAI key detected';
-  else if (val.startsWith('http')) hint.textContent = '✓ Worker URL detected';
-  else hint.textContent = '⚠ Not recognised — expecting sk-ant-…, sk-…, or https://…';
-}
-function openApiSettings(forced) {
-  var el = document.getElementById('apiOverlay');
-  el.style.display = 'flex';
-  // Show/hide sections based on owner status
-  var owner = isOwnerUnlocked();
-  document.getElementById('ownerBadge').style.display = owner ? 'block' : 'none';
-  document.getElementById('apiSettingsMain').style.display = owner ? 'none' : 'block';
-  document.getElementById('pinEntry').style.display = 'none';
-  document.getElementById('resetBtn').textContent = owner ? 'Sign out' : 'Clear settings';
-  var stored = '';
-  try { stored = localStorage.getItem('bloom_api') || ''; } catch(e) {}
-  var input = document.getElementById('proxyInput');
-  input.value = stored;
-  apiInputHint(stored);
-  input.addEventListener('input', function() { apiInputHint(this.value.trim()); });
-  try {
-    document.getElementById('sheetsIdInput').value = localStorage.getItem('bloom_sheets_id') || '';
-    document.getElementById('sheetsKeyInput').value = localStorage.getItem('bloom_sheets_key') || '';
-  } catch(e) {}
-  // session usage
-  var cost = (sessionTokens.input / 1e6 * TOKEN_COST.input) +
-             (sessionTokens.output / 1e6 * TOKEN_COST.output);
-  document.getElementById('sessionUsageDisplay').innerHTML =
-    sessionTokens.calls === 0
-      ? 'No API calls this session.'
-      : sessionTokens.calls + ' call' + (sessionTokens.calls > 1 ? 's' : '') +
-        ' · ' + sessionTokens.input + ' in · ' + sessionTokens.output + ' out<br>' +
-        'Estimated cost: <strong>$' + cost.toFixed(4) + '</strong>';
-}
-function closeApiSettings() {
-  document.getElementById('apiOverlay').style.display = 'none';
-}
-function saveApiSettings() {
-  var val = document.getElementById('proxyInput').value.trim();
-  try {
-    if (val) { localStorage.setItem('bloom_api', val); }
-    else      { localStorage.removeItem('bloom_api'); }
-    var sid = document.getElementById('sheetsIdInput').value.trim();
-    var skey = document.getElementById('sheetsKeyInput').value.trim();
-    if (sid)  { localStorage.setItem('bloom_sheets_id',  sid);  } else { localStorage.removeItem('bloom_sheets_id'); }
-    if (skey) { localStorage.setItem('bloom_sheets_key', skey); } else { localStorage.removeItem('bloom_sheets_key'); }
-  } catch(e) {}
-  closeApiSettings();
-}
-function clearApiSettings() {
-  try {
-    localStorage.removeItem('bloom_api');
-    localStorage.removeItem('bloom_sheets_id');
-    localStorage.removeItem('bloom_sheets_key');
-    localStorage.removeItem('bloom_owner');
-  } catch(e) {}
-  document.getElementById('proxyInput').value = '';
-  document.getElementById('sheetsIdInput').value = '';
-  document.getElementById('sheetsKeyInput').value = '';
-  closeApiSettings();
-}
-
-// ── GOOGLE SHEETS SYNC ───────────────────────────────────────────────
+// ── GOOGLE SHEETS SYNC ────────────────────────────────────────────────
 var recipeCounter = 0;
-try { recipeCounter = parseInt(localStorage.getItem('bloom_recipe_count') || '0'); } catch(e) {}
-
+try { recipeCounter = parseInt(localStorage.getItem('bloom_recipe_count')||'0'); } catch(e) {}
 async function saveToSheets(meal, type) {
-  var spreadsheetId = '';
-  var apiKey = '';
-  try {
-    spreadsheetId = localStorage.getItem('bloom_sheets_id') || '';
-    apiKey        = localStorage.getItem('bloom_sheets_key') || '';
-  } catch(e) {}
-
-  if (!spreadsheetId || !apiKey) {
-    alert('Add your Google Spreadsheet ID and API key in ⚙ Settings first.');
-    return;
-  }
-
+  var sid='', skey='';
+  try { sid=localStorage.getItem('bloom_sheets_id')||''; skey=localStorage.getItem('bloom_sheets_key')||''; } catch(e) {}
+  if (!sid||!skey) { alert('Add your Spreadsheet ID and Google API key in ⚙ Settings first.'); return; }
   recipeCounter++;
   try { localStorage.setItem('bloom_recipe_count', String(recipeCounter)); } catch(e) {}
-
-  var label = type.charAt(0).toUpperCase() + type.slice(1);
-  var tabName = 'Recipe ' + String(recipeCounter).padStart(2,'0') + ' — ' + label;
-
-  // Build rows: header + ingredients + blank + steps + blank + note
-  var rows = [
-    [meal.name || ''],
-    [meal.cuisine || '', (meal.serves||'') + ' · ' + (meal.time||'') + (meal.difficulty ? ' · ' + meal.difficulty : '')],
-    [meal.why || meal.why_tonight || meal.description || ''],
-    [''],
-    ['INGREDIENTS'],
-  ];
-  if (Array.isArray(meal.ingredients)) {
-    meal.ingredients.forEach(function(ing) {
-      if (typeof ing === 'object') {
-        rows.push([(ing.amount||'') + ' ' + (ing.unit||''), ing.item||'']);
-      } else {
-        rows.push([String(ing)]);
-      }
-    });
-  }
-  rows.push(['']);
-  rows.push(['METHOD']);
-  if (Array.isArray(meal.steps)) {
-    meal.steps.forEach(function(s) {
-      rows.push([(s.n||'') + '.', s.text || String(s)]);
-    });
-  }
-  if (meal.note) { rows.push(['']); rows.push(['NOTE', meal.note]); }
-
+  var label = type.charAt(0).toUpperCase()+type.slice(1);
+  var tabName = 'Recipe '+String(recipeCounter).padStart(2,'0')+' — '+label;
+  var rows = [[meal.name||''],[meal.cuisine||'',(meal.serves||'')+' · '+(meal.time||'')+(meal.difficulty?' · '+meal.difficulty:'')],[meal.why||meal.why_tonight||meal.description||''],[''],['INGREDIENTS']];
+  (meal.ingredients||[]).forEach(function(ing){ rows.push(typeof ing==='object'?[(ing.amount||'')+' '+(ing.unit||''),ing.item||'']:[String(ing)]); });
+  rows.push([''],['METHOD']);
+  (meal.steps||[]).forEach(function(s){ rows.push([(s.n||'')+'.', s.text||String(s)]); });
+  if (meal.note) { rows.push([''],['NOTE',meal.note]); }
   try {
-    // Step 1: Add a new sheet tab
-    var addSheetResp = await fetch(
-      'https://sheets.googleapis.com/v4/spreadsheets/' + spreadsheetId + ':batchUpdate?key=' + apiKey,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ requests: [{ addSheet: { properties: { title: tabName } } }] })
-      }
-    );
-    if (!addSheetResp.ok) {
-      var e = await addSheetResp.json();
-      throw new Error(e.error && e.error.message || 'Could not create tab');
-    }
-
-    // Step 2: Write data into new tab
-    var writeResp = await fetch(
-      'https://sheets.googleapis.com/v4/spreadsheets/' + spreadsheetId +
-      '/values/' + encodeURIComponent(tabName + '!A1') +
-      ':append?valueInputOption=RAW&key=' + apiKey,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ values: rows })
-      }
-    );
-    if (!writeResp.ok) {
-      var e2 = await writeResp.json();
-      throw new Error(e2.error && e2.error.message || 'Could not write data');
-    }
-
-    return tabName; // success
-  } catch(err) {
-    recipeCounter--; // roll back counter on failure
-    try { localStorage.setItem('bloom_recipe_count', String(recipeCounter)); } catch(e2) {}
-    throw err;
-  }
+    var r1 = await fetch('https://sheets.googleapis.com/v4/spreadsheets/'+sid+':batchUpdate?key='+skey,
+      { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({requests:[{addSheet:{properties:{title:tabName}}}]}) });
+    if (!r1.ok) { var e1=await r1.json(); throw new Error(e1.error&&e1.error.message||'Could not create tab'); }
+    var r2 = await fetch('https://sheets.googleapis.com/v4/spreadsheets/'+sid+'/values/'+encodeURIComponent(tabName+'!A1')+':append?valueInputOption=RAW&key='+skey,
+      { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({values:rows}) });
+    if (!r2.ok) { var e2=await r2.json(); throw new Error(e2.error&&e2.error.message||'Could not write data'); }
+    return tabName;
+  } catch(err) { recipeCounter--; try { localStorage.setItem('bloom_recipe_count',String(recipeCounter)); } catch(e2){} throw err; }
 }
-
 function handleSaveToSheets(type) {
-  var meal = currentMeals[type];
-  if (!meal) return;
-  var btn = document.getElementById('saveBtn-' + type);
-  if (btn) { btn.textContent = 'Saving...'; btn.style.opacity = '.6'; btn.disabled = true; }
-  saveToSheets(meal, type).then(function(tabName) {
-    if (btn) { btn.textContent = '✓ Saved'; btn.style.color = 'var(--sage)'; btn.style.opacity = '1'; btn.disabled = false; }
-  }).catch(function(err) {
-    if (btn) { btn.textContent = '⚠ Error'; btn.style.color = 'var(--terra)'; btn.style.opacity = '1'; btn.disabled = false; }
-    setTimeout(function() {
-      if (btn) { btn.textContent = '↑ Save'; btn.style.color = 'var(--sage)'; }
-    }, 3000);
-    console.error('Sheets save error:', err);
-  });
+  var meal = currentMeals[type]; if (!meal) return;
+  var btn = document.getElementById('saveBtn-'+type);
+  if (btn) { btn.textContent='Saving...'; btn.style.opacity='.6'; btn.disabled=true; }
+  saveToSheets(meal,type).then(function(){ if(btn){btn.textContent='✓ Saved';btn.style.color='var(--sage)';btn.style.opacity='1';btn.disabled=false;} })
+  .catch(function(){ if(btn){btn.textContent='⚠ Error';btn.style.color='var(--terra)';btn.style.opacity='1';btn.disabled=false;} setTimeout(function(){if(btn){btn.textContent='↑ Save';btn.style.color='var(--sage)';}},3000); });
 }
 
-// ── PIN ENTRY ─────────────────────────────────────────────────────────
-function showPinEntry() {
-  document.getElementById('apiSettingsMain').style.display = 'none';
-  document.getElementById('pinEntry').style.display = 'block';
-  document.getElementById('pinInput').value = '';
-  document.getElementById('pinError').textContent = '';
-  setTimeout(function(){ document.getElementById('pinInput').focus(); }, 100);
+// ── MONEY DATA ────────────────────────────────────────────────────────
+const MONEY_HABITS = [
+  { label:'Daily', title:'Before any purchase over $80', text:'One question before the card comes out: is this the thing itself, or the feeling of the thing?', action:'Pause 30 seconds. If the answer is sensation — wait 24 hours.' },
+  { label:'Weekday rule', title:'Phone purchases during work hours', text:'If spending happens from the phone between 9am and 5pm, it is almost certainly Mercury Scorpio avoiding the hard thing at the desk.', action:'Any purchase made from phone during work hours: come back to it at 6pm.' },
+  { label:'Monthly · First Sunday', title:'The Three-Column Audit', text:"Every transaction over $30: Correct, Sensation, Drift. The Drift column is where the money actually goes.", action:'20 minutes. Three columns. Reduce the Drift total next month.' },
+  { label:'Monthly · Last Sunday', title:'Subscription Audit', text:'Every subscription: was it actively used in the past 30 days?', action:'Cancel everything unused. Re-subscribe deliberately if still wanted.' },
+  { label:'Monthly', title:'Three Named Financial Targets', text:'Not a general savings account — the Japan fund, the MBA fund, the owned home fund.', action:'Name three targets with specific dollar amounts. Fund them automatically on the 1st.' },
+  { label:'Monthly · Last Sunday', title:'Financial Review · One Hour', text:'Savings rate, investment balance, emergency fund, trajectory toward each named target.', action:'One hour. The actual numbers. Not an approximation.' },
+  { label:'Quarterly', title:'Career Investment Budget', text:'The one spending category that should increase: things that compound toward the CFO chapter.', action:'Designate $150–300/month as a career investment line item.' },
+  { label:'Always', title:'The Phone-Spend Link', text:'Frivolous spending and phone procrastination are the same pattern wearing different clothes.', action:'Notice when you open a shopping app during work hours. That is the signal. Return to the desk.' },
+];
+function renderMoney() {
+  var todayIdx = 0;
+  var html = "<div style='padding:16px 20px 4px'><p style='font-family:Cormorant Garamond,serif;font-size:18px;font-style:italic;color:var(--stone);line-height:1.75;margin-bottom:4px'>Financial habits that compound.</p></div>";
+  html += '<div style="margin:0 12px 12px;background:linear-gradient(135deg,rgba(160,120,48,.08),rgba(184,92,56,.06));border-radius:12px;padding:14px 16px;border:1px solid rgba(160,120,48,.15);display:flex;align-items:flex-start;gap:10px"><div style="font-size:18px;flex-shrink:0">✦</div><div><div style="font-family:Jost,sans-serif;font-size:9px;font-weight:400;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:4px">Today\'s reminder</div><div style="font-family:Cormorant Garamond,serif;font-size:15px;color:var(--stone);line-height:1.7;font-style:italic">'+MONEY_HABITS[todayIdx].title+': '+MONEY_HABITS[todayIdx].action+'</div></div></div>';
+  MONEY_HABITS.forEach(function(h,i) {
+    html += '<div class="money-card" onclick="toggleMoney('+i+')" id="mc-'+i+'"><div class="money-card-label">'+h.label+'</div><div class="money-card-title">'+h.title+'</div><div class="money-card-text" id="mt-'+i+'" style="display:none">'+h.text+'</div><div class="money-card-action">→ '+h.action+'</div></div>';
+  });
+  document.getElementById('mainContent').innerHTML = html;
 }
-function hidePinEntry() {
-  document.getElementById('pinEntry').style.display = 'none';
-  document.getElementById('apiSettingsMain').style.display = 'block';
+function toggleMoney(i) {
+  var el = document.getElementById('mt-'+i); if (!el) return;
+  var open = el.style.display !== 'none';
+  document.querySelectorAll('[id^="mt-"]').forEach(function(e){e.style.display='none';});
+  if (!open) el.style.display = 'block';
 }
-function submitPin() {
-  var pin = document.getElementById('pinInput').value;
-  if (!pin) return;
-  if (checkPin(pin)) {
-    try { localStorage.setItem('bloom_owner', '1'); } catch(e) {}
-    closeApiSettings();
+
+// ── RENDER TODAY ──────────────────────────────────────────────────────
+function renderToday() {
+  const blocks = SCHEDULE[viewDay] || [], now = nowMinutes(), currentIdx = findCurrentBlock(viewDay);
+  const progress = dayProgress(viewDay), today = new Date();
+  const isToday = viewDay === (today.getDay()===0?6:today.getDay()-1);
+  const currentBlock = currentIdx!==null?blocks[currentIdx]:null;
+  const nextBlock = currentIdx!==null&&currentIdx+1<blocks.length?blocks[currentIdx+1]:null;
+  const intentionText = INTENTIONS[viewDay];
+  let html = `<div class="now-section"><div class="now-label">${isToday?'Right Now':DAY_NAMES[viewDay]}</div>`;
+  if (currentBlock && isToday) {
+    html += `<div class="now-card"><div class="now-time-badge">${currentBlock.t} · ${DAY_NAMES[viewDay]}</div><div class="now-title">${currentBlock.title}</div>${currentBlock.note?`<div class="now-note">${currentBlock.note}</div>`:''} ${currentBlock.tag?`<div class="now-tag">${currentBlock.tag}</div>`:''}<div class="now-actions">${nextBlock?`<button class="btn-next" onclick="scrollToNext()" title="Next">›</button>`:''}</div></div>`;
   } else {
-    document.getElementById('pinError').textContent = 'Incorrect PIN';
-    document.getElementById('pinInput').value = '';
+    html += `<div class="now-card" style="background:var(--sage)"><div class="now-time-badge">${DAY_NAMES[viewDay]}</div><div class="now-title">View the full schedule below</div><div class="now-note">Tap any block to expand it.</div></div>`;
   }
+  html += `</div>`;
+  if (isToday) {
+    html += `<div class="day-progress"><div class="progress-label"><span>Day progress</span><span>${Math.round(progress)}%</span></div><div class="progress-track"><div class="progress-fill" style="width:${progress}%"></div></div></div>`;
+  }
+  html += `<div class="day-selector">`;
+  DAY_NAMES.forEach((name,i) => { html += `<button class="day-btn ${i===viewDay?'active':''}" onclick="changeDay(${i})">${name.slice(0,3)}</button>`; });
+  html += `</div><div class="intention-banner"><div class="intention-icon">✦</div><div><div class="intention-label">Today's intention</div><div class="intention-text">${intentionText}</div></div></div>`;
+  const sections=['Morning','Work','Afternoon','Evening'], sectionRanges=[[0,720],[720,960],[960,1080],[1080,1440]];
+  sectionRanges.forEach(([start,end],si) => {
+    const sectionBlocks = blocks.filter(b=>b.m>=start&&b.m<end); if (!sectionBlocks.length) return;
+    html += `<div class="sched-section-header"><span class="sched-section-name">${sections[si]}</span><div class="sched-section-line"></div></div><div class="blocks-list">`;
+    sectionBlocks.forEach((block,bi) => {
+      const globalIdx=blocks.indexOf(block), isPast=isToday&&block.m<now-15, isNow=isToday&&globalIdx===currentIdx;
+      const tagClass=block.tag?`tag-${block.tag}`:'', pillClass=block.tag?`pill-${block.tag}`:'', blockDone=isDone(viewDay,globalIdx);
+      html += `<div class="block-card ${tagClass} ${isPast?'past':''} ${isNow?'is-now':''} ${blockDone?'done':''}" id="block-${viewDay}-${globalIdx}" onclick="toggleBlock(this,${viewDay},${globalIdx})">
+        <div class="block-accent"></div>
+        <div class="block-check ${blockDone?'checked':''}" onclick="toggleDone(${viewDay},${globalIdx},event)"></div>
+        <div class="block-inner">
+          <div class="block-top">
+            <div class="block-time">${block.t}</div>
+            <div style="display:flex;align-items:center;gap:6px">
+              <div class="wave-indicator"><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div></div>
+              ${block.tag?`<span class="block-pill ${pillClass}">${block.tag}</span>`:''}
+            </div>
+          </div>
+          <div class="block-title">${block.title}</div>
+          <div class="block-note">${block.note||''}</div>
+        </div>
+      </div>`;
+    });
+    html += `</div>`;
+  });
+  document.getElementById('mainContent').innerHTML = html;
 }
-// Allow Enter key in PIN field
-document.addEventListener('DOMContentLoaded', function() {
-  var pinInput = document.getElementById('pinInput');
-  if (pinInput) pinInput.addEventListener('keydown', function(e){ if(e.key==='Enter') submitPin(); });
-});
+function toggleBlock(el,dayIdx,blockIdx) {
+  const was=el.classList.contains('expanded');
+  document.querySelectorAll('.block-card.expanded').forEach(c=>c.classList.remove('expanded'));
+  if (!was) { el.classList.add('expanded'); el.scrollIntoView({behavior:'smooth',block:'nearest'}); }
+}
+function changeDay(idx) { viewDay=idx; renderToday(); }
+function scrollToNext() {
+  const nowIdx=findCurrentBlock(viewDay);
+  if (nowIdx!==null) { const next=document.getElementById(`block-${viewDay}-${nowIdx+1}`); if(next)next.scrollIntoView({behavior:'smooth',block:'center'}); }
+}
+
+// ── RENDER HABITS ─────────────────────────────────────────────────────
+function renderHabits() {
+  let html = `<div style="padding:12px 20px 0"><p style="font-family:Cormorant Garamond,serif;font-size:17px;font-style:italic;color:var(--stone);line-height:1.75;margin-bottom:16px">Eight specific corrections.</p></div><div class="habits-section">`;
+  HABITS_DATA.forEach((h,i) => {
+    html += `<div class="habit-item" id="habit-${i}" onclick="toggleHabit(${i})"><div class="habit-num">${h.n}</div><div class="habit-content"><div class="habit-title-sm">${h.title}</div><div class="habit-tag-sm">${h.tag}</div><div class="habit-body-sm"><p class="habit-body-text">${h.text}</p><p class="habit-body-practice">${h.practice}</p></div></div></div>`;
+  });
+  html += `</div>`;
+  document.getElementById('mainContent').innerHTML = html;
+}
+function toggleHabit(idx) {
+  const el=document.getElementById(`habit-${idx}`), was=el.classList.contains('open');
+  document.querySelectorAll('.habit-item.open').forEach(h=>h.classList.remove('open'));
+  if (!was) { el.classList.add('open'); el.scrollIntoView({behavior:'smooth',block:'nearest'}); }
+}
+
+// ── RENDER GUIDE ──────────────────────────────────────────────────────
+function toggleGuide(el) { var p=el.nextElementSibling; p.style.display=p.style.display==='block'?'none':'block'; }
+function renderVoice() {
+  var hour=new Date().getHours(), defaultKey='morning';
+  if(hour>=12&&hour<17) defaultKey='midday'; else if(hour>=17) defaultKey='evening';
+  if(new Date().getDay()===0) defaultKey='sunday';
+  var guides=[
+    {key:'morning',icon:'🌅',title:'Morning Guide',     desc:'The first two hours.'},
+    {key:'midday', icon:'☀', title:'Midday Check-In',  desc:'The afternoon reset.'},
+    {key:'evening',icon:'🌙',title:'Evening Wind-Down', desc:'The formal close.'},
+    {key:'sunday', icon:'🕯',title:'Sunday Guide',      desc:'The protected afternoon.'}
+  ];
+  var html='<div style="padding:16px 20px 4px"><p style="font-family:Cormorant Garamond,serif;font-size:18px;font-style:italic;color:var(--stone);line-height:1.75;margin-bottom:16px">Read a guide for the time of day.</p></div>';
+  guides.forEach(function(g) {
+    var isRec=g.key===defaultKey, script=(GUIDE_SCRIPTS[g.key]||'').replace(/</g,'&lt;');
+    var bg=isRec?'var(--terra)':'var(--cream)', clr=isRec?'#fff':'var(--ink)', sub=isRec?'rgba(255,255,255,.75)':'var(--stone)', scriptClr=isRec?'rgba(255,255,255,.9)':'var(--stone)', divBdr=isRec?'rgba(255,255,255,.15)':'rgba(168,120,80,.1)';
+    var nowBadge=isRec?'<div style="font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.8);background:rgba(255,255,255,.15);border-radius:10px;padding:3px 8px">Now</div>':'';
+    html+='<div style="margin:0 12px 10px;background:'+bg+';border-radius:14px;overflow:hidden">'+
+      '<div onclick="toggleGuide(this)" style="display:flex;align-items:center;gap:14px;padding:18px 20px;cursor:pointer">'+
+        '<div style="font-size:26px">'+g.icon+'</div><div style="flex:1"><div style="font-family:Cormorant Garamond,serif;font-size:19px;color:'+clr+'">'+g.title+'</div><div style="font-size:12px;color:'+sub+';margin-top:3px">'+g.desc+'</div></div>'+nowBadge+
+      '</div>'+
+      '<div style="display:none;padding:0 20px 18px;border-top:1px solid '+divBdr+'"><p style="font-family:Cormorant Garamond,serif;font-size:16px;line-height:1.9;color:'+scriptClr+';margin:12px 0 0;white-space:pre-line">'+script+'</p></div>'+
+    '</div>';
+  });
+  document.getElementById('mainContent').innerHTML = html;
+}
+
+// ── SUPPLEMENTS ───────────────────────────────────────────────────────
+var SUPPLEMENTS = [
+  { id:'elec', name:'Electrolytes',        dose:'pinch salt + lemon', time:'morning', icon:'💧', note:'First on waking, before coffee.' },
+  { id:'vd3',  name:'Vitamin D3',          dose:'2000–4000IU',        time:'morning', icon:'☀️', note:'With breakfast — fat soluble.' },
+  { id:'omg',  name:'Omega-3',             dose:'1–2g EPA/DHA',       time:'morning', icon:'🐟', note:'With breakfast.' },
+  { id:'mg',   name:'Magnesium Glycinate', dose:'200–400mg',          time:'evening', icon:'💊', note:'With dinner or 1h before bed.' },
+  { id:'lth',  name:'L-Theanine',          dose:'100–200mg',          time:'evening', icon:'🍵', note:'After dinner, without caffeine.' },
+];
+function getSuppLog() { var k='bloom_supps_'+new Date().toISOString().slice(0,10); try{return JSON.parse(localStorage.getItem(k)||'{}');}catch(e){return {};} }
+function toggleSupp(id) { var k='bloom_supps_'+new Date().toISOString().slice(0,10); var log=getSuppLog(); if(log[id])delete log[id]; else log[id]=1; try{localStorage.setItem(k,JSON.stringify(log));}catch(e){} renderSleep(); }
+
+// ── FITNESS PLAN ──────────────────────────────────────────────────────
+var FITNESS_PLAN = [
+  { day:'Monday',    tag:'Run + Core',       exercises:[
+    { name:'Run · Crane Cove', detail:'4–5 miles · easy pace · no headphones first mile' },
+    { name:'Dead Bug',         detail:'3 × 10 reps · slow and controlled' },
+    { name:'Plank Hold',       detail:'3 × 45 sec' },
+    { name:'Glute Bridge',     detail:'3 × 15 · drive through heels' },
+  ]},
+  { day:'Tuesday',   tag:'Yoga or Rest',     exercises:[
+    { name:'Listen to the body', detail:'High energy → 30–45 min yoga. Low energy → walk only.' },
+    { name:'Sun Salutations A+B', detail:'5 rounds each' },
+    { name:'Pigeon Pose',        detail:'2 min each side · essential for runners' },
+    { name:'Legs Up the Wall',   detail:'5–10 min · parasympathetic recovery' },
+  ]},
+  { day:'Wednesday', tag:'Run + Mobility',   exercises:[
+    { name:'Run · Embarcadero', detail:'5 miles · moderate effort' },
+    { name:'Hip Flexor Stretch', detail:'90 sec each side' },
+    { name:'Single-leg Calf Raise', detail:'3 × 20 each · injury prevention' },
+    { name:'Thread the Needle',  detail:'10 reps each side · desk posture' },
+  ]},
+  { day:'Thursday',  tag:'Strength (2 hrs)', exercises:[
+    { name:'Deadlift',          detail:'4 × 5 · heavy · rest 2–3 min between sets' },
+    { name:'Romanian Deadlift', detail:'3 × 10 · hamstring focus' },
+    { name:'Goblet Squat',      detail:'3 × 12 · controlled descent' },
+    { name:'Dumbbell Row',      detail:'3 × 12 each arm' },
+    { name:'Push-Up or Bench',  detail:'3 × 10' },
+    { name:"Farmer's Carry",    detail:'3 × 30m · grip and core' },
+    { name:'Hip Thrust',        detail:'3 × 15 · do not skip' },
+  ]},
+  { day:'Friday',    tag:'Long Run',         exercises:[
+    { name:'Long Run · Presidio or Marin', detail:"8–10 miles · 2 hours · easy pace · the week's physical close" },
+    { name:'Post-run stretch',  detail:'10 min · calves, hamstrings, hip flexors' },
+  ]},
+  { day:'Saturday',  tag:'Walk + Recovery',  exercises:[
+    { name:'Walk · Crane Cove or Noe Valley', detail:'No agenda, no headphones.' },
+    { name:'Foam Roll',         detail:'IT bands, calves, thoracic spine · 10–15 min' },
+    { name:'Optional swim or yoga', detail:'If the body asks.' },
+  ]},
+  { day:'Sunday',    tag:'Full Rest',         exercises:[
+    { name:'No structured exercise', detail:'The body rebuilds during rest.' },
+    { name:'5-min prep only',   detail:'Check Thursday weights, confirm Friday route.' },
+  ]},
+];
+function toggleFitnessDay(idx) { var el=document.getElementById('fit-day-'+idx); var was=el.classList.contains('open'); document.querySelectorAll('.fitness-day.open').forEach(function(d){d.classList.remove('open');}); if(!was)el.classList.add('open'); }
+
+// ── SLEEP TIPS ────────────────────────────────────────────────────────
+var SLEEP_TIPS = [
+  { icon:'📵', title:'Phone out of the bedroom', body:'The scroll keeps your nervous system alert for 1–2 hours after you stop. Out of the room entirely is the only version that works.' },
+  { icon:'🧠', title:'The wired-but-tired pattern', body:'A consistent wind-down routine — same sequence every night — signals to your nervous system it is safe to switch off.' },
+  { icon:'🌡', title:'Cool the room', body:'Core body temperature needs to drop to initiate deep sleep. 65–68°F is optimal.' },
+  { icon:'🪟', title:'Make it fully dark', body:'Even small light sources suppress melatonin. Blackout curtains or a sleep mask.' },
+  { icon:'⏰', title:'Consistent wake time', body:'A consistent wake time anchors your circadian rhythm more than a consistent bedtime.' },
+  { icon:'💊', title:'Magnesium glycinate', body:'200–400mg before bed helps the nervous system downregulate — specifically glycinate, not oxide.' },
+  { icon:'📓', title:'Brain dump before bed', body:"Write tomorrow's tasks and unresolved thoughts. The mental chatter keeping you awake is information that has nowhere to go." },
+  { icon:'☀️', title:'Morning light within 30 min of waking', body:'Natural light in the morning sets your cortisol peak at the right time, so melatonin rises correctly 14–16 hours later.' },
+  { icon:'☕', title:'Caffeine before 1pm only', body:'Caffeine has a 5–7 hour half-life. This includes matcha.' },
+];
+function getContextualTips(entry, log) {
+  var tips=[SLEEP_TIPS[0],SLEEP_TIPS[4],SLEEP_TIPS[7]];
+  if(entry.quality&&entry.quality<=3){tips.push(SLEEP_TIPS[2]);tips.push(SLEEP_TIPS[3]);tips.push(SLEEP_TIPS[6]);}
+  if(entry.energy!==null&&entry.energy!==undefined&&entry.energy<=1){tips.push(SLEEP_TIPS[5]);tips.push(SLEEP_TIPS[8]);}
+  tips.push(SLEEP_TIPS[1]);
+  var seen={};
+  return tips.filter(function(t){if(seen[t.title])return false;seen[t.title]=true;return true;}).slice(0,5);
+}
+
+// ── SLEEP / WELLNESS TAB ──────────────────────────────────────────────
+var sleepTimerSecs=20*60,sleepTimerLeft=0,sleepTimerInterval=null,sleepTimerRunning=false;
+function getSleepLog(){try{return JSON.parse(localStorage.getItem('bloom_sleep_log')||'[]');}catch(e){return[];}}
+function saveSleepLog(log){try{localStorage.setItem('bloom_sleep_log',JSON.stringify(log.slice(-30)));}catch(e){}}
+function sleepTodayKey(){var d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function getSleepEntry(){var log=getSleepLog();return log.find(function(e){return e.date===sleepTodayKey();})||{date:sleepTodayKey(),bedtime:'',wake:'',quality:null,energy:null};}
+function saveSleepEntry(entry){var log=getSleepLog().filter(function(e){return e.date!==sleepTodayKey();});log.push(entry);saveSleepLog(log);}
+function calcSleepHours(bed,wake){var bp=bed.split(':').map(Number),wp=wake.split(':').map(Number);var bm=bp[0]*60+bp[1],wm=wp[0]*60+wp[1];if(wm<=bm)wm+=1440;return(wm-bm)/60;}
+function fmtTimer(s){return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');}
+function playBeep(){try{var ctx=new(window.AudioContext||window.webkitAudioContext)();[0,.35,.7].forEach(function(t){var o=ctx.createOscillator(),g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.frequency.value=528;o.type='sine';g.gain.setValueAtTime(.4,ctx.currentTime+t);g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+t+.5);o.start(ctx.currentTime+t);o.stop(ctx.currentTime+t+.6);});}catch(e){}if(navigator.vibrate)navigator.vibrate([300,150,300,150,300]);}
+function setSleepField(field,val){var e=getSleepEntry();e[field]=val;saveSleepEntry(e);renderSleep();}
+function setSleepTime(field,val){var e=getSleepEntry();e[field]=val;saveSleepEntry(e);renderSleep();}
+function setSleepTimerDur(mins){if(sleepTimerRunning)return;sleepTimerSecs=mins*60;renderSleep();}
+function startSleepTimer(){sleepTimerLeft=sleepTimerSecs;sleepTimerRunning=true;renderSleep();sleepTimerInterval=setInterval(function(){sleepTimerLeft--;var el=document.getElementById('sleepTimerDisplay');if(el)el.textContent=fmtTimer(sleepTimerLeft);if(sleepTimerLeft<=0){clearInterval(sleepTimerInterval);sleepTimerRunning=false;playBeep();renderSleep();}},1000);}
+function stopSleepTimer(){clearInterval(sleepTimerInterval);sleepTimerRunning=false;renderSleep();}
+
+function renderSleep() {
+  var entry=getSleepEntry(),log=getSleepLog(),suppLog=getSuppLog();
+  var days=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  var durStr='';
+  if(entry.bedtime&&entry.wake){var hrs=calcSleepHours(entry.bedtime,entry.wake);var col=hrs>=7.5?'var(--sage)':hrs>=6?'var(--gold)':'var(--terra)';durStr='<div style="text-align:center;font-family:Cormorant Garamond,serif;font-size:15px;font-style:italic;color:'+col+';margin-top:4px">'+hrs.toFixed(1)+' hours · '+(hrs>=7.5?'good':hrs>=6?'okay':'short')+'</div>';}
+  var qe=['😞','😐','🙂','😊','✨'],qBtns='';
+  for(var q=0;q<5;q++) qBtns+='<button class="sleep-rating-btn'+(entry.quality===q+1?' selected':'')+'" onclick="setSleepField(&quot;quality&quot;,'+(q+1)+')">'+qe[q]+'</button>';
+  var ne=['🪫','😵','😑','⚡','🔥'],nBtns='';
+  for(var n=0;n<5;n++) nBtns+='<button class="sleep-energy-btn'+(entry.energy===n?' selected':'')+'" onclick="setSleepField(&quot;energy&quot;,'+n+')">'+ne[n]+'</button>';
+  var tv=sleepTimerRunning?sleepTimerLeft:sleepTimerSecs;
+  var tBtn=sleepTimerRunning?'<button onclick="stopSleepTimer()" style="font-family:Jost,sans-serif;font-size:11px;letter-spacing:.1em;text-transform:uppercase;background:var(--terra);color:#fff;border:none;border-radius:50px;padding:10px 28px;cursor:pointer;margin-top:10px">Stop</button>':'<button onclick="startSleepTimer()" style="font-family:Jost,sans-serif;font-size:11px;letter-spacing:.1em;text-transform:uppercase;background:var(--sage);color:#fff;border:none;border-radius:50px;padding:10px 28px;cursor:pointer;margin-top:10px">Start wind-down</button>';
+  var r7=log.slice(-7),maxH=8;r7.forEach(function(e){if(e.bedtime&&e.wake){var h=calcSleepHours(e.bedtime,e.wake);if(h>maxH)maxH=h;}});
+  var wkHtml='';
+  for(var i=0;i<7;i++){var we=r7[i]||{},wh=(we.bedtime&&we.wake)?calcSleepHours(we.bedtime,we.wake):0;var wd=we.date?new Date(we.date+'T12:00').toLocaleDateString('en',{weekday:'short'}):days[i];var wdot=we.quality?qe[we.quality-1]:'';wkHtml+='<div class="sleep-week-col"><div style="font-size:8px;color:var(--dust);margin-bottom:2px">'+(wh>0?wh.toFixed(1)+'h':'')+'</div><div class="sleep-week-fill" style="height:'+Math.max((wh/maxH)*46,wh>0?3:0)+'px"></div><div class="sleep-week-lbl">'+wd+'</div><div style="font-size:9px">'+wdot+'</div></div>';}
+  var logHtml='';log.slice(-5).reverse().forEach(function(le){var dur=(le.bedtime&&le.wake)?calcSleepHours(le.bedtime,le.wake).toFixed(1)+'h':'—';var ql=le.quality?qe[le.quality-1]:'—';var nl=(le.energy!=null)?ne[le.energy]:'—';var dl=new Date(le.date+'T12:00').toLocaleDateString('en',{weekday:'short',month:'short',day:'numeric'});logHtml+='<div class="sleep-log-row"><span style="font-family:Jost,sans-serif;font-size:10px;color:var(--dust)">'+dl+'</span><span style="font-family:Cormorant Garamond,serif;font-size:14px;color:var(--stone)">'+dur+' &nbsp;'+ql+' &nbsp;'+nl+'</span></div>';});
+  function suppRow(s){var done=!!suppLog[s.id];return '<div class="supp-item"><div><div style="font-family:Cormorant Garamond,serif;font-size:15px;color:var(--ink)">'+s.icon+' '+s.name+' <span style="font-family:Jost,sans-serif;font-size:10px;font-weight:300;color:var(--dust)">'+s.dose+'</span></div><div style="font-family:Jost,sans-serif;font-size:9px;color:var(--dust);margin-top:2px">'+s.note+'</div></div><button class="supp-check'+(done?' done':'')+'" onclick="toggleSupp(\''+s.id+'\')"><span>'+(done?'✓':'')+'</span></button></div>';}
+  var mornS=SUPPLEMENTS.filter(function(s){return s.time==='morning';}),eveS=SUPPLEMENTS.filter(function(s){return s.time==='evening';});
+  var dow=new Date().getDay(),fidx=dow===0?6:dow-1;
+  var fitHtml='';FITNESS_PLAN.forEach(function(plan,i){var isToday=(i===fidx);var exHtml='';plan.exercises.forEach(function(ex){exHtml+='<div class="fitness-exercise"><div class="fitness-ex-name">'+ex.name+'</div><div class="fitness-ex-detail">'+ex.detail+'</div></div>';});fitHtml+='<div class="fitness-day'+(isToday?' open':'')+'" id="fit-day-'+i+'"><div class="fitness-day-header" onclick="toggleFitnessDay('+i+')"><div class="fitness-day-name">'+(isToday?'<span style="color:var(--terra)">Today · </span>':'')+plan.day+'</div><div class="fitness-day-tag">'+plan.tag+'</div></div><div class="fitness-day-body" style="padding-top:10px">'+exHtml+'</div></div>';});
+  var tips=getContextualTips(entry,log),tipsHtml='';tips.forEach(function(tip){tipsHtml+='<div style="margin:0 12px 8px;background:rgba(184,92,56,.06);border-radius:14px;padding:14px 16px;border-left:3px solid var(--terra)"><div style="font-family:Jost,sans-serif;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--terra);margin-bottom:4px">'+tip.icon+' '+tip.title+'</div><div style="font-family:Cormorant Garamond,serif;font-size:14px;color:var(--stone);line-height:1.75">'+tip.body+'</div></div>';});
+
+  document.getElementById('mainContent').innerHTML =
+    '<div class="sleep-card"><div class="sleep-section-title">Tonight / This Morning</div><div class="sleep-time-row"><div class="sleep-time-block"><div class="sleep-time-label">Bedtime</div><input class="sleep-time-input" type="time" value="'+(entry.bedtime||'22:30')+'" onchange="setSleepTime(&quot;bedtime&quot;,this.value)"></div><div class="sleep-time-block"><div class="sleep-time-label">Wake up</div><input class="sleep-time-input" type="time" value="'+(entry.wake||'07:00')+'" onchange="setSleepTime(&quot;wake&quot;,this.value)"></div></div>'+durStr+'<div class="sleep-section-title" style="margin-top:14px">Sleep quality</div><div class="sleep-rating-row">'+qBtns+'</div><div class="sleep-section-title">Morning energy</div><div class="sleep-energy-row">'+nBtns+'</div></div>'+
+    '<div class="sleep-card" style="margin-top:10px"><div class="sleep-section-title">Phone-free wind-down timer</div><div style="text-align:center;padding:8px 0"><div style="font-family:Cormorant Garamond,serif;font-size:48px;color:var(--ink);font-style:italic;line-height:1" id="sleepTimerDisplay">'+fmtTimer(tv)+'</div><div style="font-family:Jost,sans-serif;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--dust);margin-top:4px">'+(sleepTimerRunning?'put the phone down':'phone-free')+'</div><div style="display:flex;gap:8px;justify-content:center;margin-top:10px">'+['10','20','30'].map(function(m){return'<button onclick="setSleepTimerDur('+m+')" style="font-family:Jost,sans-serif;font-size:10px;color:var(--dust);background:none;border:1px solid rgba(168,120,80,.2);border-radius:20px;padding:4px 12px;cursor:pointer">'+m+'m</button>';}).join('')+'</div>'+tBtn+'</div></div>'+
+    '<div class="sleep-card" style="margin-top:10px"><div class="sleep-section-title">Supplements · Today</div><div style="font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--dust);margin-bottom:8px">Morning</div>'+mornS.map(suppRow).join('')+'<div style="font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--dust);margin-top:12px;margin-bottom:8px">Evening</div>'+eveS.map(suppRow).join('')+'</div>'+
+    '<div class="sleep-card" style="margin-top:10px"><div class="sleep-section-title">This week · sleep</div><div class="sleep-week-chart">'+wkHtml+'</div></div>'+
+    (logHtml?'<div class="sleep-card" style="margin-top:10px"><div class="sleep-section-title">Recent nights</div>'+logHtml+'</div>':'')+
+    '<div style="padding:14px 12px 4px"><div style="font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--terra)">Fitness · Weekly Plan</div><div style="font-family:Cormorant Garamond,serif;font-size:13px;font-style:italic;color:var(--dust);margin-top:4px;margin-bottom:10px">Tailored for running + lifting · tap to expand</div></div>'+
+    '<div style="padding:0 12px">'+fitHtml+'</div>'+
+    '<div style="padding:14px 12px 4px"><div style="font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--terra)">Sleep tips for you</div></div>'+
+    tipsHtml+'<div style="height:24px"></div>';
+}
+
+// ── API SETTINGS OVERLAY ──────────────────────────────────────────────
+function apiInputHint(val){var h=document.getElementById('apiTypeHint');if(!h)return;if(!val){h.textContent='';return;}if(val.startsWith('sk-ant-'))h.textContent='✓ Anthropic key';else if(val.startsWith('sk-'))h.textContent='✓ OpenAI key';else if(val.startsWith('http'))h.textContent='✓ Worker URL';else h.textContent='⚠ Expected sk-ant-…, sk-…, or https://…';}
+function openApiSettings(){var el=document.getElementById('apiOverlay');el.style.display='flex';var owner=isOwnerUnlocked();document.getElementById('ownerBadge').style.display=owner?'block':'none';document.getElementById('apiSettingsMain').style.display=owner?'none':'block';document.getElementById('pinEntry').style.display='none';document.getElementById('resetBtn').textContent=owner?'Sign out':'Clear settings';var stored='';try{stored=localStorage.getItem('bloom_api')||'';}catch(e){}var inp=document.getElementById('proxyInput');inp.value=stored;apiInputHint(stored);inp.oninput=function(){apiInputHint(this.value.trim());};try{document.getElementById('sheetsIdInput').value=localStorage.getItem('bloom_sheets_id')||'';document.getElementById('sheetsKeyInput').value=localStorage.getItem('bloom_sheets_key')||'';}catch(e){}var cost=(sessionTokens.input/1e6*TOKEN_COST.input)+(sessionTokens.output/1e6*TOKEN_COST.output);document.getElementById('sessionUsageDisplay').innerHTML=sessionTokens.calls===0?'No API calls this session.':sessionTokens.calls+' call'+(sessionTokens.calls>1?'s':'')+' · '+sessionTokens.input+' in · '+sessionTokens.output+' out<br>Est. cost: <strong>$'+cost.toFixed(4)+'</strong>';}
+function closeApiSettings(){document.getElementById('apiOverlay').style.display='none';}
+function saveApiSettings(){var val=document.getElementById('proxyInput').value.trim();try{if(val)localStorage.setItem('bloom_api',val);else localStorage.removeItem('bloom_api');var sid=document.getElementById('sheetsIdInput').value.trim();var sk=document.getElementById('sheetsKeyInput').value.trim();if(sid)localStorage.setItem('bloom_sheets_id',sid);else localStorage.removeItem('bloom_sheets_id');if(sk)localStorage.setItem('bloom_sheets_key',sk);else localStorage.removeItem('bloom_sheets_key');}catch(e){}closeApiSettings();}
+function clearApiSettings(){try{['bloom_api','bloom_sheets_id','bloom_sheets_key','bloom_owner'].forEach(function(k){localStorage.removeItem(k);});}catch(e){}['proxyInput','sheetsIdInput','sheetsKeyInput'].forEach(function(id){document.getElementById(id).value='';});closeApiSettings();}
+function showPinEntry(){document.getElementById('apiSettingsMain').style.display='none';document.getElementById('pinEntry').style.display='block';document.getElementById('pinInput').value='';document.getElementById('pinError').textContent='';setTimeout(function(){document.getElementById('pinInput').focus();},100);}
+function hidePinEntry(){document.getElementById('pinEntry').style.display='none';document.getElementById('apiSettingsMain').style.display='block';}
+function submitPin(){var pin=document.getElementById('pinInput').value;if(!pin)return;if(checkPin(pin)){try{localStorage.setItem('bloom_owner','1');}catch(e){}closeApiSettings();}else{document.getElementById('pinError').textContent='Incorrect PIN';document.getElementById('pinInput').value='';}}
+document.addEventListener('DOMContentLoaded',function(){var pi=document.getElementById('pinInput');if(pi)pi.addEventListener('keydown',function(e){if(e.key==='Enter')submitPin();});});
+
+// ── LOFI ──────────────────────────────────────────────────────────────
+var lofiPlaying=false;
+function setMusicOn(){lofiPlaying=true;var b=document.getElementById('musicBtn');document.getElementById('musicIcon').innerHTML='<span class="music-wave"><span></span><span></span><span></span></span>';document.getElementById('musicLabel').textContent='on';b.style.background='rgba(90,120,72,.15)';b.style.borderColor='rgba(90,120,72,.3)';b.style.color='var(--sage)';}
+function setMusicOff(){lofiPlaying=false;var b=document.getElementById('musicBtn');document.getElementById('musicIcon').textContent='\u266a';document.getElementById('musicLabel').textContent='lofi';b.style.background='rgba(184,92,56,.1)';b.style.borderColor='rgba(184,92,56,.2)';b.style.color='var(--terra)';}
+function toggleLofi(){var audio=document.getElementById('lofiAudio');if(!audio)return;if(lofiPlaying){audio.pause();setMusicOff();return;}if(audio.readyState===0)audio.load();var b=document.getElementById('musicBtn');if(b)b.style.opacity='.5';audio.play().then(function(){setMusicOn();if(b)b.style.opacity='1';}).catch(function(){if(b)b.style.opacity='1';setMusicOff();var l=document.getElementById('musicLabel');if(l){l.textContent='error';setTimeout(function(){l.textContent='lofi';},2500);}});}
+
+// ── SWITCH TAB ────────────────────────────────────────────────────────
+function switchTab(tab) {
+  currentTab=tab;
+  document.querySelectorAll('.tab-item').forEach(t=>t.classList.remove('active'));
+  var tabEl=document.getElementById('tab-'+tab); if(tabEl)tabEl.classList.add('active');
+  document.querySelectorAll('.tab-bg').forEach(b=>b.classList.remove('active'));
+  var bg=document.getElementById('tabBg-'+tab); if(bg)bg.classList.add('active');
+  if(tab==='today')       renderToday();
+  else if(tab==='habits') renderHabits();
+  else if(tab==='money')  renderMoney();
+  else if(tab==='dinner') renderDinner();
+  else if(tab==='voice')  renderVoice();
+  else if(tab==='sleep')  renderSleep();
+}
+
+// ── CLOCK + AUTO-REFRESH ──────────────────────────────────────────────
+function updateClock(){document.getElementById('liveTime').textContent=formatTime();}
+setInterval(updateClock,30000); updateClock();
+setInterval(function(){if(currentTab==='today'){var isToday=viewDay===(new Date().getDay()===0?6:new Date().getDay()-1);if(isToday)renderToday();}},60000);
+
+// ── INIT ──────────────────────────────────────────────────────────────
+renderToday();
+if('serviceWorker'in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('./blossom-sw.js').catch(function(e){console.log('SW:',e.message);});});}
+
 </script>
+
+<div id="tabBg-sleep" class="tab-bg" style="background:#f0edf5"></div>
 
 <!-- API SETTINGS OVERLAY -->
 <div id="apiOverlay" style="display:none;position:fixed;inset:0;z-index:999;background:rgba(42,30,20,.7);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);align-items:center;justify-content:center">
-  <div style="background:var(--cream);border-radius:20px;padding:28px 24px;max-width:340px;width:90%;margin:0 auto">
+  <div style="background:var(--cream);border-radius:20px;padding:28px 24px;max-width:340px;width:90%;margin:0 auto;max-height:85vh;overflow-y:auto">
     <div style="font-family:Cormorant Garamond,serif;font-size:22px;font-style:italic;color:var(--terra);margin-bottom:6px">API Settings</div>
     <div id="ownerBadge" style="display:none;font-family:Jost,sans-serif;font-size:10px;letter-spacing:.08em;color:var(--sage);background:rgba(90,120,72,.1);border-radius:20px;padding:4px 12px;margin-bottom:12px;text-align:center">✓ Using owner API</div>
     <div id="apiSettingsMain">
-      <div style="font-family:Jost,sans-serif;font-size:11px;color:var(--stone);margin-bottom:16px;line-height:1.8">
-        Enter your own API key to use this app.<br>
-        <span style="color:var(--terra)">sk-ant-…</span> — Anthropic<br>
-        <span style="color:var(--terra)">sk-…</span> — OpenAI<br>
-        <span style="color:var(--terra)">https://…</span> — Cloudflare Worker
-      </div>
-      <div style="font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--terra);margin-bottom:6px">Your API key or Worker URL</div>
-      <input id="proxyInput" type="text" placeholder="sk-ant-… · sk-… · https://…"
-        style="width:100%;box-sizing:border-box;font-family:Jost,sans-serif;font-size:12px;padding:10px 12px;border:1px solid rgba(168,120,80,.3);border-radius:10px;background:var(--bg);color:var(--ink);outline:none;margin-bottom:6px">
+      <div style="font-family:Jost,sans-serif;font-size:11px;color:var(--stone);margin-bottom:16px;line-height:1.8">Enter your own API key to use food suggestions.<br><span style="color:var(--terra)">sk-ant-…</span> Anthropic &nbsp;<span style="color:var(--terra)">sk-…</span> OpenAI &nbsp;<span style="color:var(--terra)">https://…</span> Worker</div>
+      <div style="font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--terra);margin-bottom:6px">API key or Worker URL</div>
+      <input id="proxyInput" type="text" placeholder="sk-ant-… · sk-… · https://…" style="width:100%;box-sizing:border-box;font-family:Jost,sans-serif;font-size:12px;padding:10px 12px;border:1px solid rgba(168,120,80,.3);border-radius:10px;background:var(--bg);color:var(--ink);outline:none;margin-bottom:6px">
       <div id="apiTypeHint" style="font-size:10px;color:var(--sage);margin-bottom:8px;min-height:16px"></div>
-      <div style="text-align:center;margin-bottom:12px">
-        <button onclick="showPinEntry()" style="font-family:Jost,sans-serif;font-size:10px;color:var(--dust);background:none;border:none;cursor:pointer;letter-spacing:.06em">Have a PIN? →</button>
-      </div>
+      <div style="text-align:center;margin-bottom:12px"><button onclick="showPinEntry()" style="font-family:Jost,sans-serif;font-size:10px;color:var(--dust);background:none;border:none;cursor:pointer;letter-spacing:.06em">Have a PIN? →</button></div>
     </div>
     <div id="pinEntry" style="display:none;margin-bottom:12px">
       <div style="font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--terra);margin-bottom:6px">Owner PIN</div>
-      <input id="pinInput" type="password" placeholder="Enter PIN"
-        style="width:100%;box-sizing:border-box;font-family:Jost,sans-serif;font-size:14px;padding:10px 12px;border:1px solid rgba(168,120,80,.3);border-radius:10px;background:var(--bg);color:var(--ink);outline:none;margin-bottom:6px;letter-spacing:.3em">
+      <input id="pinInput" type="password" placeholder="Enter PIN" style="width:100%;box-sizing:border-box;font-family:Jost,sans-serif;font-size:14px;padding:10px 12px;border:1px solid rgba(168,120,80,.3);border-radius:10px;background:var(--bg);color:var(--ink);outline:none;margin-bottom:6px;letter-spacing:.3em">
       <div id="pinError" style="font-size:10px;color:var(--terra);margin-bottom:8px;min-height:14px"></div>
       <button onclick="submitPin()" style="width:100%;font-family:Jost,sans-serif;font-size:11px;font-weight:400;letter-spacing:.1em;text-transform:uppercase;background:var(--terra);color:#fff;border:none;border-radius:50px;padding:10px;cursor:pointer;margin-bottom:8px">Unlock</button>
       <div style="text-align:center"><button onclick="hidePinEntry()" style="font-family:Jost,sans-serif;font-size:10px;color:var(--dust);background:none;border:none;cursor:pointer">← Back</button></div>
     </div>
     <div style="font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--terra);margin-bottom:6px">Google Sheets sync</div>
-    <input id="sheetsIdInput" type="text" placeholder="Spreadsheet ID (from URL)"
-      style="width:100%;box-sizing:border-box;font-family:Jost,sans-serif;font-size:12px;padding:8px 12px;border:1px solid rgba(168,120,80,.3);border-radius:10px;background:var(--bg);color:var(--ink);outline:none;margin-bottom:6px">
-    <input id="sheetsKeyInput" type="text" placeholder="Google API key"
-      style="width:100%;box-sizing:border-box;font-family:Jost,sans-serif;font-size:12px;padding:8px 12px;border:1px solid rgba(168,120,80,.3);border-radius:10px;background:var(--bg);color:var(--ink);outline:none;margin-bottom:4px">
-    <div style="font-family:Jost,sans-serif;font-size:10px;color:var(--dust);margin-bottom:14px;line-height:1.7">
-      Recipes save as individual tabs named<br><em>Recipe 01 — Dinner</em>, <em>Recipe 02 — Lunch</em> etc.
-    </div>
+    <input id="sheetsIdInput" type="text" placeholder="Spreadsheet ID (from URL)" style="width:100%;box-sizing:border-box;font-family:Jost,sans-serif;font-size:12px;padding:8px 12px;border:1px solid rgba(168,120,80,.3);border-radius:10px;background:var(--bg);color:var(--ink);outline:none;margin-bottom:6px">
+    <input id="sheetsKeyInput" type="text" placeholder="Google API key" style="width:100%;box-sizing:border-box;font-family:Jost,sans-serif;font-size:12px;padding:8px 12px;border:1px solid rgba(168,120,80,.3);border-radius:10px;background:var(--bg);color:var(--ink);outline:none;margin-bottom:4px">
+    <div style="font-family:Jost,sans-serif;font-size:10px;color:var(--dust);margin-bottom:14px;line-height:1.7">Recipes save as tabs: <em>Recipe 01 — Dinner</em> etc.</div>
     <div style="font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--terra);margin-bottom:6px">Session usage</div>
     <div id="sessionUsageDisplay" style="font-family:Jost,sans-serif;font-size:11px;color:var(--stone);margin-bottom:18px;background:rgba(168,120,80,.07);border-radius:8px;padding:8px 10px"></div>
     <div style="display:flex;gap:10px">
       <button onclick="saveApiSettings()" style="flex:1;font-family:Jost,sans-serif;font-size:11px;font-weight:400;letter-spacing:.1em;text-transform:uppercase;background:var(--terra);color:#fff;border:none;border-radius:50px;padding:10px;cursor:pointer">Save</button>
       <button onclick="closeApiSettings()" style="font-family:Jost,sans-serif;font-size:11px;font-weight:400;letter-spacing:.1em;text-transform:uppercase;background:none;color:var(--stone);border:1px solid rgba(168,120,80,.3);border-radius:50px;padding:10px 16px;cursor:pointer">Cancel</button>
     </div>
-    <div style="text-align:center;margin-top:14px">
-      <button onclick="clearApiSettings()" style="font-family:Jost,sans-serif;font-size:10px;color:var(--dust);background:none;border:none;cursor:pointer;letter-spacing:.06em" id="resetBtn">Clear settings</button>
-    </div>
+    <div style="text-align:center;margin-top:14px"><button onclick="clearApiSettings()" id="resetBtn" style="font-family:Jost,sans-serif;font-size:10px;color:var(--dust);background:none;border:none;cursor:pointer;letter-spacing:.06em">Clear settings</button></div>
   </div>
 </div>
+
 </body>
 </html>
