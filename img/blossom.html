@@ -652,6 +652,37 @@ body {
 .fitness-exercise:last-child { border-bottom:none; }
 .fitness-ex-name { font-family:'Cormorant Garamond',serif; font-size:15px; color:var(--ink); margin-bottom:2px; }
 .fitness-ex-detail { font-family:'Jost',sans-serif; font-size:11px; font-weight:300; color:var(--stone); line-height:1.6; }
+
+/* ── RECIPE SEARCH ── */
+.recipe-search-wrap {
+  margin: 12px 12px 4px;
+  position: relative;
+}
+.recipe-search-input {
+  width: 100%; box-sizing: border-box;
+  font-family: 'Cormorant Garamond', serif; font-size: 16px;
+  color: var(--ink); background: var(--cream);
+  border: 1px solid rgba(168,120,80,.25); border-radius: 50px;
+  padding: 12px 50px 12px 18px; outline: none;
+  transition: border-color .2s;
+}
+.recipe-search-input:focus { border-color: var(--terra); }
+.recipe-search-input::placeholder { color: var(--dust); font-style: italic; }
+.recipe-search-btn {
+  position: absolute; right: 6px; top: 50%; transform: translateY(-50%);
+  width: 36px; height: 36px; border-radius: 50%;
+  background: var(--terra); border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px; color: #fff; transition: background .15s;
+}
+.recipe-search-btn:active { background: var(--terra-l); }
+.recipe-search-result {
+  margin: 0 12px 8px;
+  background: var(--cream); border-radius: 14px;
+  border: 1px solid rgba(168,120,80,.12);
+  border-left: 4px solid var(--terra);
+  overflow: hidden;
+}
 </style>
 </head>
 <body>
@@ -1059,6 +1090,90 @@ async function generateMeal(type) {
 }
 
 // ── RENDER FOOD TAB ───────────────────────────────────────────────────
+
+// ── RECIPE SEARCH ─────────────────────────────────────────────────────
+async function searchRecipe() {
+  var query = document.getElementById('recipeSearchInput');
+  if (!query) return;
+  var q = query.value.trim();
+  if (!q) return;
+
+  var btn = document.getElementById('recipeSearchBtn');
+  var resultBox = document.getElementById('recipeSearchResult');
+  if (btn)  { btn.textContent = '…'; btn.disabled = true; }
+  if (resultBox) { resultBox.style.display='block'; resultBox.innerHTML = '<div style="padding:16px 20px;font-family:Cormorant Garamond,serif;font-style:italic;color:var(--stone);font-size:15px">Thinking... (~10 sec)</div>'; }
+
+  var prompt = [
+    "You know this person deeply. She is 26, SF Dogpatch, Libra sun, Taurus rising, ISTP.",
+    "She has searched for: \"" + q + "\".",
+    "Interpret this generously — it could be a specific dish, a cuisine, an ingredient, a mood, or a vague craving.",
+    "Her palate: she loves fermented elements, fat used properly, acidity to balance, dishes with story.",
+    "No heavy or sweet defaults. Range freely across all cuisines.",
+    "Return a FULL recipe for what she is looking for. JSON only, no markdown, no preamble:",
+    '{"name":"","cuisine":"","why":"one phrase why this fits her search","serves":"1-2","time":"30 min","difficulty":"Medium","ingredients":[{"amount":"1","unit":"tbsp","item":"olive oil"}],"steps":[{"n":1,"text":"Step here."}],"note":"optional tip"}'
+  ].join(' ');
+
+  try {
+    var result = await callApi(prompt);
+    var text = result.text.replace(/```json|```/g,'').trim();
+    var meal = JSON.parse(text);
+    currentMeals['search'] = meal;
+    var tokenLine = trackTokens(result.usage);
+
+    // Save to history under the closest meal type
+    var hour = new Date().getHours();
+    var histType = hour < 11 ? 'breakfast' : hour < 15 ? 'lunch' : 'dinner';
+    mealHistory[histType].push(meal.name);
+    try { localStorage.setItem('bloom_meals', JSON.stringify(mealHistory)); } catch(e) {}
+
+    // Build ingredients
+    var ingHtml = '';
+    if (Array.isArray(meal.ingredients)) {
+      meal.ingredients.forEach(function(ing) {
+        if (typeof ing === 'object') ingHtml += '<li>'+[ing.amount,ing.unit,ing.item].filter(Boolean).join(' ')+'</li>';
+        else ingHtml += '<li>'+ing+'</li>';
+      });
+    }
+    // Build steps
+    var stepsHtml = '';
+    if (Array.isArray(meal.steps)) {
+      meal.steps.forEach(function(s) {
+        stepsHtml += '<div style="display:flex;gap:10px;margin-bottom:10px">'+
+          '<div style="font-family:Cormorant Garamond,serif;font-size:18px;color:var(--terra);flex-shrink:0;line-height:1.3">'+(s.n||'')+'</div>'+
+          '<div style="font-family:Cormorant Garamond,serif;font-size:15px;color:var(--ink);line-height:1.7">'+(s.text||s)+'</div></div>';
+      });
+    } else {
+      stepsHtml = '<div style="font-family:Cormorant Garamond,serif;font-size:15px;color:var(--ink);line-height:1.7">'+(meal.method||'')+'</div>';
+    }
+    var noteHtml = meal.note ? '<div style="margin-top:12px;padding:10px 12px;background:rgba(168,120,80,.07);border-radius:8px;font-family:Cormorant Garamond,serif;font-size:13px;font-style:italic;color:var(--stone);line-height:1.6">✦ '+meal.note+'</div>' : '';
+    var diffLine = meal.difficulty ? ' · '+meal.difficulty : '';
+
+    if (resultBox) resultBox.innerHTML =
+      '<div class="dinner-card" style="margin:0;border-radius:0;border:none">'+
+        '<div class="dinner-card-cuisine">'+(meal.cuisine||'')+'</div>'+
+        '<div class="dinner-card-name">'+(meal.name||'')+'</div>'+
+        '<div style="font-size:11px;color:var(--dust);margin-bottom:10px">'+(meal.serves||'')+' · '+(meal.time||'')+diffLine+'</div>'+
+        '<div style="font-family:Cormorant Garamond,serif;font-size:15px;font-style:italic;color:var(--stone);margin-bottom:14px;line-height:1.65">'+(meal.why||'')+'</div>'+
+        '<div style="font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--terra);margin-bottom:8px">Ingredients</div>'+
+        '<ul style="padding-left:16px;margin:0 0 16px;font-family:Jost,sans-serif;font-size:12px;font-weight:300;color:var(--stone);line-height:2">'+ingHtml+'</ul>'+
+        '<div style="font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--terra);margin-bottom:10px">Method</div>'+
+        stepsHtml + noteHtml +
+        '<div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px;padding-top:10px;border-top:1px solid rgba(168,120,80,.1)">'+
+          '<div style="cursor:pointer;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--dust)" onclick="searchRecipe()">↺ Try again</div>'+
+          '<button id="saveBtn-search" onclick="handleSaveToSheets(&quot;search&quot;)" style="font-family:Jost,sans-serif;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--sage);background:none;border:1px solid rgba(90,120,72,.3);border-radius:20px;padding:5px 12px;cursor:pointer">↑ Save</button>'+
+        '</div>'+
+        (tokenLine?'<div style="text-align:right;padding:4px 0 0;font-size:9px;color:var(--dust);opacity:.5">'+tokenLine+'</div>':'')+
+      '</div>';
+  } catch(e) {
+    var msg = (e&&e.message)?e.message:'Unknown error';
+    if (resultBox) {
+      resultBox.innerHTML = '<div style="padding:16px;font-size:13px;color:var(--stone);text-align:center">⚠ '+msg.slice(0,150)+'<br><span style="font-size:11px;opacity:.6">Tap to retry</span></div>';
+      resultBox.onclick = function(){ resultBox.onclick=null; searchRecipe(); };
+    }
+  }
+  if (btn) { btn.textContent = '→'; btn.disabled = false; }
+}
+
 function renderDinner() {
   var meals = [
     { type:'breakfast', icon:'☀️', label:'Breakfast', sub:'Morning · 15–25 min',  color:'var(--gold)'  },
@@ -1066,7 +1181,13 @@ function renderDinner() {
     { type:'dinner',    icon:'🌙', label:'Dinner',    sub:'Evening · 30–60 min',  color:'var(--terra)' },
     { type:'dessert',   icon:'🍮', label:'Dessert',   sub:'Any time · 20–40 min', color:'var(--gold)'  },
   ];
-  var html = '<div style="padding:16px 20px 4px"><p style="font-family:Cormorant Garamond,serif;font-size:18px;font-style:italic;color:var(--stone);line-height:1.75;margin-bottom:4px">What should she eat?</p><p style="font-family:Jost,sans-serif;font-size:11px;font-weight:300;color:var(--dust);letter-spacing:.04em;margin-bottom:12px">Matched to her palate. Tap any meal to get a full recipe.</p></div>';
+  var html = '<div style="padding:16px 20px 4px"><p style="font-family:Cormorant Garamond,serif;font-size:18px;font-style:italic;color:var(--stone);line-height:1.75;margin-bottom:4px">What should she eat?</p><p style="font-family:Jost,sans-serif;font-size:11px;font-weight:300;color:var(--dust);letter-spacing:.04em;margin-bottom:8px">Search for something specific, or tap a meal below.</p></div>'+
+    '<div class="recipe-search-wrap">'+
+      '<input id="recipeSearchInput" class="recipe-search-input" type="text" placeholder="shakshuka · something Korean · high protein lunch…" '+
+        'onkeydown="if(event.key===&quot;Enter&quot;)searchRecipe()">'+
+      '<button id="recipeSearchBtn" class="recipe-search-btn" onclick="searchRecipe()">→</button>'+
+    '</div>'+
+    '<div id="recipeSearchResult" class="recipe-search-result" style="display:none"></div>';
   meals.forEach(function(m) {
     html += '<div style="margin:0 12px 8px;background:var(--cream);border-radius:14px;border:1px solid rgba(168,120,80,.12);border-left:4px solid '+m.color+';padding:14px 16px">'+
       '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">'+
