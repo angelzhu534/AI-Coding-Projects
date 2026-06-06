@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Sovereign Handbook — In Full Bloom</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f6f1e7;--ink:#3a322a;--soft:#6b5d4d;--terra:#a8674a;--terra-deep:#8a5a3c;
+    --camel:#c8a882;--gold:#bf9b6f;--line:#dcccb0;--paper:#fbf7ee;--shadow:rgba(90,70,50,.16);
+    --green:#6c7a4a;--serif:"Cormorant Garamond",Georgia,serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{background:radial-gradient(1100px 560px at 82% -10%,#fbf3e4 0%,transparent 60%),
+    radial-gradient(820px 460px at -8% 18%,#f3ead9 0%,transparent 55%),var(--bg);
+    color:var(--ink);font-family:var(--serif);font-size:18px;line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:1;opacity:.05;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+  header.top{text-align:center;padding:64px 24px 26px;position:relative;z-index:2}
+  header .mark{font-size:26px;color:var(--camel)}
+  header h1{font-size:clamp(42px,8vw,86px);font-weight:600;color:var(--terra-deep);line-height:1;margin-top:6px}
+  header .sub{font-style:italic;color:var(--terra);font-size:clamp(17px,2.4vw,25px);margin-top:10px}
+  header .goal{margin-top:20px;font-size:15px;letter-spacing:.18em;text-transform:uppercase;color:var(--soft)}
+  header .goal b{color:var(--terra);font-weight:700}
+
+  nav.toc{position:sticky;top:0;z-index:40;backdrop-filter:blur(9px);
+    background:linear-gradient(to bottom,rgba(246,241,231,.97),rgba(246,241,231,.85));
+    border-bottom:1px solid var(--line);padding:10px 14px;display:flex;gap:6px;justify-content:center;flex-wrap:wrap}
+  nav.toc a{font-size:14.5px;padding:5px 13px;border-radius:999px;color:var(--soft);text-decoration:none;
+    border:1px solid transparent;transition:.2s;white-space:nowrap}
+  nav.toc a:hover{color:var(--terra);border-color:var(--camel)}
+
+  main{max-width:920px;margin:0 auto;padding:10px 24px 100px;position:relative;z-index:2}
+  section{padding:48px 0 8px;scroll-margin-top:64px}
+  .eyebrow{font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);font-weight:600;margin-bottom:6px}
+  h2{font-size:clamp(30px,5.5vw,52px);font-weight:600;color:var(--terra-deep);line-height:1.03;margin-bottom:6px}
+  .intro{font-style:italic;color:var(--terra);font-size:20px;margin-bottom:20px;max-width:740px}
+  h3{font-size:26px;font-weight:600;color:var(--terra-deep);margin:26px 0 10px}
+  p{font-size:18.5px;line-height:1.62;margin-bottom:13px}
+  b{color:var(--terra-deep);font-weight:600}
+  .card{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:22px 24px;
+    box-shadow:0 10px 28px -20px var(--shadow);margin-bottom:16px;position:relative;overflow:hidden}
+  .card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--camel);opacity:.6}
+  .num{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;
+    background:var(--terra);color:#fff;font-size:16px;font-weight:700;margin-right:10px;vertical-align:middle}
+  ul{list-style:none;margin:4px 0 8px}
+  ul li{position:relative;padding-left:24px;margin-bottom:9px;font-size:18px;line-height:1.55}
+  ul li::before{content:"✦";position:absolute;left:0;color:var(--camel);font-size:13px;top:4px}
+  ul.check li::before{content:"☐";color:var(--terra);font-size:16px;top:1px}
+  .ribbon{background:linear-gradient(135deg,#f3ead9,#efe3cd);border:1px solid var(--camel);border-radius:16px;
+    padding:24px 26px;margin:18px 0}
+  .ribbon h3{margin-top:0}
+  .pill{display:inline-block;font-size:12px;letter-spacing:.13em;text-transform:uppercase;font-weight:600;
+    padding:3px 11px;border-radius:999px;background:#e9ddc6;color:#876338;margin-bottom:8px}
+  .pill.green{background:#dfe6d0;color:#566636}
+  .pill.risk{background:#f0d9cf;color:#9d5238}
+
+  /* daily schedule */
+  .day{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--paper);box-shadow:0 10px 28px -20px var(--shadow)}
+  .slot{display:grid;grid-template-columns:128px 1fr;border-bottom:1px solid var(--line)}
+  .slot:last-child{border-bottom:none}
+  .slot .when{background:#f1e7d6;padding:16px 14px;font-weight:600;color:var(--terra-deep);font-size:16px;
+    display:flex;flex-direction:column;justify-content:center;border-right:1px solid var(--line)}
+  .slot .when .clock{font-size:13px;color:var(--gold);font-weight:600;letter-spacing:.04em;margin-top:2px}
+  .slot .what{padding:15px 18px}
+  .slot .what .h{font-size:19px;font-weight:600;color:var(--ink)}
+  .slot .what .d{font-size:16.5px;color:var(--soft);line-height:1.5;margin-top:2px}
+  @media(max-width:620px){.slot{grid-template-columns:96px 1fr}.slot .when{font-size:14px;padding:12px 9px}}
+
+  /* phase timeline */
+  .phase{border-left:3px solid var(--camel);padding:4px 0 4px 22px;margin-bottom:22px;position:relative}
+  .phase::before{content:"";position:absolute;left:-8px;top:6px;width:13px;height:13px;border-radius:50%;
+    background:var(--paper);border:3px solid var(--terra)}
+  .phase .age{font-size:14px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);font-weight:600}
+  .phase h3{margin:2px 0 8px}
+
+  /* week grid */
+  .week{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-top:6px}
+  .wd{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:14px}
+  .wd .dn{font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);font-weight:600}
+  .wd .dt{font-size:18px;font-weight:600;color:var(--terra-deep);margin:3px 0 4px;line-height:1.1}
+  .wd .dd{font-size:15px;color:var(--soft);line-height:1.45}
+
+  /* scoreboard */
+  .score{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media(max-width:620px){.score{grid-template-columns:1fr}}
+  .metric{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:18px 20px}
+  .metric .mh{font-size:19px;font-weight:600;color:var(--terra-deep)}
+  .metric .mt{font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);font-weight:600;margin-bottom:5px}
+  .metric .md{font-size:16.5px;color:var(--soft);line-height:1.5;margin-top:4px}
+  .metric .star{font-size:13px;color:var(--terra);font-weight:600;margin-top:7px;font-style:italic}
+
+  table.money{width:100%;border-collapse:collapse;background:var(--paper);border:1px solid var(--line);border-radius:14px;overflow:hidden;margin:8px 0 14px}
+  table.money th,table.money td{padding:12px 14px;text-align:left;border-bottom:1px solid var(--line);font-size:17px}
+  table.money th{background:#f1e7d6;color:var(--terra-deep);font-weight:600;font-size:14px;letter-spacing:.06em;text-transform:uppercase}
+  table.money td:last-child,table.money th:last-child{text-align:right;font-variant-numeric:tabular-nums}
+  table.money tr:last-child td{border-bottom:none;font-weight:600;color:var(--terra-deep)}
+
+  blockquote{font-style:italic;font-size:24px;color:var(--terra-deep);line-height:1.4;text-align:center;
+    margin:30px auto;max-width:660px}
+  .footer{text-align:center;padding:30px;color:var(--gold);font-size:13px;letter-spacing:.2em;text-transform:uppercase;position:relative;z-index:2}
+  .note{font-size:14px;color:var(--gold);font-style:italic;line-height:1.5;margin-top:10px}
+  ::selection{background:var(--camel);color:#fff}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="mark">✦</div>
+  <h1>The Sovereign Handbook</h1>
+  <div class="sub">every step to the life — built by my own hand</div>
+  <div class="goal">The goal · <b>$25M+ net worth, on my own terms</b> · primarily my own doing</div>
+</header>
+
+<nav class="toc">
+  <a href="#creed">The Creed</a>
+  <a href="#principles">Principles</a>
+  <a href="#roadmap">The Roadmap</a>
+  <a href="#day">The Day</a>
+  <a href="#week">The Week</a>
+  <a href="#year">The Year</a>
+  <a href="#money">The Engine</a>
+  <a href="#scoreboard">Scoreboard</a>
+  <a href="#balance">Balance</a>
+  <a href="#rules">The Rules</a>
+</nav>
+
+<main>
+
+<!-- CREED -->
+<section id="creed">
+  <div class="eyebrow">Why this exists</div>
+  <h2>The Creed</h2>
+  <div class="intro">I am the one responsible for this outcome. Not a partner, not luck, not the right man. Me.</div>
+  <p>The number is <b>$25 million or more, held in my own name, built primarily by my own hand.</b> A partner may amplify it; he will never be the plan. I have read the honest odds: solo, this is roughly a one-in-seven outcome. I am choosing to be that one — not by hoping, but by stacking every edge I control until the improbable becomes the likely.</p>
+  <p>I already hold the rarest raw materials: discipline that does not break, judgment that sees what others miss, taste, and a will that plays the long game. What I have lacked is not capability. It is <b>permission to bet bigger</b> — and the structure to bet consistently. This handbook is that structure. It turns a wish into a system, and a system, run for twenty years, into a life.</p>
+  <blockquote>I do not save my way to $25M. I own my way there.</blockquote>
+</section>
+
+<!-- PRINCIPLES -->
+<section id="principles">
+  <div class="eyebrow">The mindset that makes it possible</div>
+  <h2>Six Operating Principles</h2>
+  <div class="intro">Every decision, large or small, runs through these.</div>
+
+  <div class="card"><p><span class="num">1</span><b>Own, don't earn.</b> Salary builds $5–10M and stops. Ownership builds $25M+. From now on, every career move is judged first by the equity it hands me — a real piece of an appreciating thing — and only second by the paycheck. I will trade cash comp for equity whenever the venture is sound. The question is never "what does it pay?" It is "what do I own?"</p></div>
+
+  <div class="card"><p><span class="num">2</span><b>Concentrate to build; diversify to keep.</b> Diversification is how you protect wealth, not how you create it. The number gets built by a concentrated position in one thing I control or deeply believe in. Once a win lands, I convert it into a diversified, permanent base — and then concentrate again on the next swing. Two modes, never confused.</p></div>
+
+  <div class="card"><p><span class="num">3</span><b>I am the asset.</b> The highest-return investment of my twenties is the relentless compounding of rare, valuable skill. I become so good at one scarce thing — operations, systems, the rails beneath commerce — that reputation does the selling and equity comes to me. Skill is the seed of every later windfall.</p></div>
+
+  <div class="card"><p><span class="num">4</span><b>A high floor is permission to swing.</b> My competence and discipline guarantee I will never be destitute. That safety net is not for comfort — it is license to take concentrated risk <i>now</i>, while I am young, unencumbered, and the downside is cushioned. The safe life wastes the very thing that makes me able to be bold.</p></div>
+
+  <div class="card"><p><span class="num">5</span><b>Sovereignty first.</b> I build the number myself, in my own name, so that any partnership is a choice and never a necessity. The wealth I control is the wealth that is truly mine. A partner is the amplifier; my own equity is the plan.</p></div>
+
+  <div class="card"><p><span class="num">6</span><b>The bottleneck is courage, not capability.</b> My nature will counsel caution at every fork — stay in the safe role, hold the secure title, wait for more certainty. That instinct protected me once; now it is the single greatest threat to the goal. When the analysis is done and the bet is sound, the disciplined act is to <i>leap</i>. Courage is the skill I practice most deliberately.</p></div>
+</section>
+
+<!-- ROADMAP -->
+<section id="roadmap">
+  <div class="eyebrow">The twenty-year arc, in four phases</div>
+  <h2>The Roadmap to $25M</h2>
+  <div class="intro">Each phase has one job. Finish the job; earn the next phase.</div>
+
+  <div class="phase">
+    <div class="age">Phase I · ages 26–28 · Foundation &amp; Reframe</div>
+    <h3>Become undeniable, and rewire the goal</h3>
+    <ul>
+      <li><b>Master the domain completely</b> — become the person operations runs through; build a portfolio of documented, demonstrable wins.</li>
+      <li><b>Install the savings engine now</b> — automate 40%+ of take-home into investments from this year. The habit matters more at 26 than the amount.</li>
+      <li><b>Reframe every ambition from income to ownership</b> — start reading cap tables, equity terms, how value is actually created and captured.</li>
+      <li><b>Apply to top MBA programs</b> — not for the credential alone, but as the on-ramp into the equity world: venture, founders, growth-stage operators.</li>
+      <li><b>Build the war-chest and the network seed</b> — cash runway buys courage later; the few right relationships begin now.</li>
+    </ul>
+  </div>
+
+  <div class="phase">
+    <div class="age">Phase II · ages 28–31 · The Equity Pivot</div>
+    <h3>Leave safety; enter the ownership game</h3>
+    <ul>
+      <li><b>Use the MBA as an equity on-ramp</b> — target roles that hand real equity: growth-stage operating seats, venture, founder-adjacent work. Refuse the safe corporate default.</li>
+      <li><b>Take the first concentrated position</b> — join a high-trajectory startup as a senior, equity-heavy operator. Trade some cash for a meaningful stake.</li>
+      <li><b>Move through the Saturn return with clarity</b> — this is the years-long reckoning that sets the bar. Come out sovereign, certain, and pointed at the number.</li>
+      <li><b>Keep saving aggressively</b> — the invested base compounds quietly beneath the bigger bets.</li>
+    </ul>
+  </div>
+
+  <div class="phase">
+    <div class="age">Phase III · ages 31–37 · The Operator-Builder</div>
+    <h3>Stack equity events; find the thing to build</h3>
+    <ul>
+      <li><b>Become a senior equity-holding operator</b> (Head of Ops / COO-track) at one or two high-trajectory companies — aim for at least one meaningful exit in this window.</li>
+      <li><b>Or start the advisory</b> — the commerce-operations consultancy: cash-flowing immediately, full ownership, and a front-row seat to the problem that repeats across every client.</li>
+      <li><b>Mine the repeating problem</b> — the operational pain you watch a dozen companies beg to solve is your company's seed.</li>
+      <li><b>Begin productizing</b> — turn that one problem into software or infrastructure. Build the rails beneath commerce, not the storefront.</li>
+      <li><b>Convert the first win</b> — when an equity event lands, lock a diversified base, then concentrate again on the build.</li>
+    </ul>
+  </div>
+
+  <div class="phase">
+    <div class="age">Phase IV · ages 37–46 · The Build &amp; Compound</div>
+    <h3>Ride the concentrated bet to the number</h3>
+    <ul>
+      <li><b>Build (or co-build) the infrastructure company</b> as the operator it rewards — ideally beside a product-visionary so I am the builder I actually am.</li>
+      <li><b>Stack outcomes</b> — one home run, or two or three solid exits, compounds with the invested base toward $25M+.</li>
+      <li><b>Let compounding finish the job</b> — by now the base is large; even market returns add millions a year.</li>
+      <li><b>Convert wins into permanent, diversified wealth</b> — the number, once reached, is protected, not re-risked.</li>
+      <li><b>Arrive sovereign</b> — the wealth is mine, built by my hand, a partner having amplified rather than authored it.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- THE DAY -->
+<section id="day">
+  <div class="eyebrow">How a single day is built</div>
+  <h2>The Day, Hour by Hour</h2>
+  <div class="intro">The number is won or lost in the deep-work blocks and protected in the sacred hours. A day is the smallest unit of the twenty-year plan.</div>
+
+  <div class="day">
+    <div class="slot"><div class="when">Dawn<div class="clock">5:30–6:30</div></div>
+      <div class="what"><div class="h">The sacred hour</div><div class="d">Wake before the world. No phone. Matcha, silence, ten minutes of journaling — name today's one needle-mover. The mind is set before anything is allowed to set it.</div></div></div>
+    <div class="slot"><div class="when">Early<div class="clock">6:30–7:30</div></div>
+      <div class="what"><div class="h">Move the body</div><div class="d">Run, climb, or strength — every day, non-negotiable. The body is the engine and the place the hardest problems quietly solve themselves.</div></div></div>
+    <div class="slot"><div class="when">Reset<div class="clock">7:30–8:30</div></div>
+      <div class="what"><div class="h">Shower, eat, aim</div><div class="d">A real breakfast. Review the day's single most important task — the one thing that, if done, makes the day a win regardless of what else slips.</div></div></div>
+    <div class="slot"><div class="when">Morning<div class="clock">8:30–12:30</div></div>
+      <div class="what"><div class="h">Deep Work Block I — the leverage hours</div><div class="d">The four most valuable hours of the day, protected ferociously. The build, the equity-bearing project, the mastery work. No meetings, no email, no fragmentation. This block is where $25M is actually made.</div></div></div>
+    <div class="slot"><div class="when">Midday<div class="clock">12:30–1:30</div></div>
+      <div class="what"><div class="h">Lunch &amp; a walk</div><div class="d">Away from the desk. A real break — the Libra sun needs the pause, and the afternoon depends on it.</div></div></div>
+    <div class="slot"><div class="when">Afternoon<div class="clock">1:30–4:30</div></div>
+      <div class="what"><div class="h">Deep Work Block II — execution</div><div class="d">Shipping, meetings that matter, the operational work, decisions. The second engine block — lower intensity than the morning, but where things get moved across the line.</div></div></div>
+    <div class="slot"><div class="when">Late day<div class="clock">4:30–5:30</div></div>
+      <div class="what"><div class="h">Relationships &amp; the network</div><div class="d">The one deliberate outreach. The check-in with the sponsor, the mentor, the peer, the person worth knowing. Equity and opportunity travel through relationships — tend them daily, not desperately.</div></div></div>
+    <div class="slot"><div class="when">Evening<div class="clock">5:30–7:30</div></div>
+      <div class="what"><div class="h">The home, the table, the people</div><div class="d">Cook the real meal. Be with the few who matter — partner, friends, family — fully present, work set down. This is not the leftover of the day; it is part of its point.</div></div></div>
+    <div class="slot"><div class="when">Night<div class="clock">8:00–9:30</div></div>
+      <div class="what"><div class="h">Build's second shift (in sprint seasons) — or rest</div><div class="d">In a build sprint: a focused evening block on the venture. In steady seasons: read, rest, let one good thing in without earning it. Know which season you are in.</div></div></div>
+    <div class="slot"><div class="when">Close<div class="clock">9:30–10:15</div></div>
+      <div class="what"><div class="h">Document &amp; close</div><div class="d">Record the day's work, decisions, and one win (the habit that compounds — and protects). Set tomorrow's single needle-mover. Lights out by 10:30; the dawn hour depends on it.</div></div></div>
+  </div>
+  <p class="note">Two seasons, one structure: in a <b>build sprint</b> the evening becomes a second work block and the social load is trimmed; in a <b>steady season</b> the evenings belong to life and restoration. The morning, the body, and the close never change.</p>
+</section>
+
+<!-- THE WEEK -->
+<section id="week">
+  <div class="eyebrow">The seven-day rhythm</div>
+  <h2>The Week</h2>
+  <div class="intro">Each day carries a slight theme so the whole week covers building, relationships, restoration, and review — without anything fighting for attention.</div>
+  <div class="week">
+    <div class="wd"><div class="dn">Mon</div><div class="dt">Aim</div><div class="dd">Set the week's three priorities. Heaviest deep-work day. Plan the one big move.</div></div>
+    <div class="wd"><div class="dn">Tue</div><div class="dt">Build</div><div class="dd">Pure execution on the highest-leverage project. Guard the calendar.</div></div>
+    <div class="wd"><div class="dn">Wed</div><div class="dt">Build</div><div class="dd">Deep work continues. Midweek body check — push the training.</div></div>
+    <div class="wd"><div class="dn">Thu</div><div class="dt">Connect</div><div class="dd">Network and relationships day — the coffees, the calls, the sponsor, the peers.</div></div>
+    <div class="wd"><div class="dn">Fri</div><div class="dt">Review</div><div class="dd">Ship the week's work. Weekly review: what was built, what's next, money check.</div></div>
+    <div class="wd"><div class="dn">Sat</div><div class="dt">Craft</div><div class="dd">The market, the long cook, the climb or hike. Restoration through the things she loves.</div></div>
+    <div class="wd"><div class="dn">Sun</div><div class="dt">Rest &amp; Prep</div><div class="dd">Genuine rest. Then quietly set up the week — meals, calendar, the coming priorities.</div></div>
+  </div>
+  <div class="ribbon">
+    <h3>The weekly non-negotiables</h3>
+    <ul>
+      <li>One long restorative session (the cook, the hike) — refills the engine.</li>
+      <li>One real in-person connection with the inner circle.</li>
+      <li>The Friday strategic review — never skip the step-back.</li>
+      <li>The weekly money glance — savings on track, equity accumulating.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- THE YEAR -->
+<section id="year">
+  <div class="eyebrow">The annual cadence &amp; the yearly themes</div>
+  <h2>The Year</h2>
+  <div class="intro">Zoom out. The day builds the week; the week builds the quarter; the quarter builds the year; and the year, run honestly, builds the decade.</div>
+
+  <h3>The quarterly engine — the 90-day sprint</h3>
+  <div class="card"><p>Every 90 days: set <b>one dominant objective</b> (a skill milestone, an equity move, a build milestone, a financial target). Review monthly. At quarter's end, assess honestly — hit or miss, and why — then set the next. Four sharp sprints beat twelve vague months.</p></div>
+
+  <h3>The annual reckoning — the keystone</h3>
+  <div class="card"><p>Once a year, in solitude, with uncomfortable honesty: <b>assess the whole life against the goal.</b> Am I still on the path to the number, or drifting? Then decide the year's <b>one big bet</b> — the leap, the role change, the build milestone, the concentrated investment — and the year's deliberate journey. <b>Then act on the truth, including the courage to change course.</b> This single repeated discipline is the engine of the entire plan; most people never do it, and so they drift. I do not drift.</p></div>
+
+  <h3>The yearly themes</h3>
+  <div class="card">
+    <ul>
+      <li><b>Age 26 — Mastery &amp; Reframe:</b> become undeniable in the domain; rewire the goal from income to ownership; start the savings engine.</li>
+      <li><b>Age 27 — The Bet on Myself:</b> commit to the MBA; take the first long journey; close the chapter that has to close.</li>
+      <li><b>Ages 28–29 — Remaking:</b> business school as the equity on-ramp; build the network at the top.</li>
+      <li><b>Age 30 — Clarity (Saturn return):</b> emerge sovereign and pointed at the number; take the first equity-bearing role.</li>
+      <li><b>Ages 31–33 — The First Stakes:</b> senior operator with real equity; survive the trial; aim at the first exit.</li>
+      <li><b>Ages 34–36 — The Build Begins:</b> the advisory, the repeating problem, the first productization; the first meaningful win.</li>
+      <li><b>Ages 37–42 — The Concentrated Swing:</b> build the infrastructure company; stack outcomes; ride compounding hard.</li>
+      <li><b>Ages 43–46 — The Number &amp; the Harvest:</b> convert wins to permanent wealth; arrive at $25M+, sovereign.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- THE ENGINE -->
+<section id="money">
+  <div class="eyebrow">The financial mechanics</div>
+  <h2>The Engine</h2>
+  <div class="intro">Two forces build the number: the savings engine that runs every year, and the equity events that create the leaps. Both, relentlessly.</div>
+
+  <h3>The savings engine — the floor</h3>
+  <p>From age 26, automate the highest savings rate the life allows — target <b>40–50% of take-home</b>, rising as income rises. Index the base broadly; let it compound untouched. This alone, on a strong career, builds the $5–10M floor that guarantees I am never desperate — which is exactly what lets me swing for the rest.</p>
+
+  <h3>The equity events — the ceiling</h3>
+  <p>The leap from a few million to $25M comes from <b>owning</b>: founder equity, early-employee stakes, the productized company. One home run or two-to-three solid exits, stacked on the compounding base, is the realistic route. I accumulate equity deliberately, across the whole career, treating each stake as a lottery ticket I had a hand in printing.</p>
+
+  <h3>The shape of it, illustrative</h3>
+  <table class="money">
+    <tr><th>Source</th><th>Across the arc</th></tr>
+    <tr><td>Saved &amp; invested base (career income, 40%+ rate, compounding)</td><td>$5–10M</td></tr>
+    <tr><td>First equity event (senior operator exit / advisory sale)</td><td>$2–8M</td></tr>
+    <tr><td>The build — concentrated stake in the infrastructure company</td><td>$10–40M</td></tr>
+    <tr><td>Compounding of locked wins over the final decade</td><td>stacks on top</td></tr>
+    <tr><td>Target by mid-40s</td><td>$25M+</td></tr>
+  </table>
+  <p class="note">Illustrative, not a forecast or financial advice. The base is dependable; the equity events are uncertain and most do not land — which is why I take more than one swing, keep the floor safe, and let a licensed advisor inform the real decisions.</p>
+</section>
+
+<!-- SCOREBOARD -->
+<section id="scoreboard">
+  <div class="eyebrow">What I actually track</div>
+  <h2>The Scoreboard</h2>
+  <div class="intro">Salary is a vanity metric on this path. These are the numbers that tell me whether I am on the road to $25M.</div>
+  <div class="score">
+    <div class="metric"><div class="mt">The headline metric</div><div class="mh">Equity owned</div><div class="md">The dollar value of the appreciating things I own — not what I'm paid. This is the number that builds the number.</div><div class="star">★ review quarterly — it should always be growing</div></div>
+    <div class="metric"><div class="mt">The floor</div><div class="mh">Invested net worth</div><div class="md">The compounding base. Savings rate × time × return. The guarantee that I can always afford to be bold.</div><div class="star">★ review monthly</div></div>
+    <div class="metric"><div class="mt">The seed</div><div class="mh">Rare skill &amp; reputation</div><div class="md">Am I measurably more excellent, more sought-after, more equipped to command equity than a year ago?</div><div class="star">★ review yearly, honestly</div></div>
+    <div class="metric"><div class="mt">The conduit</div><div class="mh">Substantial relationships</div><div class="md">The handful of real, deep relationships through which opportunity and equity travel. Quality, never count.</div><div class="star">★ tend weekly</div></div>
+    <div class="metric"><div class="mt">The discipline</div><div class="mh">Deep-work hours &amp; streak</div><div class="md">Protected leverage hours logged; days the practice was kept. The leading indicator of everything else.</div><div class="star">★ track daily</div></div>
+    <div class="metric"><div class="mt">The courage</div><div class="mh">Bets taken</div><div class="md">Did I make the leap this year, or let caution win? On this path, zero bets is the only true failure.</div><div class="star">★ review yearly</div></div>
+  </div>
+</section>
+
+<!-- BALANCE -->
+<section id="balance">
+  <div class="eyebrow">The full life, and how I am seen</div>
+  <h2>Balance &amp; Perception</h2>
+  <div class="intro">Ambition does not compete with the life. The life is the fuel that lets the ambition last twenty years.</div>
+
+  <p>I am the type whose work expands to fill every available hour, and whose instinct is to treat rest, beauty, and connection as rewards to be earned later. That instinct is wrong, and it is the thing most likely to burn me out. For me, the down time, the travel, the table, the climb are not rewards — they are <b>inputs</b>. A depleted engine builds nothing. So balance is not a soft virtue here; it is part of the strategy.</p>
+
+  <h3>The four moves that keep the life whole</h3>
+  <div class="card"><p><b>Protect the restoration as fiercely as the work.</b> The same discipline that guards the morning leverage hours guards the Saturday market, the long cook, the climbing session. If it is not on the calendar, the ambition quietly eats it. Schedule the life, or lose it.</p></div>
+  <div class="card"><p><b>Stack, don't separate.</b> I don't need a separate slot for fitness, friendship, and rest — the right activities serve three needs at once. The climbing gym is body and friends and decompression. The dinner party is craft and connection and network. Exploring the city is hobby and rest and the sensory feeding my nature needs. Combine the threads instead of making them fight for hours.</p></div>
+  <div class="card"><p><b>Know which season I'm in.</b> Not every period gets equal balance, and that is fine. A 90-day build sprint is work-heavy and social-light — on purpose, with an end date. A steady season tilts back toward life. The skill is not perfect daily balance; it is never pretending a sprint is permanent, and never letting a steady season drift into one by accident.</p></div>
+  <div class="card"><p><b>Bank the rich life now, while it's cheap.</b> Right now — before the firm, before children, before the build's full intensity — is the easiest season I will have to live widely. Travel, explore, deepen the friendships, build the hobbies into real competence. The foundation of a full life is laid in exactly this window. The disciplined structure runs underneath; the evenings and weekends should be <i>full</i>, not sacrificed. I am not behind. I am right on time.</p></div>
+
+  <div class="ribbon">
+    <span class="pill risk">my real risk</span>
+    <p style="margin-bottom:0"><b>My danger is over-functioning, not slacking.</b> I will say yes to too much, grind past useful energy, and treat the down time as optional. So my balance discipline is mostly <b>subtraction and permission</b> — permission to rest without earning it, to close the laptop, to take the trip. For me, choosing the life is the harder discipline than choosing the work, and the one I must practice on purpose.</p>
+  </div>
+
+  <h3>How leadership sees me — and what to do about it</h3>
+  <p>The perception is strong, and consistent with who I am — with one quiet cost I must manage deliberately.</p>
+  <ul>
+    <li><b>Reliable to the point of absolute.</b> I read as serious, competent, and safe to depend on — often older than my years. Superiors hand me what actually matters because I never drop it. This is my single biggest professional asset.</li>
+    <li><b>The one who sees what others miss.</b> I catch the risk, the flaw, the thing no one flagged — and over time my read becomes the trusted one.</li>
+    <li><b>Clean, thorough, drama-free.</b> Work that does not need checking, and a calm that creates no noise for the people above me. Enormously valued.</li>
+  </ul>
+  <div class="ribbon">
+    <span class="pill">the cost, and the fix</span>
+    <h3 style="margin-top:0">The trap: valued without being promoted</h3>
+    <p>The quiet, reliable operator gets pigeonholed as <i>indispensable where she is</i> rather than <i>destined for the top.</i> My containment can read as a lack of ambition to people who mistake volume for drive — and my own excellence can make a manager resist losing me to a promotion. The risk is becoming the trusted workhorse instead of the obvious leader.</p>
+    <p style="margin-bottom:0">So the work being excellent is necessary but not sufficient. I must make the ambition <b>legible</b>:</p>
+    <ul style="margin-top:10px">
+      <li><b>Say it out loud</b> — name explicitly, to the people who decide, that I want to lead and where I'm headed. They cannot promote an ambition they cannot see.</li>
+      <li><b>Claim the credit I'd instinctively let slide</b> — my modesty undersells me; visibility is not arrogance, it is information leadership needs.</li>
+      <li><b>Find the one senior sponsor</b> who will say my name in the rooms I'm not in. A mentor advises me; a sponsor advocates for me. I need the second.</li>
+      <li><b>Trust the work less to speak for itself</b> — my blind spot is assuming it speaks loudly enough. It rarely does. The highest-leverage career move is not working harder; it is becoming visible about wanting more.</li>
+    </ul>
+  </div>
+  <p>This is the same growth edge the whole handbook circles: the bottleneck is courage and self-advocacy, not capability. Leadership already trusts me. The next step is making them <b>see me bigger.</b></p>
+</section>
+
+<!-- RULES -->
+<section id="rules">
+  <div class="eyebrow">The non-negotiables</div>
+  <h2>The Rules</h2>
+  <div class="intro">When in doubt, return to these.</div>
+  <div class="ribbon">
+    <ul>
+      <li><b>The morning is sacred</b> — the body and the quiet hour come before the world, every day.</li>
+      <li><b>Optimize for ownership</b> — judge every move by what I own, not what I'm paid.</li>
+      <li><b>Take the swing</b> — when the analysis is done and the bet is sound, leap. Caution is the enemy now.</li>
+      <li><b>Protect the floor</b> — save relentlessly so I can always afford to be bold and never desperate.</li>
+      <li><b>Concentrate to build, diversify to keep</b> — and never confuse the two modes.</li>
+      <li><b>Stay sovereign</b> — build it myself; let no partner be the plan.</li>
+      <li><b>Curate ruthlessly</b> — say no to nearly everything so the few right things get all of me.</li>
+      <li><b>The yearly reckoning is mandatory</b> — assess honestly, then act on the truth.</li>
+      <li><b>Let myself receive</b> — accept help, rest, and love without earning them first; a depleted engine builds nothing.</li>
+    </ul>
+  </div>
+  <blockquote>I decided what I wanted. Then I built it. That was always my particular genius.</blockquote>
+</section>
+
+</main>
+<div class="footer">In Full Bloom · the sovereign handbook</div>
+
+<script>
+/* subtle reveal on scroll */
+const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.style.opacity=1;e.target.style.transform='none';io.unobserve(e.target);}});},{threshold:.08});
+document.querySelectorAll('section').forEach(s=>{s.style.opacity=0;s.style.transform='translateY(20px)';s.style.transition='opacity .7s, transform .7s';io.observe(s);});
+</script>
+</body>
+</html>
