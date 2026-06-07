@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Forecast — In Full Bloom</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f6f1e7;--ink:#3a322a;--soft:#6b5d4d;--terra:#a8674a;--terra-deep:#8a5a3c;
+    --camel:#c8a882;--gold:#bf9b6f;--line:#dcccb0;--paper:#fbf7ee;--shadow:rgba(90,70,50,.16);
+    --s5:#7a8a4e;--s4:#a8a85a;--s3:#c8a882;--s2:#cf9166;--s1:#c47a5a;
+    --serif:"Cormorant Garamond",Georgia,serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:radial-gradient(1100px 560px at 82% -10%,#fbf3e4 0%,transparent 60%),
+    radial-gradient(820px 460px at -8% 18%,#f3ead9 0%,transparent 55%),var(--bg);
+    color:var(--ink);font-family:var(--serif);font-size:18px;line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:1;opacity:.05;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+  header.top{text-align:center;padding:46px 24px 8px;position:relative;z-index:2}
+  header .mark{font-size:24px;color:var(--camel)}
+  header h1{font-size:clamp(38px,7vw,72px);font-weight:600;color:var(--terra-deep);line-height:1;margin-top:6px}
+  header .sub{font-style:italic;color:var(--terra);font-size:clamp(16px,2.3vw,22px);margin-top:8px}
+  header .chart{margin-top:10px;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+
+  main{max-width:1100px;margin:0 auto;padding:14px 18px 90px;position:relative;z-index:2}
+
+  .viewtoggle{display:flex;gap:6px;justify-content:center;margin:8px 0 4px}
+  .viewtoggle button{font-family:var(--serif);font-size:15px;padding:6px 16px;border-radius:999px;cursor:pointer;
+    border:1px solid var(--line);background:var(--paper);color:var(--soft);transition:.2s}
+  .viewtoggle button.on{background:var(--terra);border-color:var(--terra);color:#fff;box-shadow:0 4px 12px var(--shadow)}
+  .monthbar{display:flex;align-items:center;justify-content:center;gap:16px;margin:8px 0 4px}
+  .monthbar button{font-family:var(--serif);font-size:22px;width:42px;height:42px;border-radius:50%;border:1px solid var(--line);
+    background:var(--paper);color:var(--terra);cursor:pointer;transition:.2s}
+  .monthbar button:hover{border-color:var(--camel);background:#f1e7d6}
+  .monthbar .mlabel{font-size:clamp(22px,4vw,34px);font-weight:600;color:var(--terra-deep);min-width:240px;text-align:center}
+  .todaybtn{display:block;margin:0 auto 14px;font-family:var(--serif);font-size:15px;color:var(--soft);background:none;
+    border:1px solid var(--line);border-radius:999px;padding:6px 16px;cursor:pointer;transition:.2s}
+  .todaybtn:hover{border-color:var(--terra);color:var(--terra)}
+
+  .transits{background:linear-gradient(135deg,#f3ead9,#efe3cd);border:1px solid var(--camel);border-radius:16px;
+    padding:18px 22px;margin-bottom:16px}
+  .transits h3{font-size:22px;color:var(--terra-deep);font-weight:600;margin-bottom:3px}
+  .transits .tsub{font-style:italic;color:var(--terra);font-size:15px;margin-bottom:11px}
+  .tlist{display:flex;flex-direction:column;gap:10px}
+  .tr{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:12px 15px}
+  .tr .th{font-size:17px;font-weight:600;color:var(--terra-deep)}
+  .tr .td{font-size:16px;color:var(--soft);line-height:1.48;margin-top:2px}
+
+  .summary{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:18px 22px;margin-bottom:16px;
+    box-shadow:0 10px 28px -20px var(--shadow)}
+  .summary h3{font-size:22px;color:var(--terra-deep);font-weight:600;margin-bottom:8px}
+  .sgrid{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+  @media(max-width:680px){.sgrid{grid-template-columns:1fr}}
+  .sgrid .s{padding:11px 13px;border-radius:11px;background:var(--bg);border:1px solid var(--line)}
+  .sgrid .s .k{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);font-weight:600}
+  .sgrid .s .v{font-size:16.5px;color:var(--ink);line-height:1.42;margin-top:3px}
+  .sgrid .s .v b{color:var(--terra-deep)}
+
+  /* months container */
+  .months{display:grid;gap:18px}
+  .months.one{grid-template-columns:1fr}
+  .months.three{grid-template-columns:repeat(3,1fr)}
+  @media(max-width:900px){.months.three{grid-template-columns:1fr}}
+  .mblock .mh{text-align:center;font-size:21px;font-weight:600;color:var(--terra-deep);margin-bottom:3px}
+  .mblock .mmini{text-align:center;font-size:13.5px;color:var(--soft);font-style:italic;margin-bottom:8px;line-height:1.4}
+  .mblock .mmini b{color:var(--terra);font-style:normal}
+  .dow{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin-bottom:5px}
+  .dow div{text-align:center;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--gold);font-weight:600}
+  .cal{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
+  .cell{aspect-ratio:1/1;border-radius:10px;border:1px solid var(--line);background:var(--paper);padding:5px 6px;
+    cursor:pointer;transition:.16s;position:relative;display:flex;flex-direction:column;overflow:hidden}
+  .cell.empty{background:transparent;border:none;cursor:default}
+  .cell:hover{transform:translateY(-2px);box-shadow:0 8px 18px -14px var(--shadow);border-color:var(--camel)}
+  .cell .dn{font-size:15px;font-weight:600;color:var(--ink);line-height:1}
+  .cell .area{font-size:10px;color:var(--terra);margin-top:2px;line-height:1.12;font-weight:600}
+  .cell .moon{font-size:10px;color:var(--soft);margin-top:auto;line-height:1.15}
+  .cell .glyph{position:absolute;top:4px;right:6px;font-size:12px;opacity:.8}
+  .cell .scorebar{position:absolute;left:0;right:0;bottom:0;height:4px}
+  .cell.sel{outline:3px solid var(--terra);outline-offset:-1px}
+  .cell.today{box-shadow:0 0 0 2px var(--gold) inset}
+  .cell.today .dn::after{content:" ·now";font-size:9px;color:var(--gold);font-weight:600;letter-spacing:.04em;text-transform:uppercase}
+  /* compact (three-month) hides area text to fit */
+  .months.three .cell .area{display:none}
+  .months.three .cell .moon{font-size:9px}
+  .months.three .cell .dn{font-size:13px}
+  .s5b{background:var(--s5)}.s4b{background:var(--s4)}.s3b{background:var(--s3)}.s2b{background:var(--s2)}.s1b{background:var(--s1)}
+  .cell.sc5{background:linear-gradient(to top,#eef0e2,var(--paper))}
+  .cell.sc4{background:linear-gradient(to top,#f0efe0,var(--paper))}
+  .cell.sc2{background:linear-gradient(to top,#f6e7da,var(--paper))}
+  .cell.sc1{background:linear-gradient(to top,#f4e0d4,var(--paper))}
+
+  .detail{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:22px 24px;margin-top:18px;
+    box-shadow:0 12px 30px -20px var(--shadow);position:relative;overflow:hidden}
+  .detail::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px}
+  .detail.d5::before{background:var(--s5)}.detail.d4::before{background:var(--s4)}
+  .detail.d3::before{background:var(--s3)}.detail.d2::before{background:var(--s2)}.detail.d1::before{background:var(--s1)}
+  .detail .dh{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px;margin-bottom:4px}
+  .detail .dtitle{font-size:26px;font-weight:600;color:var(--terra-deep)}
+  .detail .drating{font-size:15px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;padding:3px 12px;border-radius:999px}
+  .detail .arealabel{font-size:14px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);font-weight:600;margin-bottom:2px}
+  .detail .moonline{font-style:italic;color:var(--terra);font-size:18px;margin-bottom:12px}
+  .detail p{font-size:18px;line-height:1.6;margin-bottom:10px}
+  .detail .dom{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+  .detail .domtag{font-size:13px;letter-spacing:.06em;padding:4px 12px;border-radius:999px;font-weight:600}
+  .domtag.career{background:#e9ddc6;color:#876338}
+  .domtag.love{background:#f0d9cf;color:#9d5238}
+  .domtag.rest{background:#dfe6d0;color:#566636}
+  .domtag.social{background:#dce6e8;color:#3f6168}
+  .domtag.caution{background:#f4ddd2;color:#a85a3c}
+  .domtag.money{background:#e3e8cf;color:#5f6a34}
+  .domtag.work{background:#e7dfc9;color:#7d6a35}
+  .domtag.home{background:#efe0d2;color:#9a6a44}
+
+  .legend{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin:16px 0 4px;font-size:14px;color:var(--soft)}
+  .legend span{display:inline-flex;align-items:center;gap:6px}
+  .sw{width:14px;height:8px;border-radius:3px;display:inline-block}
+
+  .yearhead{background:linear-gradient(135deg,#f3ead9,#efe3cd);border:1px solid var(--camel);border-radius:16px;
+    padding:20px 24px;margin-bottom:16px;text-align:center}
+  .yearhead .yrbig{font-size:clamp(34px,6vw,52px);font-weight:600;color:var(--terra-deep);line-height:1}
+  .yearhead .stars{font-size:28px;color:var(--terra);letter-spacing:4px;margin:6px 0 2px}
+  .yearhead .yrating{font-size:15px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);font-weight:600}
+  .yearhead .verdict{font-size:18.5px;color:var(--ink);line-height:1.55;margin-top:10px;max-width:680px;margin-left:auto;margin-right:auto;font-style:italic}
+  .ygrid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+  @media(max-width:780px){.ygrid{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:460px){.ygrid{grid-template-columns:1fr}}
+  .ym{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:15px 16px;cursor:pointer;
+    transition:.2s;position:relative;overflow:hidden;box-shadow:0 8px 24px -20px var(--shadow)}
+  .ym::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px}
+  .ym.r5::before{background:var(--s5)}.ym.r4::before{background:var(--s4)}.ym.r3::before{background:var(--s3)}.ym.r2::before{background:var(--s2)}.ym.r1::before{background:var(--s1)}
+  .ym:hover{transform:translateY(-3px);border-color:var(--camel);box-shadow:0 16px 34px -22px var(--shadow)}
+  .ym .ymn{font-size:21px;font-weight:600;color:var(--terra-deep)}
+  .ym .ystars{font-size:15px;color:var(--terra);letter-spacing:2px;margin:2px 0 4px}
+  .ym .ybadge{display:inline-block;font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;
+    padding:2px 9px;border-radius:999px;margin-bottom:5px}
+  .ym .ybadge.peak{background:#dfe6d0;color:#556633}
+  .ym .ybadge.low{background:#f4ddd2;color:#a85a3c}
+  .ym .ydesc{font-size:14.5px;color:var(--soft);line-height:1.45}
+  .ym .yevent{font-size:13.5px;color:var(--terra-deep);font-weight:600;margin-top:6px;line-height:1.4}
+  .ym .yevent::before{content:"✦ ";color:var(--camel)}
+  .note{font-size:14px;color:var(--gold);font-style:italic;margin-top:18px;line-height:1.55;text-align:center;max-width:740px;margin-left:auto;margin-right:auto}
+  .footer{text-align:center;padding:26px;color:var(--gold);font-size:13px;letter-spacing:.2em;text-transform:uppercase;position:relative;z-index:2}
+  ::selection{background:var(--camel);color:#fff}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="mark">✦</div>
+  <h1>The Forecast</h1>
+  <div class="sub">her living months — the daily lunar rhythm, and the year's great transits</div>
+  <div class="chart">Sun Libra · Moon &amp; Mars Capricorn · Taurus Rising · Mercury Scorpio · Venus Virgo</div>
+</header>
+
+<main>
+  <div class="viewtoggle" id="viewtoggle">
+    <button data-v="1" class="on">One month</button>
+    <button data-v="3">Three months</button>
+    <button data-v="12">Year</button>
+  </div>
+  <div class="monthbar">
+    <button id="prev" aria-label="previous">‹</button>
+    <div class="mlabel" id="mlabel"></div>
+    <button id="next" aria-label="next">›</button>
+  </div>
+  <button class="todaybtn" id="todayBtn">jump to today ✦</button>
+
+  <div class="transits" id="transits"></div>
+  <div class="summary" id="summary"></div>
+
+  <div class="months one" id="months"></div>
+
+  <div class="legend">
+    <span><span class="sw s5b"></span> peak day</span>
+    <span><span class="sw s4b"></span> strong</span>
+    <span><span class="sw s3b"></span> mixed</span>
+    <span><span class="sw s2b"></span> frictional</span>
+    <span><span class="sw s1b"></span> hardest</span>
+  </div>
+
+  <div class="detail" id="detail"></div>
+
+  <div class="note">The calendar reads the Moon's daily sign against her chart — which life-area it lights (money, work, partnership, home…) and how it harmonizes with her nature. The panel above shows the year's slow, defining transits. These are thematic inclinations and timing-flavors, <i>not</i> literal scheduled events — astrology points to the weather, not the appointments. The stars incline; she decides.</div>
+</main>
+<div class="footer">In Full Bloom · the forecast</div>
+
+<script>
+function jd(y,m,d){if(m<=2){y--;m+=12;}const A=Math.floor(y/100),B=2-A+Math.floor(A/4);
+  return Math.floor(365.25*(y+4716))+Math.floor(30.6001*(m+1))+d+B-1524.5;}
+const SIGNS=["Aries","Taurus","Gemini","Cancer","Leo","Virgo","Libra","Scorpio","Sagittarius","Capricorn","Aquarius","Pisces"];
+const GLYPH={Aries:"♈",Taurus:"♉",Gemini:"♊",Cancer:"♋",Leo:"♌",Virgo:"♍",Libra:"♎",Scorpio:"♏",Sagittarius:"♐",Capricorn:"♑",Aquarius:"♒",Pisces:"♓"};
+function moonSign(y,m,d){const n=jd(y,m,d)-2451545.0;
+  const L=((218.316+13.176396*n)%360+360)%360;const M=(134.963+13.064993*n)*Math.PI/180;
+  const lon=((L+6.289*Math.sin(M))%360+360)%360;return SIGNS[Math.floor(lon/30)];}
+
+const DAY={
+ Taurus:{s:5,area:"Self & Body · 1st house",tags:["rest"],
+   text:"The Moon crosses her Ascendant — a 'her' day. Self, body, and presence come first; she feels settled in her own skin and quietly magnetic. A day to lead with her own needs, be seen, and enjoy the senses."},
+ Gemini:{s:3,area:"Money & Resources · 2nd house",tags:["money","caution"],
+   text:"A money & resources day — income, spending, and what she values are in focus. Good for reviewing finances, budgeting, or a smart small purchase — but the scattered air energy argues against big financial decisions. Watch impulsive spending; review, don't commit."},
+ Cancer:{s:4,area:"Communication · 3rd house",tags:["social","love"],
+   text:"A communication day — conversations, messages, errands, learning. Warm and intuitive: good for the important talk, the reconnect, the writing she's put off. Mentally active and emotionally open."},
+ Leo:{s:2,area:"Home & Family · 4th house",tags:["home","caution"],
+   text:"A home & family day, but a draining one — the Moon pulls focus to roots while chafing against her reserve. Tend the home; don't force the social or the spotlight. Friction with family possible if pushed. Protect her quiet."},
+ Virgo:{s:5,area:"Romance & Creativity · 5th house",tags:["love"],
+   text:"The Moon meets her Venus in her house of romance, pleasure, and creativity. One of the loveliest days of the month for dates, creative work, fun, and self-expression. Joy and connection flow without strain."},
+ Libra:{s:4,area:"Work & Coworkers · 6th house",tags:["work","social"],
+   text:"A work, coworkers & health day — daily tasks, colleagues, routine — and the Moon lights her Sun, so she's diplomatic and well-liked. Ideal for smoothing things over with the team, clearing the list, and being seen well at work. Tend the body too."},
+ Scorpio:{s:5,area:"Partnership & Others · 7th house",tags:["love","career"],
+   text:"A partnership day — the Moon in her 7th lights her Mercury. One-on-ones, love, negotiations, and contracts take center stage, and her read on people is razor-sharp. Powerful for intimacy, the important conversation, and seeing the truth of a relationship."},
+ Sagittarius:{s:2,area:"Shared Money & Intimacy · 8th house",tags:["money","caution"],
+   text:"A day of shared resources and depth — joint money, debts, taxes, intimacy — but restless and scattered, opposing her Capricorn core. A poor day for financial commitments or heavy talks; a fine one for movement and air. Don't sign, don't push."},
+ Capricorn:{s:5,area:"Vision & Expansion · 9th house",tags:["career","rest"],
+   text:"The Moon on her own Moon and Mars, in her house of the big picture — travel, learning, the long-game vision. Her most grounded, ambitious, self-possessed days. Do the hard, important work and think big; she feels most like herself."},
+ Aquarius:{s:3,area:"Career & Reputation · 10th house",tags:["career","social"],
+   text:"A career & public-standing day — reputation, authority, the people who decide, the long-term goal. Heady and a little detached: excellent for strategy, visibility, and the ambitious move; less for warmth. A day to be seen by leadership."},
+ Pisces:{s:4,area:"Friends & Networks · 11th house",tags:["social","rest"],
+   text:"A friends, networks & hopes day — the wider circle, the community, the dream for the future. Dreamy and open; good for the group, the cause, the people who lift her. Soft, a little unfocused, kind."},
+ Aries:{s:2,area:"Rest & Retreat · 12th house",tags:["rest","caution"],
+   text:"A retreat day — the Moon in her 12th, the house of rest, solitude, and the behind-the-scenes. Energy runs low and friction with others is likelier if she pushes. The honest move is rest and quiet, not output or confrontation. Recharge."},
+};
+const RATELABEL={5:["peak day","#7a8a4e"],4:["strong","#8a943f"],3:["mixed","#a8843c"],2:["frictional","#bf7a4a"],1:["hardest","#b5613f"]};
+
+const TRANSITS={
+ 2026:{sub:"a formative, pressured year — and the start of better things",items:[
+  ["Saturn in Aries — opposite her Sun, square her Moon & Mars","The defining pressure of the year. Saturn opposes her Libra Sun and squares her Capricorn Moon and Mars — a maturing reckoning across identity, relationships, and emotional foundations. It makes the comfortable life feel too small and pushes her toward the pivot. Build something real; let the pressure move you."],
+  ["Jupiter into Leo (from late June) — her home & family sector","Expansion and good fortune move into her 4th house of home, family, and roots. A favorable year-plus for property, for making the home a sanctuary, and for deepening family foundations."],
+  ["The birthday window — mid-October","Her solar return resets the year. Late September into early October is a quieter, reflective close to her personal year; mid-October opens the new one. The strongest moment to set the year's one big intention."],
+ ]},
+ 2027:{sub:"the pressure resolves; love and creativity open",items:[
+  ["Saturn finishing in Aries","The last of the Saturn opposition-and-square pressure. The pivot pressure peaks and resolves — by year's end the hardest of it is behind her, the lesson integrated."],
+  ["Jupiter into Virgo — her romance & creativity sector","One of the warmest romantic and creative windows of the decade. Jupiter through her 5th house favors love, pleasure, creative flowering, and joy. A year to date abundantly and create freely."],
+ ]},
+ 2028:{sub:"a launchpad year, and the Saturn return begins to build",items:[
+  ["Jupiter into Libra — conjunct her Sun","A personal expansion and luck peak: Jupiter meets her Libra Sun. Confidence, visibility, and opportunity rise; it also lights her 6th house, favoring work and health. A genuine launchpad year."],
+  ["Saturn re-enters Taurus","Saturn returns toward her own rising sign — the Saturn return begins to build. The deep themes of her life start coming to a head."],
+ ]},
+ 2029:{sub:"the great reckoning approaches",items:[
+  ["The Saturn Return building to exact — Saturn on her Ascendant & natal Saturn","The defining transit of her life nears its peak. A profound reckoning and re-founding: who she is, what she has built, what she keeps. Doubled in force because Saturn rules her rising. Emerge sovereign and clear."],
+ ]},
+ 2030:{sub:"the new self consolidates",items:[
+  ["Saturn Return completing","The reckoning passes into a re-founded, more authoritative life. The new self consolidates; from here the career heights and the great relationship years begin to open."],
+ ]},
+};
+function transitsFor(y){
+  if(TRANSITS[y])return TRANSITS[y];
+  if(y<2026)return{sub:"the foundation years",items:[["Building toward the pivot","The disciplined groundwork of the twenties — mastery, saving, and the seeds of the network — laid before the great transits of the late twenties arrive."]]};
+  return{sub:"the years of the built life",items:[["Beyond the Saturn return","Past thirty, the slow planets favor building and harvest — the career heights, the partnership, and the compounding of everything established earlier."]]};
+}
+
+const today=new Date();today.setHours(0,0,0,0);
+let viewY=today.getFullYear(),viewM=today.getMonth();
+let mode=1;
+let sel=null; // {y,m,d}
+const MONTHS=["January","February","March","April","May","June","July","August","September","October","November","December"];
+const MABBR=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+
+/* her seasonal month profile — constant each year, from her Sun-sign relationships */
+const MONTHPROFILE=[
+ {r:5,d:"Capricorn season lights her Moon & Mars — grounded, driven, effective."},
+ {r:3,d:"Aquarius season — heady and social, a little detached from her warmth."},
+ {r:4,d:"Pisces season — soft, intuitive, emotionally open and creative."},
+ {r:2,d:"Aries season opposes her Libra Sun — friction, impatience; pace herself."},
+ {r:5,d:"Taurus season — her own rising element. Sensual, settled, magnetic."},
+ {r:3,d:"Gemini season — scattered and quick; good for ideas, not deep focus."},
+ {r:4,d:"Cancer season — warm, nurturing, home-and-heart centered."},
+ {r:3,d:"Leo season — bright and performative; fine, but not her natural register."},
+ {r:5,d:"Virgo season lights her Venus — precise, productive, deeply satisfying."},
+ {r:5,d:"Libra season is her Sun — her birthday window. Charm, clarity, renewal."},
+ {r:5,d:"Scorpio season lights her Mercury — deep, magnetic, powerful for love & insight."},
+ {r:2,d:"Sagittarius season opposes her Capricorn core — restless; rest and reset."},
+];
+/* the year's overall rating + verdict + month-specific transit events */
+const YEARDATA={
+ 2026:{r:3,verdict:"A formative, pressured year — Saturn tests her identity, relationships, and foundations. Heavy but clarifying; the year that pushes the pivot. Carried, late, by Jupiter warming her home life.",
+   events:{3:"Saturn pressure sharp — go slow on big commitments",5:"Jupiter enters Leo — home & family expand",9:"The reflective run-up to her birthday",10:"Solar return — the year's reset & strongest intention-setting"}},
+ 2027:{r:4,verdict:"Lighter and warmer — the Saturn pressure resolves and Jupiter opens her romance-and-creativity sector. A year to enjoy, date, and create freely.",
+   events:{5:"Jupiter into Virgo — romance & creativity flower",10:"Solar return — set the year's bet"}},
+ 2028:{r:4.5,verdict:"A launchpad year — Jupiter conjoins her Libra Sun for a luck-and-confidence peak. Among the best of the decade; push the ambitions hard.",
+   events:{10:"Jupiter on her Sun near her birthday — peak luck & visibility"}},
+ 2029:{r:2.5,verdict:"The Saturn return builds to exact — the great reckoning. Intense and demanding, but the most transformative year of her young life. Re-founding, not breaking.",
+   events:{}},
+ 2030:{r:3,verdict:"The return completes and the new self consolidates — still serious, but resolving into a re-founded, more authoritative life. The heights begin to open.",
+   events:{}},
+};
+function yearData(y){
+  if(YEARDATA[y])return YEARDATA[y];
+  if(y<2026)return{r:3.5,verdict:"A foundation year of the twenties — steady building, mastery, and saving before the great transits of the late twenties arrive.",events:{10:"Solar return — the year's reset"}};
+  return{r:4,verdict:"A year of the built life — past the Saturn return, the slow planets favor building and harvest: the career heights, the partnership, and the compounding of all that was established.",events:{10:"Solar return — the year's reset"}};
+}
+function stars(r){const full=Math.floor(r);const half=r-full>=0.25&&r-full<0.75;const fullN=half?full:Math.round(r);
+  let s='';for(let i=0;i<5;i++){s+= i<full?'★':(i===full&&half?'⯨':'☆');}return s.replace('⯨','✬');}
+
+
+function buildMonth(y,m){const days=new Date(y,m+1,0).getDate();const arr=[];
+  for(let d=1;d<=days;d++){const sign=moonSign(y,m+1,d);arr.push({d,sign,...DAY[sign]});}return arr;}
+function grp(arr){if(!arr.length)return '—';const out=[];let s=arr[0],p=arr[0];
+  for(let i=1;i<=arr.length;i++){if(arr[i]===p+1){p=arr[i];}else{out.push(s===p?`${s}`:`${s}–${p}`);s=arr[i];p=arr[i];}}return out.join(', ');}
+
+function renderTransits(){const t=transitsFor(viewY);
+  document.getElementById('transits').innerHTML=
+    `<h3>${viewY} · the great transits</h3><div class="tsub">${t.sub}</div>
+     <div class="tlist">${t.items.map(it=>`<div class="tr"><div class="th">${it[0]}</div><div class="td">${it[1]}</div></div>`).join('')}</div>`;}
+
+function monthBlock(y,m){
+  const data=buildMonth(y,m);
+  const peaks=data.filter(x=>x.s===5).map(x=>x.d);
+  const hards=data.filter(x=>x.s===2).map(x=>x.d);
+  const block=document.createElement('div');block.className='mblock';
+  let html=`<div class="mh">${MONTHS[m]} ${y}</div>`;
+  if(mode===3)html+=`<div class="mmini">best <b>${grp(peaks)}</b> · hard <b>${grp(hards)}</b></div>`;
+  html+=`<div class="dow"><div>S</div><div>M</div><div>T</div><div>W</div><div>T</div><div>F</div><div>S</div></div><div class="cal"></div>`;
+  block.innerHTML=html;
+  const cal=block.querySelector('.cal');
+  const firstDow=new Date(y,m,1).getDay();
+  for(let i=0;i<firstDow;i++){const e=document.createElement('div');e.className='cell empty';cal.appendChild(e);}
+  data.forEach(x=>{
+    const c=document.createElement('div');c.className='cell sc'+x.s;
+    if(y===today.getFullYear()&&m===today.getMonth()&&x.d===today.getDate())c.classList.add('today');
+    if(sel&&sel.y===y&&sel.m===m&&sel.d===x.d)c.classList.add('sel');
+    const areaShort=x.area.split(' · ')[0];
+    c.innerHTML=`<div class="dn">${x.d}</div><span class="glyph">${GLYPH[x.sign]}</span>
+      <div class="area">${areaShort}</div><div class="moon">${x.sign}</div><div class="scorebar s${x.s}b"></div>`;
+    c.addEventListener('click',()=>{sel={y,m,d:x.d};render();showDetail(x,y,m);});
+    cal.appendChild(c);
+  });
+  return {block,data,peaks,hards};
+}
+
+function render(){
+  // label
+  if(mode===12){document.getElementById('mlabel').textContent=viewY;}
+  else if(mode===1)document.getElementById('mlabel').textContent=MONTHS[viewM]+' '+viewY;
+  else{let m2=viewM+2,y2=viewY;if(m2>11){m2-=12;y2++;}document.getElementById('mlabel').textContent=MONTHS[viewM]+'–'+MONTHS[m2]+' '+(y2!==viewY?viewY+'/'+y2:viewY);}
+  renderTransits();
+  const monthsEl=document.getElementById('months');
+  const summaryEl=document.getElementById('summary');
+  const legendEl=document.querySelector('.legend');
+  const detailEl=document.getElementById('detail');
+
+  if(mode===12){
+    summaryEl.style.display='none';legendEl.style.display='none';detailEl.style.display='none';
+    monthsEl.className='';monthsEl.innerHTML=renderYear();
+    // wire month clicks
+    monthsEl.querySelectorAll('.ym').forEach(el=>{
+      el.addEventListener('click',()=>{viewM=+el.dataset.m;mode=1;sel=null;
+        document.querySelectorAll('#viewtoggle button').forEach(b=>b.classList.toggle('on',b.dataset.v==='1'));
+        render();window.scrollTo({top:0,behavior:'smooth'});});
+    });
+    return;
+  }
+  legendEl.style.display='';detailEl.style.display='';
+  monthsEl.className='months '+(mode===3?'three':'one');monthsEl.innerHTML='';
+  const blocks=[];
+  for(let i=0;i<mode;i++){let m=viewM+i,y=viewY;while(m>11){m-=12;y++;}const b=monthBlock(y,m);blocks.push({...b,y,m});monthsEl.appendChild(b.block);}
+  if(mode===1){
+    const data=blocks[0].data;
+    const peaks=data.filter(x=>x.s===5).map(x=>x.d),hards=data.filter(x=>x.s===2).map(x=>x.d);
+    const loveDays=data.filter(x=>x.tags.includes('love')).map(x=>x.d);
+    const careerDays=data.filter(x=>x.tags.includes('career')||x.tags.includes('work')).map(x=>x.d);
+    const moneyDays=data.filter(x=>x.tags.includes('money')).map(x=>x.d);
+    summaryEl.style.display='';
+    summaryEl.innerHTML=`<h3>${MONTHS[viewM]} at a glance</h3><div class="sgrid">
+      <div class="s"><div class="k">Best days</div><div class="v"><b>${grp(peaks)}</b> — grounded, productive, magnetic</div></div>
+      <div class="s"><div class="k">Hardest days</div><div class="v"><b>${grp(hards)}</b> — restless; move, don't commit</div></div>
+      <div class="s"><div class="k">For love &amp; connection</div><div class="v"><b>${grp(loveDays)}</b> — warm, deep, open</div></div>
+      <div class="s"><div class="k">For career &amp; work</div><div class="v"><b>${grp(careerDays)}</b> — focus, ambition, visibility</div></div>
+      <div class="s"><div class="k">Money-flavored days</div><div class="v"><b>${grp(moneyDays)}</b> — review, don't make big bets</div></div>
+      <div class="s"><div class="k">Watch the spotlight</div><div class="v">Leo &amp; Aries days can grate — protect her quiet</div></div></div>`;
+  }else{summaryEl.style.display='none';}
+  let show,sy,sm;
+  if(sel){for(const b of blocks){if(b.y===sel.y&&b.m===sel.m){const f=b.data.find(x=>x.d===sel.d);if(f){show=f;sy=b.y;sm=b.m;}}}}
+  if(!show){for(const b of blocks){if(b.y===today.getFullYear()&&b.m===today.getMonth()){const f=b.data.find(x=>x.d===today.getDate());if(f){show=f;sy=b.y;sm=b.m;}}}}
+  if(!show){const b=blocks[0];show=b.data.find(x=>x.s===5)||b.data[0];sy=b.y;sm=b.m;}
+  if(show){sel={y:sy,m:sm,d:show.d};showDetail(show,sy,sm);}
+}
+
+function renderYear(){
+  const yd=yearData(viewY);
+  const ratings=MONTHPROFILE.map(p=>p.r);
+  const peak=Math.max(...ratings),low=Math.min(...ratings);
+  let html=`<div class="yearhead"><div class="yrbig">${viewY}</div>
+    <div class="stars">${stars(yd.r)}</div>
+    <div class="yrating">${yd.r.toFixed(1)} / 5 · the year overall</div>
+    <div class="verdict">${yd.verdict}</div></div>
+    <div class="ygrid">`;
+  MONTHPROFILE.forEach((p,i)=>{
+    const badge = p.r===peak?'<span class="ybadge peak">peak month</span>'
+      : p.r===low?'<span class="ybadge low">low month</span>':'';
+    const ev = yd.events&&yd.events[i]?`<div class="yevent">${yd.events[i]}</div>`:'';
+    html+=`<div class="ym r${p.r}" data-m="${i}">${badge}
+      <div class="ymn">${MONTHS[i]}</div>
+      <div class="ystars">${stars(p.r)}</div>
+      <div class="ydesc">${p.d}</div>${ev}</div>`;
+  });
+  html+=`</div>`;
+  return html;
+}
+
+function showDetail(x,y,m){
+  const det=document.getElementById('detail');det.className='detail d'+x.s;
+  const[lab,col]=RATELABEL[x.s];
+  const domHtml=x.tags.map(d=>`<span class="domtag ${d}">${d}</span>`).join('');
+  det.innerHTML=`<div class="dh"><div class="dtitle">${MONTHS[m]} ${x.d}, ${y}</div>
+    <div class="drating" style="background:${col}22;color:${col}">${lab}</div></div>
+    <div class="arealabel">${x.area}</div>
+    <div class="moonline">Moon in ${x.sign} ${GLYPH[x.sign]}</div>
+    <p>${x.text}</p><div class="dom">${domHtml}</div>`;
+  document.querySelectorAll('.cell:not(.empty)').forEach(c=>c.classList.remove('sel'));
+}
+
+document.getElementById('viewtoggle').addEventListener('click',e=>{
+  if(e.target.tagName!=='BUTTON')return;
+  mode=+e.target.dataset.v;
+  document.querySelectorAll('#viewtoggle button').forEach(b=>b.classList.toggle('on',b===e.target));
+  render();
+});
+document.getElementById('prev').addEventListener('click',()=>{if(mode===12){viewY--;}else{viewM--;if(viewM<0){viewM=11;viewY--;}}sel=null;render();});
+document.getElementById('next').addEventListener('click',()=>{if(mode===12){viewY++;}else{viewM++;if(viewM>11){viewM=0;viewY++;}}sel=null;render();});
+document.getElementById('todayBtn').addEventListener('click',()=>{viewY=today.getFullYear();viewM=today.getMonth();sel={y:viewY,m:viewM,d:today.getDate()};render();});
+
+render();
+</script>
+</body>
+</html>
