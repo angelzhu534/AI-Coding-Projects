@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Checklists — In Full Bloom</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f6f1e7;--ink:#3a322a;--soft:#6b5d4d;--terra:#a8674a;--terra-deep:#8a5a3c;
+    --camel:#c8a882;--gold:#bf9b6f;--line:#dcccb0;--paper:#fbf7ee;--shadow:rgba(90,70,50,.16);
+    --green:#6c7a4a;--serif:"Cormorant Garamond",Georgia,serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{background:radial-gradient(1100px 560px at 82% -10%,#fbf3e4 0%,transparent 60%),
+    radial-gradient(820px 460px at -8% 18%,#f3ead9 0%,transparent 55%),var(--bg);
+    color:var(--ink);font-family:var(--serif);font-size:18px;line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:1;opacity:.05;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+  header.top{text-align:center;padding:54px 24px 16px;position:relative;z-index:2}
+  header .mark{font-size:24px;color:var(--camel)}
+  header h1{font-size:clamp(40px,8vw,80px);font-weight:600;color:var(--terra-deep);line-height:1;margin-top:6px}
+  header .sub{font-style:italic;color:var(--terra);font-size:clamp(16px,2.3vw,23px);margin-top:8px}
+
+  .tabs{position:sticky;top:0;z-index:30;backdrop-filter:blur(9px);
+    background:linear-gradient(to bottom,rgba(246,241,231,.97),rgba(246,241,231,.84));
+    border-bottom:1px solid var(--line);padding:11px 14px;display:flex;gap:7px;justify-content:center;flex-wrap:wrap}
+  .tab{font-family:var(--serif);font-size:16px;padding:6px 16px;border-radius:999px;cursor:pointer;
+    border:1px solid var(--line);background:var(--paper);color:var(--soft);transition:.22s}
+  .tab:hover{border-color:var(--camel);color:var(--terra)}
+  .tab.on{background:var(--terra);border-color:var(--terra);color:#fff;box-shadow:0 4px 12px var(--shadow)}
+
+  .panel{display:none;max-width:820px;margin:0 auto;padding:30px 22px 90px;position:relative;z-index:2}
+  .panel.on{display:block;animation:fade .45s ease both}
+  @keyframes fade{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+  h2{font-size:clamp(28px,5vw,46px);font-weight:600;color:var(--terra-deep);line-height:1.05;margin-bottom:4px}
+  .lede{font-style:italic;color:var(--terra);font-size:19px;margin-bottom:14px}
+
+  .progress{display:flex;align-items:center;gap:12px;margin-bottom:20px}
+  .ptrack{flex:1;height:8px;border-radius:6px;background:#e7dcc6;overflow:hidden}
+  .pfill{height:100%;width:0;border-radius:6px;background:linear-gradient(90deg,var(--camel),var(--terra));transition:width .4s}
+  .ppct{font-size:17px;font-weight:700;color:var(--terra);font-variant-numeric:tabular-nums;min-width:42px;text-align:right}
+
+  .grp{margin-bottom:22px}
+  .grp h3{font-size:22px;font-weight:600;color:var(--terra-deep);margin-bottom:4px;display:flex;align-items:center;gap:9px}
+  .grp .gtag{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);font-weight:600}
+  .grp .gsub{font-style:italic;color:var(--soft);font-size:16px;margin-bottom:10px}
+
+  .item{display:flex;align-items:flex-start;gap:12px;padding:13px 15px;border:1px solid var(--line);
+    border-radius:11px;background:var(--paper);margin-bottom:9px;cursor:pointer;transition:.2s}
+  .item:hover{border-color:var(--camel)}
+  .item.done{background:#eef0e2;border-color:#cdd6b4}
+  .box{flex:0 0 23px;width:23px;height:23px;border-radius:7px;border:2px solid var(--camel);
+    display:flex;align-items:center;justify-content:center;transition:.2s;margin-top:1px}
+  .item.done .box{background:var(--green);border-color:var(--green)}
+  .box svg{width:13px;height:13px;opacity:0;transform:scale(.5);transition:.2s}
+  .item.done .box svg{opacity:1;transform:scale(1)}
+  .it{font-size:18px;color:var(--ink);line-height:1.45}
+  .item.done .it{color:var(--soft);text-decoration:line-through;text-decoration-color:var(--camel)}
+  .it .sub{display:block;font-size:15px;color:var(--soft);font-style:italic;margin-top:2px;text-decoration:none}
+
+  .daterow{font-size:15px;color:var(--gold);font-style:italic;margin-bottom:14px}
+  .resetbtn{margin-top:16px;font-family:var(--serif);font-size:15px;color:var(--soft);background:none;border:1px solid var(--line);
+    border-radius:999px;padding:7px 16px;cursor:pointer;transition:.2s}
+  .resetbtn:hover{border-color:var(--terra);color:var(--terra)}
+  .note{font-size:14px;color:var(--gold);font-style:italic;margin-top:16px;line-height:1.5}
+  .footer{text-align:center;padding:26px;color:var(--gold);font-size:13px;letter-spacing:.2em;text-transform:uppercase;position:relative;z-index:2}
+  ::selection{background:var(--camel);color:#fff}
+
+  /* focus panel */
+  .creed{background:linear-gradient(135deg,#f3ead9,#efe3cd);border:1px solid var(--camel);border-radius:16px;
+    padding:20px 24px;margin-bottom:20px}
+  .creed p{font-size:18.5px;line-height:1.6;margin:0;color:var(--ink)}
+  .creed b{color:var(--terra-deep)}
+  .capture{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin:8px 0 20px;
+    box-shadow:0 10px 28px -20px var(--shadow)}
+  .capture .ch{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;flex-wrap:wrap;gap:8px}
+  .capture .ct{font-size:20px;font-weight:600;color:var(--terra-deep)}
+  .capture .cs{font-size:15px;color:var(--soft);font-style:italic}
+  .capture textarea{width:100%;min-height:120px;border:1px solid var(--line);border-radius:11px;background:var(--bg);
+    font-family:var(--serif);font-size:18px;color:var(--ink);padding:12px 14px;resize:vertical;line-height:1.6;outline:none;transition:.2s}
+  .capture textarea:focus{border-color:var(--camel)}
+  .capture .saved{font-size:14px;color:var(--green);font-style:italic;opacity:0;transition:.3s;margin-top:6px;height:16px}
+  .capture .saved.show{opacity:1}
+  .reset60{background:var(--paper);border:1px dashed var(--terra);border-radius:14px;padding:20px 22px;margin:8px 0 20px;text-align:center}
+  .reset60 .rt{font-size:13px;letter-spacing:.13em;text-transform:uppercase;color:var(--terra);font-weight:600;margin-bottom:8px}
+  .reset60 .rline{font-size:21px;font-style:italic;color:var(--terra-deep);line-height:1.4}
+  .reset60 .rbtn{margin-top:14px;font-family:var(--serif);font-size:16px;background:var(--terra);color:#fff;border:none;
+    border-radius:999px;padding:9px 22px;cursor:pointer;transition:.2s}
+  .reset60 .rbtn:hover{background:var(--terra-deep)}
+  .reset60 .rstep{display:none;font-size:19px;color:var(--soft);font-style:italic;margin-top:12px;line-height:1.5}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="mark">✦</div>
+  <h1>The Checklists</h1>
+  <div class="sub">the Sovereign Handbook, made into things to actually do</div>
+</header>
+
+<nav class="tabs" id="tabs">
+  <button class="tab on" data-p="daily">Daily</button>
+  <button class="tab" data-p="weekly">Weekly</button>
+  <button class="tab" data-p="quarterly">Quarterly</button>
+  <button class="tab" data-p="yearly">Yearly</button>
+  <button class="tab" data-p="phases">The Phases</button>
+  <button class="tab" data-p="focus">Focus</button>
+</nav>
+
+<section class="panel on" id="daily"></section>
+<section class="panel" id="weekly"></section>
+<section class="panel" id="quarterly"></section>
+<section class="panel" id="yearly"></section>
+<section class="panel" id="phases"></section>
+<section class="panel" id="focus"></section>
+
+<div class="footer">In Full Bloom · the checklists</div>
+
+<script>
+/* ---------- storage (persists when downloaded; memory fallback in preview) ---------- */
+const mem={};
+const store={
+  get(k){try{const v=localStorage.getItem(k);return v===null?(k in mem?mem[k]:null):v;}catch(e){return k in mem?mem[k]:null;}},
+  set(k,v){try{localStorage.setItem(k,v);}catch(e){mem[k]=v;}}
+};
+const tick='<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
+
+/* ---------- period keys ---------- */
+const now=new Date();
+const pad=n=>String(n).padStart(2,'0');
+const dayKey=now.getFullYear()+'-'+pad(now.getMonth()+1)+'-'+pad(now.getDate());
+function weekKey(d){const t=new Date(d);t.setHours(0,0,0,0);t.setDate(t.getDate()+3-((t.getDay()+6)%7));
+  const w1=new Date(t.getFullYear(),0,4);return t.getFullYear()+'-W'+pad(1+Math.round(((t-w1)/86400000-3+((w1.getDay()+6)%7))/7));}
+const wk=weekKey(now);
+const qtr=now.getFullYear()+'-Q'+(Math.floor(now.getMonth()/3)+1);
+const yr=String(now.getFullYear());
+
+/* ---------- the data ---------- */
+const DAILY=[
+ {h:"Morning — protect the foundation",sub:"the hours that decide the day",items:[
+  ["Woke before the world — no phone in the first hour","matcha, silence, the mind set before it's set for me"],
+  ["Named today's ONE needle-mover","the single thing that makes today a win toward the goal"],
+  ["Moved the body","run, climb, or strength — non-negotiable"],
+ ]},
+ {h:"The work — where the number is made",sub:"leverage, then execution",items:[
+  ["Deep Work Block I — 3–4 protected leverage hours","the build / the equity project / mastery. No meetings, no email"],
+  ["Deep Work Block II — execution","shipping, the decisions, moving things across the line"],
+  ["One deliberate relationship touch","the sponsor, mentor, peer — opportunity travels through people"],
+  ["Optimized one decision for ownership, not just income","asked 'what do I own?' not only 'what does it pay?'"],
+ ]},
+ {h:"Evening — life, and the close",sub:"the point of the building",items:[
+  ["Was fully present with the few who matter","work set down — the table, the people"],
+  ["Let one good thing in without earning it","a rest, a kindness, a pleasure — the receiving discipline"],
+  ["Documented the day — work, decisions, one win","the habit that compounds and protects"],
+  ["Set tomorrow's one needle-mover · lights out by 10:30","tomorrow's dawn depends on tonight's close"],
+ ]},
+];
+const WEEKLY=[
+ {h:"Build & aim",sub:"",items:[
+  ["Set the week's three priorities (Monday)",""],
+  ["Protected at least 3 heavy deep-work days","Tue–Wed the calendar is guarded"],
+  ["Moved the highest-leverage project forward","the build / the equity-bearing work"],
+ ]},
+ {h:"Connect & maintain",sub:"",items:[
+  ["One real in-person connection with the inner circle",""],
+  ["The network day — coffees, calls, the sponsor (Thursday)",""],
+ ]},
+ {h:"Review & restore",sub:"",items:[
+  ["Friday strategic review — what was built, what's next",""],
+  ["The weekly money glance — savings on track, equity growing",""],
+  ["One long restorative session — the cook, the hike, the climb",""],
+  ["Genuine rest + set up the coming week (Sunday)",""],
+ ]},
+];
+const QUARTERLY=[
+ {h:"The 90-day sprint",sub:"four sharp sprints beat twelve vague months",items:[
+  ["Set ONE dominant objective for the quarter","a skill milestone, an equity move, a build milestone, or a financial target"],
+  ["Broke it into monthly checkpoints",""],
+  ["Reviewed progress at each month's end",""],
+  ["Assessed honestly at quarter's end — hit or miss, and why",""],
+  ["Set the next quarter's dominant objective",""],
+ ]},
+ {h:"The quarterly money & equity review",sub:"the headline metric is what I own",items:[
+  ["Updated equity owned (the number that builds the number)",""],
+  ["Checked invested net worth vs. the savings-rate target",""],
+  ["Asked: am I more sought-after / equipped to command equity than last quarter?",""],
+ ]},
+];
+const YEARLY=[
+ {h:"The annual reckoning — the keystone",sub:"in solitude, with uncomfortable honesty",items:[
+  ["Assessed the whole life against the $25M goal — on path, or drifting?",""],
+  ["Decided the year's ONE big bet","the leap, the role change, the build milestone, the concentrated investment"],
+  ["Planned the year's deliberate major journey",""],
+  ["Acted on the truth — including the courage to change course","this single discipline is the engine of the whole plan"],
+ ]},
+ {h:"The yearly scoreboard",sub:"review honestly, once a year",items:[
+  ["Equity owned — grew this year?",""],
+  ["Invested net worth — on the compounding curve?",""],
+  ["Rare skill & reputation — measurably stronger?",""],
+  ["Substantial relationships — deepened, not just counted?",""],
+  ["Bets taken — did I leap, or let caution win?","zero bets is the only true failure on this path"],
+ ]},
+];
+const PHASES=[
+ {h:"Phase I · 26–28 · Foundation & Reframe",sub:"become undeniable, rewire the goal",items:[
+  ["Mastered the domain — became the person ops runs through",""],
+  ["Built a portfolio of documented, demonstrable wins",""],
+  ["Automated 40%+ of take-home into investments",""],
+  ["Reframed ambition from income to ownership — learned cap tables & equity",""],
+  ["Applied to top MBA programs (the equity on-ramp)",""],
+  ["Began the war-chest and the network seed",""],
+ ]},
+ {h:"Phase II · 28–31 · The Equity Pivot",sub:"leave safety, enter the ownership game",items:[
+  ["Used the MBA to enter an equity-bearing role",""],
+  ["Took the first concentrated position — equity-heavy startup seat",""],
+  ["Moved through the Saturn return clarified and sovereign",""],
+  ["Kept the savings engine running beneath the bigger bets",""],
+ ]},
+ {h:"Phase III · 31–37 · The Operator-Builder",sub:"stack equity events; find the thing to build",items:[
+  ["Became a senior equity-holding operator (or started the advisory)",""],
+  ["Aimed at the first meaningful equity event / exit",""],
+  ["Mined the operational problem that repeats across clients",""],
+  ["Began productizing it — the rails beneath commerce",""],
+  ["Converted the first win: locked a diversified base, then concentrated again",""],
+ ]},
+ {h:"Phase IV · 37–46 · The Build & Compound",sub:"ride the concentrated bet to the number",items:[
+  ["Built (or co-built) the infrastructure company as the operator",""],
+  ["Stacked outcomes — one home run or several solid exits",""],
+  ["Let compounding finish the job on the large base",""],
+  ["Converted wins into permanent, diversified wealth",""],
+  ["Arrived sovereign — $25M+, built by my own hand",""],
+ ]},
+];
+
+const FOCUS=[
+ {h:"Before — design the day so focus isn't a fight",sub:"distraction is beaten by structure, not willpower",items:[
+  ["Today's ONE needle-mover was named last night","I start already aimed — no ambiguity for distraction to fill"],
+  ["The deep-work block is on the calendar as an unmovable meeting","a real appointment with myself, defended like any other"],
+  ["Slept by 10:30 / woke for the dawn hour","a tired brain cannot focus, no matter the intent"],
+  ["Moved the body — the energy that makes focus possible","focus is energy management before it is time management"],
+ ]},
+ {h:"During — remove the friction, don't resist it",sub:"out-structure the distraction",items:[
+  ["Phone in ANOTHER room — not face-down on the desk",""],
+  ["Notifications fully off; one browser, one tab, one task",""],
+  ["Matched the hardest work to peak energy (the morning)",""],
+  ["Cleared the open loops into the capture box below first","a mind holding stray tasks cannot stay present"],
+  ["Single-tasking — one thing until it's done or the block ends",""],
+ ]},
+ {h:"The recovery skill — the return, not the never-leaving",sub:"everyone drifts; the focused recover fast",items:[
+  ["When I drifted, I took one breath and returned — no self-criticism","the self-criticism is itself a distraction"],
+  ["Used the 60-second reset below when pulled off course",""],
+ ]},
+ {h:"The real risk for me — over-functioning",sub:"my distraction is too much, not too little",items:[
+  ["Said NO to at least one thing that wasn't the priority",""],
+  ["Stopped at the point of useful energy — didn't grind past it",""],
+  ["Checked: am I being effective, or just busy?",""],
+  ["Protected the few right things; cut the rest",""],
+ ]},
+];
+
+const CONFIG={
+ daily:{data:DAILY,key:'cl_daily_'+dayKey,title:'The Daily Checklist',
+   lede:'Run it every day. This is where the twenty-year plan is actually executed.',date:fmtDate(now)},
+ weekly:{data:WEEKLY,key:'cl_weekly_'+wk,title:'The Weekly Checklist',
+   lede:'Build, connect, review, restore — so the whole week is covered.',date:'Week of '+fmtDate(now)},
+ quarterly:{data:QUARTERLY,key:'cl_qtr_'+qtr,title:'The Quarterly Checklist',
+   lede:'The 90-day sprint and the equity review.',date:qtr.replace('-',' · ')},
+ yearly:{data:YEARLY,key:'cl_year_'+yr,title:'The Yearly Checklist',
+   lede:'The annual reckoning and the scoreboard — the keystone of the plan.',date:yr},
+ phases:{data:PHASES,key:'cl_phases',title:'The Phase Roadmap',
+   lede:'The long milestones. Check them off across the years — these do not reset.',date:'the twenty-year arc'},
+ focus:{data:FOCUS,key:'cl_focus_'+dayKey,title:'Firing on All Cylinders',
+   lede:"How to stay undistracted and at full power — by design, not willpower.",date:fmtDate(now)},
+};
+function fmtDate(d){return d.toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'});}
+
+function render(panelId){
+  const cfg=CONFIG[panelId];const panel=document.getElementById(panelId);
+  const state=JSON.parse(store.get(cfg.key)||'{}');
+  let total=0,done=0;
+  let html=`<h2>${cfg.title}</h2><div class="lede">${cfg.lede}</div><div class="daterow">${cfg.date}</div>
+    <div class="progress"><div class="ptrack"><div class="pfill" id="pf_${panelId}"></div></div><div class="ppct" id="pp_${panelId}">0%</div></div>`;
+  cfg.data.forEach((g,gi)=>{
+    html+=`<div class="grp"><h3>${g.h}</h3>`+(g.sub?`<div class="gsub">${g.sub}</div>`:'');
+    g.items.forEach((it,ii)=>{
+      const id=gi+'_'+ii;const isDone=!!state[id];total++;if(isDone)done++;
+      const sub=it[1]?`<span class="sub">${it[1]}</span>`:'';
+      html+=`<div class="item${isDone?' done':''}" data-id="${id}"><div class="box">${tick}</div><div class="it">${it[0]}${sub}</div></div>`;
+    });
+    html+=`</div>`;
+  });
+  html+=`<button class="resetbtn" data-reset="${panelId}">reset this list</button>
+    <div class="note" id="note_${panelId}"></div>`;
+  panel.innerHTML=html;
+  updateBar(panelId,done,total);
+  // persistence note
+  let persists=false;try{localStorage.setItem('t','1');localStorage.removeItem('t');persists=true;}catch(e){}
+  document.getElementById('note_'+panelId).textContent=persists
+    ?'Saved automatically in this browser. Daily/weekly/quarterly/yearly lists reset with each new period; the phase roadmap persists across the years.'
+    :'In this preview, checks last for the session. Download the file and open it in your browser to save progress permanently.';
+}
+function updateBar(panelId,done,total){
+  const pct=total?Math.round(done/total*100):0;
+  const f=document.getElementById('pf_'+panelId),p=document.getElementById('pp_'+panelId);
+  if(f)f.style.width=pct+'%';if(p)p.textContent=pct+'%';
+}
+
+/* events */
+document.body.addEventListener('click',e=>{
+  const item=e.target.closest('.item');
+  if(item){
+    const panel=item.closest('.panel');const pid=panel.id;const cfg=CONFIG[pid];
+    const state=JSON.parse(store.get(cfg.key)||'{}');
+    const id=item.dataset.id;state[id]=!state[id];
+    store.set(cfg.key,JSON.stringify(state));
+    item.classList.toggle('done',state[id]);
+    let total=0,done=0;cfg.data.forEach(g=>g.items.forEach(()=>total++));
+    Object.values(state).forEach(v=>{if(v)done++;});
+    updateBar(pid,done,total);
+    return;
+  }
+  const rb=e.target.closest('[data-reset]');
+  if(rb){const pid=rb.dataset.reset;store.set(CONFIG[pid].key,'{}');render(pid);if(pid==='focus')augmentFocus();}
+});
+
+/* tabs */
+document.getElementById('tabs').addEventListener('click',e=>{
+  if(!e.target.classList.contains('tab'))return;
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'));
+  e.target.classList.add('on');
+  const pid=e.target.dataset.p;document.getElementById(pid).classList.add('on');
+  window.scrollTo({top:0,behavior:'smooth'});
+});
+
+/* init all panels */
+Object.keys(CONFIG).forEach(render);
+augmentFocus();
+
+function augmentFocus(){
+  const panel=document.getElementById('focus');
+  // creed banner — insert after the lede/date/progress (before first .grp)
+  const firstGrp=panel.querySelector('.grp');
+  const creed=document.createElement('div');creed.className='creed';
+  creed.innerHTML=`<p><b>I will not out-discipline distraction — I out-structure it.</b> Willpower runs out daily; the focused don't resist temptation in the moment, they remove the moments where resistance is needed. So I pre-decide, remove friction, protect my energy, and — because my real risk is over-functioning, not laziness — I cut ruthlessly and stop being merely busy.</p>`;
+  panel.insertBefore(creed,firstGrp);
+
+  // 60-second reset card — insert before the reset button
+  const resetBtn=panel.querySelector('[data-reset]');
+  const r=document.createElement('div');r.className='reset60';
+  r.innerHTML=`<div class="rt">the 60-second reset</div>
+    <div class="rline">Caught drifting? Don't spiral. Recover.</div>
+    <button class="rbtn" id="reset60btn">walk me back ✦</button>
+    <div class="rstep" id="reset60step"></div>`;
+  panel.insertBefore(r,resetBtn);
+
+  // capture box — insert before the reset button too (after the reset card)
+  const cap=document.createElement('div');cap.className='capture';
+  cap.innerHTML=`<div class="ch"><span class="ct">Open Loops — the capture box</span><span class="cs">empty your head so it can stay present</span></div>
+    <textarea id="loopBox" placeholder="Dump every stray task, worry, or idea here the moment it appears — get it out of your head and onto the page, then return to the one thing…"></textarea>
+    <div class="saved" id="loopSaved">saved ✦</div>`;
+  panel.insertBefore(cap,resetBtn);
+
+  // wire the 60s reset
+  const steps=[
+    "1 / 4 — Stop. Take one slow breath. No judgment — drifting is normal.",
+    "2 / 4 — Name the distraction in a word (phone? worry? email?). Then let it go.",
+    "3 / 4 — If it's a real task, dump it in the capture box. If not, release it.",
+    "4 / 4 — Look at today's ONE needle-mover. Put your hands back on it. Begin again."
+  ];
+  let si=0;const btn=document.getElementById('reset60btn'),step=document.getElementById('reset60step');
+  btn.addEventListener('click',()=>{
+    step.style.display='block';step.textContent=steps[si];
+    si=(si+1)%steps.length;
+    btn.textContent=si===0?'walk me back ✦':'next ✦';
+  });
+
+  // wire capture persistence
+  const box=document.getElementById('loopBox');const saved=document.getElementById('loopSaved');
+  box.value=store.get('cl_loops')||'';
+  let t;box.addEventListener('input',()=>{
+    store.set('cl_loops',box.value);
+    saved.classList.add('show');clearTimeout(t);t=setTimeout(()=>saved.classList.remove('show'),1300);
+  });
+}
+</script>
+</body>
+</html>
