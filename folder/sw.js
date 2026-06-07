@@ -1,5 +1,5 @@
 /* ─── In Full Bloom · Daily Ritual SW v1 ─── */
-const CACHE = 'bloom-ritual-v1';
+const CACHE = 'bloom-ritual-v2';
 const ASSETS = [
   './index.html',
   './manifest.json',

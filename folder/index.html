@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Auryn</title>
+<meta name="description" content="Daily ritual, checklists and journal for a sovereign life.">
+<meta name="theme-color" content="#a8674a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Auryn">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="theme-color" content="#a8674a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Bloom">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f6f1e7;--ink:#3a322a;--soft:#6b5d4d;--terra:#a8674a;--terra-deep:#8a5a3c;
+    --camel:#c8a882;--gold:#bf9b6f;--line:#dcccb0;--paper:#fbf7ee;--shadow:rgba(90,70,50,.16);
+    --green:#6c7a4a;--serif:"Cormorant Garamond",Georgia,serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{background:radial-gradient(1100px 560px at 82% -10%,#fbf3e4 0%,transparent 60%),
+    radial-gradient(820px 460px at -8% 18%,#f3ead9 0%,transparent 55%),var(--bg);
+    color:var(--ink);font-family:var(--serif);font-size:18px;line-height:1.5;
+    -webkit-font-smoothing:antialiased;overflow-x:hidden}
+  body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:1;opacity:.05;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+  header.top{text-align:center;padding:46px 24px 12px;position:relative;z-index:2}
+  header .mark{font-size:22px;color:var(--camel)}
+  header h1{font-size:clamp(38px,8vw,72px);font-weight:600;color:var(--terra-deep);line-height:1;margin-top:6px}
+  header .sub{font-style:italic;color:var(--terra);font-size:clamp(15px,2.2vw,21px);margin-top:6px}
+
+  /* tabs */
+  .tabs{position:sticky;top:0;z-index:30;backdrop-filter:blur(9px);
+    background:linear-gradient(to bottom,rgba(246,241,231,.97),rgba(246,241,231,.84));
+    border-bottom:1px solid var(--line);padding:10px 14px;
+    display:flex;gap:7px;justify-content:center;flex-wrap:wrap}
+  .tab{font-family:var(--serif);font-size:16px;padding:6px 16px;border-radius:999px;cursor:pointer;
+    border:1px solid var(--line);background:var(--paper);color:var(--soft);transition:.22s}
+  .tab:hover{border-color:var(--camel);color:var(--terra)}
+  .tab.on{background:var(--terra);border-color:var(--terra);color:#fff;box-shadow:0 4px 12px var(--shadow)}
+
+  /* panels */
+  .panel{display:none;max-width:820px;margin:0 auto;padding:28px 22px 90px;position:relative;z-index:2}
+  .panel.on{display:block;animation:fade .42s ease both}
+  @keyframes fade{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+  h2{font-size:clamp(26px,5vw,40px);font-weight:600;color:var(--terra-deep);margin-bottom:4px}
+  .lede{font-style:italic;color:var(--terra);font-size:18.5px;margin-bottom:16px}
+  h3{font-size:24px;font-weight:600;color:var(--terra-deep);margin:22px 0 9px}
+
+  /* north star */
+  .northstar{background:linear-gradient(135deg,#f3ead9,#efe3cd);border:1px solid var(--camel);
+    border-radius:14px;padding:16px 20px;margin-bottom:16px}
+  .northstar label{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);font-weight:600;display:block;margin-bottom:6px}
+  .northstar textarea{width:100%;border:none;background:transparent;font-family:var(--serif);font-size:20px;
+    color:var(--ink);resize:none;line-height:1.4;font-style:italic;outline:none;overflow:hidden;min-height:28px}
+
+  /* date + streak row */
+  .dayrow{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:16px;flex-wrap:wrap}
+  .today-label{font-size:20px;color:var(--terra-deep);font-weight:600}
+  .streak{display:flex;align-items:center;gap:8px;font-size:16px;color:var(--soft)}
+  .streak b{color:var(--terra);font-size:22px;font-weight:700;font-variant-numeric:tabular-nums}
+
+  /* progress */
+  .progress{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+  .ptrack{flex:1;height:7px;border-radius:6px;background:#e7dcc6;overflow:hidden}
+  .pfill{height:100%;width:0;border-radius:6px;background:linear-gradient(90deg,var(--camel),var(--terra));transition:width .35s}
+  .ppct{font-size:17px;font-weight:700;color:var(--terra);min-width:42px;text-align:right;font-variant-numeric:tabular-nums}
+
+  /* groups */
+  .grp{margin-bottom:20px}
+  .grp-head{display:flex;align-items:baseline;gap:10px;margin-bottom:3px}
+  .grp-head h3{margin:0}
+  .grp-sub{font-size:15px;color:var(--soft);font-style:italic;margin-bottom:10px}
+
+  /* check items */
+  .item{display:flex;align-items:flex-start;gap:12px;padding:13px 15px;border:1px solid var(--line);
+    border-radius:11px;background:var(--paper);margin-bottom:9px;cursor:pointer;transition:.2s;user-select:none}
+  .item:hover{border-color:var(--camel)}
+  .item.done{background:#eef0e2;border-color:#cdd6b4}
+  .box{flex:0 0 23px;width:23px;height:23px;border-radius:7px;border:2px solid var(--camel);
+    display:flex;align-items:center;justify-content:center;transition:.2s;margin-top:1px;flex-shrink:0}
+  .item.done .box{background:var(--green);border-color:var(--green)}
+  .box svg{width:13px;height:13px;opacity:0;transform:scale(.5);transition:.2s}
+  .item.done .box svg{opacity:1;transform:scale(1)}
+  .itext .it{font-size:18px;color:var(--ink);line-height:1.4}
+  .item.done .it{color:var(--soft);text-decoration:line-through;text-decoration-color:var(--camel)}
+  .itext .is{display:block;font-size:14.5px;color:var(--soft);font-style:italic;margin-top:2px}
+
+  /* journal */
+  .journal{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:20px 22px;
+    margin-top:20px;box-shadow:0 10px 28px -20px var(--shadow)}
+  .journal .jpill{display:inline-block;font-size:12px;letter-spacing:.13em;text-transform:uppercase;
+    font-weight:600;padding:3px 11px;border-radius:999px;background:#e9ddc6;color:#876338;margin-bottom:12px}
+  .journal label{display:block;font-size:12.5px;letter-spacing:.13em;text-transform:uppercase;
+    color:var(--gold);font-weight:600;margin:14px 0 5px}
+  .journal label:first-of-type{margin-top:0}
+  .journal textarea{width:100%;min-height:60px;border:1px solid var(--line);border-radius:10px;
+    background:var(--bg);font-family:var(--serif);font-size:17.5px;color:var(--ink);
+    padding:10px 13px;resize:vertical;line-height:1.5;outline:none;transition:.2s}
+  .journal textarea:focus{border-color:var(--camel)}
+  .jsaved{font-size:13px;color:var(--green);font-style:italic;opacity:0;transition:.3s;margin-top:6px;height:16px}
+  .jsaved.show{opacity:1}
+
+  /* focus collapsible */
+  .focus-toggle{width:100%;font-family:var(--serif);font-size:17px;padding:13px 18px;
+    border:1px solid var(--line);border-radius:12px;background:var(--paper);color:var(--terra-deep);
+    cursor:pointer;text-align:left;display:flex;justify-content:space-between;align-items:center;
+    margin-top:20px;transition:.2s;font-weight:600}
+  .focus-toggle:hover{border-color:var(--camel)}
+  .focus-toggle .arr{transition:.3s;font-size:18px;color:var(--camel)}
+  .focus-toggle.open .arr{transform:rotate(45deg)}
+  .focus-body{max-height:0;overflow:hidden;transition:max-height .5s ease}
+  .focus-body.open{max-height:2400px}
+  .creed{background:linear-gradient(135deg,#f3ead9,#efe3cd);border:1px solid var(--camel);
+    border-radius:12px;padding:16px 20px;margin:12px 0}
+  .creed p{font-size:17.5px;line-height:1.58;color:var(--ink)}
+  .creed b{color:var(--terra-deep)}
+  .capture{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:16px 20px;margin:8px 0}
+  .capture .ch{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:7px;gap:8px;flex-wrap:wrap}
+  .capture .ct{font-size:18px;font-weight:600;color:var(--terra-deep)}
+  .capture .cs{font-size:14px;color:var(--soft);font-style:italic}
+  .capture textarea{width:100%;min-height:90px;border:1px solid var(--line);border-radius:10px;
+    background:var(--bg);font-family:var(--serif);font-size:17px;color:var(--ink);
+    padding:10px 13px;resize:vertical;line-height:1.55;outline:none;transition:.2s}
+  .capture textarea:focus{border-color:var(--camel)}
+  .cap-saved{font-size:13px;color:var(--green);font-style:italic;opacity:0;transition:.3s;margin-top:5px;height:15px}
+  .cap-saved.show{opacity:1}
+  .reset60{background:var(--paper);border:1px dashed var(--terra);border-radius:12px;
+    padding:16px 20px;margin:8px 0;text-align:center}
+  .reset60 .rt{font-size:12px;letter-spacing:.13em;text-transform:uppercase;color:var(--terra);font-weight:600;margin-bottom:6px}
+  .reset60 .rl{font-size:19px;font-style:italic;color:var(--terra-deep);line-height:1.35}
+  .reset60 .rbtn{margin-top:12px;font-family:var(--serif);font-size:15px;background:var(--terra);color:#fff;
+    border:none;border-radius:999px;padding:8px 20px;cursor:pointer;transition:.2s}
+  .reset60 .rbtn:hover{background:var(--terra-deep)}
+  .reset60 .rstep{display:none;font-size:17px;color:var(--soft);font-style:italic;margin-top:10px;line-height:1.5}
+
+  /* generic for non-daily panels */
+  .panel p{font-size:18px;line-height:1.62;margin-bottom:12px}
+
+  /* reset / util */
+  .resetbtn{margin-top:14px;font-family:var(--serif);font-size:15px;color:var(--soft);background:none;
+    border:1px solid var(--line);border-radius:999px;padding:7px 16px;cursor:pointer;transition:.2s}
+  .resetbtn:hover{border-color:var(--terra);color:var(--terra)}
+  .note{font-size:13.5px;color:var(--gold);font-style:italic;margin-top:14px;line-height:1.5}
+  .footer{text-align:center;padding:24px;color:var(--gold);font-size:12px;letter-spacing:.18em;text-transform:uppercase;position:relative;z-index:2}
+  ::selection{background:var(--camel);color:#fff}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="mark">✦</div>
+  <h1>Auryn</h1>
+  <div class="sub">the practice that builds the life — one kept day at a time</div>
+</header>
+
+<nav class="tabs" id="tabs">
+  <button class="tab on" data-p="daily">Today</button>
+  <button class="tab" data-p="weekly">This Week</button>
+  <button class="tab" data-p="quarterly">Quarter</button>
+  <button class="tab" data-p="yearly">Year</button>
+  <button class="tab" data-p="phases">The Arc</button>
+</nav>
+
+<section class="panel on" id="daily"></section>
+<section class="panel" id="weekly"></section>
+<section class="panel" id="quarterly"></section>
+<section class="panel" id="yearly"></section>
+<section class="panel" id="phases"></section>
+
+<div class="footer">In Full Bloom · daily ritual</div>
+
+<script>
+/* ─── storage ─── */
+const mem={};
+const store={
+  get(k){try{const v=localStorage.getItem(k);return v!==null?v:(k in mem?mem[k]:null);}catch(e){return k in mem?mem[k]:null;}},
+  set(k,v){try{localStorage.setItem(k,v);}catch(e){mem[k]=v;}}
+};
+
+/* ─── keys ─── */
+const now=new Date();
+const pad=n=>String(n).padStart(2,'0');
+const dayKey=now.getFullYear()+'-'+pad(now.getMonth()+1)+'-'+pad(now.getDate());
+function weekKey(d){const t=new Date(d);t.setHours(0,0,0,0);t.setDate(t.getDate()+3-((t.getDay()+6)%7));
+  const w=new Date(t.getFullYear(),0,4);return t.getFullYear()+'-W'+pad(1+Math.round(((t-w)/86400000-3+((w.getDay()+6)%7))/7));}
+const wk=weekKey(now);
+const qtr=now.getFullYear()+'-Q'+(Math.floor(now.getMonth()/3)+1);
+const yr=String(now.getFullYear());
+const tick='<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
+
+/* ─── DATA ─── */
+const DAILY=[
+  {h:"The morning foundation",sub:"the hours that decide everything that follows",items:[
+    ["Sacred hour — before the world begins","no phone in the first hour; matcha, silence, the mind set on your own terms"],
+    ["Today's ONE needle-mover named","the single thing that makes today a win toward the goal"],
+    ["Moved the body","run, climb, or strengthen — non-negotiable; this is where the anxiety metabolizes"],
+  ]},
+  {h:"The work — where the number is made",sub:"leverage first, then execution",items:[
+    ["Deep Work Block I — 3–4 protected leverage hours","phone in another room, notifications off, one task; this is where $25M is actually built"],
+    ["Deep Work Block II — execution & decisions","shipping, meetings that matter, moving things across the line"],
+    ["One deliberate relationship touch","the sponsor, mentor, peer — opportunity travels through people; tend this daily"],
+    ["Optimized one decision for ownership","asked 'what do I own?' — not just 'what does it pay?'"],
+  ]},
+  {h:"The evening — the point of the building",sub:"life, close, and reset",items:[
+    ["Fully present with the few who matter","work set down — the table, the people, the actual life"],
+    ["Let one good thing in — without earning it","rest, kindness, pleasure; for her this is the hardest discipline"],
+    ["Documented the day — work, decisions, one win","the habit that compounds and protects; always have the record"],
+    ["Set tomorrow's needle-mover · lights out by 10:30","tomorrow's dawn hour depends on tonight's close"],
+  ]},
+];
+
+const WEEKLY=[
+  {h:"Build & aim",sub:"",items:[
+    ["Set the week's three priorities (Monday)",""],
+    ["Protected at least three heavy deep-work days",""],
+    ["Moved the highest-leverage project forward","the build, the equity work, the mastery"],
+  ]},
+  {h:"Connect & maintain",sub:"",items:[
+    ["One real in-person connection with the inner circle",""],
+    ["The network touch — sponsor, mentor, or key peer",""],
+  ]},
+  {h:"Review & restore",sub:"",items:[
+    ["Friday strategic review — what was built, what's next",""],
+    ["Weekly money glance — savings on track, equity accumulating",""],
+    ["One long restorative session — the cook, the hike, the climb",""],
+    ["Rest, then set up the coming week (Sunday)",""],
+  ]},
+];
+
+const QUARTERLY=[
+  {h:"The 90-day sprint",sub:"four sharp sprints beat twelve vague months",items:[
+    ["Named ONE dominant objective for the quarter","a skill milestone, equity move, build milestone, or financial target"],
+    ["Broke it into monthly checkpoints",""],
+    ["Reviewed progress at each month's end",""],
+    ["Honest assessment at quarter's end — hit or miss, and why",""],
+    ["Set the next quarter's single objective",""],
+  ]},
+  {h:"The quarterly money & equity review",sub:"the headline metric is what I own",items:[
+    ["Updated equity owned — the number that builds the number",""],
+    ["Checked invested net worth vs savings-rate target",""],
+    ["Asked: am I more equipped to command equity than last quarter?",""],
+  ]},
+];
+
+const YEARLY=[
+  {h:"The annual reckoning — the keystone",sub:"in solitude, with uncomfortable honesty",items:[
+    ["Assessed the whole life against the $25M goal — on path, or drifting?",""],
+    ["Decided the year's ONE big bet","the leap, the role change, the build milestone, the investment"],
+    ["Planned the year's deliberate major journey",""],
+    ["Acted on the truth — including the courage to change course","this single discipline is the engine of the whole plan"],
+  ]},
+  {h:"The yearly scoreboard",sub:"review honestly, once a year",items:[
+    ["Equity owned — grew this year?",""],
+    ["Invested net worth — on the compounding curve?",""],
+    ["Rare skill & reputation — measurably stronger?",""],
+    ["Substantial relationships — deepened, not just counted?",""],
+    ["Bets taken — did I leap, or let caution win?","zero bets is the only true failure on this path"],
+  ]},
+];
+
+const PHASES=[
+  {h:"Phase I · 26–28 · Foundation & Reframe",sub:"become undeniable, rewire the goal",items:[
+    ["Mastered the domain — became the person ops runs through",""],
+    ["Built a portfolio of documented, demonstrable wins",""],
+    ["Automated 40%+ of take-home into investments",""],
+    ["Reframed ambition from income to ownership","learned cap tables, equity terms, how value is actually captured"],
+    ["Applied to top MBA programs","the equity on-ramp, not just the credential"],
+    ["Built the war-chest and the network seed",""],
+  ]},
+  {h:"Phase II · 28–31 · The Equity Pivot",sub:"leave safety, enter the ownership game",items:[
+    ["Used the MBA to enter an equity-bearing role",""],
+    ["Took the first concentrated position — equity-heavy startup seat",""],
+    ["Moved through the Saturn return clarified and sovereign",""],
+    ["Kept the savings engine running beneath the bigger bets",""],
+  ]},
+  {h:"Phase III · 31–37 · The Operator-Builder",sub:"stack equity events; find the thing to build",items:[
+    ["Became a senior equity-holding operator (or started the advisory)",""],
+    ["Aimed at the first meaningful equity event / exit",""],
+    ["Mined the operational problem that repeats across clients",""],
+    ["Began productizing it — the rails beneath commerce",""],
+    ["Converted the first win: locked a diversified base, then concentrated again",""],
+  ]},
+  {h:"Phase IV · 37–46 · The Build & Compound",sub:"ride the concentrated bet to the number",items:[
+    ["Built (or co-built) the infrastructure company as the operator",""],
+    ["Stacked outcomes — one home run or several solid exits",""],
+    ["Let compounding finish the job on the large base",""],
+    ["Converted wins into permanent, diversified wealth",""],
+    ["Arrived sovereign — $25M+, built by my own hand",""],
+  ]},
+];
+
+const CONFIG={
+  weekly:{data:WEEKLY,key:'cl_weekly_'+wk,title:'This Week',lede:'Build, connect, review, restore — so the whole week is covered.',date:'Week of '+now.toLocaleDateString(undefined,{month:'long',day:'numeric'})},
+  quarterly:{data:QUARTERLY,key:'cl_qtr_'+qtr,title:'This Quarter',lede:'The 90-day sprint and the equity review.',date:qtr.replace('-Q',' · Q')},
+  yearly:{data:YEARLY,key:'cl_year_'+yr,title:'This Year',lede:'The annual reckoning and the scoreboard — the keystone of the plan.',date:yr},
+  phases:{data:PHASES,key:'cl_phases',title:'The Arc',lede:'The long milestones. Check these off across the years — they do not reset.',date:'the twenty-year arc'},
+};
+
+/* ─── generic panel renderer ─── */
+function renderPanel(panelId){
+  const cfg=CONFIG[panelId];const panel=document.getElementById(panelId);
+  const state=JSON.parse(store.get(cfg.key)||'{}');
+  let total=0,done=0;
+  let html=`<h2>${cfg.title}</h2><div class="lede">${cfg.lede}</div>
+    <p style="font-size:15px;color:var(--gold);font-style:italic;margin-bottom:16px">${cfg.date}</p>
+    <div class="progress"><div class="ptrack"><div class="pfill" id="pf_${panelId}" style="width:0%"></div></div><div class="ppct" id="pp_${panelId}">0%</div></div>`;
+  cfg.data.forEach((g,gi)=>{
+    html+=`<div class="grp"><h3>${g.h}</h3>${g.sub?`<div class="grp-sub">${g.sub}</div>`:''} `;
+    g.items.forEach((it,ii)=>{
+      const id=gi+'_'+ii,isDone=!!state[id];total++;if(isDone)done++;
+      html+=`<div class="item${isDone?' done':''}" data-id="${id}">
+        <div class="box">${tick}</div>
+        <div class="itext"><div class="it">${it[0]}${it[1]?`<span class="is">${it[1]}</span>`:''}</div></div></div>`;
+    });
+    html+='</div>';
+  });
+  html+=`<button class="resetbtn" data-reset="${panelId}">reset this list</button><div class="note" id="note_${panelId}"></div>`;
+  panel.innerHTML=html;
+  setBar(panelId,done,total);
+  addNote(panelId);
+}
+function setBar(pid,done,total){
+  const pct=total?Math.round(done/total*100):0;
+  const f=document.getElementById('pf_'+pid),p=document.getElementById('pp_'+pid);
+  if(f)setTimeout(()=>f.style.width=pct+'%',60);if(p)p.textContent=pct+'%';
+}
+function addNote(pid){
+  let ok=false;try{localStorage.setItem('t','1');localStorage.removeItem('t');ok=true;}catch(e){}
+  const n=document.getElementById('note_'+pid);if(n)n.textContent=ok
+    ?'Saves automatically. Daily/weekly/quarterly/yearly lists reset each period; the arc persists.'
+    :'Download and open in your browser to save progress permanently.';
+}
+
+/* ─── daily tab renderer ─── */
+function renderDaily(){
+  const panel=document.getElementById('daily');
+  const state=JSON.parse(store.get('cl_daily_'+dayKey)||'{}');
+  const fstate=JSON.parse(store.get('cl_focus_'+dayKey)||'{}');
+  const loopsVal=store.get('cl_loops')||'';
+  const northVal=store.get('cl_north')||'';
+
+  /* count for streak */
+  const allItems=DAILY.flatMap(g=>g.items);
+  const doneCount=allItems.filter((_,i)=>state[Math.floor(i/10)+'_'+(i%10)]).length;
+  // recalculate properly
+  let dailyTotal=0,dailyDone=0;
+  DAILY.forEach((g,gi)=>g.items.forEach((_,ii)=>{dailyTotal++;if(state[gi+'_'+ii])dailyDone++;}));
+  const pct=dailyTotal?Math.round(dailyDone/dailyTotal*100):0;
+
+  let html=`
+    <div class="northstar">
+      <label>My North Star — the life I am building toward</label>
+      <textarea id="northInput" rows="1" placeholder="Write the one sentence that names what all of this is for…">${northVal.replace(/</g,'&lt;')}</textarea>
+    </div>
+    <div class="dayrow">
+      <div class="today-label">${now.toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'})}</div>
+      <div class="streak"><span style="color:var(--camel)">✦</span> <b id="streakNum">0</b> <span id="streakWord">days kept</span></div>
+    </div>
+    <div class="progress"><div class="ptrack"><div class="pfill" id="pf_daily" style="width:0%"></div></div><div class="ppct" id="pp_daily">${pct}%</div></div>`;
+
+  DAILY.forEach((g,gi)=>{
+    html+=`<div class="grp"><h3>${g.h}</h3><div class="grp-sub">${g.sub}</div>`;
+    g.items.forEach((it,ii)=>{
+      const id=gi+'_'+ii,isDone=!!state[id];
+      html+=`<div class="item${isDone?' done':''}" data-id="${id}" data-src="daily">
+        <div class="box">${tick}</div>
+        <div class="itext"><div class="it">${it[0]}${it[1]?`<span class="is">${it[1]}</span>`:''}</div></div></div>`;
+    });
+    html+='</div>';
+  });
+
+  html+=`
+    <div class="journal">
+      <span class="jpill">the manifest journal</span>
+      <label>Today's one needle-moving action toward the goal</label>
+      <textarea id="j_action" placeholder="The single most important thing I will move forward today…"></textarea>
+      <label>A win, however small — or something I'm grateful for</label>
+      <textarea id="j_win" placeholder="What went right…"></textarea>
+      <label>What I'm building toward, in my own words today</label>
+      <textarea id="j_vision" placeholder="Reconnect with the why…"></textarea>
+      <div class="jsaved" id="jsaved"></div>
+    </div>
+
+    <button class="focus-toggle" id="focusToggle">
+      <span>Focus system <span style="font-size:14px;color:var(--gold);font-weight:400;margin-left:6px">· firing on all cylinders</span></span>
+      <span class="arr">+</span>
+    </button>
+    <div class="focus-body" id="focusBody">
+      <div class="creed"><p><b>I will not out-discipline distraction — I out-structure it.</b> Willpower runs out daily. The focused remove the moments where resistance is needed, not just resist in the moment. And my real risk is over-functioning — so my focus discipline is also about permission to stop, subtract, and protect the few right things.</p></div>`;
+
+  const FOCUS=[
+    {h:"Before — design the day",sub:"distraction is beaten by structure, not willpower",items:[
+      ["Today's ONE needle-mover was named last night","I start already aimed — no ambiguity for distraction to fill"],
+      ["The deep-work block is on the calendar as unmovable","a real appointment with myself, defended like any other"],
+      ["Slept by 10:30 / woke for the dawn hour","a tired brain cannot focus no matter the intent"],
+      ["Moved the body — the energy that makes focus possible","focus is energy management before it is time management"],
+    ]},
+    {h:"During — remove the friction",sub:"out-structure it",items:[
+      ["Phone in another room — not face-down, another room",""],
+      ["Notifications fully off; one browser, one tab, one task",""],
+      ["Cleared the open loops into the capture box below first","a mind holding stray tasks cannot stay present"],
+    ]},
+    {h:"The recovery skill",sub:"everyone drifts — the skill is the return",items:[
+      ["When I drifted, I took one breath and returned — no self-criticism","the self-criticism is itself a distraction"],
+    ]},
+    {h:"The real risk — over-functioning",sub:"my distraction is too much, not too little",items:[
+      ["Said no to at least one non-priority today",""],
+      ["Stopped at the point of useful energy — didn't grind past it",""],
+      ["Protected the few right things; cut the rest",""],
+    ]},
+  ];
+
+  let ftotal=0,fdone=0;
+  FOCUS.forEach((g,gi)=>g.items.forEach((_,ii)=>{ftotal++;if(fstate[gi+'_'+ii])fdone++;}));
+  html+=`<div class="progress" style="margin:12px 0 10px"><div class="ptrack"><div class="pfill" id="pf_focus" style="width:${ftotal?Math.round(fdone/ftotal*100):0}%"></div></div><div class="ppct" id="pp_focus">${ftotal?Math.round(fdone/ftotal*100):0}%</div></div>`;
+
+  FOCUS.forEach((g,gi)=>{
+    html+=`<div class="grp"><h3 style="font-size:19px;margin:14px 0 4px">${g.h}</h3><div class="grp-sub">${g.sub}</div>`;
+    g.items.forEach((it,ii)=>{
+      const id=gi+'_'+ii,isDone=!!fstate[id];
+      html+=`<div class="item${isDone?' done':''}" data-id="${id}" data-src="focus">
+        <div class="box">${tick}</div>
+        <div class="itext"><div class="it">${it[0]}${it[1]?`<span class="is">${it[1]}</span>`:''}</div></div></div>`;
+    });
+    html+='</div>';
+  });
+
+  html+=`
+    <div class="reset60" style="margin-top:8px">
+      <div class="rt">the 60-second reset</div>
+      <div class="rl">Caught drifting? Don't spiral. Recover.</div>
+      <button class="rbtn" id="r60btn">walk me back ✦</button>
+      <div class="rstep" id="r60step"></div>
+    </div>
+    <div class="capture">
+      <div class="ch"><span class="ct">Open loops</span><span class="cs">empty your head so it can stay present</span></div>
+      <textarea id="loopBox" placeholder="Dump every stray task, worry, or idea here the moment it appears — get it out of your head and back on the one thing…">${loopsVal.replace(/</g,'&lt;')}</textarea>
+      <div class="cap-saved" id="capSaved">saved ✦</div>
+    </div>
+    <button class="resetbtn" id="resetDaily" style="margin-top:12px">reset today</button>
+    <div class="note" id="dailyNote"></div>
+  </div>`;
+
+  panel.innerHTML=html;
+  setTimeout(()=>{
+    const pf=document.getElementById('pf_daily');if(pf)pf.style.width=pct+'%';
+  },60);
+
+  /* wire north star */
+  const ns=document.getElementById('northInput');
+  ns.style.height='auto';ns.style.height=ns.scrollHeight+'px';
+  ns.addEventListener('input',()=>{store.set('cl_north',ns.value);ns.style.height='auto';ns.style.height=ns.scrollHeight+'px';});
+
+  /* wire journal */
+  const jkeys=['j_action','j_win','j_vision'];
+  const jsaved=document.getElementById('jsaved');let jt;
+  jkeys.forEach(k=>{
+    const el=document.getElementById(k);
+    const saved=JSON.parse(store.get('cl_journal_'+dayKey)||'{}');
+    el.value=saved[k]||'';
+    el.addEventListener('input',()=>{
+      const s=JSON.parse(store.get('cl_journal_'+dayKey)||'{}');s[k]=el.value;
+      store.set('cl_journal_'+dayKey,JSON.stringify(s));
+      jsaved.classList.add('show');clearTimeout(jt);jt=setTimeout(()=>jsaved.classList.remove('show'),1300);
+    });
+  });
+
+  /* focus toggle */
+  const ft=document.getElementById('focusToggle'),fb=document.getElementById('focusBody');
+  ft.addEventListener('click',()=>{ft.classList.toggle('open');fb.classList.toggle('open');});
+
+  /* 60-second reset */
+  const steps=["1 / 4 — Stop. One slow breath. No judgment.","2 / 4 — Name the distraction in one word. Let it go.","3 / 4 — If it's a real task, dump it in the capture box below.","4 / 4 — Look at today's ONE needle-mover. Begin again."];
+  let si=0;const rb=document.getElementById('r60btn'),rs=document.getElementById('r60step');
+  rb.addEventListener('click',()=>{rs.style.display='block';rs.textContent=steps[si];si=(si+1)%steps.length;rb.textContent=si===0?'walk me back ✦':'next ✦';});
+
+  /* capture / loops */
+  const lb=document.getElementById('loopBox'),cs=document.getElementById('capSaved');let lt;
+  lb.addEventListener('input',()=>{store.set('cl_loops',lb.value);cs.classList.add('show');clearTimeout(lt);lt=setTimeout(()=>cs.classList.remove('show'),1300);});
+
+  /* reset daily */
+  document.getElementById('resetDaily').addEventListener('click',()=>{
+    store.set('cl_daily_'+dayKey,'{}');store.set('cl_focus_'+dayKey,'{}');
+    renderDaily();updateStreak();
+  });
+
+  /* note */
+  let ok=false;try{localStorage.setItem('t','1');localStorage.removeItem('t');ok=true;}catch(e){}
+  document.getElementById('dailyNote').textContent=ok
+    ?'Your checklist, journal, north star, streak and open loops save automatically in this browser.'
+    :'Download and open in your browser to save progress permanently.';
+
+  updateStreak();
+}
+
+/* ─── streak ─── */
+function dayComplete(k){
+  const s=JSON.parse(store.get('cl_daily_'+k)||'{}');
+  let total=0,done=0;DAILY.forEach((g,gi)=>g.items.forEach((_,ii)=>{total++;if(s[gi+'_'+ii])done++;}));
+  return done>=Math.ceil(total*0.6);
+}
+function updateStreak(){
+  let streak=0;const d=new Date();
+  if(!dayComplete(dayKey))d.setDate(d.getDate()-1);
+  for(;;){
+    const k=d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+    if(dayComplete(k)){streak++;d.setDate(d.getDate()-1);}else break;
+    if(streak>3650)break;
+  }
+  const sn=document.getElementById('streakNum'),sw=document.getElementById('streakWord');
+  if(sn)sn.textContent=streak;if(sw)sw.textContent=streak===1?'day kept':'days kept';
+  store.set('cl_streak',String(streak));
+}
+
+/* ─── event delegation for item clicks ─── */
+document.body.addEventListener('click',e=>{
+  const item=e.target.closest('.item[data-id]');
+  if(item){
+    const panel=item.closest('.panel');if(!panel)return;
+    const pid=panel.id;
+    const src=item.dataset.src;
+    const id=item.dataset.id;
+    if(src==='focus'){
+      const fstate=JSON.parse(store.get('cl_focus_'+dayKey)||'{}');
+      fstate[id]=!fstate[id];store.set('cl_focus_'+dayKey,JSON.stringify(fstate));
+      item.classList.toggle('done',fstate[id]);
+      let total=0,done=0;
+      [4,3,1,3].forEach((c,gi)=>{for(let ii=0;ii<c;ii++){total++;if(fstate[gi+'_'+ii])done++;}});
+      const pct=Math.round(done/total*100);
+      const pf=document.getElementById('pf_focus'),pp=document.getElementById('pp_focus');
+      if(pf)pf.style.width=pct+'%';if(pp)pp.textContent=pct+'%';
+      return;
+    }
+    if(pid==='daily'||src==='daily'){
+      const state=JSON.parse(store.get('cl_daily_'+dayKey)||'{}');
+      state[id]=!state[id];store.set('cl_daily_'+dayKey,JSON.stringify(state));
+      item.classList.toggle('done',state[id]);
+      let total=0,done=0;DAILY.forEach((g,gi)=>g.items.forEach((_,ii)=>{total++;if(state[gi+'_'+ii])done++;}));
+      const pct=Math.round(done/total*100);
+      const pf=document.getElementById('pf_daily'),pp=document.getElementById('pp_daily');
+      if(pf)pf.style.width=pct+'%';if(pp)pp.textContent=pct+'%';
+      updateStreak();return;
+    }
+    const cfg=CONFIG[pid];if(!cfg)return;
+    const state=JSON.parse(store.get(cfg.key)||'{}');
+    state[id]=!state[id];store.set(cfg.key,JSON.stringify(state));
+    item.classList.toggle('done',state[id]);
+    let total=0,done=0;cfg.data.forEach((g,gi)=>g.items.forEach((_,ii)=>{total++;if(state[gi+'_'+ii])done++;}));
+    setBar(pid,done,total);
+    return;
+  }
+  const rb=e.target.closest('[data-reset]');
+  if(rb){const pid=rb.dataset.reset;store.set(CONFIG[pid].key,'{}');renderPanel(pid);}
+});
+
+/* ─── tabs ─── */
+document.getElementById('tabs').addEventListener('click',e=>{
+  if(!e.target.classList.contains('tab'))return;
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'));
+  e.target.classList.add('on');
+  const pid=e.target.dataset.p;document.getElementById(pid).classList.add('on');
+  window.scrollTo({top:0,behavior:'smooth'});
+});
+
+/* ─── init ─── */
+renderDaily();
+Object.keys(CONFIG).forEach(k=>renderPanel(k));
+</script>
+
+<div id="installBanner" style="display:none;position:fixed;bottom:24px;left:50%;transform:translateX(-50%);
+  background:#a8674a;color:#fff;padding:13px 24px;border-radius:999px;
+  font-family:'Cormorant Garamond',Georgia,serif;font-size:16px;
+  box-shadow:0 8px 28px rgba(90,70,50,.35);z-index:999;cursor:pointer;white-space:nowrap;
+  align-items:center;gap:10px">
+  <span>✦</span><span>Add to Home Screen</span>
+  <span id="bannerClose" style="font-size:20px;margin-left:4px;opacity:.7">×</span>
+</div>
+<script>
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>{
+    navigator.serviceWorker.register('sw.js')
+      .then(r=>console.log('SW:',r.scope))
+      .catch(e=>console.warn('SW failed:',e));
+  });
+}
+let deferredPrompt;
+const banner=document.getElementById('installBanner');
+document.getElementById('bannerClose').addEventListener('click',e=>{e.stopPropagation();banner.style.display='none';});
+window.addEventListener('beforeinstallprompt',e=>{
+  e.preventDefault();deferredPrompt=e;banner.style.display='flex';
+  banner.addEventListener('click',async()=>{
+    banner.style.display='none';
+    deferredPrompt.prompt();
+    await deferredPrompt.userChoice;
+    deferredPrompt=null;
+  },{once:true});
+});
+window.addEventListener('appinstalled',()=>{banner.style.display='none';});
+</script>
+</body>
+</html>
