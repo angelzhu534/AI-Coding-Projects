@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>In Full Bloom — An Interactive Life</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f6f1e7;--ink:#3a322a;--soft:#6b5d4d;--terra:#a8674a;--terra-deep:#8a5a3c;
+    --camel:#c8a882;--gold:#bf9b6f;--line:#dcccb0;--paper:#fbf7ee;--shadow:rgba(90,70,50,.16);
+    --serif:"Cormorant Garamond",Georgia,serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    background:radial-gradient(1200px 600px at 80% -10%,#fbf3e4 0%,transparent 60%),
+      radial-gradient(900px 500px at -10% 20%,#f3ead9 0%,transparent 55%),var(--bg);
+    color:var(--ink);font-family:var(--serif);font-size:18px;line-height:1.5;
+    -webkit-font-smoothing:antialiased;overflow-x:hidden;
+  }
+  body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:1;opacity:.05;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+  .hero{position:relative;min-height:100vh;display:flex;flex-direction:column;align-items:center;
+    justify-content:center;text-align:center;padding:40px 24px;z-index:2}
+  .bloom{width:160px;height:160px;margin-bottom:18px;animation:rise 1.6s cubic-bezier(.2,.7,.2,1) both}
+  .hero h1{font-size:clamp(54px,11vw,128px);font-weight:600;line-height:.95;color:var(--terra-deep);
+    animation:rise 1.2s .15s cubic-bezier(.2,.7,.2,1) both}
+  .hero .sub{font-style:italic;font-size:clamp(18px,2.6vw,28px);color:var(--terra);margin-top:14px;
+    animation:rise 1.2s .3s cubic-bezier(.2,.7,.2,1) both}
+  .hero .chart{margin-top:30px;font-size:14px;letter-spacing:.14em;text-transform:uppercase;color:var(--soft);
+    max-width:680px;line-height:2.1;animation:rise 1.2s .45s both}
+  .hero .birth{margin-top:8px;font-size:13px;letter-spacing:.2em;color:var(--gold);text-transform:uppercase;
+    animation:rise 1.2s .55s both}
+  .scrollcue{margin-top:50px;font-style:italic;color:var(--soft);font-size:17px;opacity:.85;
+    animation:rise 1.2s .7s both,float 2.6s 1.6s ease-in-out infinite}
+  .scrollcue span{display:block;font-size:24px;margin-top:2px;color:var(--camel)}
+  @keyframes rise{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(7px)}}
+
+  .controls{position:sticky;top:0;z-index:30;backdrop-filter:blur(9px);
+    background:linear-gradient(to bottom,rgba(246,241,231,.96),rgba(246,241,231,.82));
+    border-bottom:1px solid var(--line);padding:11px 18px;display:flex;gap:8px;align-items:center;
+    justify-content:center;flex-wrap:wrap}
+  .controls .lbl{font-style:italic;color:var(--soft);font-size:15px;margin-right:4px}
+  .chip{font-family:var(--serif);font-size:15px;padding:5px 14px;border-radius:999px;cursor:pointer;
+    border:1px solid var(--line);background:var(--paper);color:var(--soft);transition:.25s}
+  .chip:hover{border-color:var(--camel);color:var(--terra)}
+  .chip.on{background:var(--terra);border-color:var(--terra);color:#fff;box-shadow:0 4px 12px var(--shadow)}
+
+  .era{max-width:1080px;margin:0 auto;padding:64px 24px 6px;position:relative;z-index:2}
+  .era h2{font-size:clamp(36px,6vw,66px);font-weight:600;color:var(--terra-deep);line-height:1}
+  .era .erasub{font-style:italic;color:var(--terra);font-size:clamp(17px,2.2vw,23px);margin-top:6px}
+  .era .erablurb{color:var(--soft);max-width:740px;margin-top:14px;font-size:19px;line-height:1.55}
+
+  .timeline{max-width:1080px;margin:0 auto;padding:18px 24px 30px;position:relative;z-index:2}
+  .spine{position:absolute;left:max(44px,calc(50% - 480px));top:0;bottom:0;width:2px;
+    background:linear-gradient(var(--camel),var(--line));opacity:.6}
+  .node{position:relative;padding:14px 0 14px 78px;opacity:0;transform:translateY(30px);
+    transition:opacity .7s,transform .7s}
+  .node.show{opacity:1;transform:translateY(0)}
+  .node.hidden{display:none}
+  .dot{position:absolute;left:max(36px,calc(50% - 488px));top:24px;width:18px;height:18px;border-radius:50%;
+    background:var(--paper);border:2px solid var(--camel);z-index:3;transition:.3s}
+  .node:hover .dot{transform:scale(1.25);border-color:var(--terra)}
+  .age-badge{position:absolute;left:max(0px,calc(50% - 524px));top:18px;width:34px;text-align:right;
+    font-size:15px;color:var(--gold);font-weight:600}
+  .yr{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);opacity:.85}
+  .card{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:20px 22px;
+    box-shadow:0 10px 30px -18px var(--shadow);cursor:pointer;transition:.3s;position:relative;overflow:hidden}
+  .card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--camel);opacity:.5;transition:.3s}
+  .card:hover{box-shadow:0 18px 40px -20px var(--shadow);border-color:var(--camel)}
+  .card:hover::before{opacity:1}
+  .card .tags{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:9px}
+  .tag{font-size:12px;letter-spacing:.13em;text-transform:uppercase;padding:3px 10px;border-radius:999px;font-weight:600}
+  .tag.career{background:#e9ddc6;color:#876338}
+  .tag.love{background:#f0d9cf;color:#9d5238}
+  .tag.astro{background:#dfe2d0;color:#5c6a3e}
+  .tag.life{background:#e3dcc4;color:#6f6433}
+  .tag.travel{background:#d3e0e2;color:#3f6168}
+  .tag.major{background:var(--terra);color:#fff}
+  .card h3{font-size:25px;font-weight:600;color:var(--ink);line-height:1.12}
+  .card .teaser{color:var(--soft);font-style:italic;margin-top:5px;font-size:18px}
+  .card .detail{max-height:0;overflow:hidden;transition:max-height .55s ease,margin .4s,opacity .4s;opacity:0}
+  .card.open .detail{max-height:2600px;margin-top:14px;opacity:1}
+  .card .detail p{font-size:18.5px;line-height:1.62;color:var(--ink);margin-bottom:11px}
+  .card .detail .astroline{margin-top:6px;padding:11px 14px;border-radius:9px;background:#eef0e2;
+    border:1px solid #d7dcc2;color:#5c6a3e;font-size:16px;display:flex;gap:10px;align-items:flex-start;line-height:1.45}
+  .card .detail .astroline b{color:#46522b;font-weight:600}
+  .card .detail .travline{margin-top:6px;padding:11px 14px;border-radius:9px;background:#dceaec;
+    border:1px solid #bcd3d6;color:#3f6168;font-size:16px;display:flex;gap:10px;align-items:flex-start;line-height:1.45}
+  .card .detail .travline b{color:#2d4d53;font-weight:600}
+  .card .expand{margin-top:8px;font-size:14px;letter-spacing:.12em;text-transform:uppercase;color:var(--terra);opacity:.7;transition:.3s}
+  .card:hover .expand{opacity:1}
+  .card.open .expand{color:var(--gold)}
+  @media(min-width:980px){
+    .spine{left:50%}
+    .node{width:50%;padding-left:0;padding-right:56px}
+    .node:nth-child(even){margin-left:50%;padding-right:0;padding-left:56px}
+    .dot{left:auto;right:-9px}.node:nth-child(even) .dot{right:auto;left:-9px}
+    .age-badge{left:auto;right:-92px;width:48px;text-align:left;top:20px}
+    .node:nth-child(even) .age-badge{right:auto;left:-92px;text-align:right}
+  }
+
+  .odds{max-width:900px;margin:30px auto 0;padding:70px 24px 40px;position:relative;z-index:2}
+  .odds h2{font-size:clamp(34px,6vw,60px);font-weight:600;color:var(--terra-deep);line-height:1}
+  .odds .erasub{font-style:italic;color:var(--terra);font-size:clamp(17px,2.2vw,22px);margin-top:6px}
+  .odds .intro{color:var(--soft);font-size:19px;line-height:1.6;margin:16px 0 30px;max-width:760px}
+  .bar{margin-bottom:18px;background:var(--paper);border:1px solid var(--line);border-radius:12px;
+    padding:15px 18px;box-shadow:0 8px 24px -18px var(--shadow);cursor:pointer;transition:.25s}
+  .bar:hover{border-color:var(--camel)}
+  .bar .top{display:flex;justify-content:space-between;align-items:baseline;gap:14px}
+  .bar .label{font-size:20px;font-weight:600;color:var(--ink)}
+  .bar .pct{font-size:24px;font-weight:700;color:var(--terra);font-variant-numeric:tabular-nums;white-space:nowrap}
+  .track{height:9px;border-radius:6px;background:#e7dcc6;margin-top:10px;overflow:hidden}
+  .fill{height:100%;border-radius:6px;width:0;transition:width 1.1s cubic-bezier(.2,.7,.2,1);
+    background:linear-gradient(90deg,var(--camel),var(--terra))}
+  .bar .why{max-height:0;overflow:hidden;opacity:0;transition:max-height .45s,opacity .4s,margin .4s;
+    color:var(--soft);font-size:17px;line-height:1.55}
+  .bar.open .why{max-height:600px;opacity:1;margin-top:12px}
+  .bar .cue{font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-top:9px;opacity:.8}
+  .verdict{margin-top:34px;padding:26px 28px;border-radius:16px;background:linear-gradient(135deg,#f3ead9,#efe3cd);
+    border:1px solid var(--camel)}
+  .verdict h3{font-size:27px;color:var(--terra-deep);font-weight:600;margin-bottom:10px}
+  .verdict p{color:var(--ink);font-size:18.5px;line-height:1.62;margin-bottom:10px}
+  .verdict .floor{font-style:italic;color:var(--terra)}
+
+  .paths{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:6px 0 28px}
+  @media(max-width:720px){.paths{grid-template-columns:1fr}}
+  .path{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:20px 22px;
+    box-shadow:0 8px 24px -18px var(--shadow)}
+  .path .ph{font-size:14px;letter-spacing:.13em;text-transform:uppercase;color:var(--gold);font-weight:600}
+  .path h4{font-size:24px;font-weight:600;color:var(--terra-deep);margin:4px 0 8px;line-height:1.1}
+  .path p{font-size:17px;line-height:1.55;color:var(--soft)}
+  .path .big{font-size:40px;font-weight:700;color:var(--terra);line-height:1;margin:8px 0 4px;font-variant-numeric:tabular-nums}
+  .candid{margin-top:14px;padding:24px 26px;border-radius:16px;background:linear-gradient(135deg,#ece3d2,#f0d9cf);
+    border:1px solid var(--terra)}
+  .candid h3{font-size:25px;color:var(--terra-deep);font-weight:600;margin-bottom:10px}
+  .candid p{color:var(--ink);font-size:18px;line-height:1.6;margin-bottom:10px}
+  .candid b{color:var(--terra-deep);font-weight:600}
+  .candid .turn{font-style:italic;color:var(--terra)}
+
+  .domains{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:8px}
+  @media(max-width:720px){.domains{grid-template-columns:1fr}}
+  .dom{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:22px 24px;
+    box-shadow:0 8px 24px -18px var(--shadow);position:relative;overflow:hidden;transition:.3s}
+  .dom::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--camel);opacity:.6}
+  .dom:hover{transform:translateY(-3px);border-color:var(--camel);box-shadow:0 16px 36px -20px var(--shadow)}
+  .dom h4{font-size:26px;font-weight:600;color:var(--terra-deep);margin-bottom:3px}
+  .dom .plac{font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:12px}
+  .dom .lean{color:var(--ink);font-size:17.5px;line-height:1.55;margin-bottom:12px}
+  .dom .lean b{color:var(--terra);font-weight:600}
+  .dom .edge{font-size:16px;line-height:1.5;color:var(--soft);font-style:italic;
+    padding-top:11px;border-top:1px solid var(--line)}
+  .dom .edge b{font-style:normal;color:var(--terra-deep);font-weight:600;letter-spacing:.06em;
+    text-transform:uppercase;font-size:12px;display:block;margin-bottom:3px}
+
+  .coda{max-width:760px;margin:0 auto;padding:70px 24px 110px;text-align:center;position:relative;z-index:2}
+  .coda .mark{font-size:30px;color:var(--camel)}
+  .coda blockquote{font-style:italic;font-size:clamp(22px,3.4vw,32px);color:var(--terra-deep);line-height:1.4;margin:24px 0}
+  .coda p{color:var(--soft);font-size:19px;line-height:1.6;margin-top:14px}
+  .footer{text-align:center;padding:30px;color:var(--gold);font-size:13px;letter-spacing:.2em;text-transform:uppercase;position:relative;z-index:2}
+  ::selection{background:var(--camel);color:#fff}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <svg class="bloom" viewBox="0 0 200 200" aria-hidden="true">
+    <g transform="translate(100,100)"><g id="petals"></g>
+      <circle r="15" fill="#8a5a3c"/><circle r="9" fill="#a8674a"/><circle r="4" fill="#e9d9bf"/></g>
+  </svg>
+  <h1>In&nbsp;Full&nbsp;Bloom</h1>
+  <div class="sub">an interactive life — woven from the stars she was born under</div>
+  <div class="chart">Sun in Libra · Moon &amp; Mars in Capricorn · Taurus Rising<br>Saturn conjunct the Ascendant · Mercury in Scorpio · Venus in Virgo</div>
+  <div class="birth">17 October 1999 · 7:00 PM · Berkeley, California</div>
+  <div class="scrollcue">follow the timeline<span>↓</span></div>
+</header>
+
+<nav class="controls" id="controls">
+  <span class="lbl">trace a thread:</span>
+  <button class="chip on" data-f="all">The Whole Life</button>
+  <button class="chip" data-f="career">Career</button>
+  <button class="chip" data-f="love">Love</button>
+  <button class="chip" data-f="travel">Travel</button>
+  <button class="chip" data-f="astro">The Stars</button>
+  <button class="chip" data-f="life">Life &amp; Self</button>
+</nav>
+
+<main id="stage"></main>
+<section class="odds" id="odds"></section>
+<section class="odds" id="wealth"></section>
+<section class="odds" id="strengths"></section>
+<section class="odds" id="balance"></section>
+
+<section class="coda">
+  <div class="mark">✦</div>
+  <blockquote>A blossom does not rush. It waits for the precise conditions, survives the storms, and then opens all at once — completely, exactly as it always knew how.</blockquote>
+  <p>This is one telling of a life not yet lived — the shape her chart and her nature point toward most strongly. Every turning is a real choice. The stars describe the raw material: the discipline, the depth, the taste, the will. What she makes of it is her own work. She was always the author.</p>
+</section>
+<div class="footer">In Full Bloom · a narrative portrait</div>
+
+<script>
+(function(){const g=document.getElementById('petals');
+  const ring=(n,rx,ry,d,f,rot)=>{for(let i=0;i<n;i++){const a=(360/n)*i+(rot||0);
+    const p=document.createElementNS('http://www.w3.org/2000/svg','ellipse');
+    p.setAttribute('rx',rx);p.setAttribute('ry',ry);p.setAttribute('cx',0);p.setAttribute('cy',-d);
+    p.setAttribute('fill',f);p.setAttribute('transform',`rotate(${a})`);p.setAttribute('opacity','.92');g.appendChild(p);}};
+  ring(12,11,30,46,'#c8a882',0);ring(12,9,24,34,'#b98a5e',15);ring(8,7,16,20,'#a8674a',0);})();
+
+const LIFE=[
+ {age:26,yr:"2025–26",era:1,tags:["career","life"],title:"The Restlessness Begins",
+  teaser:"The well-built life starts to feel, quietly, like a cage.",
+  body:["At twenty-six she wakes before the city does, in the Dogpatch loft near the water — matcha in the bowl glazed like a winter sky, an hour of silence, a run along the bay through the fog, or the climbing gym where she is quietly getting good. She works in legal operations, the invisible craft of making a broken system run the way it should, and her Mercury in Scorpio makes her the quietest person in the room and the one whose single comment changes the decision.",
+        "But the work that once stretched her has begun to fit too comfortably. She has become indispensable — and indispensability, she senses, can become its own kind of cage. The Capricorn in her wants to stay where it is safe; the Capricorn Mars in her has begun to stir toward something larger."],
+  astro:{t:"Saturn in Aries squares her Cancer–Capricorn axis",d:"The first cosmic push to leave comfort behind. Saturn dissolves what has outlived its purpose, making the safe life feel too small."}},
+
+ {age:27,yr:"2026–27",era:1,tags:["life","travel","astro"],title:"The Decision to Pivot",
+  teaser:"She resolves to remake herself — and applies to business school.",
+  body:["The decision crystallizes the way all her decisions do: researched exhaustively, weighed in private for nearly a year, then executed completely. She wants the prestige, the pedigree, the knowledge — and above all the network. She applies to business school, only to the few great programs worth uprooting her life for.",
+        "This is the single most strategic move available to a woman who intends to end among the genuinely powerful: placing herself, deliberately, in the rooms where founders and investors are made. The cautious Capricorn recognizes it as the rare bet worth making — and makes it without flinching. Before she goes, she takes the trip she has been promising herself: a long slow stretch in Japan, the country her whole aesthetic has been pointing toward, a first deep taste of the place that will become her second home."],
+  astro:{t:"Progressed Moon completes its first 27-year cycle",d:"A milestone of emotional adulthood — the inner self comes full circle, and she is ready at last to act on what she always quietly knew she wanted."},
+  trav:{t:"Japan, the first long immersion",d:"Not a tourist's week but a real stay — Kyoto's temples, the mountain ryokan, the food culture studied from the inside. The seed of a lifelong second home."}},
+
+ {age:28,yr:"2027–29",era:1,tags:["career","life","travel","major"],title:"Business School — The Deliberate Remaking",
+  teaser:"She leaves California for a great program back east. It raises her ceiling for life.",
+  body:["She goes — most likely east, to one of the great schools, leaving the soft grey light of San Francisco for hard bright winters and old brick gravity. She understands exactly what she is buying, and it is not primarily an education. It is entry: into a network, a class, the social world of people who will found companies and run funds across the coming decades.",
+        "The two years remake her. She forms the handful of formidable connections her selective nature allows — people who scatter across finance and founding and remain her network at the top for life. She emerges not more capable, for she was always capable, but more ambitious: her ceiling raised by two years among people who assumed, without arrogance, that they would run things.",
+        "There is a cost. The Pisces love of her early twenties does not survive the distance; she grieves it inwardly, in long runs before dawn. He was water where she needed stone. The woman now taking shape needs more than he was ever going to become."],
+  astro:{t:"Jupiter transits toward her career sector",d:"Expansion and visibility — Jupiter blesses exactly this leap into a larger world, the part of her chart governing public standing lit up at the perfect moment."},
+  trav:{t:"A new register of place — the East Coast, and Europe in the breaks",d:"Autumn gold along the river, the first real snow, weekends in old coastal towns; and the long summer break spent in Italy, region by region, learning the difference between a Ligurian and an Emilian table."}},
+
+ {age:30,yr:"2029–30",era:2,tags:["astro","life","major"],title:"The Saturn Return",
+  teaser:"The defining transit of her life — and because Saturn sits on her Ascendant, it lands doubled.",
+  body:["Around thirty, Saturn completes its first full orbit and returns to where it stood at her birth — and because her Saturn sits conjunct her Taurus Ascendant, this is the most significant transit of her life, landing with double weight. For most it is an earthquake; for her, already disciplined, it is a clarification. The themes of her whole life — responsibility, structure, the slow building of something real — come to a head and demand examination.",
+        "She is out of business school now, transformed. The Saturn return does not break her; it focuses her. She decides, consciously, what she wants from the rest of her life: a true partner and a genuine equal, eventually — and not one degree less than the specific combination she requires. She comes through it not partnered but clarified. Sovereign, certain, ready."],
+  astro:{t:"SATURN RETURN — Saturn conjunct natal Saturn & Ascendant in Taurus",d:"The great reckoning of the late twenties, doubled because Saturn rules her rising. It strips away what was never truly hers and crowns what is — the single most important passage of her early life."}},
+
+ {age:30,yr:"2029–32",era:2,tags:["love","travel","life"],title:"The Abundant Years",
+  teaser:"Newly sovereign, she dates widely and without guilt — and travels between the affairs.",
+  body:["Out of business school with the credential, the network, a rising income, and a complete indifference to whether any man approves of her — the most magnetic thing about her, radiating without effort — she enters the most romantically abundant season of her life.",
+        "She dates widely and without apology, keeps her options genuinely open, lets several men court her at once. She is sovereign: belonging to no one, performing no monogamy she has not agreed to. She draws the accomplished and the substantial — the founder, the financier, the brilliant difficult man — and gravitates, again and again, toward Asian, East Asian, Indian, South Asian, and mixed-heritage men, alongside a serious register of the Caucasian men her world produces. She takes lovers in the seasons of freedom.",
+        "It is not aimlessness. It is preparation — becoming the woman who can one day choose from genuine abundance rather than need, the only way her eventual commitment could ever be real."],
+  trav:{t:"The affairs abroad, and the adventurer's trips",d:"The most memorable fires happen far from home, where she is unobserved and free — a month in Mexico City, all art and appetite; the solo week in a foreign city where no one knows her. And the trips that feed her Capricorn-Mars hunger for challenge: climbing in the Dolomites, the long drive through Iceland, hiking somewhere that has to be earned."}},
+
+ {age:32,yr:"2031–32",era:2,tags:["career","life","major"],title:"The Year It Almost Came Apart",
+  teaser:"A scandal she did not cause breaks over her — and tests everything she built.",
+  body:["Her career ascends fast after business school: senior leadership, real authority, wealth beginning to accumulate through compensation and equity. She becomes, in her field, a name — trusted absolutely. And it is precisely because she has climbed so high that the fall, when it comes, is so dangerous.",
+        "A senior executive above her — whose conduct she once quietly flagged and was told to leave alone — is found to have done something seriously wrong. Because she ran the function that touched the relevant systems, the first wave of suspicion breaks over her. For weeks she lives inside every careful person's nightmare.",
+        "But the whole architecture of her character pays off at once. Because she documents everything — because her Scorpio caution made her thorough to a fault — there is a record. There is always, with her, a record. And she does the thing the woman of her twenties never could: she lets herself be carried, lets the few who love her hold her through it, and discovers that needing people is not weakness. This is the true climax of her life — not the scandal, but what it teaches her."],
+  astro:{t:"Saturn squares her natal Moon & Mars in Capricorn",d:"A hard transit demanding proof of everything she built. Saturn tests the foundations — and because she built them honestly, they hold. The square that should have broken her instead reveals her strength."}},
+
+ {age:34,yr:"2033–34",era:3,tags:["love","career","major"],title:"The Man She Was Waiting For",
+  teaser:"At the height of her powers, she meets him — as an equal, never as a seeker.",
+  body:["Cleared and elevated by the trial — known now as the one who saw it coming — she meets him not by looking but by being completely herself, most likely right in San Francisco, dense as it is with founders who have exited and investors who move real capital. He is a connection of a connection, or a principal at a firm she crosses professionally, or a man seated near her at a high dinner her network now includes her in.",
+        "He is the man her chart was built to love: a Sun in Capricorn or Scorpio, a Moon in water or earth for the warmth beneath the drive, a Mercury in Scorpio to meet her mind, a Venus that loves through devotion. Four to eight years her senior, born around 1992 — a Monkey in the Chinese zodiac, clever and strategic and magnetic. Already successful — a fund principal, a venture investor — at the stage where a man like that, having won, finally wants a genuine equal rather than another acquisition.",
+        "What undoes him is what she offers without trying: a woman who is not impressed, who has her own substantial life and money, who sees straight through him and wants nothing from him at all. He is drowning in admiration; what he has never met is someone real. She does not pursue. She simply remains sovereign — and that, at his altitude, is irresistible."]},
+
+ {age:36,yr:"2035–36",era:3,tags:["love","travel","life","major"],title:"The Proposal & The Long Honeymoon",
+  teaser:"He proposes privately, with everything stripped away but the truth. Then weeks of honeymoon.",
+  body:["He commits not from comfort but from the clarifying terror of losing the one thing his money cannot replace — a fear she generates without manufacturing, simply by remaining genuinely willing to walk away. The proposal is private, never public: a quiet morning in a garden in Japan, perhaps, or the kitchen where they have cooked a hundred meals. The ring is restrained and of real quality, the kind she would wear for fifty years. And the asking is the opposite of performance — a formidable man setting down all his armor to tell her plainly that she is the one thing he could not survive losing.",
+        "She says yes not to the wealth, which she does not need, nor the security, which she built herself, but to the man who let her see him completely and chose her freely from a position where he could have had anyone."],
+  astro:{t:"JUPITER RETURN — Jupiter returns to its natal place",d:"Once every twelve years Jupiter comes home, opening a window of expansion and good fortune. Her third Jupiter return lands precisely in the marriage window — the cosmos blessing the union with its most generous transit."},
+  trav:{t:"The honeymoon — weeks, not days",d:"A long unhurried journey through the places that mean most to her: Japan certainly, perhaps Italy after, somewhere remote and stunning where they are entirely alone. Two formidable equals with nothing to do but discover each other. Everything the waiting was for."}},
+
+ {age:38,yr:"2037–39",era:4,tags:["life","career","travel"],title:"The Built Life Takes Shape",
+  teaser:"Her own firm, the first child, the house with land and light.",
+  body:["The marriage settles into the deep ease of two complete people who could each leave at any time and choose, every day, not to. She keeps her own firm — the small, fierce, deliberately un-scaled legal-operations consultancy she builds with the freedom her own wealth bought — because her own work is the spine of her sovereignty. His wealth amplifies the life; it does not author it.",
+        "The children, if she wants them — and she most likely does, though not many — arrive in these years. She is an excellent, unconventional mother: the kind who takes a child to the market at seven and teaches them to cook by eight, who gives them deliberately the things she had to fight to learn.",
+        "And the home becomes the house with land and light, out of the city to Marin or the Berkeley hills, with the garden she tends with her own hands and the kitchen built for the serious cooking of her life — the fullest expression of her Taurus rising, the masterpiece toward which every earlier home was a study."],
+  astro:{t:"Saturn square — the consolidation checkpoint",d:"Saturn asks again whether the structures are sound, and finds them so — a transit of building and securing, matched to the years she lays the foundations of family and firm."},
+  trav:{t:"The family journeys begin",d:"Travel shifts register — less her own discovery, more the deliberate giving of the world to her children: their first time in Japan, watching them taste it; the long California coast drives of her own youth, now shared."}},
+
+ {age:41,yr:"2039–42",era:4,tags:["astro","life","travel"],title:"The Midlife Awakening",
+  teaser:"The classic midlife transits arrive — and she meets them already whole.",
+  body:["In the early forties come the great midlife transits — Uranus opposing its own natal place, Neptune squaring its own. For many these bring crisis: the urge to blow up a life that no longer fits. For her they arrive gently, because she has been living deliberately all along and has nothing false to dismantle.",
+        "What they bring her instead is a deepening — a final shedding of any last performance, a settling into the most authentic version of herself. Where others fracture at midlife, she simply intensifies. The questions these transits ask, she has been answering quietly for two decades."],
+  astro:{t:"Uranus opposition · Neptune square natal Neptune",d:"The midlife awakening. Uranus (~40–42) demands authenticity; Neptune (~41) asks about meaning. Met by a woman already true to herself, they bring not crisis but the fullest flowering of who she always was."},
+  trav:{t:"The beloved places, and a possible home abroad",d:"By now close to thirty countries. She returns to the ones that claimed her — Japan, Italy — with the ease of the familiar, and there is a real chance of a genuine second home abroad: a converted farmhouse in Tuscany, a long chapter in Lisbon."}},
+
+ {age:45,yr:"2044–45",era:4,tags:["career","life","astro"],title:"The Fullest Bloom",
+  teaser:"Everything she built was building toward this. She does not diminish — she intensifies.",
+  body:["The forties are the best decade, because everything she built was building toward them. The Saturn that made her young years heavy has transmuted entirely into authority; the Taurus rising, which ages better than any placement, is in full flower. She is at the height of her professional powers — wealthy in the way that actually matters, security so complete it has become invisible.",
+        "She is happiest, as she always was, in the sensory and the specific: hands in dough or soil, the morning light, the long meal for the few who matter, the garden going quiet in the evening — knowing, while she lives them, that these are the point. Most people learn that only in retrospect. She learned it in time.",
+        "This is the life she decided, in her twenties, that she wanted. She built it not by luck but by the deliberate execution of exactly the plan she set herself. She decided what she wanted. Then she built it. That was always her particular genius."],
+  astro:{t:"Saturn opposition — the harvest checkpoint",d:"Around forty-four, Saturn opposes its natal place: a moment of reaping. For her, who built well and honestly, it is not a reckoning but a harvest — the quiet confirmation that she chose right."}},
+];
+
+const ERAS={
+ 1:{h:"The Twenties",s:"Foundation, and the Deliberate Pivot",b:"The gathering years — the sacred mornings, the invisible craft, the restlessness that becomes resolve. She loves fully, leaves deliberately, takes her first deep journey through Japan, and bets on herself by going to business school for the prestige, the pedigree, the knowledge, and above all the network."},
+ 2:{h:"Around Thirty",s:"The Saturn Return, Abundance, and the Trial",b:"The defining passage. Newly remade, she dates abundantly from pure sovereignty, travels and adventures between the affairs, comes through her Saturn return clarified rather than broken, and survives the one scandal that nearly took everything — emerging elevated and finally able to be carried."},
+ 3:{h:"The Mid-Thirties",s:"The Great Love, Met as an Equal",b:"At the height of her powers she meets the man her chart was built to love — the Monkey-born investor, already successful, secure enough to want an equal. He commits not from comfort but from the fear of losing her, and the proposal, when it comes, is the truth with all the armor set down — followed by weeks of honeymoon through the places she loves."},
+ 4:{h:"The Forties",s:"The Built Life, and the Fullest Bloom",b:"Her own firm kept, children raised with intention, the house with land and light, the family journeys and the beloved places returned to. The midlife transits that fracture others only deepen her. She does not fade with age — she comes, at last and completely, into full bloom."},
+};
+
+const ODDS=[
+ {label:"Excellence & ownership in her career",pct:85,why:"The safest bet in her whole chart. Libra-Sun/Scorpio-Mercury judgment, Capricorn Moon &amp; Mars discipline, and Saturn-on-the-Ascendant seriousness make deep competence very nearly a certainty."},
+ {label:"Gets into & completes a top MBA",pct:70,why:"The capability is unquestionable; the variables are the decision to go and admissions luck. Her Capricorn Mars makes the strategic bet likely once she commits to it."},
+ {label:"Survives a major career trial intact",pct:80,why:"Some serious test is likely for anyone who climbs high. Her Mercury-Scorpio thoroughness — the documentation habit — plus Saturn's resilience make emerging stronger the high-probability outcome for her specifically."},
+ {label:"Senior leadership / real wealth by mid-30s",pct:70,why:"Strong, given the trajectory and the MBA network. The Capricorn stack rewards the long game. The main drag is her own over-caution at the moments that call for a leap."},
+ {label:"Equity windfall / true financial sovereignty",pct:45,why:"Partly outside her control — it depends on being at the right company at the right exit. Real and reachable, but never guaranteed by character alone."},
+ {label:"Abundant, sovereign dating in her 20s–30s",pct:80,why:"Taurus-rising magnetism, Libra charm, and a genuine indifference to approval. Very likely, if she chooses to live this way — and her nature inclines her to."},
+ {label:"A substantial, equal partnership",pct:60,why:"Good odds, and higher if she does the inner work of learning to receive. Her high standards raise the quality of the match while narrowing the field."},
+ {label:"The specific 9-figure founder / fund-principal equal",pct:28,why:"The narrowest target in the whole forecast. Such men who are ALSO secure enough to want a true equal are rare, and timing and chemistry must align. Genuinely possible — more so for her than for most — but not probable."},
+ {label:"Children, if she wants them",pct:65,why:"Subject to timing, biology, and partnership. Her Capricorn Moon wants the foundation solid first, which can compress the window."},
+ {label:"Extensive travel — 25–35 countries, a year abroad",pct:75,why:"Very likely. It depends mostly on means and will, both of which her trajectory supplies, and her Taurus-rising sensory hunger and Scorpio curiosity drive it relentlessly."},
+ {label:"Arrives mid-40s accomplished, secure, at peace",pct:75,why:"Follows naturally if the foundation years go reasonably well. Her floor is unusually high — the disciplined core makes a dignified, secure life close to a default."},
+ {label:"The FULLEST version — wealth + ideal equal + total peace, all at once",pct:27,why:"The optimistic tail: it requires many things to break right across twenty years. Roughly one chance in four. Beautiful, genuinely possible, and not the way to bet."},
+];
+
+const stage=document.getElementById('stage');let curEra=0;
+LIFE.forEach(e=>{
+  if(e.era!==curEra){curEra=e.era;const m=ERAS[curEra];
+    const era=document.createElement('section');era.className='era';
+    era.innerHTML=`<h2>${m.h}</h2><div class="erasub">${m.s}</div><div class="erablurb">${m.b}</div>`;
+    stage.appendChild(era);
+    const tl=document.createElement('div');tl.className='timeline';tl.id='tl'+curEra;
+    tl.innerHTML='<div class="spine"></div>';stage.appendChild(tl);}
+  const tl=document.getElementById('tl'+curEra);
+  const node=document.createElement('div');node.className='node';node.dataset.tags=e.tags.join(' ');
+  const tagHtml=e.tags.filter(t=>t!=='major').map(t=>`<span class="tag ${t}">${t==='astro'?'the stars':t==='life'?'life & self':t}</span>`).join('')
+    +(e.tags.includes('major')?'<span class="tag major">turning point</span>':'');
+  const bodyHtml=e.body.map(p=>`<p>${p}</p>`).join('');
+  const travHtml=e.trav?`<div class="travline"><span>❍</span><div><b>${e.trav.t}.</b> ${e.trav.d}</div></div>`:'';
+  const astroHtml=e.astro?`<div class="astroline"><span>✦</span><div><b>${e.astro.t}.</b> ${e.astro.d}</div></div>`:'';
+  node.innerHTML=`<div class="dot"></div><div class="age-badge">${e.age}<div class="yr">${e.yr}</div></div>
+    <div class="card"><div class="tags">${tagHtml}</div><h3>${e.title}</h3>
+    <div class="teaser">${e.teaser}</div>
+    <div class="detail">${bodyHtml}${travHtml}${astroHtml}</div>
+    <div class="expand">click to open ↓</div></div>`;
+  const card=node.querySelector('.card');
+  card.addEventListener('click',()=>{card.classList.toggle('open');
+    card.querySelector('.expand').textContent=card.classList.contains('open')?'click to close ↑':'click to open ↓';});
+  tl.appendChild(node);
+});
+
+const odds=document.getElementById('odds');
+odds.innerHTML=`<h2>How Likely Is All This?</h2>
+  <div class="erasub">an honest reading of the odds, grounded in her placements</div>
+  <div class="intro">A chart describes potential, not destiny. Here is the candid probability of each piece of this life actually happening — read from the specific strengths and limits of her placements. Tap any bar for the astrological reasoning behind the number.</div>`;
+ODDS.forEach(o=>{
+  const b=document.createElement('div');b.className='bar';
+  b.innerHTML=`<div class="top"><div class="label">${o.label}</div><div class="pct">${o.pct}%</div></div>
+    <div class="track"><div class="fill" data-w="${o.pct}"></div></div>
+    <div class="why">${o.why}</div><div class="cue">tap for the reasoning ↓</div>`;
+  b.addEventListener('click',()=>b.classList.toggle('open'));
+  odds.appendChild(b);
+});
+const verdict=document.createElement('div');verdict.className='verdict';
+verdict.innerHTML=`<h3>The honest bottom line</h3>
+  <p>The <b>fullest version</b> told in the timeline — the wealth and the perfect equal and the total peace, all at once — is the optimistic tail: roughly <b>one chance in four</b>, requiring sustained excellent execution and some good fortune across two decades.</p>
+  <p>But the <b>substantially-good version</b> — accomplished, secure, loved, well-travelled, at peace, even if not the maximal storybook ending — is considerably more likely, around <b>three in five</b>.</p>
+  <p class="floor">And the floor is high: even the disappointing version of her life is competent, sovereign, and dignified, because her core placements make true catastrophe unlikely. A high floor, an excellent median, and a real if improbable spectacular ceiling. Few charts offer a distribution that good — and the single greatest variable is not luck but execution, which is the one thing within her control.</p>`;
+odds.appendChild(verdict);
+
+/* ---------- THE QUESTION OF WEALTH ---------- */
+const WEALTH_TIERS=[
+ {label:"Becomes a millionaire — net worth $1M+",pct:82,why:"Close to a default for a disciplined top-MBA Bay Area professional. High income + her Capricorn saving instinct + real-estate equity + steady investing compound to this almost regardless of which path she takes."},
+ {label:"Becomes a multi-millionaire — $3–5M+ net worth",pct:58,why:"Likely, and likelier still with an equity event, a high-earning partner, or both. The Capricorn discipline plus dual Bay Area income makes several million a realistic median outcome rather than a stretch."},
+ {label:"Becomes genuinely wealthy — $10M+",pct:26,why:"The high tail. This needs a real equity exit, a founder success, or a wealthy partnership to stack on top of her own earning. Real and reachable — but not the base case, and not something character alone guarantees."},
+];
+const WEALTH_PATHS=[
+ {tag:"Path One — the reliable route",h:"Climbing the ladder",pct:"68%",
+  p:"Senior leadership, equity packages, disciplined investing, real estate. This plays directly to her strengths — the operator who becomes indispensable — and carries the highest floor. It builds wealth steadily and almost certainly, if not explosively."},
+ {tag:"Path Two — the higher-variance route",h:"Building her own thing",pct:"48%",
+  p:"Aggregate odds of a genuinely successful business — pulled up by the low-risk services route that fits her perfectly, and down by the brutal odds of a venture-scale consumer startup. The route she chooses inside this matters enormously."},
+];
+const wealth=document.getElementById('wealth');
+wealth.innerHTML=`<h2>The Question of Wealth</h2>
+  <div class="erasub">how likely is she to actually become a multi-millionaire — and by which road?</div>
+  <div class="intro">She wants to succeed financially, and the honest answer is that her chart is unusually well-built for it: the Capricorn Moon and Mars give her the saving discipline and the long game, Saturn-on-the-Ascendant gives her the durability, and Mercury-in-Scorpio gives her the judgment. The question is less <i>whether</i> she builds wealth than <i>how high</i> and <i>by which road.</i> Tap any bar for the reasoning.</div>`;
+WEALTH_TIERS.forEach(o=>{
+  const b=document.createElement('div');b.className='bar';
+  b.innerHTML=`<div class="top"><div class="label">${o.label}</div><div class="pct">${o.pct}%</div></div>
+    <div class="track"><div class="fill" data-w="${o.pct}"></div></div>
+    <div class="why">${o.why}</div><div class="cue">tap for the reasoning ↓</div>`;
+  b.addEventListener('click',()=>b.classList.toggle('open'));
+  wealth.appendChild(b);
+});
+const pathsWrap=document.createElement('div');pathsWrap.className='paths';
+WEALTH_PATHS.forEach(p=>{
+  const d=document.createElement('div');d.className='path';
+  d.innerHTML=`<div class="ph">${p.tag}</div><h4>${p.h}</h4><div class="big">${p.pct}</div><p>${p.p}</p>`;
+  pathsWrap.appendChild(d);
+});
+wealth.appendChild(pathsWrap);
+
+const candid=document.createElement('div');candid.className='candid';
+candid.innerHTML=`<h3>On the e-commerce idea — an honest take</h3>
+  <p>She is drawn to building something in commerce: revolutionizing the shopping-app experience, the logistics, the infrastructure of how people buy. It is worth being straight about this, because the specific shape of it changes the odds dramatically.</p>
+  <p>A <b>consumer-facing shopping app</b> — the "revolutionize how people shop" dream — is one of the hardest and most crowded categories in all of business. It is capital-intensive, dominated by giants with bottomless resources, and it rewards a particular kind of charismatic consumer-product-visionary founder. That is not, honestly, her natural profile. As a solo consumer-app founder her odds of a venture-scale success sit around <b>15%</b> — not because she lacks the talent, but because the category is brutal and the archetype it rewards is not hers.</p>
+  <p class="turn">But here is the genuinely useful insight: the part of her vision that fits her best is the part most people overlook — the logistics, the infrastructure, the <b>"picks and shovels"</b> enablement layer beneath the shopping experience.</p>
+  <p>Her actual genius is operations, systems, trust, and flawless execution — the operator who walks into a broken process and rebuilds it. That is exactly what the B2B infrastructure layer of commerce rewards: the company that <i>supports</i> the revolution rather than performing it, the logistics-and-enablement business that other companies depend on. Aimed there — and ideally as an operator-cofounder beside a product-visionary rather than as the sole consumer-facing founder — her odds roughly <b>double, to around 30%</b>, and the business she builds plays to every strength her chart gave her.</p>
+  <p>The synthesis most true to her nature: build the <b>infrastructure</b>, not the storefront. Let someone else chase the flashy consumer app; she should own the rails it runs on. That is where her operator's discipline, her Scorpio thoroughness, and her Capricorn endurance turn into a genuine, defensible edge — and where "succeeding financially" becomes not a gamble but a near-extension of exactly what she is already best at.</p>`;
+wealth.appendChild(candid);
+
+/* ---------- WHERE SHE PLAYS TO HER STRENGTHS ---------- */
+const DOMAINS=[
+ {h:"Career",plac:"Mercury Scorpio · Capricorn Moon & Mars · Saturn on the Ascendant · Venus Virgo",
+  lean:"Her stack is built for this. <b>Own a domain completely</b> and become the indispensable operator rather than the loudest voice. Lead by competence and trust, not charisma — Saturn makes people feel safe handing her what matters. <b>Document everything</b> (it is both her superpower and, one day, her shield). Play the long game the Capricorn way: compound rare, valuable skill until reputation does the selling for her.",
+  edge:"GROWTH EDGE — Her Capricorn caution can make her stay too long in safety and miss the leap. The move that builds wealth is the calculated bet taken when the foundation is solid. Leap on purpose."},
+ {h:"Love",plac:"Taurus Rising · Libra Sun · Scorpio Mercury",
+  lean:"Her magnetism is the <b>slow-burn</b> kind — it lands at minute ten, not minute one, and it only deepens with age (Taurus rising ages beautifully). Lead from <b>sovereignty, never need</b>: the woman who wants but does not require is the one a substantial man cannot stop thinking about. Choose from <b>abundance</b> and never settle below a true equal. Her Scorpio sees through people — trust that read.",
+  edge:"GROWTH EDGE — She gives endlessly and receives poorly. The whole arc of her love life is learning to <b>let herself be loved</b> — to accept care, to say the need aloud, to be carried as well as to carry."},
+ {h:"Friendship",plac:"Venus Virgo · Scorpio depth · Capricorn Moon",
+  lean:"<b>Depth over breadth</b> is not a limitation — it is her design, and her superpower. Bond the way that actually works for her: <b>through shared craft</b>, side by side over a task, not through networking she finds hollow. Be the one who remembers the detail and shows up with the thing already done. Curate a small table of people who would come at 3 a.m. — and she will have them, because she is that friend first.",
+  edge:"GROWTH EDGE — The same containment that protects her can keep even close friends at arm's length. Let the few who earned it past the seal; be known, not just relied upon."},
+ {h:"Family",plac:"Capricorn Moon & Mars · Taurus Rising · Saturn-built",
+  lean:"She is a natural <b>provider and foundation</b> — dependable, structured, the one who builds the sanctuary. Make the <b>home the masterpiece</b> (her Taurus rising lives for it) and parent with intention: teach autonomy, competence, and — deliberately — the emotional fluency she had to learn the hard way. Raise capable people, not managed projects.",
+  edge:"GROWTH EDGE — Under stress she over-functions in silence and quietly resents the weight no one saw. The healthy family is the one where she <b>lets her partner carry his full share</b> and asks for help before she breaks."},
+];
+const strengths=document.getElementById('strengths');
+strengths.innerHTML=`<h2>Where She Plays to Her Strengths</h2>
+  <div class="erasub">the same chart, turned toward each part of a life</div>
+  <div class="intro">The placements that make her formidable show up differently in each domain. Here is how to lean into the gift in each — and, honestly, the growth edge to manage, because every strength has a shadow.</div>
+  <div class="domains" id="domgrid"></div>`;
+const dg=strengths.querySelector('#domgrid');
+DOMAINS.forEach(d=>{
+  const el=document.createElement('div');el.className='dom';
+  el.innerHTML=`<h4>${d.h}</h4><div class="plac">${d.plac}</div>
+    <div class="lean">${d.lean}</div><div class="edge"><b>${d.edge.split(' — ')[0]}</b>${d.edge.split(' — ')[1]}</div>`;
+  dg.appendChild(el);
+});
+
+/* ---------- BALANCE & PERCEPTION ---------- */
+const BALANCE=[
+ {h:"The life is the fuel, not the reward",b:"For her, ambition does not compete with the rest of life — the rest of life is what lets the ambition last twenty years. Her Taurus rising and Libra sun are not distractions from the Capricorn drive; they are its renewable energy source. The down time, the travel, the long table, the climb are inputs, not rewards to be earned later. A depleted engine builds nothing, and the people who burn out are precisely the ones who treated rest and beauty and connection as things they would get to once the work was done."},
+ {h:"She schedules the life, or loses it",b:"She is the type whose work expands to fill every available hour, so the restoration has to be defended as fiercely as the deep work — the Saturday market, the long cook, the climbing session, all on the calendar with the same authority as any meeting. And her smartest move is to stack rather than separate: the climbing gym is body and friendship and decompression at once; the dinner party is craft and connection and network; a Saturday exploring the city is hobby and rest and the sensory feeding her nature needs. She need not carve a separate hour for each — the right things serve three needs together."},
+ {h:"Now is the season to live widely",b:"Right now, at twenty-six — before the firm, before children, before the build's full intensity — is the easiest season she will ever have to live a wide and rich life. The honest counsel is the opposite of grind-harder: bank the experiences while they are cheap. Travel, explore, deepen the friendships, build the hobbies into real competence. The foundation of a full life is laid in exactly this window, with the disciplined daily structure running quietly underneath and the evenings and weekends kept full rather than sacrificed. She is not behind. She is right on time."},
+ {h:"Her real risk is over-functioning",b:"Her danger was never laziness — it is the opposite. She will say yes to too much, grind past the point of useful energy, and treat the down time as optional. So her balance discipline is mostly subtraction and permission: permission to rest without earning it, to close the laptop, to take the trip. For her, choosing the life is the harder discipline than choosing the work — and the one she must practice on purpose. The skill is also knowing which season she is in: a build sprint is work-heavy by design and with an end date; a steady season tilts back toward living. The failure is pretending a sprint is permanent, or letting a steady season drift into one by accident."},
+ {h:"How leadership sees her — the gift",b:"The perception is strong and consistent with who she is. Saturn on her Ascendant makes her read as serious, competent, and safe to depend on — often older than her years — so superiors hand her the things that actually matter, because she never drops them. Her Mercury in Scorpio makes her the one who sees the risk no one else flagged, until her read becomes the trusted one. Her Venus in Virgo shows up as work that is simply clean — thorough, documented, needing no checking. And she creates no drama, no noise, no politics, which anyone above her values enormously. Reliability bordering on the absolute is her single greatest professional asset."},
+ {h:"How leadership sees her — the cost, and the fix",b:"But there is a quiet cost she must manage. The reliable operator gets pigeonholed as indispensable where she is rather than destined for the top, and her containment can read as a lack of ambition to people who mistake volume for drive — so the real risk is being valued without being promoted, the trusted workhorse rather than the obvious leader. Her own excellence can even make a manager resist losing her. The fix is to make the ambition legible: to say out loud, to the people who decide, that she wants to lead; to claim the credit her modesty would let slide; to find the one senior sponsor who will say her name in the rooms she is not in. Her blind spot is assuming the work speaks loudly enough on its own. It rarely does. The highest-leverage move of her career is not working harder — it is becoming visible about wanting more."},
+];
+const bal=document.getElementById('balance');
+bal.innerHTML=`<h2>Balance &amp; Perception</h2>
+  <div class="erasub">holding the whole life — and being seen for it</div>
+  <div class="intro">How she keeps ambition from eating the rest of her life, especially now — and how the people above her actually see her. Tap any card to open it.</div>`;
+BALANCE.forEach(item=>{
+  const b=document.createElement('div');b.className='bar';
+  b.innerHTML=`<div class="top"><div class="label">${item.h}</div></div>
+    <div class="why">${item.b}</div><div class="cue">tap to open ↓</div>`;
+  b.addEventListener('click',()=>b.classList.toggle('open'));
+  bal.appendChild(b);
+});
+
+const io=new IntersectionObserver(es=>{es.forEach(en=>{if(en.isIntersecting)en.target.classList.add('show');});},{threshold:.15});
+document.querySelectorAll('.node').forEach(n=>io.observe(n));
+const bio=new IntersectionObserver(es=>{es.forEach(en=>{if(en.isIntersecting){
+  en.target.style.width=en.target.dataset.w+'%';bio.unobserve(en.target);}});},{threshold:.5});
+document.querySelectorAll('.fill').forEach(f=>bio.observe(f));
+
+document.getElementById('controls').addEventListener('click',e=>{
+  if(!e.target.classList.contains('chip'))return;
+  document.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));
+  e.target.classList.add('on');const f=e.target.dataset.f;
+  document.querySelectorAll('.node').forEach(n=>{
+    n.classList.toggle('hidden',!(f==='all'||n.dataset.tags.includes(f)));});
+});
+</script>
+</body>
+</html>
