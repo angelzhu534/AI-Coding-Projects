@@ -1,0 +1,293 @@
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap');
+
+.mg-wrap {
+  font-family: 'DM Sans', sans-serif;
+  background: #f5f0e8;
+  border-radius: 20px;
+  padding: 2rem 1.5rem 2.5rem;
+  max-width: 660px;
+  margin: 0 auto;
+}
+.mg-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 28px;
+  color: #2d4a2d;
+  text-align: center;
+  margin: 0 0 4px;
+  letter-spacing: -0.5px;
+}
+.mg-subtitle {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: 14px;
+  color: #7a9a6a;
+  text-align: center;
+  margin: 0 0 1.5rem;
+}
+.mg-section-label {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #7a9a6a;
+  margin: 0 0 10px;
+}
+.mg-ingredients {
+  background: #2d4a2d;
+  border-radius: 14px;
+  padding: 1.2rem 1.4rem;
+  margin-bottom: 1.2rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 24px;
+}
+.mg-ing-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #e8f0e0;
+  font-size: 13px;
+}
+.mg-ing-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #8dc97a;
+  flex-shrink: 0;
+}
+.mg-ing-amount {
+  color: #8dc97a;
+  font-weight: 500;
+  margin-right: 2px;
+}
+.mg-steps-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 1.2rem;
+}
+.mg-step-card {
+  background: white;
+  border-radius: 12px;
+  padding: 12px;
+  border: 1.5px solid #d4e8c2;
+  position: relative;
+}
+.mg-step-num {
+  position: absolute;
+  top: -10px;
+  left: 12px;
+  background: #5a8a4a;
+  color: white;
+  font-size: 10px;
+  font-weight: 500;
+  border-radius: 20px;
+  padding: 2px 9px;
+  letter-spacing: 0.5px;
+}
+.mg-step-icon {
+  font-size: 22px;
+  display: block;
+  margin: 8px 0 4px;
+  text-align: center;
+}
+.mg-step-text {
+  font-size: 11.5px;
+  color: #4a6a3a;
+  line-height: 1.5;
+  text-align: center;
+}
+.mg-step-bold {
+  font-weight: 500;
+  color: #2d4a2d;
+  display: block;
+  margin-bottom: 2px;
+}
+
+.mg-assembly {
+  background: #eaf5e0;
+  border-radius: 14px;
+  padding: 1.2rem 1.4rem;
+  margin-bottom: 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+.mg-glass {
+  flex-shrink: 0;
+  width: 60px;
+}
+.mg-glass svg {
+  width: 60px;
+}
+.mg-layers {
+  flex: 1;
+}
+.mg-layer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 7px;
+  font-size: 12.5px;
+}
+.mg-layer-num {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #2d4a2d;
+  color: white;
+  font-size: 10px;
+  font-weight: 500;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.mg-layer-bar {
+  height: 8px;
+  border-radius: 4px;
+  width: 60px;
+  flex-shrink: 0;
+}
+.mg-layer-label { color: #2d4a2d; font-weight: 500; }
+.mg-layer-note { color: #7a9a6a; font-size: 11px; margin-top: 1px; }
+
+.mg-sweet-syrup {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 1rem;
+}
+.mg-sweet-box {
+  background: white;
+  border-radius: 12px;
+  padding: 12px 14px;
+  border: 1.5px solid #d4e8c2;
+}
+.mg-sweet-title {
+  font-weight: 500;
+  color: #2d4a2d;
+  font-size: 13px;
+  margin-bottom: 6px;
+}
+.mg-sweet-item {
+  font-size: 12px;
+  color: #5a8a4a;
+  margin-bottom: 3px;
+}
+.mg-sweet-amount {
+  font-size: 10.5px;
+  color: #999;
+  font-style: italic;
+}
+.mg-tip {
+  background: #2d4a2d;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 12px;
+  color: #b8d8a0;
+  text-align: center;
+  margin-top: 0.5rem;
+}
+.mg-tip strong { color: #8dc97a; }
+</style>
+
+<div class="mg-wrap">
+  <div class="mg-title">Iced Matcha Latte</div>
+  <div class="mg-subtitle">a step-by-step guide</div>
+
+  <div class="mg-section-label">Ingredients (1 serving)</div>
+  <div class="mg-ingredients">
+    <div class="mg-ing-item"><span class="mg-ing-dot"></span><span><span class="mg-ing-amount">2 tsp</span> ceremonial matcha</span></div>
+    <div class="mg-ing-item"><span class="mg-ing-dot"></span><span><span class="mg-ing-amount">2 tbsp</span> hot water (70–80°C)</span></div>
+    <div class="mg-ing-item"><span class="mg-ing-dot"></span><span><span class="mg-ing-amount">¾ cup</span> oat or dairy milk</span></div>
+    <div class="mg-ing-item"><span class="mg-ing-dot"></span><span><span class="mg-ing-amount">1–2 tsp</span> sweetener of choice</span></div>
+    <div class="mg-ing-item"><span class="mg-ing-dot"></span><span><span class="mg-ing-amount">a handful</span> of ice cubes</span></div>
+  </div>
+
+  <div class="mg-section-label">Steps</div>
+  <div class="mg-steps-grid">
+    <div class="mg-step-card">
+      <div class="mg-step-num">Step 1</div>
+      <span class="mg-step-icon">🧂</span>
+      <div class="mg-step-text"><span class="mg-step-bold">Sift matcha</span>into your bowl to remove clumps</div>
+    </div>
+    <div class="mg-step-card">
+      <div class="mg-step-num">Step 2</div>
+      <span class="mg-step-icon">💧</span>
+      <div class="mg-step-text"><span class="mg-step-bold">Add 2 tbsp water</span>at 70–80°C — never boiling</div>
+    </div>
+    <div class="mg-step-card">
+      <div class="mg-step-num">Step 3</div>
+      <span class="mg-step-icon">🎋</span>
+      <div class="mg-step-text"><span class="mg-step-bold">Whisk in W motion</span>until smooth and frothy paste</div>
+    </div>
+    <div class="mg-step-card">
+      <div class="mg-step-num">Step 4</div>
+      <span class="mg-step-icon">🍯</span>
+      <div class="mg-step-text"><span class="mg-step-bold">Stir in sweetener</span>while matcha is still warm</div>
+    </div>
+    <div class="mg-step-card">
+      <div class="mg-step-num">Step 5</div>
+      <span class="mg-step-icon">🧊</span>
+      <div class="mg-step-text"><span class="mg-step-bold">Fill glass with ice</span>then pour cold milk over it</div>
+    </div>
+    <div class="mg-step-card">
+      <div class="mg-step-num">Step 6</div>
+      <span class="mg-step-icon">🍵</span>
+      <div class="mg-step-text"><span class="mg-step-bold">Pour matcha on top</span>gently for beautiful layers</div>
+    </div>
+  </div>
+
+  <div class="mg-section-label">Glass assembly — layer order</div>
+  <div class="mg-assembly">
+    <div class="mg-glass">
+      <svg viewBox="0 0 60 120" xmlns="http://www.w3.org/2000/svg">
+        <rect x="8" y="5" width="44" height="108" rx="5" fill="rgba(255,255,255,0.5)" stroke="#b0c8a0" stroke-width="1.5"/>
+        <rect x="8" y="55" width="44" height="20" fill="#e8f4ff" opacity="0.8"/>
+        <rect x="8" y="75" width="44" height="15" fill="#d4ecb8" opacity="0.9"/>
+        <rect x="8" y="90" width="44" height="23" fill="#4a8a3a" opacity="0.85"/>
+        <text x="30" y="68" text-anchor="middle" font-size="8" fill="#5a9aaa" font-family="DM Sans,sans-serif">milk</text>
+        <text x="30" y="85" text-anchor="middle" font-size="7.5" fill="#3d7a2d" font-family="DM Sans,sans-serif">ice</text>
+        <text x="30" y="103" text-anchor="middle" font-size="8" fill="#c8f0a0" font-family="DM Sans,sans-serif">matcha</text>
+      </svg>
+    </div>
+    <div class="mg-layers">
+      <div class="mg-layer">
+        <div class="mg-layer-num">1</div>
+        <div class="mg-layer-bar" style="background:#e8f4ff;border:1px solid #b8d8f0;"></div>
+        <div><div class="mg-layer-label">Cold milk</div><div class="mg-layer-note">fills about ¾ of the glass</div></div>
+      </div>
+      <div class="mg-layer">
+        <div class="mg-layer-num">2</div>
+        <div class="mg-layer-bar" style="background:#c8e8f8;border:1px solid #a0c8e8;"></div>
+        <div><div class="mg-layer-label">Ice cubes</div><div class="mg-layer-note">a generous handful on top</div></div>
+      </div>
+      <div class="mg-layer">
+        <div class="mg-layer-num">3</div>
+        <div class="mg-layer-bar" style="background:#5a8a3a;border:1px solid #3d7a2d;"></div>
+        <div><div class="mg-layer-label">Matcha paste</div><div class="mg-layer-note">pour slowly — creates the gradient!</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mg-section-label">Sweetness &amp; syrups</div>
+  <div class="mg-sweet-syrup">
+    <div class="mg-sweet-box">
+      <div class="mg-sweet-title">🍯 How much to add</div>
+      <div class="mg-sweet-item">Subtle: <span class="mg-sweet-amount">½ tsp — matcha forward</span></div>
+      <div class="mg-sweet-item">Balanced: <span class="mg-sweet-amount">1 tsp — most people's sweet spot</span></div>
+      <div class="mg-sweet-item">Sweet: <span class="mg-sweet-amount">2 tsp — café style</span></div>
+    </div>
+    <div class="mg-sweet-box">
+      <div class="mg-sweet-title">✨ Syrup ideas</div>
+      <div class="mg-sweet-item">Vanilla — classic, crowd-pleaser</div>
+      <div class="mg-sweet-item">Honey — earthy, pairs perfectly</div>
+      <div class="mg-sweet-item">Brown sugar — caramel depth</div>
+      <div class="mg-sweet-item">Lavender — floral &amp; dreamy</div>
+      <div class="mg-sweet-item">Coconut — tropical twist</div>
+    </div>
+  </div>
+
+  <div class="mg-tip"><strong>Pro tip:</strong> Mix sweetener into the warm matcha paste before adding ice — it dissolves much better than stirring into cold milk!</div>
+</div>
