@@ -1,625 +1,323 @@
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IPX Power — Legal Ops Onboarding Guide</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:var(--font-sans)}
-.nav{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1.5rem;padding-top:1rem}
-.nav button{padding:6px 14px;border-radius:20px;border:0.5px solid var(--color-border-secondary);background:var(--color-background-primary);color:var(--color-text-secondary);font-size:13px;cursor:pointer;font-family:var(--font-sans);transition:all .15s}
-.nav button.active{background:var(--color-text-primary);color:var(--color-background-primary);border-color:var(--color-text-primary)}
-.section{display:none}.section.active{display:block}
-h2{font-size:18px;font-weight:500;color:var(--color-text-primary);margin-bottom:1rem}
-h3{font-size:15px;font-weight:500;color:var(--color-text-primary);margin-bottom:.5rem}
-p,li{font-size:14px;color:var(--color-text-secondary);line-height:1.6}
-.card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1rem 1.25rem;margin-bottom:.75rem}
-.card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.75rem;margin-bottom:1rem}
-.badge{display:inline-block;font-size:11px;padding:2px 8px;border-radius:10px;font-weight:500;margin-bottom:.5rem}
-.badge-red{background:#FCEBEB;color:#A32D2D}
-.badge-amber{background:#FAEEDA;color:#854F0B}
-.badge-green{background:#EAF3DE;color:#3B6D11}
-.badge-blue{background:#E6F1FB;color:#185FA5}
-.badge-purple{background:#EEEDFE;color:#3C3489}
-.row{display:flex;gap:.5rem;align-items:flex-start;margin-bottom:.5rem}
-.dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:5px}
-.dot-red{background:#E24B4A}.dot-amber{background:#BA7517}.dot-green{background:#639922}.dot-blue{background:#378ADD}
-.step-flow{display:flex;flex-direction:column;gap:.5rem;margin-bottom:1rem}
-.step-item{display:grid;grid-template-columns:36px 1fr;gap:.75rem;align-items:start}
-.step-num{width:32px;height:32px;border-radius:8px;background:var(--color-text-primary);color:var(--color-background-primary);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:500;flex-shrink:0}
-.step-body{padding-top:4px}
-.step-title{font-size:14px;font-weight:500;color:var(--color-text-primary);margin-bottom:2px}
-.step-sub{font-size:12px;color:var(--color-text-secondary);line-height:1.5}
-.tool-chip{display:inline-block;font-size:11px;padding:2px 7px;border-radius:6px;background:var(--color-background-secondary);color:var(--color-text-secondary);border:0.5px solid var(--color-border-tertiary);margin-left:6px;vertical-align:middle}
-.table-wrap{overflow-x:auto;margin-bottom:1rem}
-table{width:100%;border-collapse:collapse;font-size:13px}
-th{text-align:left;padding:8px 10px;background:var(--color-background-secondary);color:var(--color-text-secondary);font-weight:500;border-bottom:0.5px solid var(--color-border-tertiary)}
-td{padding:8px 10px;border-bottom:0.5px solid var(--color-border-tertiary);color:var(--color-text-primary);vertical-align:top}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#F8F9FA;color:#111827;padding:1.5rem 1rem}
+.wrap{max-width:780px;margin:0 auto}
+.nav{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:1.5rem}
+.nav button{padding:5px 12px;border-radius:20px;border:1px solid #D1D5DB;background:#fff;color:#6B7280;font-size:12px;cursor:pointer;font-family:inherit;transition:all .15s}
+.nav button.active{background:#111827;color:#fff;border-color:#111827}
+.sec{display:none}.sec.active{display:block}
+h2{font-size:18px;font-weight:500;margin-bottom:1rem;color:#111827}
+h3{font-size:15px;font-weight:500;margin-bottom:.5rem;color:#111827}
+p,li{font-size:13.5px;color:#6B7280;line-height:1.6}
+.cd{background:#fff;border:1px solid #E5E7EB;border-radius:12px;padding:1rem 1.25rem;margin-bottom:.75rem}
+.cg{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:.75rem;margin-bottom:.75rem}
+.bd{display:inline-block;font-size:11px;padding:2px 8px;border-radius:10px;font-weight:500;margin-bottom:.5rem}
+.bd-r{background:#FCEBEB;color:#A32D2D}.bd-a{background:#FAEEDA;color:#854F0B}.bd-g{background:#EAF3DE;color:#3B6D11}.bd-b{background:#E6F1FB;color:#185FA5}.bd-p{background:#EEEDFE;color:#3C3489}.bd-t{background:#E1F5EE;color:#0F6E56}
+.rw{display:flex;gap:.5rem;align-items:flex-start;margin-bottom:.5rem}
+.dt{width:7px;height:7px;border-radius:50%;flex-shrink:0;margin-top:5px}
+.dt-r{background:#E24B4A}.dt-a{background:#BA7517}.dt-g{background:#639922}.dt-b{background:#378ADD}.dt-p{background:#7F77DD}
+.sf{display:flex;flex-direction:column;gap:.5rem;margin-bottom:1rem}
+.si{display:grid;grid-template-columns:34px 1fr;gap:.75rem;align-items:start}
+.sn{width:30px;height:30px;border-radius:8px;background:#111827;color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;flex-shrink:0}
+.sb{padding-top:3px}
+.st{font-size:13.5px;font-weight:500;color:#111827;margin-bottom:2px}
+.ss{font-size:12px;color:#6B7280;line-height:1.5}
+.tc{display:inline-block;font-size:11px;padding:1px 6px;border-radius:5px;background:#F3F4F6;color:#6B7280;border:1px solid #E5E7EB;margin-left:4px;vertical-align:middle}
+.tw{overflow-x:auto;margin-bottom:.75rem}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th{text-align:left;padding:7px 8px;background:#F9FAFB;color:#6B7280;font-weight:500;border-bottom:1px solid #E5E7EB}
+td{padding:7px 8px;border-bottom:1px solid #E5E7EB;color:#111827;vertical-align:top}
 tr:last-child td{border-bottom:none}
-.alert-strip{display:grid;grid-template-columns:repeat(4,1fr);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);overflow:hidden;margin-bottom:1rem}
-.alert-block{padding:.875rem 1rem;border-right:0.5px solid var(--color-border-tertiary)}
-.alert-block:last-child{border-right:none}
-.alert-days{font-size:16px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px}
-.alert-label{font-size:11px;color:var(--color-text-secondary);margin-bottom:.5rem;line-height:1.4}
-.alert-item{font-size:12px;color:var(--color-text-secondary);padding:2px 0;line-height:1.4}
-.person-row{display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem}
-.avatar{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:500;flex-shrink:0}
-.av-blue{background:#E6F1FB;color:#185FA5}
-.av-purple{background:#EEEDFE;color:#3C3489}
-.av-teal{background:#E1F5EE;color:#0F6E56}
-.av-amber{background:#FAEEDA;color:#854F0B}
-.person-name{font-size:14px;font-weight:500;color:var(--color-text-primary)}
-.person-role{font-size:12px;color:var(--color-text-secondary)}
-.person-note{font-size:12px;color:var(--color-text-secondary);margin-top:2px}
-.warn-box{border-left:3px solid #E24B4A;background:#FCEBEB;border-radius:0 var(--border-radius-md) var(--border-radius-md) 0;padding:.75rem 1rem;margin-bottom:.75rem}
-.warn-box p{color:#A32D2D;font-size:13px}
-.info-box{border-left:3px solid #378ADD;background:#E6F1FB;border-radius:0 var(--border-radius-md) var(--border-radius-md) 0;padding:.75rem 1rem;margin-bottom:.75rem}
-.info-box p{color:#185FA5;font-size:13px}
-.tip-box{border-left:3px solid #1D9E75;background:#E1F5EE;border-radius:0 var(--border-radius-md) var(--border-radius-md) 0;padding:.75rem 1rem;margin-bottom:.75rem}
-.tip-box p{color:#0F6E56;font-size:13px}
-.glossary-item{margin-bottom:.875rem}
-.glossary-term{font-size:14px;font-weight:500;color:var(--color-text-primary);margin-bottom:2px}
-.glossary-def{font-size:13px;color:var(--color-text-secondary);line-height:1.6}
-.auth-grid{display:grid;grid-template-columns:repeat(4,1fr);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);overflow:hidden;margin-bottom:1rem}
-.auth-block{padding:.875rem 1rem;border-right:0.5px solid var(--color-border-tertiary);text-align:center}
-.auth-block:last-child{border-right:none}
-.auth-range{font-size:12px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px}
-.auth-who{font-size:11px;color:var(--color-text-secondary);line-height:1.4;margin-bottom:4px}
-.auth-sigs{font-size:11px;font-weight:500;color:var(--color-text-secondary)}
-.divider{height:0.5px;background:var(--color-border-tertiary);margin:1.25rem 0}
+.ag{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid #E5E7EB;border-radius:12px;overflow:hidden;margin-bottom:.75rem}
+.ab{padding:.75rem .875rem;border-right:1px solid #E5E7EB}
+.ab:last-child{border-right:none}
+.ad{font-size:15px;font-weight:500;color:#111827;margin-bottom:3px}
+.al{font-size:11px;color:#6B7280;margin-bottom:.4rem;line-height:1.4}
+.ai{font-size:11.5px;color:#6B7280;padding:1.5px 0;line-height:1.4}
+.pr{display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem}
+.av{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;flex-shrink:0}
+.av-b{background:#E6F1FB;color:#185FA5}.av-p{background:#EEEDFE;color:#3C3489}.av-t{background:#E1F5EE;color:#0F6E56}.av-a{background:#FAEEDA;color:#854F0B}.av-c{background:#FAECE7;color:#993C1D}
+.pn{font-size:13.5px;font-weight:500;color:#111827}
+.rl{font-size:12px;color:#6B7280}
+.nt{font-size:12px;color:#6B7280;margin-top:2px}
+.wb{border-left:3px solid #E24B4A;background:#FCEBEB;padding:.625rem .875rem;margin-bottom:.75rem}
+.wb p{color:#A32D2D;font-size:12.5px}
+.ib{border-left:3px solid #378ADD;background:#E6F1FB;padding:.625rem .875rem;margin-bottom:.75rem}
+.ib p{color:#185FA5;font-size:12.5px}
+.tb{border-left:3px solid #1D9E75;background:#E1F5EE;padding:.625rem .875rem;margin-bottom:.75rem}
+.tb p{color:#0F6E56;font-size:12.5px}
+.pb{border-left:3px solid #7F77DD;background:#EEEDFE;padding:.625rem .875rem;margin-bottom:.75rem}
+.pb p{color:#3C3489;font-size:12.5px}
+.ab2{border-left:3px solid #BA7517;background:#FAEEDA;padding:.625rem .875rem;margin-bottom:.75rem}
+.ab2 p{color:#854F0B;font-size:12.5px}
+.gi{margin-bottom:.75rem}
+.gt{font-size:13.5px;font-weight:500;color:#111827;margin-bottom:2px}
+.gd{font-size:12.5px;color:#6B7280;line-height:1.6}
+.dv{height:1px;background:#E5E7EB;margin:1rem 0}
 ul{padding-left:1rem;margin-bottom:.5rem}
-li{margin-bottom:3px}
-.checklist li{list-style:none;padding-left:0;display:flex;gap:.5rem;align-items:flex-start}
-.checklist li::before{content:"□";color:var(--color-text-secondary);flex-shrink:0;font-size:13px}
-.scenario{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:.875rem 1rem;margin-bottom:.75rem;border:0.5px solid var(--color-border-tertiary)}
-.scenario-q{font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:.25rem}
-.scenario-a{font-size:13px;color:var(--color-text-secondary);line-height:1.5}
-.tag-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:.5rem}
+li{margin-bottom:2px}
+.sc{background:#F9FAFB;border-radius:8px;padding:.75rem .875rem;margin-bottom:.625rem;border:1px solid #E5E7EB}
+.sq{font-size:12.5px;font-weight:500;color:#111827;margin-bottom:.25rem}
+.sa{font-size:12.5px;color:#6B7280;line-height:1.5}
+.qi{background:#fff;border:1px solid #E5E7EB;border-radius:8px;padding:.625rem .875rem;margin-bottom:.5rem}
+.qq{font-size:12.5px;color:#111827;line-height:1.5;font-style:italic}
+.qw{font-size:11.5px;color:#6B7280;margin-top:.25rem;line-height:1.5}
+.fl{display:flex;gap:.4rem;flex-wrap:wrap;align-items:center;margin-bottom:.75rem}
+.fp{font-size:12px;background:#F3F4F6;padding:4px 10px;border-radius:8px;border:1px solid #E5E7EB;color:#111827}
+.fa{color:#6B7280;font-size:12px}
+.schd{display:grid;grid-template-columns:80px 1fr 100px;gap:0;font-size:12px;border:1px solid #E5E7EB;border-radius:12px;overflow:hidden}
+.schd-h{background:#F9FAFB;padding:6px 8px;font-weight:500;color:#6B7280;border-bottom:1px solid #E5E7EB}
+.schd-c{padding:6px 8px;border-bottom:1px solid #E5E7EB;color:#111827;border-right:1px solid #E5E7EB}
+.schd-c:nth-child(3n){border-right:none}
+.schd-day{background:#F3F4F6;padding:6px 8px;font-weight:500;color:#111827;grid-column:1/-1;border-bottom:1px solid #E5E7EB}
+.unc{font-size:11px;color:#6B7280;background:#F3F4F6;padding:2px 7px;border-radius:8px;display:inline-block;margin-left:4px;border:1px solid #E5E7EB}
 </style>
-
-<div class="nav">
-  <button class="active" onclick="show('overview')">Overview</button>
-  <button onclick="show('lifecycle')">Contract Lifecycle</button>
-  <button onclick="show('contracts')">Contract Types</button>
-  <button onclick="show('tools')">Tools</button>
-  <button onclick="show('people')">People</button>
-  <button onclick="show('authority')">Signing Authority</button>
-  <button onclick="show('alerts')">Alert Windows</button>
-  <button onclick="show('slas')">SLAs</button>
-  <button onclick="show('slack-concur')">Slack & Concur</button>
-  <button onclick="show('glossary')">Glossary</button>
-  <button onclick="show('scenarios')">Scenarios</button>
+</head>
+<body>
+<div class="wrap">
+<div style="margin-bottom:1.5rem">
+<div style="font-size:11px;color:#9CA3AF;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.25rem">IPX Power · Legal Operations</div>
+<h1 style="font-size:22px;font-weight:500;color:#111827">Onboarding & study guide</h1>
 </div>
-
-<div id="overview" class="section active">
-  <h2>Your role at IPX Power</h2>
-  <div class="card">
-    <h3>What IPX Power does</h3>
-    <p>IPX Power develops, owns, and operates utility-scale solar and battery storage projects. Every project moves through a defined lifecycle: <strong style="font-weight:500">development → permitting → financing → construction → commercial operation → long-term O&M</strong>. Legal ops touches every single stage through contracts.</p>
-  </div>
-  <div class="card">
-    <h3>Your role as Legal Ops Specialist</h3>
-    <p style="margin-bottom:.5rem">You own the <em>operational layer</em> of every contract — not the legal substance. Attorneys make legal decisions; you make sure nothing stalls, gets lost, or misses a deadline.</p>
-    <p>The core mandate: prevent bottlenecks, track spending, and ensure every executed agreement is in Evisort with obligation dates entered before you close a matter.</p>
-  </div>
-  <div class="warn-box"><p><strong style="font-weight:500">Golden rule:</strong> No work may begin and no invoices may be processed until a fully executed agreement is in place. A pending DocuSign signature is not an executed contract.</p></div>
-  <div class="tip-box"><p><strong style="font-weight:500">Evisort rule:</strong> If it's not in Evisort with obligation dates entered, it doesn't exist from a legal ops perspective.</p></div>
-  <div class="card">
-    <h3>The integrated daily flow</h3>
-    <div class="step-flow" style="flex-direction:row;flex-wrap:wrap;gap:.5rem;align-items:center">
-      <span style="font-size:13px;background:var(--color-background-secondary);padding:5px 10px;border-radius:8px;border:0.5px solid var(--color-border-tertiary);color:var(--color-text-primary)">Slack request</span>
-      <span style="color:var(--color-text-secondary)">→</span>
-      <span style="font-size:13px;background:var(--color-background-secondary);padding:5px 10px;border-radius:8px;border:0.5px solid var(--color-border-tertiary);color:var(--color-text-primary)">Evisort CLM review</span>
-      <span style="color:var(--color-text-secondary)">→</span>
-      <span style="font-size:13px;background:var(--color-background-secondary);padding:5px 10px;border-radius:8px;border:0.5px solid var(--color-border-tertiary);color:var(--color-text-primary)">Concur invoice match</span>
-      <span style="color:var(--color-text-secondary)">→</span>
-      <span style="font-size:13px;background:var(--color-background-secondary);padding:5px 10px;border-radius:8px;border:0.5px solid var(--color-border-tertiary);color:var(--color-text-primary)">Relativity archive</span>
-    </div>
-  </div>
-  <div class="card-grid">
-    <div class="card" style="margin-bottom:0">
-      <div class="badge badge-blue">Before Day 1</div>
-      <ul style="font-size:13px;color:var(--color-text-secondary)">
-        <li>Request Evisort admin access from Janelle</li>
-        <li>Request DocuSign via Slack #it-help</li>
-        <li>Request Relativity access from Legal Ops</li>
-        <li>Join #legal-ops, #contracts, #general on Slack</li>
-        <li>Read the contract lifecycle guide</li>
-      </ul>
-    </div>
-    <div class="card" style="margin-bottom:0">
-      <div class="badge badge-purple">Week 1 focus</div>
-      <ul style="font-size:13px;color:var(--color-text-secondary)">
-        <li>Meet Janelle, Jen Manter, Finance, and Operations</li>
-        <li>Tour the Evisort contract library</li>
-        <li>Review active project portfolio</li>
-        <li>Shadow Janelle on one intake end-to-end</li>
-      </ul>
-    </div>
-    <div class="card" style="margin-bottom:0">
-      <div class="badge badge-green">90-day targets</div>
-      <ul style="font-size:13px;color:var(--color-text-secondary)">
-        <li>Zero missed Evisort alerts</li>
-        <li>All standard contracts hitting SLAs</li>
-        <li>Run quarterly KPI report with Janelle</li>
-        <li>Complete one outside counsel invoice review cycle</li>
-      </ul>
-    </div>
-  </div>
+<div class="nav" id="nav"></div>
+<div id="content"></div>
 </div>
-
-<div id="lifecycle" class="section">
-  <h2>The 7-step contract lifecycle</h2>
-  <div class="warn-box"><p>Business teams should never go directly to attorneys. All contract requests route through legal ops first. This is how you maintain visibility across all active agreements.</p></div>
-  <div class="step-flow">
-    <div class="step-item">
-      <div class="step-num">1</div>
-      <div class="step-body">
-        <div class="step-title">Contract intake <span class="tool-chip">Evisort</span></div>
-        <div class="step-sub">Business team submits via Evisort intake form or Slack. You identify contract type, confirm requesting party, counterparty, estimated value, and target execution date. Check if a template exists or if it's counterparty paper. Create the matter in Evisort and assign to the right attorney.</div>
-      </div>
-    </div>
-    <div class="step-item">
-      <div class="step-num">2</div>
-      <div class="step-body">
-        <div class="step-title">Documentation collection <span class="tool-chip">Google Drive</span> <span class="tool-chip">Evisort</span></div>
-        <div class="step-sub">For PPAs: capacity, location, COD target, FERC status, CAISO/ERCOT interconnection status. For land: legal property description, title search, landowner contact. For vendors/outside counsel: W-9, certificate of insurance, scope of work, signatory info, conflict check.</div>
-      </div>
-    </div>
-    <div class="step-item">
-      <div class="step-num">3</div>
-      <div class="step-body">
-        <div class="step-title">Attorney review & negotiation <span class="tool-chip">Google Docs</span></div>
-        <div class="step-sub">Attorney-owned. Your role: track status in Evisort, follow up if stalled, coordinate scheduling of negotiation calls, maintain version control (tag each redline with date and party), flag delays to the business team vs SLA. Do not participate in substantive legal decisions.</div>
-      </div>
-    </div>
-    <div class="step-item">
-      <div class="step-num">4</div>
-      <div class="step-body">
-        <div class="step-title">Internal approval & signing authority check <span class="tool-chip">Evisort</span></div>
-        <div class="step-sub">Confirm contract value → identify required signatories per the signing authority matrix. Route in Evisort and notify approvers via Slack with a deadline. Follow up after 48 hours. Escalate to Janelle if unresponsive beyond 5 days. Confirm Finance has approved budget implications.</div>
-      </div>
-    </div>
-    <div class="step-item">
-      <div class="step-num">5</div>
-      <div class="step-body">
-        <div class="step-title">Execution via DocuSign <span class="tool-chip">DocuSign</span></div>
-        <div class="step-sub">Create the DocuSign envelope with the final approved version. Route in correct order: internal signatories first, then counterparty. Confirm counterparty name, title, and email match the agreement. Monitor daily — follow up on any signatory pending more than 48 hours. Download and store immediately upon completion.</div>
-      </div>
-    </div>
-    <div class="step-item">
-      <div class="step-num">6</div>
-      <div class="step-body">
-        <div class="step-title">Storage, tagging & obligation entry <span class="tool-chip">Evisort</span></div>
-        <div class="step-sub">Upload to Evisort — tag with contract type, counterparty, project, and value. Enter all key dates: effective date, expiration, renewal windows, COD, milestones. Set automated alerts at 180/90/60/30 days. Notify the business team. Flag quarterly lender reporting for project finance deals. Copy to Relativity if litigation-relevant.</div>
-      </div>
-    </div>
-    <div class="step-item">
-      <div class="step-num">7</div>
-      <div class="step-body">
-        <div class="step-title">Ongoing obligation tracking <span class="tool-chip">Evisort</span> <span class="tool-chip">Slack</span></div>
-        <div class="step-sub">Push information proactively — Finance, Development, and Commercial should never need to chase you for contract status. PPA CODs flagged at 180/90/60/30 days. Land lease renewals flagged 12 months out. Project finance covenant compliance tracked quarterly. Build Slack alerts so teams get what they need automatically.</div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div id="contracts" class="section">
-  <h2>Contract types you'll manage</h2>
-  <div class="card">
-    <div class="badge badge-red">High risk</div>
-    <h3>Power Purchase Agreement (PPA)</h3>
-    <p style="margin-bottom:.5rem">Long-term commitment to deliver power to a utility or corporate buyer. 15–20 year terms with performance milestones, capacity guarantees, and liquidated damages.</p>
-    <p><strong style="font-weight:500">Track:</strong> Commercial Operation Date (COD), capacity guarantees, availability requirements, augmentation triggers, renewal windows.</p>
-    <p style="margin-top:.4rem;color:#A32D2D;font-size:13px">Missed COD = automatic liquidated damages. Flag at 180/90/60/30 days.</p>
-  </div>
-  <div class="card">
-    <div class="badge badge-red">High risk</div>
-    <h3>Land Lease / Easement</h3>
-    <p style="margin-bottom:.5rem">Long-term lease of hundreds of acres from private landowners. Often 25–40 year terms with renewal options.</p>
-    <p><strong style="font-weight:500">Track:</strong> Renewal option windows, rent escalation schedules, amendment history, construction commencement dates, access rights.</p>
-    <p style="margin-top:.4rem;color:#A32D2D;font-size:13px">Missed renewal window = loss of project site. Flag 12 months out — not just 180 days.</p>
-  </div>
-  <div class="card">
-    <div class="badge badge-red">High risk</div>
-    <h3>Interconnection Agreement (CAISO / ERCOT)</h3>
-    <p style="margin-bottom:.5rem">Governs how IPX connects solar/battery projects to the grid. Defines cost-sharing for grid upgrades and technical requirements.</p>
-    <p><strong style="font-weight:500">Track:</strong> Queue position milestones, study completion dates, cost allocation deadlines, execution windows.</p>
-    <p style="margin-top:.4rem;color:#A32D2D;font-size:13px">Missed milestone = lost queue position — often unrecoverable.</p>
-  </div>
-  <div class="card">
-    <div class="badge badge-amber">Medium-high risk</div>
-    <h3>EPC Contract (Engineering, Procurement & Construction)</h3>
-    <p style="margin-bottom:.5rem">Contract with the companies that physically build IPX's solar and battery projects. Defines scope, schedule, price, and performance guarantees.</p>
-    <p><strong style="font-weight:500">Track:</strong> COD milestone, liquidated damages provisions, warranty periods, change order log, performance testing schedule.</p>
-  </div>
-  <div class="card">
-    <div class="badge badge-red">High risk</div>
-    <h3>Project Finance Agreement</h3>
-    <p style="margin-bottom:.5rem">Complex debt and tax equity financing — often hundreds of millions of dollars. Governed by loan/credit agreements with lenders and institutional investors.</p>
-    <p><strong style="font-weight:500">Track:</strong> Quarterly lender reporting, covenant compliance, draw conditions, insurance requirements, maturity dates.</p>
-    <p style="margin-top:.4rem;color:#A32D2D;font-size:13px">Covenant breach = technical default. Quarterly reporting is mandatory — Finance begins prep at 90 days.</p>
-  </div>
-  <div class="card">
-    <div class="badge badge-green">Medium risk</div>
-    <h3>Outside Counsel / Vendor Agreements</h3>
-    <p style="margin-bottom:.5rem">Engagement letters with law firms, vendor agreements with consultants and service providers. Governs scope, rates, billing guidelines, and conflict waivers.</p>
-    <p><strong style="font-weight:500">Track:</strong> Billing guideline compliance, budget vs actuals per matter, rate agreement renewals, invoice review cadence.</p>
-    <p style="margin-top:.4rem;color:#185FA5;font-size:13px">Invoices are audited and paid through SAP Concur. You enforce billing guidelines — no admin charges, no unapproved travel.</p>
-  </div>
-</div>
-
-<div id="tools" class="section">
-  <h2>Your tech stack</h2>
-  <div class="card">
-    <h3>Evisort — CLM platform (primary tool)</h3>
-    <p style="margin-bottom:.5rem">The single source of truth for all IPX agreements. If it's not here with dates entered, it doesn't exist. Access via company SSO.</p>
-    <div class="tag-row">
-      <span class="badge badge-blue">Intake & routing</span>
-      <span class="badge badge-blue">Storage & tagging</span>
-      <span class="badge badge-blue">Obligation tracking</span>
-      <span class="badge badge-blue">Reporting & KPIs</span>
-      <span class="badge badge-blue">Renewal management</span>
-    </div>
-  </div>
-  <div class="card">
-    <h3>DocuSign — electronic signatures</h3>
-    <p>Used for all contract executions. Always route internal signatories first, then counterparty. Monitor the queue daily. Follow up on any signature pending more than 48 hours.</p>
-  </div>
-  <div class="card">
-    <h3>SAP Concur — invoice management</h3>
-    <p style="margin-bottom:.5rem">The financial engine for outside counsel billing. You enforce billing guidelines and "code" invoices to the correct project so Finance can track project-level profitability.</p>
-    <div class="info-box" style="margin-top:.75rem"><p>If a firm bills $100K for work on the Darden project, you tag that expense to the Darden project code in Concur. Finance relies on this for accurate reporting.</p></div>
-  </div>
-  <div class="card">
-    <h3>Slack — internal coordination</h3>
-    <p style="margin-bottom:.5rem">Primary communication tool for all internal comms. Key channels to know:</p>
-    <ul style="font-size:13px;color:var(--color-text-secondary)">
-      <li><strong style="font-weight:500">#legal-ops</strong> — internal legal ops team</li>
-      <li><strong style="font-weight:500">#contracts</strong> — cross-team contract requests</li>
-      <li><strong style="font-weight:500">#general</strong> — company-wide</li>
-      <li><strong style="font-weight:500">#it-help</strong> — DocuSign provisioning requests</li>
-    </ul>
-  </div>
-  <div class="card">
-    <h3>Relativity — litigation archive</h3>
-    <p>Store a copy of any executed agreement that may be relevant to active or anticipated litigation. Secondary to Evisort — not every contract goes here, only litigation-adjacent ones.</p>
-  </div>
-  <div class="card">
-    <h3>Google Workspace</h3>
-    <p>Google Drive for working documents, redlines, templates, and billing guidelines during negotiation. Google Docs for drafts and redlines. Sheets for tracking. Calendar for deadline management. All activity during drafting phase happens here before moving to Evisort post-execution.</p>
-  </div>
-</div>
-
-<div id="people" class="section">
-  <h2>Key people</h2>
-  <div class="card">
-    <div class="person-row">
-      <div class="avatar av-blue">JA</div>
-      <div>
-        <div class="person-name">Janelle — Head of Legal Operations</div>
-        <div class="person-role">Your direct manager</div>
-        <div class="person-note">Go-to for all contract process questions, Evisort admin, and escalations up to 5 days. She reviews your first Evisort entries. Slack her for EA-style coordination on executive signatures.</div>
-      </div>
-    </div>
-    <div class="person-row">
-      <div class="avatar av-purple">JM</div>
-      <div>
-        <div class="person-name">Jen Manter — General Counsel</div>
-        <div class="person-role">Escalation point</div>
-        <div class="person-note">Escalate high-value agreements, sensitive matters, and anything off track at 30 days. She receives quarterly KPI reports. Not your day-to-day contact — go through Janelle first.</div>
-      </div>
-    </div>
-    <div class="person-row">
-      <div class="avatar av-teal">FN</div>
-      <div>
-        <div class="person-name">Finance Team (CFO)</div>
-        <div class="person-role">Financial approvals</div>
-        <div class="person-note">Must approve budget implications before final sign-off on any agreement with financial impact. Also your partner on quarterly lender reporting for project finance deals and on Concur invoice coding.</div>
-      </div>
-    </div>
-    <div class="person-row">
-      <div class="avatar av-amber">OD</div>
-      <div>
-        <div class="person-name">Operations & Development Teams</div>
-        <div class="person-role">Primary source of contract requests</div>
-        <div class="person-note">CAISO project developers will Slack you for NDAs and vendor contracts. Your job is to redirect them into the Evisort intake pipeline — not handle requests informally in chat.</div>
-      </div>
-    </div>
-    <div class="divider"></div>
-    <div class="info-box"><p><strong style="font-weight:500">Executive Assistant partnership:</strong> Use Slack to ping the EA for status on critical documents waiting for C-suite signatures. Example: "Hey, the Darden financing resolution is sitting in Evisort for the CAO's signature — can we get that pushed through before their 2 PM?"</p></div>
-  </div>
-</div>
-
-<div id="authority" class="section">
-  <h2>Signing authority matrix</h2>
-  <p style="margin-bottom:1rem;font-size:14px;color:var(--color-text-secondary)">You must confirm the contract value and identify required signatories before routing for internal approval — every time.</p>
-  <div class="auth-grid">
-    <div class="auth-block">
-      <div class="auth-range">$0 – $50K</div>
-      <div class="auth-who">Director or Department Head</div>
-      <div class="auth-sigs">1 signature</div>
-    </div>
-    <div class="auth-block">
-      <div class="auth-range">$50K – $250K</div>
-      <div class="auth-who">Director + Head of Legal Ops or GC</div>
-      <div class="auth-sigs">2 signatures</div>
-    </div>
-    <div class="auth-block">
-      <div class="auth-range">$250K – $1M</div>
-      <div class="auth-who">GC + CFO or COO</div>
-      <div class="auth-sigs">2 signatures</div>
-    </div>
-    <div class="auth-block">
-      <div class="auth-range">Over $1M</div>
-      <div class="auth-who">CLO + CFO + CEO</div>
-      <div class="auth-sigs">3 signatures</div>
-    </div>
-  </div>
-  <div class="warn-box"><p>Follow up on pending approvals after 48 hours. Escalate to Janelle if unresponsive beyond 5 days. Finance approval of budget implications must come before final sign-off.</p></div>
-  <div class="card">
-    <h3>DocuSign signing order — always</h3>
-    <ol style="font-size:13px;color:var(--color-text-secondary);padding-left:1rem">
-      <li style="margin-bottom:.3rem">Internal signatories (in authority order) — first</li>
-      <li>Counterparty — last</li>
-    </ol>
-    <p style="margin-top:.5rem;font-size:13px;color:var(--color-text-secondary)">Confirm counterparty signatory name, title, and email match the agreement before sending.</p>
-  </div>
-</div>
-
-<div id="alerts" class="section">
-  <h2>Alert windows — configure in Evisort</h2>
-  <p style="margin-bottom:1rem;font-size:14px;color:var(--color-text-secondary)">Set automated alerts at these intervals for every key date. You own proactive communication — stakeholders should not need to ask you for status.</p>
-  <div class="alert-strip">
-    <div class="alert-block">
-      <div class="alert-days">180 days</div>
-      <div class="alert-label">Early action required</div>
-      <div class="alert-item">Land lease renewal windows</div>
-      <div class="alert-item">PPA COD dates</div>
-      <div class="alert-item">Project finance maturity</div>
-      <div class="alert-item">Outside counsel panel review</div>
-    </div>
-    <div class="alert-block">
-      <div class="alert-days">90 days</div>
-      <div class="alert-label">Attorneys engage now</div>
-      <div class="alert-item">FERC regulatory filings</div>
-      <div class="alert-item">Lender reporting (Finance begins prep)</div>
-      <div class="alert-item">CPUC compliance filings</div>
-      <div class="alert-item">COD milestone check with Operations</div>
-    </div>
-    <div class="alert-block">
-      <div class="alert-days">60 days</div>
-      <div class="alert-label">Escalate if not in progress</div>
-      <div class="alert-item">Any filing where prep hasn't started</div>
-      <div class="alert-item">Contract renewals not yet engaged</div>
-      <div class="alert-item">DocuSign pending 2+ weeks</div>
-      <div class="alert-item">FEOC documentation gaps</div>
-    </div>
-    <div class="alert-block">
-      <div class="alert-days">30 days</div>
-      <div class="alert-label">Final check — escalate to Jen</div>
-      <div class="alert-item">All filings in review or submitted</div>
-      <div class="alert-item">Lender reports in attorney review</div>
-      <div class="alert-item">Renewals negotiated and executing</div>
-      <div class="alert-item">Anything off track — flag immediately</div>
-    </div>
-  </div>
-  <div class="card">
-    <h3>High-priority obligations (flag proactively)</h3>
-    <div class="row"><div class="dot dot-red"></div><p>PPA commercial operation dates — 180/90/60/30 days to Operations and attorney</p></div>
-    <div class="row"><div class="dot dot-red"></div><p>Land lease renewal option windows — 12 months out minimum, must exercise within window</p></div>
-    <div class="row"><div class="dot dot-red"></div><p>Project finance covenant compliance — quarterly reporting to lenders</p></div>
-    <div class="row"><div class="dot dot-red"></div><p>CAISO interconnection queue milestones — track per project</p></div>
-  </div>
-  <div class="card">
-    <h3>Medium-priority obligations</h3>
-    <div class="row"><div class="dot dot-amber"></div><p>EPC milestone payment confirmations — coordinate with Operations</p></div>
-    <div class="row"><div class="dot dot-amber"></div><p>PPA augmentation triggers — monitor capacity vs contracted thresholds</p></div>
-    <div class="row"><div class="dot dot-amber"></div><p>Rent escalation schedules on land leases — confirm applied correctly</p></div>
-    <div class="row"><div class="dot dot-amber"></div><p>Outside counsel engagement renewals — review before auto-renewal</p></div>
-  </div>
-</div>
-
-<div id="slas" class="section">
-  <h2>SLAs — your turnaround commitments</h2>
-  <p style="margin-bottom:1rem;font-size:14px;color:var(--color-text-secondary)">These are the commitments you make to business teams. Know them cold.</p>
-  <div class="table-wrap">
-    <table>
-      <thead>
-        <tr>
-          <th>Contract type</th>
-          <th>Intake → attorney</th>
-          <th>Review turnaround</th>
-          <th>Execution target</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>NDA / Confidentiality Agreement</td>
-          <td>Same day</td>
-          <td>2–3 business days</td>
-          <td>3–5 business days</td>
-        </tr>
-        <tr>
-          <td>Vendor / Service Agreement</td>
-          <td>1 business day</td>
-          <td>5–7 business days</td>
-          <td>7–10 business days</td>
-        </tr>
-        <tr>
-          <td>Outside Counsel Engagement</td>
-          <td>1 business day</td>
-          <td>3–5 business days</td>
-          <td>5–7 business days</td>
-        </tr>
-        <tr>
-          <td>O&M Agreement</td>
-          <td>1 business day</td>
-          <td>10–15 business days</td>
-          <td>15–20 business days</td>
-        </tr>
-        <tr>
-          <td>EPC Contract</td>
-          <td>1 business day</td>
-          <td>TBD by complexity</td>
-          <td>Coordinate with attorney</td>
-        </tr>
-        <tr>
-          <td>PPA / Land Lease / Project Finance</td>
-          <td>Same day</td>
-          <td>TBD by complexity</td>
-          <td>Coordinate with attorney</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-  <div class="info-box"><p>NDAs and PPAs both require same-day intake-to-attorney routing. NDAs are the fastest contract to execute (3–5 business days total). Complex deals like PPAs and project finance have no fixed execution target — coordinate directly with the attorney.</p></div>
-</div>
-
-<div id="slack-concur" class="section">
-  <h2>Slack & SAP Concur in your daily workflow</h2>
-  <div class="card">
-    <h3>SAP Concur — outside counsel invoice management</h3>
-    <p style="margin-bottom:.75rem">Because IPX Power spends millions on elite outside law firms for energy regulations and project financings, Concur is your financial control layer.</p>
-    <h3 style="font-size:13px;margin-bottom:.4rem">Who you work with in Concur</h3>
-    <div class="row"><div class="dot dot-blue"></div><p>Outside law firms (submitting invoices)</p></div>
-    <div class="row"><div class="dot dot-blue"></div><p>Strategic Procurement Support team</p></div>
-    <div class="row"><div class="dot dot-blue"></div><p>Finance / Accounts Payable</p></div>
-    <div class="divider"></div>
-    <h3 style="font-size:13px;margin-bottom:.4rem">Your two core Concur responsibilities</h3>
-    <div class="info-box"><p><strong style="font-weight:500">Enforcing billing guidelines:</strong> Block firms from charging for basic administrative work or unapproved travel. Invoices must comply with IPX Power's billing guidelines before you approve them in Concur.</p></div>
-    <div class="info-box"><p><strong style="font-weight:500">Cost-tracking allocations (invoice coding):</strong> Tag every invoice to the correct project code. If a firm bills $100K on the Darden project, that gets coded to Darden — not to a general legal budget line. Finance uses this for project-level profitability reporting.</p></div>
-  </div>
-  <div class="card">
-    <h3>Slack — the "get things done" layer</h3>
-    <p style="margin-bottom:.75rem">Email is effectively dead for internal teams at IPX. Everyone lives in Slack — from C-suite to field engineers.</p>
-    <h3 style="font-size:13px;margin-bottom:.4rem">Who you work with in Slack</h3>
-    <div class="row"><div class="dot dot-purple"></div><p>Executive Assistant — for routing C-suite signatures</p></div>
-    <div class="row"><div class="dot dot-purple"></div><p>CAISO Project Developers — who will ping you for NDAs and vendor contracts</p></div>
-    <div class="row"><div class="dot dot-purple"></div><p>Internal legal team — attorney coordination</p></div>
-    <div class="divider"></div>
-    <h3 style="font-size:13px;margin-bottom:.4rem">Two daily Slack patterns</h3>
-    <div class="scenario">
-      <div class="scenario-q">EA partnership — executive signature follow-ups</div>
-      <div class="scenario-a">"Hey, the Darden financing resolution is sitting in Evisort for the CAO's signature — can we get that pushed through before their 2 PM?" This is a daily occurrence. The EA manages the executive's schedule; you manage the document queue.</div>
-    </div>
-    <div class="scenario">
-      <div class="scenario-q">Legal intake & triage — redirect Slack requests to Evisort</div>
-      <div class="scenario-a">When a developer pings you on Slack asking for a quick NDA, don't handle it in chat. Redirect them to the official Evisort intake form so the request is tracked. Informal Slack requests that don't hit the pipeline get lost.</div>
-    </div>
-  </div>
-</div>
-
-<div id="glossary" class="section">
-  <h2>Industry glossary</h2>
-  <div class="card">
-    <div class="glossary-item">
-      <div class="glossary-term">COD — Commercial Operation Date</div>
-      <div class="glossary-def">When a solar/battery project starts delivering power commercially. Missing this date in a PPA triggers automatic liquidated damages. The single most important deadline you will track.</div>
-    </div>
-    <div class="divider"></div>
-    <div class="glossary-item">
-      <div class="glossary-term">PPA — Power Purchase Agreement</div>
-      <div class="glossary-def">Long-term contract (15–20 years) committing IPX to deliver power to a buyer — a utility or corporate off-taker. The core commercial contract for every project.</div>
-    </div>
-    <div class="divider"></div>
-    <div class="glossary-item">
-      <div class="glossary-term">EPC — Engineering, Procurement & Construction</div>
-      <div class="glossary-def">The contract type for companies that physically build IPX's projects. EPC contractors are responsible for construction timelines and performance guarantees.</div>
-    </div>
-    <div class="divider"></div>
-    <div class="glossary-item">
-      <div class="glossary-term">CAISO — California Independent System Operator</div>
-      <div class="glossary-def">The grid operator for most of California. IPX projects in CA interconnect through CAISO's queue process. Missing queue milestones = lost position, often unrecoverable.</div>
-    </div>
-    <div class="divider"></div>
-    <div class="glossary-item">
-      <div class="glossary-term">ERCOT — Electric Reliability Council of Texas</div>
-      <div class="glossary-def">The Texas grid operator. IPX projects in TX interconnect through ERCOT. Same queue dynamics as CAISO.</div>
-    </div>
-    <div class="divider"></div>
-    <div class="glossary-item">
-      <div class="glossary-term">Liquidated damages (LD)</div>
-      <div class="glossary-def">Pre-agreed damages in a contract for specific failures — most commonly missing a COD. They're large, automatic, and don't require proving actual harm. This is why every deadline gets the full alert treatment.</div>
-    </div>
-    <div class="divider"></div>
-    <div class="glossary-item">
-      <div class="glossary-term">FERC — Federal Energy Regulatory Commission</div>
-      <div class="glossary-def">The federal regulator for wholesale electricity markets. IPX must maintain market-based rate authorization. FERC regulatory filings trigger at 90 days out.</div>
-    </div>
-    <div class="divider"></div>
-    <div class="glossary-item">
-      <div class="glossary-term">Tax equity</div>
-      <div class="glossary-def">A form of project finance where institutional investors provide capital in exchange for federal tax credits (ITC/PTC) generated by the solar project. Drives the project finance structure.</div>
-    </div>
-    <div class="divider"></div>
-    <div class="glossary-item">
-      <div class="glossary-term">ITC / PTC — Investment Tax Credit / Production Tax Credit</div>
-      <div class="glossary-def">Federal tax credits under the Inflation Reduction Act (IRA) that make solar and battery projects financially viable. The reason tax equity investors participate in project finance.</div>
-    </div>
-    <div class="divider"></div>
-    <div class="glossary-item">
-      <div class="glossary-term">Covenant</div>
-      <div class="glossary-def">A binding obligation in a project finance agreement — for example, maintaining certain financial ratios. A covenant breach = technical default, which can accelerate repayment of the entire loan.</div>
-    </div>
-    <div class="divider"></div>
-    <div class="glossary-item">
-      <div class="glossary-term">CLM — Contract Lifecycle Management</div>
-      <div class="glossary-def">The software category Evisort belongs to. Covers the full contract journey from intake through obligation tracking and renewal management.</div>
-    </div>
-    <div class="divider"></div>
-    <div class="glossary-item">
-      <div class="glossary-term">FEOC — Foreign Entity of Concern</div>
-      <div class="glossary-def">An IRA-related compliance requirement affecting supply chain documentation for projects claiming ITC/PTC credits. FEOC documentation gaps trigger escalation at 60 days out.</div>
-    </div>
-    <div class="divider"></div>
-    <div class="glossary-item">
-      <div class="glossary-term">O&M — Operations & Maintenance</div>
-      <div class="glossary-def">The long-term contract governing ongoing operation of a solar/battery project after construction. 10–15 business day review turnaround, 15–20 days to execution.</div>
-    </div>
-  </div>
-</div>
-
-<div id="scenarios" class="section">
-  <h2>Real-world scenarios</h2>
-  <p style="margin-bottom:1rem;font-size:14px;color:var(--color-text-secondary)">Practice applying the process to situations you'll actually encounter on the job.</p>
-  <div class="scenario">
-    <div class="scenario-q">A CAISO developer Slacks you: "Hey, can you send me a quick NDA for a new landowner meeting tomorrow?"</div>
-    <div class="scenario-a">Do not handle this in Slack. Respond: "Got it — please submit through the Evisort intake form so I can get it tracked and routed properly. I'll get it back to you same day." NDA SLA is same-day intake, 3–5 business days to execution.</div>
-  </div>
-  <div class="scenario">
-    <div class="scenario-q">An outside law firm submits an invoice in Concur that includes a line for "document organization and filing" at $2,000.</div>
-    <div class="scenario-a">Reject or flag the line item. Billing guidelines prohibit basic administrative work like document organization. This is exactly what Concur enforcement looks like in practice.</div>
-  </div>
-  <div class="scenario">
-    <div class="scenario-q">A $350,000 vendor contract comes in for execution. The requesting Director says "I've already approved this, just send it to DocuSign."</div>
-    <div class="scenario-a">A $350K contract requires GC + CFO or COO signatures (2 signatures). The Director alone does not have authority at this value. Route for correct approvals in Evisort before creating the DocuSign envelope.</div>
-  </div>
-  <div class="scenario">
-    <div class="scenario-q">You upload an executed PPA to Evisort. What are the minimum required steps before you can close out this matter?</div>
-    <div class="scenario-a">Tag with contract type, counterparty, project, and value. Enter all key dates: effective date, expiration, COD, renewal windows, all milestones. Set automated alerts at 180/90/60/30 days. Notify the business team. Also flag the COD to Operations at 180 days. If litigation-adjacent, copy to Relativity.</div>
-  </div>
-  <div class="scenario">
-    <div class="scenario-q">An attorney negotiation call has been ongoing for 3 weeks. The business team is asking you for a status update.</div>
-    <div class="scenario-a">Check the SLA for that contract type. If review is running over, flag the delay to the business team and check in with the attorney. Update the status in Evisort. You don't participate in the negotiation — but stalls without visibility are your problem to surface.</div>
-  </div>
-  <div class="scenario">
-    <div class="scenario-q">A signatory in a DocuSign envelope has been pending for 5 days and hasn't signed.</div>
-    <div class="scenario-a">You should have followed up after 48 hours. At 5 days, escalate to Janelle. Meanwhile, no work should have started on the project — a pending signature is not an executed contract.</div>
-  </div>
-  <div class="scenario">
-    <div class="scenario-q">Evisort sends you a 180-day alert on a land lease renewal window. What do you do?</div>
-    <div class="scenario-a">Notify the relevant attorney and the Operations/Development team immediately. Land lease renewals must be flagged at 12 months out — so if 180 days is your first alert, that's already late for land leases specifically. For all other contract types, 180 days is the correct early-action trigger.</div>
-  </div>
-  <div class="scenario">
-    <div class="scenario-q">Finance asks you how much IPX spent on outside counsel for the Darden project last quarter.</div>
-    <div class="scenario-a">This is answerable from Concur — if you've been coding invoices correctly to the Darden project code. Pull the project-tagged spend from Concur and provide it to Finance. This is exactly why accurate invoice coding matters.</div>
-  </div>
-</div>
-
 <script>
+var tabs=[
+{id:'overview',label:'Overview'},
+{id:'schedule',label:'Schedule'},
+{id:'stack',label:'Tech stack'},
+{id:'lifecycle',label:'Lifecycle'},
+{id:'contracts',label:'Contracts'},
+{id:'ferc',label:'FERC & regulatory'},
+{id:'people',label:'People'},
+{id:'authority',label:'Signing authority'},
+{id:'slas',label:'SLAs'},
+{id:'alerts',label:'Alerts'},
+{id:'spend',label:'Spend management'},
+{id:'glossary',label:'Glossary'},
+{id:'questions',label:'Questions to ask'},
+{id:'scenarios',label:'Scenarios'}
+];
+
+var sections={};
+
+sections.overview=`
+<h2>Your role at IPX Power</h2>
+<div class="cd"><h3>What IPX Power does</h3><p>Develops, owns, and operates utility-scale solar and battery storage projects. Project lifecycle: development, permitting, financing, construction, commercial operation, long-term O&M. Legal ops touches every stage through contracts.</p></div>
+<div class="cd"><h3>Your role as Legal Ops Specialist</h3><p style="margin-bottom:.4rem">You own the operational layer of every contract — not the legal substance. Attorneys make legal decisions. You prevent bottlenecks, track spending, and ensure every executed agreement is properly managed.</p><p>You are a financial gatekeeper and tracker — not a budget owner. The CFO/Finance team owns the budget. You make sure what's being spent matches what was approved and is reported accurately.</p></div>
+<div class="wb"><p><span style="font-weight:500">Golden rule:</span> No work may begin and no invoices may be processed until a fully executed agreement is in place. A pending DocuSign signature is not an executed contract.</p></div>
+<div class="tb"><p><span style="font-weight:500">Evisort rule:</span> If it's not in Evisort with obligation dates entered, it doesn't exist from a legal ops perspective.</p></div>
+<div class="cd"><h3>The confirmed daily flow</h3><div class="fl"><span class="fp">Slack request</span><span class="fa">&rarr;</span><span class="fp">Evisort CLM</span><span class="fa">&rarr;</span><span class="fp">Brightflag e-billing</span><span class="fa">&rarr;</span><span class="fp">Stampli AP</span><span class="fa">&rarr;</span><span class="fp">Relativity archive</span></div></div>
+<div class="ab2"><p><span style="font-weight:500">Important context:</span> Your original onboarding documents were hypothetically constructed. The signing authority matrix, SLAs, alert windows, and process steps are plausible but need verification against actual IPX Power policy once onboarded.</p></div>
+<div class="cg">
+<div class="cd" style="margin:0"><div class="bd bd-b">Before day 1</div><ul><li>Request Evisort admin access from Janelle</li><li>Request DocuSign via Slack #it-help</li><li>Request Relativity credentials</li><li>Join #legal-ops, #contracts, #general</li><li>Read contract lifecycle guide</li></ul></div>
+<div class="cd" style="margin:0"><div class="bd bd-p">Week 1 focus</div><ul><li>Meet Janelle, Jen, Finance, Operations</li><li>Tour Evisort contract library</li><li>Understand paralegal boundaries</li><li>Shadow one intake end-to-end</li></ul></div>
+<div class="cd" style="margin:0"><div class="bd bd-g">90-day targets</div><ul><li>Zero missed Evisort alerts</li><li>All standard contracts hitting SLAs</li><li>Quarterly KPI report with Janelle</li><li>One outside counsel invoice cycle in Brightflag</li></ul></div>
+</div>`;
+
+sections.schedule=`
+<h2>Onboarding schedule — June 10-12, 2026</h2>
+<div class="schd">
+<div class="schd-h">Time (PST)</div><div class="schd-h">Session</div><div class="schd-h">With</div>
+<div class="schd-day">Wednesday, June 10</div>
+<div class="schd-c">9:00 - 10:20</div><div class="schd-c">IT orientation</div><div class="schd-c" style="border-right:none">IT</div>
+<div class="schd-c">10:30 - 11:20</div><div class="schd-c">HR new hire orientation</div><div class="schd-c" style="border-right:none">HR</div>
+<div class="schd-c">12:00 - 12:30</div><div class="schd-c">Welcome</div><div class="schd-c" style="border-right:none">Janelle</div>
+<div class="schd-c">1:00 - 1:40</div><div class="schd-c">Wednesday Launch (recurring, all-company)</div><div class="schd-c" style="border-right:none">All company</div>
+<div class="schd-c">2:30 - 3:00</div><div class="schd-c">Slack setup and walkthrough</div><div class="schd-c" style="border-right:none">Janelle</div>
+<div class="schd-day">Thursday, June 11</div>
+<div class="schd-c">10:00 - 11:00</div><div class="schd-c">Evisort training</div><div class="schd-c" style="border-right:none">Janelle</div>
+<div class="schd-c">11:00 - 11:30</div><div class="schd-c">Daily update: LDOG (recurring)</div><div class="schd-c" style="border-right:none">LDOG / L-OPS</div>
+<div class="schd-c">1:00 - 2:00</div><div class="schd-c">Brightflag / Stampli training</div><div class="schd-c" style="border-right:none">Janelle</div>
+<div class="schd-day">Friday, June 12</div>
+<div class="schd-c">10:00 - 11:00</div><div class="schd-c">GDrive / Gmail / hCue</div><div class="schd-c" style="border-right:none">Janelle</div>
+<div class="schd-c" style="border-bottom:none">11:00 - 11:30</div><div class="schd-c" style="border-bottom:none">Welcome with Jen</div><div class="schd-c" style="border-right:none;border-bottom:none">Jen Manter</div>
+</div>
+<div class="ib" style="margin-top:.75rem"><p><span style="font-weight:500">Key session:</span> Thursday Brightflag/Stampli covers your core daily financial tools. Come with specific questions about invoice review workflow — who reviews first, what triggers a flag, how coding works.</p></div>
+<div class="pb"><p><span style="font-weight:500">Unknown: hCue</span> — on your Friday schedule but its function is unclear. Could be HR/benefits, scheduling, or something else. Clarify during IT orientation Wednesday.</p></div>
+<div class="cd"><h3>Upcoming team weeks</h3><p>September 14-18, 2026 — Denver, CO</p><p>November 2-6, 2026 — San Diego, CA</p><p style="margin-top:.4rem;font-size:12px">Check your offer letter or ask HR during orientation whether travel and lodging are company-paid.</p></div>`;
+
+sections.stack=`
+<h2>Confirmed tech stack</h2>
+<div class="ib"><p><span style="font-weight:500">Updated from your onboarding schedule.</span> Brightflag and Stampli replace the previously assumed SAP Concur. This is a significantly more mature and purpose-built legal ops infrastructure.</p></div>
+<div class="cd"><h3>Evisort — CLM platform (primary tool)</h3><p>Single source of truth for all IPX agreements. Intake, routing, storage, tagging, obligation tracking, alerts, reporting, KPIs, renewal management. If it's not here with dates entered, it doesn't exist.</p><div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:.5rem"><span class="bd bd-b">Intake</span><span class="bd bd-b">Storage</span><span class="bd bd-b">Obligations</span><span class="bd bd-b">Alerts</span><span class="bd bd-b">KPIs</span><span class="bd bd-b">Renewals</span></div></div>
+<div class="cd"><h3>Brightflag — legal e-billing</h3><p style="margin-bottom:.4rem">Dedicated legal e-billing platform. Law firms submit invoices in LEDES format. AI-driven billing guideline enforcement flags prohibited line items automatically. You review flags, approve or reject, track budget vs. actuals per matter.</p><p>This is where you enforce billing guidelines — blocking admin charges, unapproved travel, rate violations, and scope creep.</p></div>
+<div class="cd"><h3>Stampli — AP and invoice processing</h3><p>Invoice processing and accounts payable automation. After Brightflag approval, Stampli handles GL coding, project allocation, and routing to payment. This is where invoices get tagged to the correct project code for Finance's profitability reporting.</p></div>
+<div class="cd"><h3>Confirmed invoice workflow</h3><div class="fl"><span class="fp">Law firm submits (LEDES)</span><span class="fa">&rarr;</span><span class="fp">Brightflag (guideline review)</span><span class="fa">&rarr;</span><span class="fp">Stampli (AP coding)</span><span class="fa">&rarr;</span><span class="fp">ERP / payment</span></div></div>
+<div class="cg">
+<div class="cd" style="margin:0"><h3>DocuSign</h3><p>All contract executions. Internal signatories first, then counterparty. Monitor daily. Follow up after 48 hours pending.</p></div>
+<div class="cd" style="margin:0"><h3>Relativity</h3><p>Ediscovery and litigation support only. Not matter management. Store contracts relevant to active or anticipated litigation here in addition to Evisort.</p></div>
+</div>
+<div class="cg">
+<div class="cd" style="margin:0"><h3>Slack</h3><p>Primary internal comms. Key channels: #legal-ops, #contracts, #general, #it-help.</p></div>
+<div class="cd" style="margin:0"><h3>Google Workspace</h3><p>Drive for working docs, redlines, templates. Docs for drafts. Sheets for tracking. Calendar for deadlines.</p></div>
+</div>
+<div class="cg">
+<div class="cd" style="margin:0"><h3>hCue <span class="unc">Unconfirmed</span></h3><p>On Friday schedule alongside GDrive/Gmail. Function unclear — clarify during IT orientation.</p></div>
+<div class="cd" style="margin:0"><h3>Matter management <span class="unc">Potential gap</span></h3><p>No dedicated matter management tool confirmed. May live in Evisort, spreadsheets, or an unannounced tool. Ask Janelle.</p></div>
+</div>`;
+
+sections.lifecycle=`
+<h2>The 7-step contract lifecycle</h2>
+<div class="wb"><p>Business teams should never go directly to attorneys. All contract requests route through legal ops first — this is how you maintain visibility across all active agreements.</p></div>
+<div class="sf">
+<div class="si"><div class="sn">1</div><div class="sb"><div class="st">Contract intake <span class="tc">Evisort</span></div><div class="ss">Business team submits via Evisort intake form or Slack. Identify contract type, confirm requesting party, counterparty, estimated value, target execution date. Check for template or counterparty paper. Create matter in Evisort and assign to the right attorney.</div></div></div>
+<div class="si"><div class="sn">2</div><div class="sb"><div class="st">Documentation collection <span class="tc">Google Drive</span> <span class="tc">Evisort</span></div><div class="ss">PPAs: capacity, location, COD target, FERC status, interconnection status. Land: property description, title search, landowner contact. Vendors/OC: W-9, insurance cert, scope of work, signatory info, conflict check.</div></div></div>
+<div class="si"><div class="sn">3</div><div class="sb"><div class="st">Attorney review and negotiation <span class="tc">Google Docs</span></div><div class="ss">Attorney-owned. You track status in Evisort, follow up if stalled, coordinate negotiation calls, maintain version control (tag each redline with date and party), flag delays vs SLA. You do not participate in substantive legal decisions.</div></div></div>
+<div class="si"><div class="sn">4</div><div class="sb"><div class="st">Internal approval and signing authority <span class="tc">Evisort</span></div><div class="ss">Confirm contract value and identify required signatories per signing authority matrix. Route in Evisort, notify approvers via Slack with deadline. Follow up after 48 hours. Escalate to Janelle if unresponsive beyond 5 days. Finance must approve budget implications.</div></div></div>
+<div class="si"><div class="sn">5</div><div class="sb"><div class="st">Execution via DocuSign <span class="tc">DocuSign</span></div><div class="ss">Create envelope with final approved version. Internal signatories first, then counterparty. Confirm counterparty name/title/email match the agreement. Monitor daily. Follow up after 48 hours pending. Download and store immediately upon completion.</div></div></div>
+<div class="si"><div class="sn">6</div><div class="sb"><div class="st">Storage, tagging and obligation entry <span class="tc">Evisort</span></div><div class="ss">Upload to Evisort. Tag: contract type, counterparty, project, value. Enter all key dates: effective, expiration, renewal windows, COD, milestones. Set alerts at 180/90/60/30 days. Notify business team. Flag lender reporting for project finance. Copy to Relativity if litigation-relevant.</div></div></div>
+<div class="si"><div class="sn">7</div><div class="sb"><div class="st">Ongoing obligation tracking <span class="tc">Evisort</span> <span class="tc">Slack</span></div><div class="ss">Push proactively — stakeholders should not need to ask for contract status. PPA CODs flagged at 180/90/60/30 days. Land lease renewals flagged 12 months out. Project finance covenants tracked quarterly. Build Slack alerts for automatic team notifications.</div></div></div>
+</div>`;
+
+sections.contracts=`
+<h2>Contract types you will manage</h2>
+<div class="cd"><div class="bd bd-r">High risk</div><h3>Power purchase agreement (PPA)</h3><p style="margin-bottom:.4rem">Long-term commitment to deliver power to a utility or corporate buyer. 15-20 year terms with performance milestones, capacity guarantees, and liquidated damages.</p><p><span style="font-weight:500">Track:</span> COD, capacity guarantees, availability requirements, augmentation triggers, renewal windows.</p><p style="margin-top:.3rem;color:#A32D2D;font-size:12px">Missed COD = automatic liquidated damages. Flag at 180/90/60/30 days.</p></div>
+<div class="cd"><div class="bd bd-r">High risk</div><h3>Land lease / easement</h3><p style="margin-bottom:.4rem">Long-term lease of hundreds of acres from private landowners. 25-40 year terms with renewal options.</p><p><span style="font-weight:500">Track:</span> Renewal option windows, rent escalation schedules, amendment history, construction commencement, access rights.</p><p style="margin-top:.3rem;color:#A32D2D;font-size:12px">Missed renewal = loss of project site. Flag 12 months out.</p></div>
+<div class="cd"><div class="bd bd-r">High risk</div><h3>Interconnection agreement (CAISO / ERCOT)</h3><p style="margin-bottom:.4rem">Governs how IPX physically connects solar/battery projects to the grid. Different from a PPA — between IPX and the grid operator, covering technical requirements and cost-sharing for grid upgrades.</p><p><span style="font-weight:500">Track:</span> Queue position milestones, study completion dates, cost allocation deadlines, execution windows.</p><p style="margin-top:.3rem;color:#A32D2D;font-size:12px">Missed milestone = lost queue position, often unrecoverable.</p></div>
+<div class="cd"><div class="bd bd-a">Medium-high risk</div><h3>EPC contract (engineering, procurement, construction)</h3><p style="margin-bottom:.4rem">Contract with companies that physically build IPX's projects. Defines scope, schedule, price, and performance guarantees.</p><p><span style="font-weight:500">Track:</span> COD milestone, LD provisions, warranty periods, change order log, performance testing schedule.</p></div>
+<div class="cd"><div class="bd bd-r">High risk</div><h3>Project finance agreement</h3><p style="margin-bottom:.4rem">Complex debt and tax equity financing — often hundreds of millions. Governed by loan/credit agreements with lenders and institutional investors.</p><p><span style="font-weight:500">Track:</span> Quarterly lender reporting, covenant compliance, draw conditions, insurance requirements, maturity dates.</p><p style="margin-top:.3rem;color:#A32D2D;font-size:12px">Covenant breach = technical default, can accelerate full loan repayment.</p></div>
+<div class="cd"><div class="bd bd-g">Medium risk</div><h3>Outside counsel / vendor agreements</h3><p style="margin-bottom:.4rem">Engagement letters with law firms, vendor agreements with consultants and service providers.</p><p><span style="font-weight:500">Track:</span> Billing guideline compliance via Brightflag, budget vs actuals per matter, rate agreement renewals, invoice review cadence.</p></div>
+<div class="ib"><p><span style="font-weight:500">PPA vs. interconnection — they are different contracts.</span> PPA = "I promise to sell you power" (IPX and buyer). Interconnection = "here is how my equipment connects to your grid" (IPX and CAISO/ERCOT). Both required. You cannot deliver power under a PPA without an interconnection agreement first.</p></div>`;
+
+sections.ferc=`
+<h2>FERC and regulatory knowledge</h2>
+<div class="ab2"><p><span style="font-weight:500">Caveat:</span> This is general industry knowledge. Verify with Janelle how much of this legal ops owns vs. a separate regulatory affairs function.</p></div>
+<div class="cd"><h3>Market-based rate authority (MBR)</h3><p style="margin-bottom:.4rem">FERC grants IPX permission to sell wholesale power at market-based rates rather than cost-based rates. Requires initial application, periodic triennial reviews, and ongoing status change reporting.</p><p style="margin-bottom:.4rem"><span style="font-weight:500">Why market-based matters:</span> Not just competitive advantage — it is about project finance. Market-based rates let IPX negotiate PPA pricing that makes projects bankable. Cost-based rates lock pricing to a formula that may not attract lenders or tax equity investors. The entire financing model depends on MBR authorization.</p><p><span style="font-weight:500">If MBR lapses:</span> Existing PPAs may be unenforceable at negotiated prices. New PPAs cannot be signed at market rates. The project finance model breaks.</p></div>
+<div class="cd"><h3>Market-based vs. cost-based rates</h3><div class="cg" style="margin-bottom:0"><div style="background:#E6F1FB;border-radius:8px;padding:.75rem .875rem"><p style="font-weight:500;color:#0C447C;margin-bottom:.3rem">Market-based (what IPX wants)</p><p style="color:#185FA5;font-size:12px">Rates set by supply and demand. Higher upside, more fluctuation. Attractive to project finance lenders. Requires FERC MBR authorization.</p></div><div style="background:#F9FAFB;border-radius:8px;padding:.75rem .875rem;border:1px solid #E5E7EB"><p style="font-weight:500;color:#111827;margin-bottom:.3rem">Cost-based (traditional utility)</p><p style="color:#6B7280;font-size:12px">Rates = costs + regulated margin. Stable, predictable, but lower. May not generate cash flows attractive enough for lenders.</p></div></div></div>
+<div class="cd"><h3>Other FERC touchpoints</h3><div class="rw"><div class="dt dt-b"></div><p><span style="font-weight:500">Electric Quarterly Reports (EQR)</span> — recurring filings detailing wholesale power transactions</p></div><div class="rw"><div class="dt dt-b"></div><p><span style="font-weight:500">FERC Form 556</span> — qualifying facility status under PURPA for some solar projects</p></div><div class="rw"><div class="dt dt-b"></div><p><span style="font-weight:500">Interconnection jurisdiction</span> — FERC has authority over interconnection agreements for CAISO projects on the interstate grid</p></div></div>
+<div class="cd"><h3>How this hits your role</h3><p>You likely do not file anything yourself — outside counsel or regulatory specialists handle substance. But you may track filing deadlines in Evisort, coordinate with outside counsel on prep timelines, ensure the 90-day alert fires, and flag FERC-related covenants in project finance agreements.</p></div>
+<div class="wb"><p><span style="font-weight:500">Unknown:</span> Whether legal ops, regulatory affairs, or outside counsel owns FERC tracking at IPX Power. Critical question for Janelle.</p></div>`;
+
+sections.people=`
+<h2>Key people and paralegal dynamics</h2>
+<div class="cd">
+<div class="pr"><div class="av av-b">JA</div><div><div class="pn">Janelle — Head of Legal Operations</div><div class="rl">Your direct manager</div><div class="nt">Go-to for all process questions, Evisort admin, and escalations up to 5 days. Reviews your first entries. Walks you through all tools during onboarding.</div></div></div>
+<div class="pr"><div class="av av-p">JM</div><div><div class="pn">Jen Manter — General Counsel</div><div class="rl">Escalation point</div><div class="nt">High-value agreements and sensitive matters. Receives quarterly KPI reports. You meet her Friday of Week 1. Go through Janelle first.</div></div></div>
+<div class="pr"><div class="av av-t">FN</div><div><div class="pn">Finance team (CFO)</div><div class="rl">Financial approvals</div><div class="nt">Must approve budget implications before final sign-off. Key partner on lender reporting, Brightflag/Stampli invoice coding, and project-level profitability tracking.</div></div></div>
+<div class="pr"><div class="av av-a">OD</div><div><div class="pn">Operations and development teams</div><div class="rl">Primary source of contract requests</div><div class="nt">CAISO developers will Slack you for NDAs and vendor contracts. Redirect them to Evisort intake — do not handle informally in chat.</div></div></div>
+<div class="pr"><div class="av av-c">EA</div><div><div class="pn">Executive assistant</div><div class="rl">C-suite signature routing</div><div class="nt">Your Slack partner for getting executive signatures pushed through. Daily occurrence: "The Darden financing resolution is sitting in Evisort for the CAO — can we get that before their 2 PM?"</div></div></div>
+</div>
+<div class="dv"></div>
+<div class="cd"><h3>Paralegals — confirmed on team</h3><p style="margin-bottom:.5rem">IPX has confirmed paralegals. How responsibilities divide between you and them is one of the most important things to establish in Week 1.</p><h3 style="font-size:13px;margin-top:.75rem">Common overlap zones to clarify</h3><div class="rw"><div class="dt dt-p"></div><p>Document collection — typically paralegal, but you may coordinate what is collected</p></div><div class="rw"><div class="dt dt-p"></div><p>DocuSign routing — could be either</p></div><div class="rw"><div class="dt dt-p"></div><p>Evisort data entry — likely paralegal, but you probably own validation</p></div><div class="rw"><div class="dt dt-p"></div><p>Brightflag invoice review — could be paralegal first-pass, then your final approval</p></div><div class="rw"><div class="dt dt-p"></div><p>Outside counsel coordination — often splits: paralegal on documents, you on billing and compliance</p></div></div>
+<div class="pb"><p><span style="font-weight:500">Key distinction:</span> Legal ops is generally more strategic (process, systems, spend management). Paralegals handle document-level execution. But this varies — do not assume the hierarchy. Get clarity from Janelle in Week 1.</p></div>`;
+
+sections.authority=`
+<h2>Signing authority matrix</h2>
+<div class="ab2"><p><span style="font-weight:500">From your hypothetical guide — verify with Janelle.</span> Actual thresholds, required signatories, and exceptions by contract type or board pre-approval need confirmation.</p></div>
+<div class="ag"><div class="ab"><div class="ad">$0 – $50K</div><div class="al">Director or Department Head</div><div class="ai" style="font-weight:500">1 signature</div></div><div class="ab"><div class="ad">$50K – $250K</div><div class="al">Director + Head of Legal Ops or GC</div><div class="ai" style="font-weight:500">2 signatures</div></div><div class="ab"><div class="ad">$250K – $1M</div><div class="al">GC + CFO or COO</div><div class="ai" style="font-weight:500">2 signatures</div></div><div class="ab"><div class="ad">Over $1M</div><div class="al">CLO + CFO + CEO</div><div class="ai" style="font-weight:500">3 signatures</div></div></div>
+<div class="cd"><h3>Open questions about signing authority</h3><div class="rw"><div class="dt dt-a"></div><p>Are thresholds set by the Board, CLO, CFO, or a delegation of authority matrix?</p></div><div class="rw"><div class="dt dt-a"></div><p>Does contract type or risk level affect who signs, or is it purely dollar value?</p></div><div class="rw"><div class="dt dt-a"></div><p>Does the Board pre-approve certain contract classes regardless of dollar value?</p></div><div class="rw"><div class="dt dt-a"></div><p>Are some signatures legally required (bylaws or loan covenants) vs. operationally required (internal policy)?</p></div></div>
+<div class="cd"><h3>DocuSign signing order — always</h3><p>1. Internal signatories in authority order — first</p><p>2. Counterparty — last</p><p style="margin-top:.4rem;font-size:12px">Confirm counterparty name, title, and email match the agreement before sending. Follow up after 48 hours. Escalate to Janelle after 5 days.</p></div>`;
+
+sections.slas=`
+<h2>SLA turnaround commitments</h2>
+<div class="ab2"><p><span style="font-weight:500">From your hypothetical guide.</span> Verify these with Janelle. Also clarify whether they are legally binding or internal operational targets, and what happens if you miss one.</p></div>
+<div class="tw"><table><thead><tr><th>Contract type</th><th>Intake to attorney</th><th>Review turnaround</th><th>Execution target</th></tr></thead><tbody><tr><td>NDA / confidentiality</td><td>Same day</td><td>2-3 business days</td><td>3-5 business days</td></tr><tr><td>Vendor / service agreement</td><td>1 business day</td><td>5-7 business days</td><td>7-10 business days</td></tr><tr><td>Outside counsel engagement</td><td>1 business day</td><td>3-5 business days</td><td>5-7 business days</td></tr><tr><td>O&M agreement</td><td>1 business day</td><td>10-15 business days</td><td>15-20 business days</td></tr><tr><td>EPC contract</td><td>1 business day</td><td>TBD by complexity</td><td>Coordinate with attorney</td></tr><tr><td>PPA / land lease / project finance</td><td>Same day</td><td>TBD by complexity</td><td>Coordinate with attorney</td></tr></tbody></table></div>
+<div class="ib"><p>NDAs and PPAs both require same-day intake routing. NDAs are fastest to execute (3-5 days total). Complex deals like PPAs and project finance have no fixed execution target.</p></div>`;
+
+sections.alerts=`
+<h2>Alert windows — configure in Evisort</h2>
+<div class="ab2"><p><span style="font-weight:500">From your hypothetical guide.</span> Verify these windows and which obligations fall into each tier with Janelle.</p></div>
+<div class="ag"><div class="ab"><div class="ad">180 days</div><div class="al">Early action required</div><div class="ai">Land lease renewal windows</div><div class="ai">PPA COD dates</div><div class="ai">Project finance maturity</div><div class="ai">Outside counsel panel review</div></div><div class="ab"><div class="ad">90 days</div><div class="al">Attorneys engage now</div><div class="ai">FERC regulatory filings</div><div class="ai">Lender reporting (Finance preps)</div><div class="ai">CPUC compliance filings</div><div class="ai">COD milestone check</div></div><div class="ab"><div class="ad">60 days</div><div class="al">Escalate if not started</div><div class="ai">Filings where prep has not begun</div><div class="ai">Renewals not yet engaged</div><div class="ai">DocuSign pending 2+ weeks</div><div class="ai">FEOC documentation gaps</div></div><div class="ab"><div class="ad">30 days</div><div class="al">Final check, escalate to Jen</div><div class="ai">All filings in review or submitted</div><div class="ai">Lender reports in attorney review</div><div class="ai">Renewals negotiated and executing</div><div class="ai">Anything off track — flag now</div></div></div>
+<div class="cd"><h3>High-priority obligations</h3><div class="rw"><div class="dt dt-r"></div><p>PPA CODs — 180/90/60/30 days to Operations and attorney</p></div><div class="rw"><div class="dt dt-r"></div><p>Land lease renewals — 12 months out minimum, must exercise within window</p></div><div class="rw"><div class="dt dt-r"></div><p>Project finance covenants — quarterly reporting to lenders</p></div><div class="rw"><div class="dt dt-r"></div><p>CAISO interconnection queue milestones — per project</p></div><div class="rw"><div class="dt dt-r"></div><p>FERC MBR authorization — triennial reviews, status changes</p></div></div>`;
+
+sections.spend=`
+<h2>Vendor and spend management</h2>
+<div class="cd"><h3>Your role: financial gatekeeper, not budget owner</h3><p style="margin-bottom:.4rem">The CFO/Finance team owns the budget. The GC or CLO approves matter-level budgets with outside firms. You make sure what is being spent matches what was approved and is reported accurately.</p><p>Think financial compliance role — you catch a law firm billing 10 hours for document organization that violates guidelines, flag it, and make sure the right people know before it gets paid.</p></div>
+<div class="cd"><h3>Confirmed invoice workflow</h3><div class="fl"><span class="fp">Law firm submits (LEDES)</span><span class="fa">&rarr;</span><span class="fp">Brightflag (guideline review)</span><span class="fa">&rarr;</span><span class="fp">Stampli (AP coding)</span><span class="fa">&rarr;</span><span class="fp">ERP / payment</span></div><p>Brightflag handles billing guideline enforcement with AI-driven flagging. Stampli handles AP processing, GL coding, and project allocation. ERP processes actual payment.</p></div>
+<div class="cd"><h3>What billing guideline enforcement covers</h3><div class="rw"><div class="dt dt-r"></div><p>Prohibited practices — block billing, rounding up, first-year associate caps</p></div><div class="rw"><div class="dt dt-r"></div><p>Travel approval — thresholds before expenses are incurred</p></div><div class="rw"><div class="dt dt-r"></div><p>Rate schedules — when rate increases must be pre-approved</p></div><div class="rw"><div class="dt dt-r"></div><p>Staffing requirements — who can bill at what level on what matters</p></div><div class="rw"><div class="dt dt-r"></div><p>Admin charges — blocking billing for basic document organization, filing, etc.</p></div></div>
+<div class="cd"><h3>Spend analytics to track</h3><div class="rw"><div class="dt dt-b"></div><p>Spend by firm, by matter, by practice area, by project</p></div><div class="rw"><div class="dt dt-b"></div><p>Budget vs. actual variance per matter</p></div><div class="rw"><div class="dt dt-b"></div><p>Outside counsel spend as a percentage of project cost</p></div><div class="rw"><div class="dt dt-b"></div><p>Invoice cycle time — receipt to payment approval</p></div></div>
+<div class="pb"><p><span style="font-weight:500">Unknown:</span> Whether you do first-pass review or paralegals do. Whether you have direct reject authority or only escalation authority. Clarify during the Brightflag/Stampli session Thursday.</p></div>`;
+
+sections.glossary=`
+<h2>Industry glossary</h2>
+<div class="cd">
+<div class="gi"><div class="gt">COD — Commercial Operation Date</div><div class="gd">When a solar/battery project starts delivering power commercially. Missing this in a PPA triggers automatic liquidated damages. The single most important deadline you will track.</div></div><div class="dv"></div>
+<div class="gi"><div class="gt">PPA — Power Purchase Agreement</div><div class="gd">Long-term contract (15-20 years) committing IPX to deliver power to a buyer. The core commercial contract for every project. Different from an interconnection agreement.</div></div><div class="dv"></div>
+<div class="gi"><div class="gt">Interconnection agreement</div><div class="gd">Governs how IPX physically connects to the grid (CAISO or ERCOT). Between IPX and the grid operator — not the power buyer. Covers technical requirements and cost-sharing for grid upgrades. Required before a PPA can be delivered.</div></div><div class="dv"></div>
+<div class="gi"><div class="gt">EPC — Engineering, Procurement & Construction</div><div class="gd">Contract type for companies that build IPX's projects. EPC contractors own construction timelines and performance guarantees.</div></div><div class="dv"></div>
+<div class="gi"><div class="gt">CAISO — California Independent System Operator</div><div class="gd">Grid operator for most of California. IPX projects in CA interconnect through CAISO's queue. Missing queue milestones = lost position, often unrecoverable.</div></div><div class="dv"></div>
+<div class="gi"><div class="gt">ERCOT — Electric Reliability Council of Texas</div><div class="gd">Texas grid operator. Same queue dynamics as CAISO.</div></div><div class="dv"></div>
+<div class="gi"><div class="gt">FERC — Federal Energy Regulatory Commission</div><div class="gd">Federal regulator for wholesale electricity markets. IPX must maintain market-based rate authorization. FERC filings trigger at 90 days out.</div></div><div class="dv"></div>
+<div class="gi"><div class="gt">MBR — Market-Based Rate authority</div><div class="gd">FERC permission to sell power at market rates. Requires initial application, triennial reviews, and ongoing reporting. Lapse = cannot sell power under PPAs.</div></div><div class="dv"></div>
+<div class="gi"><div class="gt">Liquidated damages (LD)</div><div class="gd">Pre-agreed damages for specific contract failures (e.g. missing COD). Large, automatic, do not require proving actual harm.</div></div><div class="dv"></div>
+<div class="gi"><div class="gt">Tax equity</div><div class="gd">Project finance structure where investors provide capital in exchange for ITC/PTC tax credits. Drives the financing model for solar projects.</div></div><div class="dv"></div>
+<div class="gi"><div class="gt">ITC / PTC — Investment Tax Credit / Production Tax Credit</div><div class="gd">Federal tax credits under the IRA that make solar/battery projects financially viable. Drive project finance structure and tax equity investment.</div></div><div class="dv"></div>
+<div class="gi"><div class="gt">Covenant</div><div class="gd">Binding obligation in project finance — e.g. maintaining financial ratios. Breach = technical default, can accelerate full loan repayment.</div></div><div class="dv"></div>
+<div class="gi"><div class="gt">CLM — Contract Lifecycle Management</div><div class="gd">Software category Evisort belongs to. Covers intake through obligation tracking and renewal.</div></div><div class="dv"></div>
+<div class="gi"><div class="gt">FEOC — Foreign Entity of Concern</div><div class="gd">IRA compliance requirement for supply chain documentation on projects claiming ITC/PTC. FEOC gaps trigger escalation at 60 days.</div></div><div class="dv"></div>
+<div class="gi"><div class="gt">LEDES — Legal Electronic Data Exchange Standard</div><div class="gd">Standardized file format law firms use to submit invoices electronically. Every line item is coded with date, timekeeper, hours, rate, task code, activity code, and description. Enables Brightflag to automatically parse and review every line item against billing guidelines. Without LEDES, automated enforcement is not possible.</div></div><div class="dv"></div>
+<div class="gi"><div class="gt">UTBMS — Uniform Task-Based Management System</div><div class="gd">Standardized billing codes used in LEDES invoices. Categorizes legal work by phase, task, and activity. Brightflag uses these codes for automated guideline enforcement — e.g. flagging an admin-coded line item that exceeds allowed amounts.</div></div><div class="dv"></div>
+<div class="gi"><div class="gt">O&M — Operations & Maintenance</div><div class="gd">Long-term contract for ongoing project operation after construction. 10-15 business day review turnaround.</div></div>
+</div>`;
+
+sections.questions=`
+<h2>Key questions to ask</h2>
+<div class="cd"><h3>For Janelle — Week 1 priorities</h3>
+<div class="qi"><div class="qq">"Walk me through what happens from the moment an outside counsel invoice hits Brightflag to the moment it gets paid — who touches it and in what order?"</div><div class="qw">Maps the entire invoice workflow and your specific role in it.</div></div>
+<div class="qi"><div class="qq">"What is my actual authority when I flag a billing guideline violation? Do I reject it directly, or escalate to someone?"</div><div class="qw">Tells you how much financial ownership you actually have.</div></div>
+<div class="qi"><div class="qq">"How do legal ops and paralegals divide contract lifecycle work — especially intake, DocuSign execution, and Evisort entry?"</div><div class="qw">Prevents stepping on toes or creating gaps where both people assume the other is handling something.</div></div>
+<div class="qi"><div class="qq">"Do we have existing spend trackers or vendor rosters I should be maintaining, or is that something we are still building out?"</div><div class="qw">Tells you whether you are inheriting a system or building one — which is an opportunity to add value early.</div></div>
+<div class="qi"><div class="qq">"Do we track FERC MBR authorization deadlines and filings, and if so who owns that — legal ops, regulatory affairs, or outside counsel?"</div><div class="qw">Clarifies the scope of your role in regulatory compliance.</div></div>
+<div class="qi"><div class="qq">"Is Evisort where we track matter status, or do we have a separate matter management tool?"</div><div class="qw">Identifies a potential gap in the tech stack and where matter tracking actually lives.</div></div>
+<div class="qi"><div class="qq">"What are the actual signing authority thresholds and who set them — Board, CLO, or delegation of authority matrix?"</div><div class="qw">Grounds you in the real policy vs. your hypothetical guide.</div></div>
+</div>
+<div class="cd"><h3>For Brightflag / Stampli session (Thursday)</h3>
+<div class="qi"><div class="qq">"Does Brightflag flag guideline violations automatically, or is there manual review involved?"</div><div class="qw">Tells you how much of your time goes to invoice review vs. automated enforcement.</div></div>
+<div class="qi"><div class="qq">"How do invoices flow from Brightflag into Stampli — is it automatic after approval, or is there a manual handoff?"</div><div class="qw">Maps the integration between your two core financial tools.</div></div>
+<div class="qi"><div class="qq">"Who does first-pass invoice review — me, paralegals, or Brightflag AI? And who gives final approval?"</div><div class="qw">Clarifies the review chain and your position in it.</div></div>
+</div>
+<div class="cd"><h3>For Janelle — process and workflow</h3>
+<div class="qi"><div class="qq">"Walk me through a real example — when a $200K contract comes in, who do you route to and why?"</div><div class="qw">Grounds abstract signing authority in real workflow.</div></div>
+<div class="qi"><div class="qq">"Are there contract types that always need executive sign-off regardless of dollar value?"</div><div class="qw">Identifies risk-based exceptions to the dollar threshold model.</div></div>
+<div class="qi"><div class="qq">"If I miss entering a date in Evisort, what actually breaks?"</div><div class="qw">Tells you the real consequence — compliance issue vs. operational risk.</div></div>
+<div class="qi"><div class="qq">"Are the SLA turnaround times in the onboarding guide the actual commitments, or have they changed?"</div><div class="qw">Verifies your hypothetical guide against reality.</div></div>
+</div>
+<div class="cd"><h3>For IT orientation (Wednesday)</h3>
+<div class="qi"><div class="qq">"What is hCue and what will I use it for?"</div><div class="qw">It is on your Friday schedule but you do not know what it is.</div></div>
+<div class="qi"><div class="qq">"What ERP system processes payments after Stampli approval?"</div><div class="qw">Completes your understanding of the full payment chain.</div></div>
+</div>
+<div class="cd"><h3>For HR orientation (Wednesday)</h3>
+<div class="qi"><div class="qq">"Are team week trips in Denver and San Diego company-paid for travel and lodging?"</div><div class="qw">Check your offer letter first, then confirm with HR if unclear.</div></div>
+</div>`;
+
+sections.scenarios=`
+<h2>Real-world scenarios</h2>
+<p style="margin-bottom:1rem">Practice applying the process. Note: some details are from your hypothetical guide and may differ from actual IPX policy.</p>
+<div class="sc"><div class="sq">A CAISO developer Slacks you: "Can you send me a quick NDA for a landowner meeting tomorrow?"</div><div class="sa">Do not handle it in Slack. Respond: "Got it — please submit through the Evisort intake form so I can track and route it properly. I will get it to attorney same day." NDA SLA is same-day intake, 3-5 business days to execution.</div></div>
+<div class="sc"><div class="sq">An outside law firm invoice in Brightflag includes a $2,000 line for "document organization and filing."</div><div class="sa">Flag or reject the line item — billing guidelines typically prohibit basic administrative work. If Brightflag did not catch it automatically, note it to Janelle as a potential guideline configuration issue.</div></div>
+<div class="sc"><div class="sq">A $350,000 vendor contract comes in. The requesting Director says "I have approved this, just send it to DocuSign."</div><div class="sa">Per the hypothetical matrix, $350K requires GC + CFO or COO. The Director alone lacks authority at this value. Route for correct approvals in Evisort first. Verify the threshold with Janelle — but never skip the signing authority check regardless of who tells you to.</div></div>
+<div class="sc"><div class="sq">You upload an executed PPA to Evisort. What are the minimum steps before closing the matter?</div><div class="sa">Tag: contract type, counterparty, project, value. Enter all key dates: effective, expiration, COD, renewal windows, milestones. Set alerts at 180/90/60/30 days. Notify the business team. Flag COD to Operations at 180 days. Copy to Relativity if litigation-adjacent. An executed contract without dates entered is just a file.</div></div>
+<div class="sc"><div class="sq">Finance asks how much IPX spent on outside counsel for the Darden project last quarter.</div><div class="sa">Pull the data from Brightflag — matter-level spend by project. If invoices were coded correctly in Stampli to the Darden project code, this should be a straightforward report. This is exactly why accurate invoice coding matters.</div></div>
+<div class="sc"><div class="sq">A DocuSign envelope has been pending for 5 days without a signature.</div><div class="sa">You should have followed up after 48 hours. At 5 days, escalate to Janelle. No work should have started — a pending signature is not an executed contract.</div></div>
+<div class="sc"><div class="sq">A law firm bills a first-year associate 40 hours on a complex PPA negotiation at $650/hour.</div><div class="sa">Check the billing guidelines and engagement letter rate card. If the rate exceeds the agreed rate for first-years, or if first-years should not be staffed on this matter type, flag in Brightflag. This is a rate compliance and staffing appropriateness issue.</div></div>
+<div class="sc"><div class="sq">Evisort sends a 180-day alert on a land lease renewal window. What do you do?</div><div class="sa">Notify the attorney and Operations/Development immediately. Land leases should be flagged at 12 months out — if 180 days is your first alert, you may already be behind. Verify with Janelle whether land leases need a custom earlier trigger.</div></div>
+<div class="sc"><div class="sq">A paralegal tells you they already uploaded the executed contract to Evisort and it is done.</div><div class="sa">Verify: are all obligation dates entered? Alerts set at 180/90/60/30? Tagged correctly? Business team notified? If not, it is not done. Clarify early with Janelle who owns the validation step.</div></div>
+<div class="sc"><div class="sq">You notice a FERC MBR triennial review is approaching but no one has mentioned it.</div><div class="sa">First confirm whether this is your responsibility or belongs to regulatory affairs or outside counsel. If it is yours, check whether it is tracked in Evisort with alerts. If not tracked, flag to Janelle immediately. Do not assume someone else is handling it.</div></div>
+</div>`;
+
+var nav=document.getElementById('nav');
+var content=document.getElementById('content');
+tabs.forEach(function(t){
+var b=document.createElement('button');
+b.textContent=t.label;
+b.onclick=function(){show(t.id)};
+if(t.id==='overview')b.classList.add('active');
+nav.appendChild(b);
+});
 function show(id){
-  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
-  document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  const btns=[...document.querySelectorAll('.nav button')];
-  const labels={overview:'Overview',lifecycle:'Contract Lifecycle',contracts:'Contract Types',tools:'Tools',people:'People',authority:'Signing Authority',alerts:'Alert Windows',slas:'SLAs','slack-concur':'Slack & Concur',glossary:'Glossary',scenarios:'Scenarios'};
-  btns.forEach(b=>{if(b.textContent.trim()===labels[id])b.classList.add('active')});
+nav.querySelectorAll('button').forEach(function(b,i){b.classList.toggle('active',tabs[i].id===id);});
+content.innerHTML='<div class="sec active">'+sections[id]+'</div>';
 }
+show('overview');
 </script>
+</div>
+</body>
+</html>
