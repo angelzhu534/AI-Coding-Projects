@@ -1,0 +1,293 @@
+
+<h2 class="sr-only">Interactive simulator of four legal ops platforms used at IPX Power: Evisort, Brightflag, Stampli, and Relativity.</h2>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.ptabs{display:flex;border-bottom:0.5px solid var(--color-border-tertiary);margin-bottom:0}
+.ptab{padding:10px 16px;font-size:13px;font-weight:500;cursor:pointer;border:none;background:none;color:var(--color-text-secondary);border-bottom:2px solid transparent;font-family:inherit;transition:all .15s}
+.ptab.act{color:var(--color-text-primary);border-bottom-color:var(--color-text-primary)}
+.ptab:hover{color:var(--color-text-primary)}
+.pbar{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--color-background-secondary);border-bottom:0.5px solid var(--color-border-tertiary)}
+.pbar-t{font-size:15px;font-weight:500}
+.pbar-s{font-size:12px;color:var(--color-text-secondary)}
+.body{padding:16px}
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
+.met{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px 12px}
+.met-l{font-size:11px;color:var(--color-text-secondary);margin-bottom:2px}
+.met-v{font-size:18px;font-weight:500}
+.sub-tabs{display:flex;gap:4px;margin-bottom:12px}
+.sub-tab{padding:4px 10px;border-radius:14px;font-size:11px;cursor:pointer;border:0.5px solid var(--color-border-tertiary);background:var(--color-background-primary);color:var(--color-text-secondary);font-family:inherit}
+.sub-tab.act{background:var(--color-text-primary);color:var(--color-background-primary);border-color:var(--color-text-primary)}
+.tbl{width:100%;border-collapse:collapse;font-size:12px}
+.tbl th{text-align:left;padding:8px 6px;color:var(--color-text-secondary);font-weight:500;border-bottom:0.5px solid var(--color-border-tertiary);font-size:11px}
+.tbl td{padding:8px 6px;border-bottom:0.5px solid var(--color-border-tertiary);color:var(--color-text-primary);vertical-align:top}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tr{cursor:pointer;transition:background .1s}
+.tbl tr:hover td{background:var(--color-background-secondary)}
+.pill{display:inline-block;font-size:10px;padding:2px 7px;border-radius:10px;font-weight:500}
+.p-grn{background:#EAF3DE;color:#3B6D11}.p-red{background:#FCEBEB;color:#A32D2D}.p-amb{background:#FAEEDA;color:#854F0B}.p-blu{background:#E6F1FB;color:#185FA5}.p-gry{background:var(--color-background-secondary);color:var(--color-text-secondary)}.p-pur{background:#EEEDFE;color:#3C3489}
+.detail{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:16px;margin-bottom:12px}
+.detail-h{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px}
+.detail-t{font-size:15px;font-weight:500}
+.back-btn{font-size:12px;cursor:pointer;border:0.5px solid var(--color-border-secondary);background:none;padding:4px 10px;border-radius:var(--border-radius-md);color:var(--color-text-secondary);font-family:inherit}
+.field-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.field{margin-bottom:8px}
+.field-l{font-size:11px;color:var(--color-text-secondary);margin-bottom:1px}
+.field-v{font-size:13px;color:var(--color-text-primary)}
+.sep{height:0.5px;background:var(--color-border-tertiary);margin:12px 0}
+.alert-row{display:flex;align-items:center;gap:8px;padding:6px 0;font-size:12px}
+.alert-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.act-btn{padding:6px 14px;border-radius:var(--border-radius-md);font-size:12px;cursor:pointer;font-family:inherit;border:none;font-weight:500;transition:all .15s}
+.btn-approve{background:#EAF3DE;color:#3B6D11}.btn-reject{background:#FCEBEB;color:#A32D2D}.btn-code{background:#E6F1FB;color:#185FA5}.btn-disabled{background:var(--color-background-secondary);color:var(--color-text-secondary);cursor:default}
+.line-item{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:0.5px solid var(--color-border-tertiary);font-size:12px}
+.line-item:last-child{border-bottom:none}
+.li-flag{display:flex;align-items:center;gap:6px}
+.toast{position:relative;padding:10px 14px;border-radius:var(--border-radius-md);margin-bottom:10px;font-size:12px;font-weight:500;animation:fadeIn .3s}
+.toast-s{background:#EAF3DE;color:#3B6D11}.toast-e{background:#FCEBEB;color:#A32D2D}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+.form-row{margin-bottom:12px}
+.form-row label{display:block;font-size:11px;color:var(--color-text-secondary);margin-bottom:4px}
+.form-row input,.form-row select,.form-row textarea{width:100%;font-size:13px}
+.form-row textarea{height:60px;resize:vertical}
+.folder{display:flex;align-items:center;gap:8px;padding:10px 12px;border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);margin-bottom:6px;cursor:pointer;transition:background .1s;font-size:13px;color:var(--color-text-primary)}
+.folder:hover{background:var(--color-background-secondary)}
+.folder i{font-size:18px;color:var(--color-text-secondary)}
+.doc-row{display:flex;align-items:center;justify-content:space-between;padding:8px 10px;border-bottom:0.5px solid var(--color-border-tertiary);font-size:12px}
+.doc-row:last-child{border-bottom:none}
+.coding-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.coding-row select{flex:1;font-size:12px}
+.coding-row span{font-size:12px;min-width:80px}
+</style>
+<div class="ptabs" id="ptabs"></div>
+<div id="app"></div>
+<script>
+var S={platform:'evisort',sub:'dashboard',view:null,toasts:[],invoiceActions:{},stampliCoded:{},relFolder:null};
+var projects=['Darden Solar','Mesquite Storage','Clearwater Solar','Red Bluff Wind'];
+var projCodes=['DRD-2026','MSQ-2026','CLW-2026','RBF-2026'];
+var contracts=[
+{id:1,name:'Darden PPA',type:'PPA',counterparty:'Pacific Gas & Electric',project:'Darden Solar',value:'$142,000,000',status:'Active',risk:'High',effective:'2025-03-15',expiry:'2045-03-15',cod:'2026-09-01',alerts:[{d:180,label:'COD milestone',color:'#E24B4A'},{d:90,label:'Lender report Q3',color:'#BA7517'}],sigs:'CLO + CFO + CEO'},
+{id:2,name:'Mesquite land lease',type:'Land lease',counterparty:'Johnson Ranch LLC',project:'Mesquite Storage',value:'$8,400,000',status:'Active',risk:'High',effective:'2024-11-01',expiry:'2054-11-01',cod:'N/A',alerts:[{d:365,label:'Renewal option window',color:'#E24B4A'},{d:180,label:'Rent escalation review',color:'#BA7517'}],sigs:'GC + CFO'},
+{id:3,name:'Clearwater interconnection',type:'Interconnection',counterparty:'CAISO',project:'Clearwater Solar',value:'$23,500,000',status:'In review',risk:'High',effective:'Pending',expiry:'TBD',cod:'N/A',alerts:[{d:60,label:'Queue milestone Phase II',color:'#E24B4A'}],sigs:'GC + CFO'},
+{id:4,name:'Red Bluff EPC',type:'EPC',counterparty:'First Solar Inc.',project:'Red Bluff Wind',value:'$287,000,000',status:'Negotiating',risk:'Medium-high',effective:'Pending',expiry:'TBD',cod:'2027-06-15',alerts:[{d:90,label:'COD target coordination',color:'#BA7517'}],sigs:'CLO + CFO + CEO'},
+{id:5,name:'Darden project finance',type:'Project finance',counterparty:'Goldman Sachs',project:'Darden Solar',value:'$195,000,000',status:'Active',risk:'High',effective:'2025-06-01',expiry:'2040-06-01',cod:'N/A',alerts:[{d:90,label:'Q3 covenant compliance',color:'#E24B4A'},{d:30,label:'Lender report deadline',color:'#E24B4A'}],sigs:'CLO + CFO + CEO'},
+{id:6,name:'Vendor NDA — SunTech',type:'NDA',counterparty:'SunTech Analytics',project:'Clearwater Solar',value:'$0',status:'Pending signature',risk:'Low',effective:'Pending',expiry:'TBD',cod:'N/A',alerts:[],sigs:'Director'},
+{id:7,name:'Baker Botts engagement',type:'Outside counsel',counterparty:'Baker Botts LLP',project:'Mesquite Storage',value:'$450,000',status:'Active',risk:'Medium',effective:'2025-08-01',expiry:'2026-08-01',cod:'N/A',alerts:[{d:60,label:'Engagement renewal',color:'#BA7517'}],sigs:'Director + GC'},
+{id:8,name:'Latham FERC engagement',type:'Outside counsel',counterparty:'Latham & Watkins LLP',project:'General — regulatory',value:'$320,000',status:'Active',risk:'Medium',effective:'2025-01-15',expiry:'2026-01-15',cod:'N/A',alerts:[{d:30,label:'MBR triennial filing',color:'#E24B4A'}],sigs:'Director + GC'}
+];
+var invoices=[
+{id:'INV-4821',firm:'Kirkland & Ellis LLP',matter:'Darden project finance',project:'Darden Solar',projCode:'DRD-2026',total:87500,date:'2026-05-28',status:'Pending review',lines:[
+{desc:'Review loan covenant compliance docs',hrs:12,rate:950,amt:11400,code:'L510',flag:null},
+{desc:'Draft amendment to credit agreement',hrs:18,rate:950,amt:17100,code:'L520',flag:null},
+{desc:'Associate research — ITC safe harbor',hrs:24,rate:650,amt:15600,code:'L310',flag:null},
+{desc:'Document organization and filing',hrs:8,rate:450,amt:3600,code:'L610',flag:'Admin work prohibited'},
+{desc:'Partner conference call with lenders',hrs:6,rate:1150,amt:6900,code:'L110',flag:null},
+{desc:'Travel: NYC to Denver (unapproved)',hrs:0,rate:0,amt:4200,code:'E110',flag:'Unapproved travel expense'},
+{desc:'Redline intercreditor agreement',hrs:16,rate:750,amt:12000,code:'L520',flag:null},
+{desc:'Weekly status memo to IPX legal',hrs:10,rate:650,amt:6500,code:'L140',flag:null},
+{desc:'Photocopying and scanning (342 pages)',hrs:0,rate:0,amt:1200,code:'X110',flag:'Admin overhead prohibited'}
+]},
+{id:'INV-4835',firm:'Baker Botts LLP',matter:'Mesquite land lease',project:'Mesquite Storage',projCode:'MSQ-2026',total:42300,date:'2026-06-02',status:'Pending review',lines:[
+{desc:'Title search and review',hrs:14,rate:850,amt:11900,code:'L310',flag:null},
+{desc:'Negotiate amendment with landowner counsel',hrs:10,rate:850,amt:8500,code:'L520',flag:null},
+{desc:'Survey coordination and review',hrs:8,rate:550,amt:4400,code:'L310',flag:null},
+{desc:'Draft easement agreement',hrs:12,rate:850,amt:10200,code:'L520',flag:null},
+{desc:'Associate call with county records',hrs:6,rate:550,amt:3300,code:'L140',flag:null},
+{desc:'Environmental compliance memo',hrs:5,rate:800,amt:4000,code:'L310',flag:null}
+]},
+{id:'INV-4847',firm:'Latham & Watkins LLP',matter:'FERC MBR compliance',project:'General — regulatory',projCode:'GEN-REG',total:63750,date:'2026-06-05',status:'Pending review',lines:[
+{desc:'MBR triennial review preparation',hrs:20,rate:1050,amt:21000,code:'L310',flag:null},
+{desc:'EQR filing Q2 2026',hrs:10,rate:850,amt:8500,code:'L410',flag:null},
+{desc:'First-year associate market power analysis',hrs:30,rate:725,amt:21750,code:'L310',flag:'Rate exceeds cap ($650 max for 1st yr)'},
+{desc:'FERC Form 556 update',hrs:8,rate:850,amt:6800,code:'L410',flag:null},
+{desc:'Internal training materials',hrs:4,rate:650,amt:2600,code:'L140',flag:null},
+{desc:'Westlaw research charges',hrs:0,rate:0,amt:3100,code:'X120',flag:null}
+]}
+];
+var stampliQueue=[
+{id:'INV-4801',firm:'Vinson & Elkins LLP',matter:'Red Bluff EPC review',project:'Red Bluff Wind',projCode:'RBF-2026',total:34200,status:'Needs coding'},
+{id:'INV-4789',firm:'Kirkland & Ellis LLP',matter:'Clearwater tax equity',project:'Clearwater Solar',projCode:'CLW-2026',total:56800,status:'Needs coding'},
+{id:'INV-4776',firm:'Baker Botts LLP',matter:'Darden land acquisition',project:'Darden Solar',projCode:'DRD-2026',total:28900,status:'Coded — in payment'},
+{id:'INV-4763',firm:'Latham & Watkins LLP',matter:'FERC EQR Q1',project:'General — regulatory',projCode:'GEN-REG',total:18400,status:'Paid'}
+];
+var relMatters=[
+{id:'M-001',name:'Darden Solar — project finance',docs:[{n:'Executed PPA — PG&E',type:'PDF',date:'2025-03-15',size:'4.2 MB'},{n:'Loan agreement — Goldman Sachs',type:'PDF',date:'2025-06-01',size:'12.8 MB'},{n:'Intercreditor agreement',type:'PDF',date:'2025-06-01',size:'8.1 MB'},{n:'Title insurance policy',type:'PDF',date:'2025-02-20',size:'2.3 MB'}]},
+{id:'M-002',name:'Mesquite Storage — land dispute',docs:[{n:'Original land lease — Johnson Ranch',type:'PDF',date:'2024-11-01',size:'3.7 MB'},{n:'Amendment 1 — access rights',type:'PDF',date:'2025-04-15',size:'1.2 MB'},{n:'Landowner correspondence',type:'DOCX',date:'2025-09-10',size:'0.8 MB'},{n:'Survey and boundary report',type:'PDF',date:'2025-03-22',size:'5.4 MB'},{n:'Environmental assessment',type:'PDF',date:'2025-05-30',size:'6.1 MB'}]},
+{id:'M-003',name:'FERC — MBR authorization',docs:[{n:'MBR application (original)',type:'PDF',date:'2023-07-12',size:'2.1 MB'},{n:'FERC order granting MBR',type:'PDF',date:'2023-11-15',size:'1.8 MB'},{n:'Triennial review — 2026',type:'DOCX',date:'2026-05-20',size:'3.2 MB'}]}
+];
+
+function fmt(n){return'$'+n.toLocaleString()}
+function statusPill(s){var m={'Active':'p-grn','In review':'p-blu','Negotiating':'p-amb','Pending signature':'p-amb','Pending review':'p-amb','Needs coding':'p-amb','Coded — in payment':'p-blu','Paid':'p-grn','Flagged':'p-red','Approved':'p-grn','Rejected':'p-red'};return'<span class="pill '+(m[s]||'p-gry')+'">'+s+'</span>'}
+function riskPill(r){var m={'High':'p-red','Medium-high':'p-amb','Medium':'p-amb','Low':'p-grn'};return'<span class="pill '+(m[r]||'p-gry')+'">'+r+'</span>'}
+function toastHtml(){return S.toasts.map(function(t){return'<div class="toast '+(t.type==='success'?'toast-s':'toast-e')+'"><i class="ti ti-'+(t.type==='success'?'check':'alert-triangle')+'" aria-hidden="true" style="margin-right:6px"></i>'+t.msg+'</div>'}).join('')}
+
+function renderEvisort(){
+var h=toastHtml();
+h+='<div class="pbar"><div><div class="pbar-t"><i class="ti ti-file-text" aria-hidden="true" style="margin-right:6px;font-size:16px"></i>Evisort</div><div class="pbar-s">Contract lifecycle management</div></div><div class="pbar-s">IPX Power workspace</div></div>';
+h+='<div class="body">';
+if(S.view&&S.view.type==='contract-detail'){
+var c=contracts.find(function(x){return x.id===S.view.id});
+h+='<div class="detail"><div class="detail-h"><div class="detail-t">'+c.name+'</div><button class="back-btn" onclick="S.view=null;render()"><i class="ti ti-arrow-left" aria-hidden="true" style="font-size:14px;margin-right:4px"></i>Back</button></div>';
+h+='<div class="field-grid"><div class="field"><div class="field-l">Contract type</div><div class="field-v">'+c.type+'</div></div><div class="field"><div class="field-l">Risk level</div><div class="field-v">'+riskPill(c.risk)+'</div></div><div class="field"><div class="field-l">Counterparty</div><div class="field-v">'+c.counterparty+'</div></div><div class="field"><div class="field-l">Project</div><div class="field-v">'+c.project+'</div></div><div class="field"><div class="field-l">Contract value</div><div class="field-v">'+c.value+'</div></div><div class="field"><div class="field-l">Status</div><div class="field-v">'+statusPill(c.status)+'</div></div><div class="field"><div class="field-l">Effective date</div><div class="field-v">'+c.effective+'</div></div><div class="field"><div class="field-l">Expiration</div><div class="field-v">'+c.expiry+'</div></div><div class="field"><div class="field-l">COD</div><div class="field-v">'+(c.cod||'N/A')+'</div></div><div class="field"><div class="field-l">Required signatories</div><div class="field-v">'+c.sigs+'</div></div></div>';
+if(c.alerts.length){h+='<div class="sep"></div><div style="font-size:13px;font-weight:500;margin-bottom:8px">Obligation alerts</div>';c.alerts.forEach(function(a){h+='<div class="alert-row"><div class="alert-dot" style="background:'+a.color+'"></div><span style="font-weight:500;min-width:50px">'+a.d+' days</span><span style="color:var(--color-text-secondary)">'+a.label+'</span></div>'});}
+h+='<div class="sep"></div><div style="display:flex;gap:8px"><button class="act-btn btn-code" onclick="S.toasts=[{msg:\'Sent to DocuSign for signature\',type:\'success\'}];render()"><i class="ti ti-writing-sign" aria-hidden="true" style="font-size:14px;margin-right:4px"></i>Send to DocuSign</button><button class="act-btn" style="background:var(--color-background-secondary);color:var(--color-text-primary)" onclick="S.toasts=[{msg:\'Copied to Relativity workspace\',type:\'success\'}];render()"><i class="ti ti-copy" aria-hidden="true" style="font-size:14px;margin-right:4px"></i>Copy to Relativity</button></div>';
+h+='</div>';
+} else if(S.sub==='intake'){
+h+='<div class="detail"><div style="font-size:14px;font-weight:500;margin-bottom:12px"><i class="ti ti-plus" aria-hidden="true" style="margin-right:6px;font-size:16px"></i>New contract intake</div>';
+h+='<div class="field-grid"><div class="form-row"><label>Contract type</label><select id="f-type"><option>NDA</option><option>Vendor agreement</option><option>Outside counsel engagement</option><option>PPA</option><option>Land lease</option><option>EPC</option><option>O&M</option><option>Interconnection</option><option>Project finance</option></select></div>';
+h+='<div class="form-row"><label>Counterparty</label><input placeholder="Company or individual name" id="f-cp"/></div>';
+h+='<div class="form-row"><label>Requesting party</label><select><option>Development — CAISO</option><option>Development — ERCOT</option><option>Operations</option><option>Finance</option><option>Procurement</option></select></div>';
+h+='<div class="form-row"><label>Project</label><select id="f-proj"><option>Darden Solar</option><option>Mesquite Storage</option><option>Clearwater Solar</option><option>Red Bluff Wind</option><option>General</option></select></div>';
+h+='<div class="form-row"><label>Estimated value</label><input placeholder="$0" id="f-val"/></div>';
+h+='<div class="form-row"><label>Target execution date</label><input type="date" id="f-date"/></div></div>';
+h+='<div class="form-row"><label>Notes</label><textarea placeholder="Additional context, urgency, counterparty paper vs template..."></textarea></div>';
+h+='<div style="display:flex;gap:8px;margin-top:8px"><button class="act-btn btn-approve" onclick="submitIntake()"><i class="ti ti-check" aria-hidden="true" style="font-size:14px;margin-right:4px"></i>Submit and assign to attorney</button><button class="act-btn" style="background:var(--color-background-secondary);color:var(--color-text-primary)" onclick="S.sub=\'dashboard\';render()">Cancel</button></div>';
+h+='</div>';
+} else {
+var ac=contracts.filter(function(c){return c.status==='Active'}).length;
+var pr=contracts.filter(function(c){return c.status!=='Active'}).length;
+var al=0;contracts.forEach(function(c){al+=c.alerts.length});
+h+='<div class="metrics"><div class="met"><div class="met-l">Total contracts</div><div class="met-v">'+contracts.length+'</div></div><div class="met"><div class="met-l">Active</div><div class="met-v">'+ac+'</div></div><div class="met"><div class="met-l">In progress</div><div class="met-v">'+pr+'</div></div><div class="met"><div class="met-l">Open alerts</div><div class="met-v" style="color:#A32D2D">'+al+'</div></div></div>';
+h+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><div class="sub-tabs"><button class="sub-tab act" onclick="this.parentNode.querySelectorAll(\'.sub-tab\').forEach(b=>b.classList.remove(\'act\'));this.classList.add(\'act\')">All contracts</button><button class="sub-tab" onclick="this.parentNode.querySelectorAll(\'.sub-tab\').forEach(b=>b.classList.remove(\'act\'));this.classList.add(\'act\')">Active</button><button class="sub-tab" onclick="this.parentNode.querySelectorAll(\'.sub-tab\').forEach(b=>b.classList.remove(\'act\'));this.classList.add(\'act\')">Pending</button></div><button class="act-btn btn-code" onclick="S.sub=\'intake\';render()"><i class="ti ti-plus" aria-hidden="true" style="font-size:14px;margin-right:4px"></i>New intake</button></div>';
+h+='<table class="tbl"><thead><tr><th>Contract</th><th>Type</th><th>Counterparty</th><th>Value</th><th>Status</th><th>Alerts</th></tr></thead><tbody>';
+contracts.forEach(function(c){h+='<tr onclick="S.view={type:\'contract-detail\',id:'+c.id+'};S.toasts=[];render()"><td style="font-weight:500">'+c.name+'</td><td>'+c.type+'</td><td>'+c.counterparty+'</td><td>'+c.value+'</td><td>'+statusPill(c.status)+'</td><td>'+(c.alerts.length?'<span class="pill p-red">'+c.alerts.length+'</span>':'<span class="pill p-grn">0</span>')+'</td></tr>'});
+h+='</tbody></table>';
+}
+h+='</div>';return h;
+}
+
+function submitIntake(){
+var cp=document.getElementById('f-cp');var val=document.getElementById('f-val');
+if(!cp||!cp.value.trim()){S.toasts=[{msg:'Counterparty name is required',type:'error'}];render();return;}
+var t=document.getElementById('f-type').value;var p=document.getElementById('f-proj').value;
+contracts.push({id:contracts.length+1,name:t+' — '+cp.value.trim(),type:t,counterparty:cp.value.trim(),project:p,value:val.value||'TBD',status:'In review',risk:t==='NDA'?'Low':'Medium',effective:'Pending',expiry:'TBD',cod:'N/A',alerts:[],sigs:'TBD'});
+S.sub='dashboard';S.toasts=[{msg:'Contract submitted and routed to attorney queue',type:'success'}];render();
+}
+
+function renderBrightflag(){
+var h=toastHtml();
+h+='<div class="pbar"><div><div class="pbar-t"><i class="ti ti-receipt" aria-hidden="true" style="margin-right:6px;font-size:16px"></i>Brightflag</div><div class="pbar-s">Legal e-billing</div></div><div class="pbar-s">Invoice queue</div></div>';
+h+='<div class="body">';
+var pend=invoices.filter(function(i){var a=S.invoiceActions[i.id];return!a||a==='pending'}).length;
+var flagged=0;invoices.forEach(function(i){i.lines.forEach(function(l){if(l.flag)flagged++})});
+var totalSpend=0;invoices.forEach(function(i){totalSpend+=i.total});
+h+='<div class="metrics"><div class="met"><div class="met-l">Pending review</div><div class="met-v">'+pend+'</div></div><div class="met"><div class="met-l">Flagged line items</div><div class="met-v" style="color:#A32D2D">'+flagged+'</div></div><div class="met"><div class="met-l">Total this period</div><div class="met-v">'+fmt(totalSpend)+'</div></div><div class="met"><div class="met-l">Invoices</div><div class="met-v">'+invoices.length+'</div></div></div>';
+
+if(S.view&&S.view.type==='invoice-detail'){
+var inv=invoices.find(function(x){return x.id===S.view.id});
+var invStatus=S.invoiceActions[inv.id]||'pending';
+h+='<div class="detail"><div class="detail-h"><div><div class="detail-t">'+inv.id+' — '+inv.firm+'</div><div style="font-size:12px;color:var(--color-text-secondary);margin-top:2px">'+inv.matter+' &middot; '+inv.project+' &middot; '+inv.date+'</div></div><button class="back-btn" onclick="S.view=null;render()"><i class="ti ti-arrow-left" aria-hidden="true" style="font-size:14px;margin-right:4px"></i>Back</button></div>';
+h+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><div style="font-size:14px;font-weight:500">Line items</div><div style="font-size:14px;font-weight:500">Total: '+fmt(inv.total)+'</div></div>';
+inv.lines.forEach(function(l,idx){
+h+='<div class="line-item"><div style="flex:1"><div style="margin-bottom:2px">'+l.desc+'</div><div style="font-size:11px;color:var(--color-text-secondary)">'+(l.hrs?l.hrs+'h @ '+fmt(l.rate)+'/hr':'Expense')+' &middot; Code: '+l.code+'</div></div><div class="li-flag">';
+if(l.flag){h+='<span class="pill p-red" style="font-size:10px"><i class="ti ti-alert-triangle" aria-hidden="true" style="font-size:12px;margin-right:2px"></i>'+l.flag+'</span>';}
+h+='<span style="font-weight:500;min-width:60px;text-align:right">'+fmt(l.amt)+'</span></div></div>';
+});
+if(invStatus==='pending'){
+h+='<div class="sep"></div><div style="display:flex;gap:8px"><button class="act-btn btn-approve" onclick="S.invoiceActions[\''+inv.id+'\']=\'approved\';S.toasts=[{msg:\'Invoice approved — routed to Stampli for coding\',type:\'success\'}];S.view=null;render()"><i class="ti ti-check" aria-hidden="true" style="font-size:14px;margin-right:4px"></i>Approve invoice</button><button class="act-btn btn-reject" onclick="S.invoiceActions[\''+inv.id+'\']=\'rejected\';S.toasts=[{msg:\'Invoice rejected — returned to firm with flags\',type:\'error\'}];S.view=null;render()"><i class="ti ti-x" aria-hidden="true" style="font-size:14px;margin-right:4px"></i>Reject and return to firm</button></div>';
+} else {
+h+='<div class="sep"></div><div class="pill '+(invStatus==='approved'?'p-grn':'p-red')+'" style="font-size:12px;padding:4px 10px">'+(invStatus==='approved'?'Approved — in Stampli queue':'Rejected — returned to firm')+'</div>';
+}
+h+='</div>';
+} else {
+h+='<table class="tbl"><thead><tr><th>Invoice</th><th>Firm</th><th>Matter</th><th>Amount</th><th>Flags</th><th>Status</th></tr></thead><tbody>';
+invoices.forEach(function(i){
+var st=S.invoiceActions[i.id]||'pending';
+var stLabel=st==='approved'?'Approved':st==='rejected'?'Rejected':'Pending review';
+var fc=i.lines.filter(function(l){return l.flag}).length;
+h+='<tr onclick="S.view={type:\'invoice-detail\',id:\''+i.id+'\'};S.toasts=[];render()"><td style="font-weight:500">'+i.id+'</td><td>'+i.firm+'</td><td style="font-size:11px">'+i.matter+'</td><td>'+fmt(i.total)+'</td><td>'+(fc?'<span class="pill p-red">'+fc+' flags</span>':'<span class="pill p-grn">Clean</span>')+'</td><td>'+statusPill(stLabel)+'</td></tr>'});
+h+='</tbody></table>';
+}
+h+='</div>';return h;
+}
+
+function renderStampli(){
+var h=toastHtml();
+h+='<div class="pbar"><div><div class="pbar-t"><i class="ti ti-credit-card" aria-hidden="true" style="margin-right:6px;font-size:16px"></i>Stampli</div><div class="pbar-s">AP and invoice processing</div></div><div class="pbar-s">Payment pipeline</div></div>';
+h+='<div class="body">';
+var nc=stampliQueue.filter(function(s){return s.status==='Needs coding'&&!S.stampliCoded[s.id]}).length;
+var ip=stampliQueue.filter(function(s){return s.status==='Coded — in payment'||S.stampliCoded[s.id]}).length;
+var paid=stampliQueue.filter(function(s){return s.status==='Paid'}).length;
+var tot=0;stampliQueue.forEach(function(s){tot+=s.total});
+h+='<div class="metrics"><div class="met"><div class="met-l">Needs coding</div><div class="met-v" style="color:#854F0B">'+nc+'</div></div><div class="met"><div class="met-l">In payment</div><div class="met-v">'+ip+'</div></div><div class="met"><div class="met-l">Paid</div><div class="met-v" style="color:#3B6D11">'+paid+'</div></div><div class="met"><div class="met-l">Pipeline total</div><div class="met-v">'+fmt(tot)+'</div></div></div>';
+h+='<table class="tbl"><thead><tr><th>Invoice</th><th>Firm</th><th>Project</th><th>Amount</th><th>Project code</th><th>Status</th></tr></thead><tbody>';
+stampliQueue.forEach(function(s){
+var coded=S.stampliCoded[s.id];
+var st=coded?'Coded — in payment':s.status;
+h+='<tr><td style="font-weight:500">'+s.id+'</td><td>'+s.firm+'</td><td style="font-size:11px">'+s.project+'</td><td>'+fmt(s.total)+'</td><td>';
+if(st==='Needs coding'){
+h+='<select onchange="codeInvoice(\''+s.id+'\',this.value)" style="font-size:11px;width:100px"><option value="">Select...</option>';
+projCodes.forEach(function(pc,i){h+='<option value="'+pc+'">'+pc+'</option>'});
+h+='<option value="GEN-REG">GEN-REG</option></select>';
+} else {
+h+='<span style="font-size:11px;font-weight:500">'+(coded||s.projCode)+'</span>';
+}
+h+='</td><td>'+statusPill(st)+'</td></tr>';
+});
+h+='</tbody></table>';
+var approvedFromBF=[];
+invoices.forEach(function(i){if(S.invoiceActions[i.id]==='approved'){approvedFromBF.push(i)}});
+if(approvedFromBF.length){
+h+='<div class="sep" style="margin:16px 0"></div><div style="font-size:13px;font-weight:500;margin-bottom:8px"><i class="ti ti-arrow-right" aria-hidden="true" style="font-size:14px;margin-right:4px"></i>Newly approved from Brightflag</div>';
+approvedFromBF.forEach(function(i){
+var coded=S.stampliCoded[i.id];
+h+='<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:0.5px solid var(--color-border-tertiary);font-size:12px"><div><span style="font-weight:500">'+i.id+'</span> — '+i.firm+' &middot; '+fmt(i.total)+'</div>';
+if(!coded){h+='<select onchange="codeInvoice(\''+i.id+'\',this.value)" style="font-size:11px;width:100px"><option value="">Code to...</option>';projCodes.forEach(function(pc){h+='<option value="'+pc+'">'+pc+'</option>'});h+='<option value="GEN-REG">GEN-REG</option></select>';}
+else{h+='<span class="pill p-grn">Coded: '+coded+'</span>';}
+h+='</div>';
+});
+}
+h+='</div>';return h;
+}
+
+function codeInvoice(id,code){
+if(!code)return;
+S.stampliCoded[id]=code;
+S.toasts=[{msg:id+' coded to '+code+' — routed to payment',type:'success'}];
+render();
+}
+
+function renderRelativity(){
+var h=toastHtml();
+h+='<div class="pbar"><div><div class="pbar-t"><i class="ti ti-scale" aria-hidden="true" style="margin-right:6px;font-size:16px"></i>Relativity</div><div class="pbar-s">Ediscovery and litigation archive</div></div><div class="pbar-s">IPX Power workspace</div></div>';
+h+='<div class="body">';
+if(S.relFolder!==null){
+var m=relMatters[S.relFolder];
+h+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><div style="font-size:14px;font-weight:500"><i class="ti ti-folder" aria-hidden="true" style="margin-right:6px;font-size:16px"></i>'+m.name+'</div><button class="back-btn" onclick="S.relFolder=null;render()"><i class="ti ti-arrow-left" aria-hidden="true" style="font-size:14px;margin-right:4px"></i>Back</button></div>';
+h+='<div style="font-size:12px;color:var(--color-text-secondary);margin-bottom:12px">'+m.docs.length+' documents</div>';
+h+='<div style="border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);overflow:hidden">';
+h+='<div style="display:grid;grid-template-columns:1fr 60px 90px 70px;padding:8px 10px;background:var(--color-background-secondary);font-size:11px;color:var(--color-text-secondary);font-weight:500;border-bottom:0.5px solid var(--color-border-tertiary)"><span>Document</span><span>Type</span><span>Date</span><span>Size</span></div>';
+m.docs.forEach(function(d){
+h+='<div style="display:grid;grid-template-columns:1fr 60px 90px 70px;padding:8px 10px;border-bottom:0.5px solid var(--color-border-tertiary);font-size:12px;align-items:center"><span style="display:flex;align-items:center;gap:6px"><i class="ti ti-file" aria-hidden="true" style="font-size:14px;color:var(--color-text-secondary)"></i>'+d.n+'</span><span class="pill p-gry">'+d.type+'</span><span style="color:var(--color-text-secondary)">'+d.date+'</span><span style="color:var(--color-text-secondary)">'+d.size+'</span></div>';
+});
+h+='</div>';
+h+='<div style="margin-top:12px;display:flex;gap:8px"><button class="act-btn btn-code" onclick="S.toasts=[{msg:\'Upload dialog opened — select files to add to this matter\',type:\'success\'}];render()"><i class="ti ti-upload" aria-hidden="true" style="font-size:14px;margin-right:4px"></i>Upload document</button><button class="act-btn" style="background:var(--color-background-secondary);color:var(--color-text-primary)"><i class="ti ti-search" aria-hidden="true" style="font-size:14px;margin-right:4px"></i>Search within matter</button></div>';
+} else {
+h+='<div style="font-size:13px;font-weight:500;margin-bottom:12px">Matter workspaces</div>';
+relMatters.forEach(function(m,i){
+h+='<div class="folder" onclick="S.relFolder='+i+';S.toasts=[];render()"><i class="ti ti-folder" aria-hidden="true"></i><div style="flex:1"><div>'+m.name+'</div><div style="font-size:11px;color:var(--color-text-secondary)">'+m.docs.length+' documents</div></div><i class="ti ti-chevron-right" aria-hidden="true" style="font-size:14px;color:var(--color-text-secondary)"></i></div>';
+});
+h+='<div style="margin-top:12px"><button class="act-btn btn-code" onclick="S.toasts=[{msg:\'New matter workspace created\',type:\'success\'}];render()"><i class="ti ti-plus" aria-hidden="true" style="font-size:14px;margin-right:4px"></i>New matter workspace</button></div>';
+}
+h+='</div>';return h;
+}
+
+function render(){
+var app=document.getElementById('app');
+if(S.platform==='evisort')app.innerHTML=renderEvisort();
+else if(S.platform==='brightflag')app.innerHTML=renderBrightflag();
+else if(S.platform==='stampli')app.innerHTML=renderStampli();
+else app.innerHTML=renderRelativity();
+document.querySelectorAll('.ptab').forEach(function(t){t.classList.toggle('act',t.dataset.p===S.platform)});
+setTimeout(function(){S.toasts=[]},3000);
+}
+
+var nav=document.getElementById('ptabs');
+['evisort','brightflag','stampli','relativity'].forEach(function(p){
+var b=document.createElement('button');
+b.className='ptab'+(p==='evisort'?' act':'');
+b.dataset.p=p;
+b.textContent=p.charAt(0).toUpperCase()+p.slice(1);
+b.onclick=function(){S.platform=p;S.view=null;S.sub='dashboard';S.relFolder=null;S.toasts=[];render()};
+nav.appendChild(b);
+});
+render();
+</script>
