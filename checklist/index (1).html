@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#7a3a22">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="The Protocol">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon.svg">
+<title>The Protocol — How to Respond</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f5ede0;--paper:#fdf5e8;--ink:#1a1208;--soft:#5a4030;--muted:#8a6a50;
+  --terra:#9a5238;--terrad:#7a3a22;--gold:#a87838;--camel:#c09060;
+  --line:rgba(154,82,56,.15);--sage:#5a7a4a;--rose:#8a3a4a;--slate:#3a5a7a;
+  --serif:"Cormorant Garamond",Georgia,serif;
+  --sans:"Inter",system-ui,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:var(--serif);min-height:100vh;padding-bottom:env(safe-area-inset-bottom)}
+
+/* HEADER */
+.header{background:var(--terrad);padding:calc(env(safe-area-inset-top) + 16px) 20px 16px;position:sticky;top:0;z-index:50}
+.header-inner{display:flex;align-items:center;justify-content:space-between;max-width:600px;margin:0 auto}
+.header h1{font-family:var(--serif);font-size:20px;font-weight:600;color:#f5ede0;font-style:italic;line-height:1}
+.header-sub{font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--camel);font-family:var(--sans);margin-top:2px}
+.mode-toggle{background:rgba(255,255,255,.12);border:none;color:#f5ede0;font-family:var(--sans);font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:6px 12px;cursor:pointer;border-radius:2px}
+
+/* FILTER TABS */
+.tabs{background:var(--paper);border-bottom:1px solid var(--line);overflow-x:auto;-webkit-overflow-scrolling:touch;position:sticky;top:64px;z-index:40}
+.tabs-inner{display:flex;gap:0;min-width:max-content;max-width:600px;margin:0 auto;padding:0 16px}
+.tab{background:none;border:none;border-bottom:2px solid transparent;padding:10px 14px;font-family:var(--sans);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);cursor:pointer;white-space:nowrap;transition:.2s}
+.tab.on{color:var(--terra);border-bottom-color:var(--terra);font-weight:600}
+
+/* CONTENT */
+.content{max-width:600px;margin:0 auto;padding:16px}
+
+/* SITUATION CARDS */
+.sit{background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--camel);margin:10px 0;border-radius:2px;overflow:hidden;transition:.2s}
+.sit.urgent{border-left-color:var(--rose)}
+.sit.medium{border-left-color:var(--terra)}
+.sit.low{border-left-color:var(--sage)}
+.sit.done{opacity:.5}
+.sit-head{padding:14px 16px;cursor:pointer;display:flex;align-items:flex-start;gap:12px}
+.sit-icon{font-size:16px;flex-shrink:0;margin-top:1px}
+.sit-content{flex:1;min-width:0}
+.sit-trigger{font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-family:var(--sans);font-weight:600;margin-bottom:4px}
+.sit.urgent .sit-trigger{color:var(--rose)}
+.sit.medium .sit-trigger{color:var(--terra)}
+.sit.low .sit-trigger{color:var(--sage)}
+.sit-name{font-size:16px;color:var(--ink);line-height:1.3;font-weight:600}
+.sit-chevron{font-size:12px;color:var(--muted);margin-top:3px;flex-shrink:0;transition:transform .2s}
+.sit.open .sit-chevron{transform:rotate(180deg)}
+.sit-body{display:none;padding:0 16px 16px;border-top:1px solid var(--line)}
+.sit.open .sit-body{display:block}
+
+/* RESPONSE */
+.response-label{font-size:9px;letter-spacing:.2em;text-transform:uppercase;font-family:var(--sans);font-weight:600;color:var(--camel);margin:12px 0 6px}
+.response{background:var(--terrad);color:#f5ede0;padding:12px 16px;font-family:var(--serif);font-size:16px;font-style:italic;line-height:1.55;border-radius:2px;cursor:pointer;position:relative;transition:.2s}
+.response:active{opacity:.85}
+.response .copy-hint{font-size:10px;font-family:var(--sans);font-style:normal;letter-spacing:.1em;text-transform:uppercase;color:var(--camel);display:block;margin-top:6px;opacity:.8}
+.copied{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:var(--ink);color:#f5ede0;padding:8px 20px;font-family:var(--sans);font-size:12px;border-radius:2px;opacity:0;transition:opacity .3s;pointer-events:none;z-index:999}
+.copied.show{opacity:1}
+
+/* NOTE */
+.note{font-size:13.5px;color:var(--soft);line-height:1.6;margin-top:10px;padding-top:10px;border-top:1px solid var(--line)}
+.note b{color:var(--terrad)}
+.note em{color:var(--terra);font-style:italic}
+
+/* REMINDER BOX */
+.rule{background:rgba(154,82,56,.06);border:1px solid var(--line);padding:12px 16px;margin:10px 0;border-radius:2px}
+.rule p{font-size:14px;color:var(--soft);line-height:1.55;margin-bottom:6px}
+.rule p:last-child{margin-bottom:0}
+.rule b{color:var(--terrad)}
+
+/* MARK DONE */
+.done-btn{background:none;border:1px solid var(--line);color:var(--muted);font-family:var(--sans);font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:6px 12px;cursor:pointer;margin-top:12px;transition:.2s}
+.done-btn:active{background:var(--sage);border-color:var(--sage);color:#fff}
+
+/* EMERGENCY MODE */
+.emergency{display:none;background:var(--rose);color:#fff;padding:12px 16px;text-align:center;font-family:var(--sans);font-size:12px;letter-spacing:.05em;position:sticky;top:120px;z-index:35}
+.emergency.show{display:block}
+.emergency b{display:block;font-size:14px;margin-bottom:4px}
+
+/* EMPTY STATE */
+.empty{text-align:center;padding:48px 20px;color:var(--muted);font-style:italic;font-size:16px}
+
+/* FAB */
+.fab{position:fixed;bottom:calc(env(safe-area-inset-bottom) + 20px);right:20px;background:var(--terrad);color:#f5ede0;border:none;width:52px;height:52px;border-radius:50%;font-size:22px;cursor:pointer;box-shadow:0 4px 16px rgba(122,58,34,.3);z-index:60;display:flex;align-items:center;justify-content:center;transition:.2s}
+.fab:active{transform:scale(.95)}
+
+/* INSTALL BAR */
+.install-bar{display:none;position:fixed;bottom:0;left:0;right:0;z-index:100;background:var(--terrad);color:#f5ede0;padding:12px 20px;align-items:center;justify-content:space-between;gap:12px;font-family:var(--sans);font-size:13px}
+.install-bar button{background:rgba(255,255,255,.15);border:none;color:#f5ede0;padding:7px 16px;font-family:var(--sans);font-size:11px;font-weight:600;cursor:pointer;letter-spacing:.08em;text-transform:uppercase}
+.install-bar .ib-close{background:none;font-size:20px;padding:0 4px}
+</style>
+</head>
+<body>
+
+<div class="install-bar" id="install-bar">
+  <span>Add to home screen</span>
+  <button onclick="installApp()">Install</button>
+  <button class="ib-close" onclick="document.getElementById('install-bar').style.display='none'">×</button>
+</div>
+
+<div class="header">
+  <div class="header-inner">
+    <div>
+      <div class="header h1" style="font-family:var(--serif);font-size:20px;font-weight:600;color:#f5ede0;font-style:italic">The Protocol</div>
+      <div class="header-sub">How to respond — and what not to do</div>
+    </div>
+    <button class="mode-toggle" onclick="toggleEmergency()" id="em-btn">⚠ Emergency</button>
+  </div>
+</div>
+
+<div class="emergency" id="emergency-bar">
+  <b>Emergency mode</b>
+  One sentence. Move. Do not re-enter. The silence is not abandonment — it is protection.
+</div>
+
+<div class="tabs">
+  <div class="tabs-inner">
+    <button class="tab on" onclick="filter('all', this)">All</button>
+    <button class="tab" onclick="filter('urgent', this)">🔴 Urgent</button>
+    <button class="tab" onclick="filter('medium', this)">🟠 Manage</button>
+    <button class="tab" onclick="filter('low', this)">🟢 Easy</button>
+    <button class="tab" onclick="filter('done', this)">✓ Done</button>
+  </div>
+</div>
+
+<div class="content" id="main-content">
+
+  <!-- ─── URGENT ─── -->
+
+  <div class="sit urgent" id="s1" data-cat="urgent">
+    <div class="sit-head" onclick="toggleSit('s1')">
+      <span class="sit-icon">🌀</span>
+      <div class="sit-content">
+        <div class="sit-trigger">Urgent · Loop starting</div>
+        <div class="sit-name">The circular conversation is starting again</div>
+      </div>
+      <span class="sit-chevron">▼</span>
+    </div>
+    <div class="sit-body">
+      <div class="response-label">Say this — once</div>
+      <div class="response" onclick="copyText(this)">
+        "I've said what I need to say about this."
+        <span class="copy-hint">Tap to copy</span>
+      </div>
+      <div class="note">Then she moves. <b>She does not repeat it. She does not justify it. She does not add to it.</b> The sentence is the complete response. The loop continues only if she keeps providing the rope. She stops providing the rope.</div>
+      <button class="done-btn" onclick="markDone('s1')">Mark handled ✓</button>
+    </div>
+  </div>
+
+  <div class="sit urgent" id="s2" data-cat="urgent">
+    <div class="sit-head" onclick="toggleSit('s2')">
+      <span class="sit-icon">😶</span>
+      <div class="sit-content">
+        <div class="sit-trigger">Urgent · Semantic argument</div>
+        <div class="sit-name">He's arguing about the definition of what she said</div>
+      </div>
+      <span class="sit-chevron">▼</span>
+    </div>
+    <div class="sit-body">
+      <div class="response-label">Say this — once</div>
+      <div class="response" onclick="copyText(this)">
+        "I'm not arguing about the definition. I'm describing my experience."
+        <span class="copy-hint">Tap to copy</span>
+      </div>
+      <div class="note">Then she stops. She does not re-enter from a different angle. <b>The semantic argument is not about the definition. It is about her experience being redirected.</b> She names this once and exits.</div>
+      <button class="done-btn" onclick="markDone('s2')">Mark handled ✓</button>
+    </div>
+  </div>
+
+  <div class="sit urgent" id="s3" data-cat="urgent">
+    <div class="sit-head" onclick="toggleSit('s3')">
+      <span class="sit-icon">🌊</span>
+      <div class="sit-content">
+        <div class="sit-trigger">Urgent · Unspoken weight</div>
+        <div class="sit-name">The room is heavy and he hasn't said why</div>
+      </div>
+      <span class="sit-chevron">▼</span>
+    </div>
+    <div class="sit-body">
+      <div class="response-label">What she does</div>
+      <div class="response" onclick="copyText(this)">
+        Continue whatever she was doing. Do not adjust.
+        <span class="copy-hint">Tap to copy</span>
+      </div>
+      <div class="note">His unnamed emotional state is not her problem until he names it. <b>She stops preemptively managing weather that has no forecast.</b> If he names it: <em>"I hear you. I'm here."</em> — then she continues. One sentence of acknowledgment. Not a processing session.</div>
+      <button class="done-btn" onclick="markDone('s3')">Mark handled ✓</button>
+    </div>
+  </div>
+
+  <div class="sit urgent" id="s4" data-cat="urgent">
+    <div class="sit-head" onclick="toggleSit('s4')">
+      <span class="sit-icon">🎭</span>
+      <div class="sit-content">
+        <div class="sit-trigger">Urgent · The 180</div>
+        <div class="sit-name">He switched from heavy to chipper overnight and she feels the whiplash</div>
+      </div>
+      <span class="sit-chevron">▼</span>
+    </div>
+    <div class="sit-body">
+      <div class="response-label">Not in the moment. Later, once, calmly:</div>
+      <div class="response" onclick="copyText(this)">
+        "When you switch that fast I don't have context for where you are. A quick heads up helps."
+        <span class="copy-hint">Tap to copy</span>
+      </div>
+      <div class="note"><b>Not in the energy of the moment.</b> She waits until both are calm. She says it once. She does not revisit. She does not expect him to perfectly execute the change — she simply named what she needs. The naming is the action. Everything after is his to figure out.</div>
+      <button class="done-btn" onclick="markDone('s4')">Mark handled ✓</button>
+    </div>
+  </div>
+
+  <!-- ─── MEDIUM ─── -->
+
+  <div class="sit medium" id="s5" data-cat="medium">
+    <div class="sit-head" onclick="toggleSit('s5')">
+      <span class="sit-icon">📱</span>
+      <div class="sit-content">
+        <div class="sit-trigger">Manage · Phone calls</div>
+        <div class="sit-name">He calls with updates she didn't ask for</div>
+      </div>
+      <span class="sit-chevron">▼</span>
+    </div>
+    <div class="sit-body">
+      <div class="response-label">Let it go to voicemail. Text back:</div>
+      <div class="response" onclick="copyText(this)">
+        "Caught up — what's up?"
+        <span class="copy-hint">Tap to copy</span>
+      </div>
+      <div class="response-label">At a neutral moment, once:</div>
+      <div class="response" onclick="copyText(this)">
+        "I'm more present for things over text. Calls pull me out of whatever I'm in."
+        <span class="copy-hint">Tap to copy</span>
+      </div>
+      <div class="note">She says the second sentence once at a neutral time — not in the bathroom, not in the energy of annoyance. She does not repeat it. He will probably call anyway the next day. She lets it go to voicemail and texts. The pattern shifts slowly. She does not punish the pattern. She redirects it.</div>
+      <button class="done-btn" onclick="markDone('s5')">Mark handled ✓</button>
+    </div>
+  </div>
+
+  <div class="sit medium" id="s6" data-cat="medium">
+    <div class="sit-head" onclick="toggleSit('s6')">
+      <span class="sit-icon">🗺</span>
+      <div class="sit-content">
+        <div class="sit-trigger">Manage · Detours</div>
+        <div class="sit-name">He's rerouting, taking detours, dragging her along</div>
+      </div>
+      <span class="sit-chevron">▼</span>
+    </div>
+    <div class="sit-body">
+      <div class="response-label">Immediately, calmly:</div>
+      <div class="response" onclick="copyText(this)">
+        "I'm not going that way. I'll meet you there."
+        <span class="copy-hint">Tap to copy</span>
+      </div>
+      <div class="response-label">If separation isn't possible:</div>
+      <div class="response" onclick="copyText(this)">
+        "How long — specifically?"
+        <span class="copy-hint">Tap to copy</span>
+      </div>
+      <div class="note">She holds him to the answer. Five minutes means five minutes. She is not a passenger in her own life. The Capricorn Moon has the patience for five minutes when the duration is named. It does not have patience for the open-ended Pisces detour.</div>
+      <button class="done-btn" onclick="markDone('s6')">Mark handled ✓</button>
+    </div>
+  </div>
+
+  <div class="sit medium" id="s7" data-cat="medium">
+    <div class="sit-head" onclick="toggleSit('s7')">
+      <span class="sit-icon">👥</span>
+      <div class="sit-content">
+        <div class="sit-trigger">Manage · Social forcing</div>
+        <div class="sit-name">He wants her at his friends' events / passive invitations</div>
+      </div>
+      <span class="sit-chevron">▼</span>
+    </div>
+    <div class="sit-body">
+      <div class="response-label">The floor — stated once, held always:</div>
+      <div class="response" onclick="copyText(this)">
+        "I can do one thing this month that matters most to you. Pick the one."
+        <span class="copy-hint">Tap to copy</span>
+      </div>
+      <div class="response-label">For passive invitations (Nepal, Thai restaurant, etc.):</div>
+      <div class="response" onclick="copyText(this)">
+        "Thanks for including me — I'll let you know on that one."
+        <span class="copy-hint">Tap to copy</span>
+      </div>
+      <div class="note">The floor is two meaningful events per month. It does not move when he finds a new angle. She does not re-enter the negotiation. <b>The floor is set. She holds it without explanation because the explanation becomes the next argument.</b></div>
+      <button class="done-btn" onclick="markDone('s7')">Mark handled ✓</button>
+    </div>
+  </div>
+
+  <div class="sit medium" id="s8" data-cat="medium">
+    <div class="sit-head" onclick="toggleSit('s8')">
+      <span class="sit-icon">🏠</span>
+      <div class="sit-content">
+        <div class="sit-trigger">Manage · Roommate accusation</div>
+        <div class="sit-name">He says she's acting like a roommate, doesn't care</div>
+      </div>
+      <span class="sit-chevron">▼</span>
+    </div>
+    <div class="sit-body">
+      <div class="response-label">Once, calmly:</div>
+      <div class="response" onclick="copyText(this)">
+        "Roommates don't care about each other. I do. I also need space to function. Those aren't contradictory."
+        <span class="copy-hint">Tap to copy</span>
+      </div>
+      <div class="note">Then she stops. She does not defend further. She does not enter the philosophical debate about what couples should look like. <b>She said the true thing. It is in the room. He can do what he needs to with it.</b></div>
+      <button class="done-btn" onclick="markDone('s8')">Mark handled ✓</button>
+    </div>
+  </div>
+
+  <div class="sit medium" id="s9" data-cat="medium">
+    <div class="sit-head" onclick="toggleSit('s9')">
+      <span class="sit-icon">😔</span>
+      <div class="sit-content">
+        <div class="sit-trigger">Manage · His feelings processing</div>
+        <div class="sit-name">He's processing out loud and needs her as the container</div>
+      </div>
+      <span class="sit-chevron">▼</span>
+    </div>
+    <div class="sit-body">
+      <div class="response-label">After one genuine minute of presence:</div>
+      <div class="response" onclick="copyText(this)">
+        "I'm not the right person to process this with right now. What do you actually need — space, or something specific?"
+        <span class="copy-hint">Tap to copy</span>
+      </div>
+      <div class="note">The question forces him to name the actual need rather than continuing the ambient output. <b>She is not shutting him down. She is asking him to be specific.</b> Specific requests she can meet. Ambient processing she cannot sustain.</div>
+      <button class="done-btn" onclick="markDone('s9')">Mark handled ✓</button>
+    </div>
+  </div>
+
+  <div class="sit medium" id="s10" data-cat="medium">
+    <div class="sit-head" onclick="toggleSit('s10')">
+      <span class="sit-icon">⏰</span>
+      <div class="sit-content">
+        <div class="sit-trigger">Manage · Wake time</div>
+        <div class="sit-name">He said he'd wake at X, woke up way later</div>
+      </div>
+      <span class="sit-chevron">▼</span>
+    </div>
+    <div class="sit-body">
+      <div class="response-label">What she does</div>
+      <div class="response" onclick="copyText(this)">
+        Plan around his actual average wake time. Not his stated one.
+        <span class="copy-hint">Tap to copy</span>
+      </div>
+      <div class="note">She stops making her schedule dependent on a variable she cannot control. She has the data — she knows the pattern. She builds her day around reality. <b>If something requires him at a specific time: she tells him once the night before. If he misses it: she goes without him or reschedules once.</b> She stops being surprised by the pattern.</div>
+      <button class="done-btn" onclick="markDone('s10')">Mark handled ✓</button>
+    </div>
+  </div>
+
+  <!-- ─── LOW ─── -->
+
+  <div class="sit low" id="s11" data-cat="low">
+    <div class="sit-head" onclick="toggleSit('s11')">
+      <span class="sit-icon">🛁</span>
+      <div class="sit-content">
+        <div class="sit-trigger">Protect · Physical spaces</div>
+        <div class="sit-name">Bathroom, morning, reading corner — when she needs them</div>
+      </div>
+      <span class="sit-chevron">▼</span>
+    </div>
+    <div class="sit-body">
+      <div class="response-label">The signals — no words required</div>
+      <div class="response" onclick="copyText(this)">
+        Door closed = unavailable. Headphones on = unavailable. In the reading corner before 8am = do not enter.
+        <span class="copy-hint">Tap to copy</span>
+      </div>
+      <div class="note">She does not explain the signals. They are on or off. The bathroom before the shower is transition space — hers entirely. <b>The morning before he wakes is the private practice.</b> The reading corner is the reset. These are non-negotiable regardless of the chapter's temperature.</div>
+      <button class="done-btn" onclick="markDone('s11')">Mark handled ✓</button>
+    </div>
+  </div>
+
+  <div class="sit low" id="s12" data-cat="low">
+    <div class="sit-head" onclick="toggleSit('s12')">
+      <span class="sit-icon">😞</span>
+      <div class="sit-content">
+        <div class="sit-trigger">Protect · When she's depleted</div>
+        <div class="sit-name">She has nothing left today</div>
+      </div>
+      <span class="sit-chevron">▼</span>
+    </div>
+    <div class="sit-body">
+      <div class="response-label">What she does</div>
+      <div class="response" onclick="copyText(this)">
+        Nothing. She goes to her space. She is civil in passing. She does not perform okay-ness she doesn't have.
+        <span class="copy-hint">Tap to copy</span>
+      </div>
+      <div class="note">Civil is sufficient. Civil costs less than warm on demand. <b>She does not owe him performance on her depleted days.</b> She is not required to manage his response to her depletion. She rests. Tomorrow has the full version again.</div>
+      <button class="done-btn" onclick="markDone('s12')">Mark handled ✓</button>
+    </div>
+  </div>
+
+  <div class="sit low" id="s13" data-cat="low">
+    <div class="sit-head" onclick="toggleSit('s13')">
+      <span class="sit-icon">💭</span>
+      <div class="sit-content">
+        <div class="sit-trigger">Inner · When guilt arrives</div>
+        <div class="sit-name">She feels guilty about planning to leave</div>
+      </div>
+      <span class="sit-chevron">▼</span>
+    </div>
+    <div class="sit-body">
+      <div class="response-label">What she does</div>
+      <div class="response" onclick="copyText(this)">
+        Open the exit fund. Look at the number. The number growing is the answer to the guilt.
+        <span class="copy-hint">Tap to copy</span>
+      </div>
+      <div class="note">She is not abandoning him. She is building the runway to the next chapter. <b>Leaving a relationship that does not fit is not unfair. Leaving it correctly — prepared, funded, honestly — is the most caring version of leaving available.</b> She has been fair throughout this chapter. She continues to be fair.</div>
+      <button class="done-btn" onclick="markDone('s13')">Mark handled ✓</button>
+    </div>
+  </div>
+
+  <div class="sit low" id="s14" data-cat="low">
+    <div class="sit-head" onclick="toggleSit('s14')">
+      <span class="sit-icon">🔄</span>
+      <div class="sit-content">
+        <div class="sit-trigger">Inner · Turning her back accusation</div>
+        <div class="sit-name">He says she's shutting down / turning her back when she ends the conversation</div>
+      </div>
+      <span class="sit-chevron">▼</span>
+    </div>
+    <div class="sit-body">
+      <div class="response-label">If she chooses to respond at all:</div>
+      <div class="response" onclick="copyText(this)">
+        "I'm not turning my back. I'm done with this conversation for now."
+        <span class="copy-hint">Tap to copy</span>
+      </div>
+      <div class="note"><b>She is not turning her back. She is protecting what is left of her bandwidth.</b> The conversation that has reached the end of its usefulness does not need to be extended because he is not satisfied with the ending. She ends it when it is over. That is the ISTP's right.</div>
+      <button class="done-btn" onclick="markDone('s14')">Mark handled ✓</button>
+    </div>
+  </div>
+
+  <!-- RULES OF ENGAGEMENT -->
+  <div style="margin-top:24px;margin-bottom:8px;font-size:9px;letter-spacing:.25em;text-transform:uppercase;color:var(--camel);font-family:var(--sans);font-weight:600">The Rules She Holds</div>
+
+  <div class="rule">
+    <p><b>She responds to what is named. Not what is sensed.</b> The unnamed weather is not her responsibility until it has a name.</p>
+    <p><b>One sentence then done.</b> She does not add to it, defend it, or revisit it.</p>
+    <p><b>She does not perform warmth she doesn't have.</b> Civil is sufficient. Civil costs less.</p>
+    <p><b>The floor does not move.</b> Two events per month. She holds it without explanation.</p>
+    <p><b>The private spaces are hers.</b> The morning. The bathroom. The reading corner. Non-negotiable.</p>
+    <p><b>The exit is being built quietly.</b> She does not share the build. She simply builds.</p>
+    <p><b>The goal is not connection.</b> The goal is stability at minimum viable cost.</p>
+  </div>
+
+</div><!-- end content -->
+
+<div class="copied" id="copied-toast">Copied ✓</div>
+
+<button class="fab" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Back to top">↑</button>
+
+<script>
+// Toggle situation card
+function toggleSit(id){
+  const el=document.getElementById(id);
+  el.classList.toggle('open');
+}
+
+// Filter by category
+function filter(cat, btn){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  btn.classList.add('on');
+  document.querySelectorAll('.sit').forEach(el=>{
+    if(cat==='all'){el.style.display='block';return;}
+    if(cat==='done'){el.style.display=el.classList.contains('done')?'block':'none';return;}
+    const elCat=el.dataset.cat;
+    const isDone=el.classList.contains('done');
+    el.style.display=(elCat===cat&&!isDone)?'block':'none';
+  });
+  const visible=[...document.querySelectorAll('.sit')].filter(e=>e.style.display!=='none');
+  document.querySelector('.empty')&&document.querySelector('.empty').remove();
+  if(!visible.length){
+    const em=document.createElement('div');
+    em.className='empty';
+    em.textContent=cat==='done'?'Nothing handled yet — good, keep going.':'Nothing in this category.';
+    document.getElementById('main-content').appendChild(em);
+  }
+}
+
+// Mark as done
+function markDone(id){
+  const el=document.getElementById(id);
+  el.classList.toggle('done');
+  if(el.classList.contains('done')) el.classList.remove('open');
+  save();
+}
+
+// Copy response text
+function copyText(el){
+  const text=el.textContent.replace('Tap to copy','').trim();
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(text).then(showCopied).catch(()=>fallbackCopy(text));
+  } else { fallbackCopy(text); }
+}
+function fallbackCopy(text){
+  const ta=document.createElement('textarea');
+  ta.value=text;ta.style.position='fixed';ta.style.opacity='0';
+  document.body.appendChild(ta);ta.select();
+  try{document.execCommand('copy');showCopied();}catch(e){}
+  document.body.removeChild(ta);
+}
+function showCopied(){
+  const t=document.getElementById('copied-toast');
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),1800);
+}
+
+// Emergency mode
+function toggleEmergency(){
+  const bar=document.getElementById('emergency-bar');
+  const btn=document.getElementById('em-btn');
+  bar.classList.toggle('show');
+  btn.textContent=bar.classList.contains('show')?'✓ Clear':'⚠ Emergency';
+}
+
+// Persist done states
+function save(){
+  const state={};
+  document.querySelectorAll('.sit').forEach(el=>{
+    state[el.id]=el.classList.contains('done');
+  });
+  try{localStorage.setItem('pisces_protocol',JSON.stringify(state));}catch(e){}
+}
+function load(){
+  try{
+    const state=JSON.parse(localStorage.getItem('pisces_protocol')||'{}');
+    Object.keys(state).forEach(id=>{
+      if(state[id]){
+        const el=document.getElementById(id);
+        if(el) el.classList.add('done');
+      }
+    });
+  }catch(e){}
+}
+load();
+
+// PWA install
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt',e=>{
+  e.preventDefault();deferredPrompt=e;
+  document.getElementById('install-bar').style.display='flex';
+});
+function installApp(){
+  if(!deferredPrompt)return;
+  deferredPrompt.prompt();
+  deferredPrompt.userChoice.then(()=>{
+    deferredPrompt=null;
+    document.getElementById('install-bar').style.display='none';
+  });
+}
+window.addEventListener('appinstalled',()=>{
+  document.getElementById('install-bar').style.display='none';
+});
+
+// SW
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>{
+    navigator.serviceWorker.register('./sw.js').catch(()=>{});
+  });
+}
+</script>
+</body>
+</html>

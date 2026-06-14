@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Game Plan — How She Gets There</title>
+  <meta name="theme-color" content="#9a5238">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Bloom">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icon.svg">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Cormorant:ital,wght@0,600;0,700;1,600;1,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f5ede0;--paper:#fdf5e8;--ink:#1a1208;--soft:#5a4030;--muted:#8a6a50;
+  --terra:#9a5238;--terrad:#7a3a22;--gold:#a87838;--camel:#c09060;
+  --line:rgba(154,82,56,.16);--sage:#5a7a4a;--slate:#3a5a7a;--rose:#8a3a4a;
+  --serif:"Cormorant Garamond",Georgia,serif;
+  --display:"Cormorant",Georgia,serif;
+  --sans:"Inter",system-ui,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:var(--serif);font-size:17px;line-height:1.65}
+
+nav{position:sticky;top:0;z-index:50;background:rgba(245,237,224,.97);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);overflow-x:auto}
+.ni{display:flex;gap:0;min-width:max-content;max-width:1100px;margin:0 auto}
+nav a{font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);text-decoration:none;padding:12px 10px;white-space:nowrap;font-family:var(--sans);font-weight:500;border-bottom:2px solid transparent;transition:.2s}
+nav a:hover{color:var(--terra)}
+
+.w{max-width:820px;margin:0 auto;padding:0 24px}
+
+.hero{background:var(--paper);border-bottom:1px solid var(--line);padding:52px 24px 42px;text-align:center}
+.ho{font-size:13px;color:var(--camel);letter-spacing:.5em;margin-bottom:18px;opacity:.5}
+.hero h1{font-family:var(--display);font-size:clamp(36px,7vw,68px);font-weight:700;color:var(--terrad);line-height:.9;margin-bottom:10px}
+.hero h1 em{font-style:italic;color:var(--terra);display:block;font-size:.58em;margin-top:6px;font-weight:600}
+.hs{font-size:clamp(14px,1.5vw,16px);color:var(--soft);font-style:italic;max-width:580px;margin:0 auto;line-height:1.55}
+
+.sec{padding:40px 0 36px;border-top:1px solid var(--line)}
+.se{font-size:9px;letter-spacing:.28em;text-transform:uppercase;color:var(--camel);margin-bottom:8px;font-family:var(--sans);font-weight:600}
+.st{font-family:var(--display);font-size:clamp(26px,4.5vw,42px);font-weight:700;color:var(--terrad);line-height:.92;margin-bottom:6px}
+.st em{color:var(--terra);font-style:italic}
+.ss{font-size:13px;color:var(--muted);font-style:italic;margin-bottom:16px}
+
+p.b{font-size:16px;color:var(--soft);margin-bottom:12px;line-height:1.7}
+p.b b{color:var(--terrad)}p.b em{color:var(--terra);font-style:italic}
+
+/* CHECKLIST */
+.cl-group{margin-bottom:20px}
+.cl-label{font-size:10px;letter-spacing:.2em;text-transform:uppercase;font-family:var(--sans);font-weight:600;padding:6px 0;margin-bottom:8px;border-bottom:1px solid var(--line)}
+.cl-label.pro{color:var(--slate)}
+.cl-label.life{color:var(--sage)}
+.cl-label.rel{color:var(--rose)}
+.cl-label.fin{color:var(--gold)}
+.cl-label.inner{color:var(--terra)}
+.cl-item{display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid rgba(154,82,56,.07);cursor:pointer;border-radius:2px;padding-left:2px;transition:background .15s}
+.cl-item:hover{background:rgba(154,82,56,.03)}
+.cl-item.checked{background:rgba(90,122,74,.06)}
+.cl-item.checked .cl-text{text-decoration:line-through;color:var(--muted)}
+.cl-box{width:18px;height:18px;border:1.5px solid var(--camel);border-radius:3px;flex-shrink:0;margin-top:3px;display:flex;align-items:center;justify-content:center;transition:.2s;cursor:pointer}
+.cl-item.checked .cl-box{background:var(--sage);border-color:var(--sage)}
+.cl-item.checked .cl-box::after{content:"✓";color:#fff;font-size:11px;font-weight:700}
+.cl-text{font-size:15px;color:var(--soft);line-height:1.55}
+.cl-text b{color:var(--terrad)}
+.cl-text em{color:var(--terra);font-style:italic}
+.cl-note{font-size:12px;color:var(--muted);font-style:italic;display:block;margin-top:3px}
+.cl-tag{font-size:8px;letter-spacing:.12em;text-transform:uppercase;font-family:var(--sans);font-weight:600;padding:2px 7px;border-radius:1px;margin-left:6px;vertical-align:middle}
+.cl-tag.flex{color:var(--sage);border:1px solid rgba(90,122,74,.3)}
+.cl-tag.new{color:var(--gold);border:1px solid rgba(168,120,56,.3)}
+.cl-tag.non{color:var(--terra);border:1px solid rgba(154,82,56,.3)}
+
+/* FEAR CARDS */
+.fear{background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--rose);margin:12px 0;padding:18px 22px}
+.fear-trigger{font-size:10px;letter-spacing:.12em;text-transform:uppercase;font-family:var(--sans);font-weight:600;color:var(--rose);margin-bottom:6px}
+.fear-thought{font-size:14px;color:var(--muted);font-style:italic;margin-bottom:10px;padding-left:10px;border-left:2px solid var(--line)}
+.fear-action{font-size:15.5px;color:var(--terrad);line-height:1.55;font-weight:600;margin-bottom:8px}
+.fear-note{font-size:14px;color:var(--soft);line-height:1.55}
+
+/* PHASE */
+.phase{border:1px solid var(--line);background:var(--paper);margin:12px 0;overflow:hidden}
+.ph{padding:13px 20px;border-bottom:1px solid var(--line);background:rgba(154,82,56,.04);display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.ph-yr{font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--terra);font-family:var(--sans);font-weight:700}
+.ph-name{font-size:20px;font-weight:700;color:var(--terrad);font-family:var(--display)}
+.ph-tag{font-size:12px;color:var(--muted);font-style:italic;margin-left:auto}
+.ph-body{padding:12px 20px 16px}
+.ph-body li{display:flex;gap:10px;padding:7px 0;border-bottom:1px solid rgba(154,82,56,.06);font-size:15px;color:var(--soft);line-height:1.55}
+.ph-body li:last-child{border-bottom:none}
+.ph-body li::before{content:"→";color:var(--camel);flex-shrink:0;font-weight:600}
+.ph-body b{color:var(--terrad)}.ph-body em{color:var(--terra);font-style:italic}
+
+/* BOX */
+.bx{background:var(--paper);border:1px solid var(--line);padding:18px 22px;margin:14px 0}
+.bx.lt{border-left:3px solid var(--terra)}.bx.lg{border-left:3px solid var(--gold)}
+.bx.ls{border-left:3px solid var(--sage)}.bx.lb{border-left:3px solid var(--slate)}
+.bx.f{background:var(--terrad);color:var(--paper);border:none}.bx.f b{color:#f0d9b8}
+.bx h3{font-size:18px;color:var(--terrad);font-weight:700;margin-bottom:9px}
+.bx.f h3{color:var(--paper)}
+.bx p{font-size:15px;color:var(--soft);margin-bottom:8px;line-height:1.6}
+.bx p:last-child{margin-bottom:0}.bx.f p{color:rgba(253,245,232,.88)}
+.bx b{color:var(--terrad)}.bx em{color:var(--terra);font-style:italic}
+
+/* RESET BTN */
+.reset-bar{display:flex;justify-content:flex-end;margin-bottom:8px}
+.reset-btn{background:none;border:1px solid var(--line);color:var(--muted);font-family:var(--sans);font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:5px 14px;cursor:pointer;transition:.2s}
+.reset-btn:hover{border-color:var(--terra);color:var(--terra)}
+
+.closing{background:var(--paper);border-top:1px solid var(--line);padding:44px 24px;text-align:center;margin-top:32px}
+.closing p{font-family:var(--display);font-size:clamp(17px,2.6vw,24px);font-style:italic;color:var(--terrad);max-width:620px;margin:0 auto;line-height:1.45}
+.closing p+p{margin-top:12px;font-size:clamp(13px,1.6vw,17px);color:var(--soft)}
+footer{text-align:center;padding:16px;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);font-family:var(--sans)}
+::selection{background:var(--camel);color:#fff}
+</style>
+</head>
+<body>
+
+
+<div id="install-bar" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:100;background:var(--terrad);color:var(--paper);padding:12px 20px;align-items:center;justify-content:space-between;gap:12px;font-family:var(--sans);font-size:13px;">
+  <span>Add to your home screen</span>
+  <button onclick="installApp()" style="background:var(--paper);color:var(--terrad);border:none;padding:8px 18px;font-family:var(--sans);font-size:12px;font-weight:600;cursor:pointer;letter-spacing:.05em;">INSTALL</button>
+  <button onclick="document.getElementById('install-bar').style.display='none'" style="background:none;border:none;color:var(--camel);font-size:18px;cursor:pointer;padding:0 4px;">×</button>
+</div>
+<nav><div class="ni">
+  <a href="#principle">The Principle</a>
+  <a href="#daily">Daily</a>
+  <a href="#weekly">Weekly</a>
+  <a href="#monthly">Monthly</a>
+  <a href="#quarterly">Quarterly</a>
+  <a href="#arc">The Arc</a>
+  <a href="#fears">Her Fears</a>
+  <a href="#relationship">The Relationship</a>
+  <a href="#protocol">When It Hits</a>
+</div></nav>
+
+<div class="hero">
+  <div class="ho">✦ · ✦ · ✦</div>
+  <h1>The Game Plan<em>How She Gets There</em></h1>
+  <div class="hs">The concrete daily, weekly, monthly, and quarterly checklist. Her specific fears addressed with specific actions. The relationship chapter managed. The life she wants — built now, not later.</div>
+</div>
+
+<div class="w">
+
+<!-- ══════════════════════ -->
+<!-- THE PRINCIPLE -->
+<!-- ══════════════════════ -->
+<div class="sec" id="principle">
+  <div class="se">The Foundation</div>
+  <div class="st">The One <em>Principle</em></div>
+
+  <div class="bx f">
+    <h3>The calendar entry decides. Not the feeling.</h3>
+    <p>She will never feel ready. Readiness is not the signal — the scheduled commitment is. The morning run proves this every day: the alarm decides, not her mood. Every item below works the same way. It is on the calendar. It happens. The feeling follows the doing, not the other way around. <b>This is the only mechanism that works for her specifically.</b> Everything else is aspiration. This is architecture.</p>
+  </div>
+
+  <div class="bx lt">
+    <h3>The three tracks running simultaneously</h3>
+    <p><b>Professional:</b> IPX → GRE → MBA application → MBA → firm launch. Every day feeds the next stage.</p>
+    <p><b>Personal:</b> the morning anchor holds, interests are tried one at a time, the private life is built deliberately alongside the professional one.</p>
+    <p><b>Relational/exit:</b> the current chapter is managed with minimum viable energy, the exit is built quietly in parallel, the chapter ends on her timeline not his.</p>
+    <p><em>All three run at once. None of them wait for the others to resolve first.</em></p>
+  </div>
+</div>
+
+<!-- ══════════════════════ -->
+<!-- DAILY CHECKLIST -->
+<!-- ══════════════════════ -->
+<div class="sec" id="daily">
+  <div class="se">Every Day</div>
+  <div class="st">The Daily <em>Architecture</em></div>
+  <div class="ss">6:30am wake · 11pm sleep · two new items only</div>
+
+  <div class="reset-bar"><button class="reset-btn" onclick="resetSection('daily-checks')">Reset</button></div>
+  <div id="daily-checks">
+
+  <div class="cl-group">
+    <div class="cl-label non inner">Morning — non-negotiable anchor</div>
+    <div class="cl-item" onclick="toggle(this)"><span class="cl-box"></span><span class="cl-text"><b>Phone across the room.</b> Wake at 6:30. Not in bed past 7:00. The scroll does not happen before the anchor.<span class="cl-note">The day's quality is determined in this first decision. She already knows this.</span></span></div>
+    <div class="cl-item" onclick="toggle(this)"><span class="cl-box"></span><span class="cl-text"><b>Run or workout.</b> Every morning. Non-negotiable.<span class="cl-tag non">anchor</span><span class="cl-note">This is the proof of concept for the entire life. If this holds, everything else is possible. If this holds on the hard day, the hard day was a success.</span></span></div>
+    <div class="cl-item" onclick="toggle(this)"><span class="cl-box"></span><span class="cl-text"><b>Reading block — 25 minutes.</b> Coffee. One of: GRE study / CLOC material / finance self-study / industry reading.<span class="cl-tag new">new</span><span class="cl-note">Piggybacks the anchor. Before email. Before his morning. Before the world makes demands. This 25 minutes compounds into 152 hours per year of deliberate building.</span></span></div>
+    <div class="cl-item" onclick="toggle(this)"><span class="cl-box"></span><span class="cl-text"><b>Marcus Aurelius — 10 minutes.</b> Pencil in the margin. Before he wakes.<span class="cl-note">The private practice. The return to herself before anyone else has claims on her. Sacred in the specific sense that it is protected without announcement.</span></span></div>
+  </div>
+
+  <div class="cl-group">
+    <div class="cl-label pro">Professional</div>
+    <div class="cl-item" onclick="toggle(this)"><span class="cl-box"></span><span class="cl-text"><b>One protected 90-minute deep-work block.</b> Phone elsewhere. No Slack. No meetings scheduled into it.<span class="cl-note">Where the actual building happens. Everything reactive fills the rest of the day. This block is defended.</span></span></div>
+    <div class="cl-item" onclick="toggle(this)"><span class="cl-box"></span><span class="cl-text"><b>One observation documented.</b> One sentence about something noticed, fixed, or learned at IPX.<span class="cl-note">Dual-use: MBA application evidence now, firm portfolio material later. Takes two minutes. Compounds into the portfolio that makes everything else credible.</span></span></div>
+  </div>
+
+  <div class="cl-group">
+    <div class="cl-label rel">Relationship management — on difficult days</div>
+    <div class="cl-item" onclick="toggle(this)"><span class="cl-box"></span><span class="cl-text"><b>One sentence, then done.</b> If a loop starts: <em>"I've said what I have to say about this."</em> Then she moves.<span class="cl-note">Not a fight. Not an explanation. A door closing. She does not re-enter the loop after this sentence. The loop continues only if she keeps providing the rope.</span></span></div>
+    <div class="cl-item" onclick="toggle(this)"><span class="cl-box"></span><span class="cl-text"><b>Respond to what is named, not what is sensed.</b> The unspoken weight is not her problem until he names it.<span class="cl-note">She stops adjusting her behavior for his unnamed emotional states. His unnamed feelings do not officially exist in the shared space. She is not responsible for weather that has no forecast.</span></span></div>
+  </div>
+
+  <div class="cl-group">
+    <div class="cl-label life flex">Personal — flexible, 2–3 days/week</div>
+    <div class="cl-item" onclick="toggle(this)"><span class="cl-box"></span><span class="cl-text"><b>Hobby / interest slot</b> (Tue/Thu or Sat).<span class="cl-tag flex">flex</span><span class="cl-note">Fixed days, off-peak, treated like a meeting. If no hobby is established yet: this is the scouting slot. One new thing tried per month.</span></span></div>
+    <div class="cl-item" onclick="toggle(this)"><span class="cl-box"></span><span class="cl-text"><b>Cook something real</b> when the energy is there.<span class="cl-tag flex">flex</span><span class="cl-note">Not obligation — the daily return to herself. When she cooks she is nobody's container, nobody's audience, nobody's weather manager. She is only in the kitchen.</span></span></div>
+    <div class="cl-item" onclick="toggle(this)"><span class="cl-box"></span><span class="cl-text"><b>Exit fund contribution — on paydays.</b> Automatic transfer. Named account. Untouchable.<span class="cl-tag new">new</span><span class="cl-note">The runway to the next chapter. Treated with the same seriousness as the Roth IRA. This is not savings — it is the investment in her own freedom.</span></span></div>
+  </div>
+
+  <div class="cl-group">
+    <div class="cl-label non inner">Wind-down — non-negotiable</div>
+    <div class="cl-item" onclick="toggle(this)"><span class="cl-box"></span><span class="cl-text"><b>Screens off at 10:30.</b> Not a suggestion.<span class="cl-note">Sleep quality determines cognitive output the next morning. The reading block, the deep work block, the GRE study — all of them depend on this.</span></span></div>
+    <div class="cl-item" onclick="toggle(this)"><span class="cl-box"></span><span class="cl-text"><b>Sleep at 11.</b></span></div>
+  </div>
+
+  </div><!-- end daily-checks -->
+
+  <div class="bx ls">
+    <h3>On the days it falls apart</h3>
+    <p>Some days only the run happens. <b>That is a successful day.</b> The anchor held. If the anchor holds on the hardest day, the hardest day was not a failure. Tomorrow has the full version again. She does not compound bad days with self-assessment. She simply shows up for the anchor tomorrow morning.</p>
+  </div>
+</div>
+
+<!-- ══════════════════════ -->
+<!-- WEEKLY -->
+<!-- ══════════════════════ -->
+<div class="sec" id="weekly">
+  <div class="se">Every Week</div>
+  <div class="st">The Weekly <em>Rhythm</em></div>
+
+  <div class="reset-bar"><button class="reset-btn" onclick="resetSection('weekly-checks')">Reset</button></div>
+  <div id="weekly-checks">
+
+  <div class="cl-group">
+    <div class="cl-label non inner">Fixed — every week</div>
+    <div class="cl-item" onclick="toggle(this)"><span class="cl-box"></span><span class="cl-text"><b>GRE study — 3 sessions minimum, 30–45 minutes each.</b> Quant gets the most reps. Consistent short sessions beat long infrequent ones.<span class="cl-note">The single lever that most determines the MBA outcome. This is the most important professional task she has right now. The diagnostic has been taken. Every session moves the number.</span></span></div>
+    <div class="cl-item" onclick="toggle(this)"><span class="cl-box"></span><span class="cl-text"><b>Sunday 15-minute weekly review.</b> What shipped. What is next. Calendar locked for the week ahead.<span class="cl-note">Decide once on Sunday. Execute Mon–Sat. Re-deciding every morning is where the energy leaks. The weekly review closes the leak.</span></span></div>
+    <div class="cl-item" onclick="toggle(this)"><span class="cl-box"></span><span class="cl-text"><b>Sunday chores.</b> Capped at 2 hours. Paired with a podcast or music. Does not eat the whole day.<span class="cl-note">Already happening. Keep it. The apartment that functions is the apartment she can live in without ambient friction adding to the relationship friction.</span></span></div>
+  </div>
+
+  <div class="cl-group">
+    <div class="cl-label pro">Professional — weekly</div>
+    <div class="cl-item" onclick="toggle(this)"><span class="cl-box"></span><span class="cl-text"><b>One professional reading piece</b> beyond the daily 25-minute block. CLOC, legal ops practitioners, energy sector, finance basics.<span class="cl-note">Terrain mapping. She is building the map before she enters the room. The map makes every conference, every CLOC interaction, every skip conversation more productive.</span></span></div>
+    <div class="cl-item" onclick="toggle(this)"><span class="cl-box"></span><span class="cl-text"><b>Consulting case — 30 minutes minimum.</b> The friend's company work documented and advanced.<span class="cl-note">This is the firm's first case. It does not receive leftover attention. It receives dedicated time. The MBA application, the portfolio, the proof that the vision is not theoretical — all of it lives here.</span></span></div>
+  </div>
+
+  <div class="cl-group">
+    <div class="cl-label fin">Financial — weekly</div>
+    <div class="cl-item" onclick="toggle(this)"><span class="cl-box"></span><span class="cl-text"><b>Exit fund balance checked.</b> Knows the number. Watches it grow.<span class="cl-note">The growing number is not just money. It is the evidence that the exit is real. The evidence makes the endurance possible. She should look at the number once a week and let the Capricorn Moon feel the trajectory.</span></span></div>
+  </div>
+
+  <div class="cl-group">
+    <div class="cl-label life flex">Personal — weekly, flexible</div>
+    <div class="cl-item" onclick="toggle(this)"><span class="cl-box"></span><span class="cl-text"><b>The Saturday cook.</b> The serious one. The project dish.<span class="cl-tag flex">flex</span><span class="cl-note">This is not meal prep. This is the weekly return to the version of herself that exists before the professional formation and underneath it. The kitchen on Saturday is hers entirely. This is non-negotiable in the personal register.</span></span></div>
+    <div class="cl-item" onclick="toggle(this)"><span class="cl-box"></span><span class="cl-text"><b>One thing from the interest list — tried or deepened.</b><span class="cl-tag flex">flex</span><span class="cl-note">If no hobby is established: first visit somewhere new, off-peak. If a hobby is running: show up for it. The month-level is the right pace for exploration. The week-level is the right pace for the established anchor.</span></span></div>
+    <div class="cl-item" onclick="toggle(this)"><span class="cl-box"></span><span class="cl-text"><b>One social thing on her terms.</b> One. Capped.<span class="cl-tag flex">flex</span><span class="cl-note">Not every week requires one. When it happens: her choice, her environment, her people. Not his events. Not the obligatory attendance. The chosen thing.</span></span></div>
+  </div>
+
+  </div><!-- end weekly-checks -->
+</div>
+
+<!-- ══════════════════════ -->
+<!-- MONTHLY -->
+<!-- ══════════════════════ -->
+<div class="sec" id="monthly">
+  <div class="se">Every Month</div>
+  <div class="st">The Monthly <em>Accounting</em></div>
+
+  <div class="reset-bar"><button class="reset-btn" onclick="resetSection('monthly-checks')">Reset</button></div>
+  <div id="monthly-checks">
+
+  <div class="cl-group">
+    <div class="cl-label pro">Professional</div>
+    <div class="cl-item" onclick="toggle(this)"><span class="cl-box"></span><span class="cl-text"><b>One IPX win documented end-to-end.</b> Problem → diagnosis → fix → measurable result. One clean page.<span class="cl-note">This is the portfolio. Every documented win is a case study for the MBA application and the firm. By month 12 she has 12 cases. The 12 cases are what makes the narrative credible.</span></span></div>
+    <div class="cl-item" onclick="toggle(this)"><span class="cl-box"></span><span class="cl-text"><b>One assertive professional move.</b> The unprompted presentation to the manager. The stretch project ask. The question in the right meeting with the skip in the room.<span class="cl-note">The visibility work. One per month is the right pace — not constant low-grade networking, not the dramatic gesture, the specific useful moment that the right person sees.</span></span></div>
+    <div class="cl-item" onclick="toggle(this)"><span class="cl-box"></span><span class="cl-text"><b>GRE progress check.</b> How many points moved? Is the quant gap closing? Adjust the study strategy if not.<span class="cl-note">The monthly diagnostic on the single most important professional task. The score she needs is 327+. The quant is the variable. Monthly tracking keeps the gap visible and the strategy honest.</span></span></div>
+    <div class="cl-item" onclick="toggle(this)"><span class="cl-box"></span><span class="cl-text"><b>Consulting case advanced meaningfully.</b> One deliverable, one documented recommendation, one measurable outcome.<span class="cl-note">The friend's company is the firm's first case. Monthly progress means monthly evidence. By the MBA application she has 12–18 months of documented independent consulting work. That is a serious record.</span></span></div>
+  </div>
+
+  <div class="cl-group">
+    <div class="cl-label fin">Financial</div>
+    <div class="cl-item" onclick="toggle(this)"><span class="cl-box"></span><span class="cl-text"><b>Financial check — 20 minutes.</b> Roth IRA on track. Exit fund balance. Index fund contributions made. Debt minimums paid. Runway fund growing.<span class="cl-note">Accounting, not anxiety. The Capricorn Moon plays the long game. The long game requires knowing the current position without drama. 20 minutes once a month is the whole practice.</span></span></div>
+    <div class="cl-item" onclick="toggle(this)"><span class="cl-box"></span><span class="cl-text"><b>Exit fund progress noted.</b> How close to the $6,000–8,000 target? What is the realistic timeline?<span class="cl-note">The exit becomes more real every month the number grows. The number is not abstract — it is the specific amount that makes the next chapter possible. She knows it. She tracks it. She does not share it.</span></span></div>
+  </div>
+
+  <div class="cl-group">
+    <div class="cl-label inner">Inner</div>
+    <div class="cl-item" onclick="toggle(this)"><span class="cl-box"></span><span class="cl-text"><b>Progress-versus-plan honest review.</b> What happened. What didn't. Why. Course correct without self-punishment.<span class="cl-note">Not a performance review of herself — an accounting. The Scorpio Mercury that assesses everything with precision should assess its own progress with the same precision. No flattery. No cruelty. Just the accurate read.</span></span></div>
+    <div class="cl-item" onclick="toggle(this)"><span class="cl-box"></span><span class="cl-text"><b>One new interest tried or one existing one deepened.</b><span class="cl-note">The month is the right pace for exploring. One new visit, one new class, one new wine tasted seriously. The interest that sticks becomes the anchor. The one that doesn't produces real information.</span></span></div>
+    <div class="cl-group">
+    <div class="cl-label rel">Relationship</div>
+    <div class="cl-item" onclick="toggle(this)"><span class="cl-box"></span><span class="cl-text"><b>Quiet private relationship accounting.</b> Is the energy balance sustainable? Is the exit timeline still correct? No action required — just honesty.<span class="cl-note">Not a crisis review. Not a decision-making session. The monthly honest check-in with herself about the chapter. The Capricorn Moon that holds the horizon should check the horizon is still where she placed it.</span></span></div>
+    </div>
+  </div>
+
+  </div><!-- end monthly-checks -->
+</div>
+
+<!-- ══════════════════════ -->
+<!-- QUARTERLY -->
+<!-- ══════════════════════ -->
+<div class="sec" id="quarterly">
+  <div class="se">Every Quarter</div>
+  <div class="st">The Quarterly <em>Recalibration</em></div>
+
+  <div class="reset-bar"><button class="reset-btn" onclick="resetSection('quarterly-checks')">Reset</button></div>
+  <div id="quarterly-checks">
+
+  <div class="cl-group">
+    <div class="cl-label pro">Professional</div>
+    <div class="cl-item" onclick="toggle(this)"><span class="cl-box"></span><span class="cl-text"><b>One external professional exposure.</b> CLOC event, industry conference, or workshop. Attend with one specific question. Two conversations maximum. Then leave.<span class="cl-note">Batched, not constant. The ISTP's professional network is built through specific high-signal interactions, not ambient low-grade networking. Quarterly is the right frequency. Each event is a deliberate investment, not an obligation.</span></span></div>
+    <div class="cl-item" onclick="toggle(this)"><span class="cl-box"></span><span class="cl-text"><b>Career trajectory check.</b> Is the profile building toward the MBA she needs? What is the next competency to add — legal ops → finance → operations → judgment?<span class="cl-note">The professional build has a sequence. The quarterly check ensures she is adding the next layer rather than going deeper into the current one past the point of diminishing returns.</span></span></div>
+    <div class="cl-item" onclick="toggle(this)"><span class="cl-box"></span><span class="cl-text"><b>MBA research advanced.</b> One school visited or info session attended. One recommender conversation had. Application narrative refined.<span class="cl-note">2029 entry requires 2027 test score and 2028 application. The quarterly milestone keeps the 2029 timeline from feeling abstract until it is suddenly urgent.</span></span></div>
+    <div class="cl-item" onclick="toggle(this)"><span class="cl-box"></span><span class="cl-text"><b>Finance self-study check.</b> Is the FP&A competency growing? One new concept mastered, one model built, one industry report read at depth.<span class="cl-note">The finance gap is the bridge from legal ops specialist to whole-business operator. It does not close on its own. Quarterly attention keeps it closing at the right pace.</span></span></div>
+  </div>
+
+  <div class="cl-group">
+    <div class="cl-label inner">Inner / life</div>
+    <div class="cl-item" onclick="toggle(this)"><span class="cl-box"></span><span class="cl-text"><b>Hobby / interest audit.</b> What has stuck? What has been tried and filed? What is next on the list?<span class="cl-note">The ISTP builds one anchor at a time. The quarterly audit determines whether the current interest has become an anchor or remains in exploration. If it is an anchor: protect it. If it is still exploration: try the next thing.</span></span></div>
+    <div class="cl-item" onclick="toggle(this)"><span class="cl-box"></span><span class="cl-text"><b>One object chosen correctly.</b> One piece added to the life she is building. The specific knife, the right cashmere, the candle for the reading corner.<span class="cl-note">Not shopping. The deliberate choosing of one correct thing per quarter. The Virgo Venus's practice applied to the material life. By the time she exits the chapter her apartment already reflects the person she is becoming.</span></span></div>
+    <div class="cl-item" onclick="toggle(this)"><span class="cl-box"></span><span class="cl-text"><b>The exit date reviewed.</b> Private. Written. Is the timeline still correct? Has the exit fund reached the target? Is the honest conversation ready to be had?<span class="cl-note">The Capricorn Moon that holds horizons should check this horizon quarterly. The date is not flexible — but the circumstances may evolve. The quarterly review is not permission to delay. It is the mechanism for staying honest about when.</span></span></div>
+  </div>
+
+  </div><!-- end quarterly-checks -->
+</div>
+
+<!-- ══════════════════════ -->
+<!-- THE ARC -->
+<!-- ══════════════════════ -->
+<div class="sec" id="arc">
+  <div class="se">The Bigger Picture</div>
+  <div class="st">The <em>Arc</em></div>
+  <div class="ss">Where the daily and weekly and monthly work is building toward</div>
+
+  <div class="phase">
+    <div class="ph"><span class="ph-yr">Now → End of Year One</span><span class="ph-name">The Foundation</span><span class="ph-tag">Build the scaffolding</span></div>
+    <div class="ph-body"><ul>
+      <li><b>GRE diagnostic taken.</b> Starting score known. Study plan in motion.</li>
+      <li><b>3–4 documented IPX wins.</b> The portfolio that makes everything else credible.</li>
+      <li><b>Legal-ops gap functionally closed.</b> Performing above her tenure level.</li>
+      <li><b>FP&A self-study begun.</b> First finance concepts absorbed.</li>
+      <li><b>Consulting case documented.</b> The firm's origin story in writing.</li>
+      <li><b>One stable interest anchor</b> beyond the morning run. Confirmed through direct experience.</li>
+      <li><b>First conference attended.</b> Two conversations had. Professional terrain mapped.</li>
+      <li><b>Exit fund at or near target ($6,000–8,000).</b> The chapter ends on her terms.</li>
+      <li><b>MBA research underway.</b> School list confirmed, recommenders identified.</li>
+      <li><b>Roth IRA maxed. Financial architecture in place.</b></li>
+    </ul></div>
+  </div>
+
+  <div class="phase">
+    <div class="ph"><span class="ph-yr">Year Two</span><span class="ph-name">The Broadening</span><span class="ph-tag">Deepen the profile</span></div>
+    <div class="ph-body"><ul>
+      <li><b>GRE banked at 327+.</b> The single lever that neutralizes the GPA. Retake if needed — there is room.</li>
+      <li><b>The chapter ends.</b> The honest conversation at the right moment. The exit handled correctly.</li>
+      <li><b>Finance competency real.</b> Can read a P&L, build a simple model, speak the language of the whole business.</li>
+      <li><b>Professional network established.</b> CLOC community, one conference relationship maintained, one LinkedIn post published.</li>
+      <li><b>MBA applications submitted.</b> Stanford GSB, INSEAD, HBS, Wharton, LBS.</li>
+      <li><b>Two stable interest anchors.</b> The running plus one more that is genuinely hers.</li>
+    </ul></div>
+  </div>
+
+  <div class="phase">
+    <div class="ph"><span class="ph-yr">Year Three → Four</span><span class="ph-name">The MBA</span><span class="ph-tag">The pivot that builds everything</span></div>
+    <div class="ph-body"><ul>
+      <li>INSEAD / Stanford GSB / HBS / Wharton / LBS. The network is the asset.</li>
+      <li>Finance fluency acquired. General management competency built.</li>
+      <li>International relationships that become future clients and partners.</li>
+      <li>The right man — most likely in this cohort, in this environment, in this chapter.</li>
+      <li>Firm concept refined from aspiration to plan. First MBA-network clients identified.</li>
+    </ul></div>
+  </div>
+
+  <div class="phase">
+    <div class="ph"><span class="ph-yr">Year Five → Seven</span><span class="ph-name">The Launch</span><span class="ph-tag">The theoretical becomes operational</span></div>
+    <div class="ph-body"><ul>
+      <li>The firm launches. First clients from MBA network and IPX professional world.</li>
+      <li>Fractional COO/CFO model running — $15–30K/month per client.</li>
+      <li>First equity stake in an advised company.</li>
+      <li>The PE relationship beginning. Operating partner track emerging.</li>
+      <li>First SF property purchased. Wealth architecture compounding.</li>
+    </ul></div>
+  </div>
+
+  <div class="phase">
+    <div class="ph"><span class="ph-yr">Year Eight →</span><span class="ph-name">The Compounding</span><span class="ph-tag">Everything built so far multiplying</span></div>
+    <div class="ph-body"><ul>
+      <li>Firm at $2–5M revenue. Team of 5–10. International clients.</li>
+      <li>First equity event: $2–5M. Net worth trajectory inflects.</li>
+      <li>PE carried interest vesting. The multimillion chapter begins.</li>
+      <li>The permanent partner established. The household built deliberately.</li>
+      <li><em>The life she described at 26 is no longer aspirational. It is actual.</em></li>
+    </ul></div>
+  </div>
+</div>
+
+<!-- ══════════════════════ -->
+<!-- HER FEARS -->
+<!-- ══════════════════════ -->
+<div class="sec" id="fears">
+  <div class="se">The Inner Work</div>
+  <div class="st">Her Fears — <em>With Specific Actions</em></div>
+  <div class="ss">Not affirmations. Specific responses to specific fears — and what she does when each one arrives</div>
+
+  <div class="fear">
+    <div class="fear-trigger">When the thought arrives</div>
+    <div class="fear-thought">"I don't actually have the experience they hired me for. They're going to find out."</div>
+    <div class="fear-action">Name the specific gap. Spend 45 minutes on it tonight. The gap closes. The general fear does not.</div>
+    <div class="fear-note">The imposter syndrome is not evidence she shouldn't be there. It is evidence she knows the difference between what she is and what she is becoming. The people with no imposter syndrome either already have ten years of experience or don't know what they don't know. She is neither. She is closing the gap with full precision. That is the correct position to be in. <b>The discomfort is the signal that the build is real.</b></div>
+  </div>
+
+  <div class="fear">
+    <div class="fear-trigger">When the thought arrives</div>
+    <div class="fear-thought">"If I leave him I'll only find people on dating apps and the apps don't work."</div>
+    <div class="fear-action">Look at the exit fund balance. Then look at the interest list. Then look at the MBA school list. The environment she is building her way into is where the right man exists. Not in the apps.</div>
+    <div class="fear-note">Every real connection she has had arrived through shared real-world context — not apps. The apps produced volume. The right environments produce the right people. The MBA cohort, the professional network, the climbing gym, the farmers market — these are the places. She is building her way into them. The fear is based on the current context. The exit happens in a future context she is actively constructing. <b>She is not going back to the apps. She is going forward into the life that makes the apps irrelevant.</b></div>
+  </div>
+
+  <div class="fear">
+    <div class="fear-trigger">When the thought arrives</div>
+    <div class="fear-thought">"I'm too much. Too selective. Too hard to get close to. Too intense."</div>
+    <div class="fear-action">Name one person who has gotten close and stayed. She has evidence. Use it.</div>
+    <div class="fear-note">The filter is not a flaw. It is what makes the right person recognizable when they arrive — and what makes her recognizable to them. Every man who got past the composed exterior carried her for years, sometimes permanently. The problem was never that she was too much. The problem was the rooms were too small. She is building her way into the right-sized rooms. <b>The filter is doing its job.</b></div>
+  </div>
+
+  <div class="fear">
+    <div class="fear-trigger">When the thought arrives</div>
+    <div class="fear-thought">"I should be further along. Other people my age have figured this out."</div>
+    <div class="fear-action">Compare to herself one year ago — not to the horizon. The comparison to herself is always favorable. The comparison to the horizon always produces the feeling of being behind.</div>
+    <div class="fear-note">She is 26 with a triple major from Berkeley, a demanding new role, a strategic consulting engagement already running, and a specific actionable plan to build a multimillion firm. The Capricorn Moon compares the current position to the horizon and the gap always looks large. That is how horizons work. <b>She is not behind. She is in formation. The formation is the hardest part. She is in it.</b></div>
+  </div>
+
+  <div class="fear">
+    <div class="fear-trigger">When the thought arrives</div>
+    <div class="fear-thought">"Every hour not working is stolen from the firm."</div>
+    <div class="fear-action">Name what the hour is actually for. If it is rest: the rest is infrastructure. If it is a hobby: the hobby is R&D. If it is the relationship: this hour is a managed cost of the chapter. None of these are theft.</div>
+    <div class="fear-note">A depleted, one-dimensional, networkless founder is a worse founder. The recovery, the hobby, the interest that becomes the conversation at the INSEAD dinner — these are inputs to the work, not competitors with it. <b>The Capricorn Moon needs to see it all serving the long climb. It does.</b></div>
+  </div>
+
+  <div class="fear">
+    <div class="fear-trigger">When the thought arrives</div>
+    <div class="fear-thought">"What if I try the hobby and don't like it and it's ruined."</div>
+    <div class="fear-action">Schedule the first visit. Off-peak. 60 minutes. Treat it as data collection, not commitment. The not-liking produces real information. The real information is more valuable than the hypothetical potential.</div>
+    <div class="fear-note">The ISTP's first read is accurate and permanent — which means she avoids triggering it on things she has not yet experienced. But the hypothetical version of the thing she might love is worth less than the real data from trying it once. <b>The first visit is information. Everything after that is building.</b></div>
+  </div>
+
+  <div class="fear">
+    <div class="fear-trigger">When the thought arrives</div>
+    <div class="fear-thought">"What if I build all of this and still don't feel like enough?"</div>
+    <div class="fear-action">Find the evidence from today — one thing done correctly, one thing built, one anchor held. The feeling follows the evidence. Not the other way around.</div>
+    <div class="fear-note">The feeling of enough does not arrive at a milestone. It accumulates through evidence — rep by rep, year by year, the evidence that the full version of her is received rather than rejected. She is collecting that evidence right now. The feeling doesn't precede the evidence. <b>It follows it. It is already following it.</b></div>
+  </div>
+
+  <div class="fear">
+    <div class="fear-trigger">When the thought arrives</div>
+    <div class="fear-thought">"It's not fair that I feel like I have to leave before the chapter ends."</div>
+    <div class="fear-action">Read the Pisces chapter summary. The accounting is there. She has been fair. Leaving correctly is the fairer version than staying past the point where it costs her more than it is worth.</div>
+    <div class="fear-note">She showed up. She managed the chapter with more grace than it deserved. The warmth she maintained was real. The care was real. The irritation is also real. All three coexist. <b>None of them cancel the others. Leaving a relationship that does not fit is not unfair. Leaving it with care is the fairest version available.</b></div>
+  </div>
+</div>
+
+<!-- ══════════════════════ -->
+<!-- THE RELATIONSHIP CHAPTER -->
+<!-- ══════════════════════ -->
+<div class="sec" id="relationship">
+  <div class="se">The Current Chapter</div>
+  <div class="st">The Relationship <em>Protocol</em></div>
+  <div class="ss">Specific actions for the specific frictions — the minimum viable energy for maximum sustainability</div>
+
+  <div class="reset-bar"><button class="reset-btn" onclick="resetSection('rel-checks')">Reset</button></div>
+  <div id="rel-checks">
+
+  <div class="cl-group">
+    <div class="cl-label rel">When a processing loop starts</div>
+    <div class="cl-item" onclick="toggle(this)"><span class="cl-box"></span><span class="cl-text"><em>"I've said what I have to say about this."</em> One sentence. Then she moves.<span class="cl-note">Not a fight. Not an explanation. A door closing. This is the only tool required for the loop. She does not add to it. She does not defend it. She says it once and moves.</span></span></div>
+  </div>
+
+  <div class="cl-group">
+    <div class="cl-label rel">When the unspoken weight fills the room</div>
+    <div class="cl-item" onclick="toggle(this)"><span class="cl-box"></span><span class="cl-text">Continue whatever she was doing. Do not adjust for weather that has not been named.<span class="cl-note">His unnamed emotional state is not her problem until he names it. She stops preemptively managing the unnamed. When it is named she responds once, briefly, with genuine care. Then she moves on.</span></span></div>
+  </div>
+
+  <div class="cl-group">
+    <div class="cl-label rel">When the social integration demand arrives</div>
+    <div class="cl-item" onclick="toggle(this)"><span class="cl-box"></span><span class="cl-text">The floor is set. Two meaningful things per month. It does not move.<span class="cl-note">She does not re-enter the negotiation when he finds a new angle. The floor is the floor. She holds it without explanation because the explanation becomes the next argument.</span></span></div>
+  </div>
+
+  <div class="cl-group">
+    <div class="cl-label rel">When the detour/rerouting starts</div>
+    <div class="cl-item" onclick="toggle(this)"><span class="cl-box"></span><span class="cl-text"><em>"I'm not going that way."</em> She continues to the destination.<span class="cl-note">She is not a passenger in her own life. If the detour is unavoidable: "How long specifically?" She holds him to the number.</span></span></div>
+  </div>
+
+  <div class="cl-group">
+    <div class="cl-label rel">When the phone calls/monologues arrive</div>
+    <div class="cl-item" onclick="toggle(this)"><span class="cl-box"></span><span class="cl-text">Receive briefly. Then: <em>"Can you text me instead? I'm actually more present for it that way."</em><span class="cl-note">Said once, warmly, at a neutral moment. Not in the bathroom. Not in the energy of a bad day. The instruction is clear, the reasoning is genuine, the request is reasonable. She does not repeat it.</span></span></div>
+  </div>
+
+  <div class="cl-group">
+    <div class="cl-label rel">The private exit build — not visible to him</div>
+    <div class="cl-item" onclick="toggle(this)"><span class="cl-box"></span><span class="cl-text"><b>Run the actual financial numbers.</b> Income minus debt minus expenses equals the real constraint. Not the feeling — the ledger.<span class="cl-note">This week. On her lunch break or when he is out. The actual number makes the exit real. The feeling of financial dependence and the mathematical reality may be different. She finds out which one is running.</span></span></div>
+    <div class="cl-item" onclick="toggle(this)"><span class="cl-box"></span><span class="cl-text"><b>Research rooms.</b> Craigslist, Facebook Marketplace — what does a private room in Dogpatch or the Mission actually cost right now?<span class="cl-note">Not to move tomorrow. To know that the option is real and specific, not hypothetical. The knowing makes the endurance possible.</span></span></div>
+    <div class="cl-item" onclick="toggle(this)"><span class="cl-box"></span><span class="cl-text"><b>Set the private date.</b> Written. Known only to her. The date she has decided she will be out by or the date she has the honest conversation by.<span class="cl-note">The Capricorn Moon that holds horizons holds this one. The date gives the chapter a shape. The shape makes it finite. Finite things are endurable in a way that open-ended things are not.</span></span></div>
+    <div class="cl-item" onclick="toggle(this)"><span class="cl-box"></span><span class="cl-text"><b>Exit fund automatic transfer on payday.</b> Separate account. Untouchable. Named privately.<span class="cl-note">The runway to the next chapter. Treated as the investment it is. Not savings — freedom.</span></span></div>
+  </div>
+
+  </div><!-- end rel-checks -->
+</div>
+
+<!-- ══════════════════════ -->
+<!-- WHEN IT HITS PROTOCOL -->
+<!-- ══════════════════════ -->
+<div class="sec" id="protocol">
+  <div class="se">The Inner Protocol</div>
+  <div class="st">When the Anxiety <em>Hits</em></div>
+  <div class="ss">Concrete sequence — not "think positive," what to actually do</div>
+
+  <div class="bx lt">
+    <h3>The 6-step protocol — in order</h3>
+    <p><b>1. Name it in one sentence.</b> Not "I feel bad" — the specific thought. "I'm afraid they'll find out I don't know CLM well enough." The naming converts ambient anxiety into a specific thing. Specific things are manageable.</p>
+    <p><b>2. Run the Scorpio Mercury assessment on the thought — not the situation.</b> Is this thought accurate right now, today? Not "could it be true someday" — is it actually true in the specific present moment? The answer is almost always: partially true but larger than the evidence supports.</p>
+    <p><b>3. Find the specific gap if there is one.</b> Convert it immediately into an action. What is the one specific thing learnable in the next 24 hours? The anxiety that has an action step attached loses most of its power the moment the step is identified.</p>
+    <p><b>4. If no specific gap — move the body.</b> Not a full workout. Walk. Stretch. Change rooms. Make the matcha. The ISTP resets through physical input, not through thinking harder. The thought running in circles in a seated body often stops in a moving one.</p>
+    <p><b>5. Run the counter-evidence.</b> Three things that are actually going right right now. Not affirmations — facts. The work product that landed. The morning run completed. The exit fund that grew this month. The Capricorn Moon's accounting should run in both directions.</p>
+    <p><b>6. Return to the present.</b> Marcus Aurelius: <em>"Confine yourself to the present."</em> The angst is almost always a future-tense fear projected onto the current moment. The current moment usually contains: work being done, a gap being closed, a body that moved this morning, a life being built. Return to it.</p>
+  </div>
+
+  <div class="bx lt">
+    <h3>The emergency version — for the really bad days</h3>
+    <p>When the spiral is real and the protocol feels too structured:</p>
+    <p><b>1.</b> Stop what she is doing. <b>2.</b> Go run — even 15 minutes. <b>3.</b> Shower. <b>4.</b> Make one thing with her hands — the matcha, the meal, anything. <b>5.</b> Do one small concrete task with a visible result.</p>
+    <p><em>The spiral breaks when the body moves and the hands make something. This is how the morning run already works. The emergency version is the morning run deployed at a different hour.</em></p>
+  </div>
+
+  <div class="bx f">
+    <h3>The permissions she keeps forgetting to give herself</h3>
+    <p><b>She is allowed to not have it figured out at 26.</b> The formation is the hardest part. She is in it.</p>
+    <p><b>She is allowed to be irritated by him</b> without it requiring action today.</p>
+    <p><b>She is allowed to be a beginner</b> at the climbing gym, the wine bar, the conference. The imperfect first attempt is infinitely more useful than the hypothetical perfect one.</p>
+    <p><b>She is allowed to rest</b> without the rest counting as time stolen from the firm.</p>
+    <p><b>She is allowed to be selective</b> about her time, her people, her energy — without explaining or apologizing.</p>
+    <p><b>She is allowed to leave a relationship that does not fit.</b> Leaving correctly is not unfair. It is the most honest version of care available.</p>
+    <p><b>She is allowed to be ambitious</b> at the level she is actually ambitious — the firm, the international life, the $25M — without scaling it down for anyone's comfort.</p>
+    <p><b>She is allowed to be the full version of herself</b> — the composed and the soft, the builder and the beauty, the woman who reads Marcus Aurelius before dawn and wants the Celine Box — all of it, simultaneously, without editing for the room.</p>
+  </div>
+</div>
+
+</div>
+
+<div class="closing">
+  <p>The life she wants is not waiting on the other side of the hard chapter. It is happening right now — in the 25-minute reading block, in the consulting case documented, in the exit fund growing, in the morning that is still hers.</p>
+  <p>The building does not wait for the conditions to improve. The building is how the conditions improve. She already knows how. She proves it every morning at 7am.</p>
+  <p>One thing today. Then the next thing tomorrow. That is the whole architecture. It has always been enough.</p>
+</div>
+<footer>The Game Plan · How She Gets There · In Full Bloom</footer>
+
+<script>
+function toggle(el){
+  el.classList.toggle('checked');
+  save();
+}
+function resetSection(id){
+  document.querySelectorAll('#'+id+' .cl-item').forEach(el=>el.classList.remove('checked'));
+  save();
+}
+function save(){
+  const state={};
+  document.querySelectorAll('.cl-item').forEach((el,i)=>{
+    state[i]=el.classList.contains('checked');
+  });
+  try{localStorage.setItem('gp_checks',JSON.stringify(state));}catch(e){}
+}
+function load(){
+  try{
+    const state=JSON.parse(localStorage.getItem('gp_checks')||'{}');
+    document.querySelectorAll('.cl-item').forEach((el,i)=>{
+      if(state[i])el.classList.add('checked');
+    });
+  }catch(e){}
+}
+load();
+
+// Nav highlight
+const secs=[...document.querySelectorAll('.sec')].filter(s=>s.id);
+const links=[...document.querySelectorAll('nav a')];
+const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){links.forEach(l=>l.classList.toggle('on',l.getAttribute('href')==='#'+e.target.id));}});},{threshold:.12,rootMargin:'-40px 0px 0px 0px'});
+secs.forEach(s=>io.observe(s));
+
+// Reveal
+const rio=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.style.opacity=1;e.target.style.transform='none';rio.unobserve(e.target);}});},{threshold:.04});
+document.querySelectorAll('.bx,.fear,.phase,.cl-group').forEach(el=>{el.style.opacity=0;el.style.transform='translateY(10px)';el.style.transition='opacity .5s ease,transform .5s ease';rio.observe(el);});
+</script>
+
+<script>
+if('serviceWorker' in navigator){
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js').catch(()=>{});
+  });
+}
+
+// Install prompt
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  deferredPrompt = e;
+  document.getElementById('install-bar').style.display = 'flex';
+});
+
+function installApp(){
+  if(!deferredPrompt) return;
+  deferredPrompt.prompt();
+  deferredPrompt.userChoice.then(() => {
+    deferredPrompt = null;
+    document.getElementById('install-bar').style.display = 'none';
+  });
+}
+
+window.addEventListener('appinstalled', () => {
+  document.getElementById('install-bar').style.display = 'none';
+});
+</script>
+</body>
+</html>
