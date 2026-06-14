@@ -2,7 +2,7 @@
   "name": "The Protocol — How to Respond",
   "short_name": "Protocol",
   "description": "Concrete responses for every situation",
-  "start_url": "./PPPAstrology.html",
+  "start_url": "PPPAstrology.html",
   "display": "standalone",
   "background_color": "#f5ede0",
   "theme_color": "#7a3a22",
