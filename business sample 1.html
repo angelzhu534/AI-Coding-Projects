@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mortuary Transport · Financial Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --ink:      #1A2233;
+      --ink-soft: #5B6478;
+      --paper:    #F6F4EF;
+      --panel:    #FFFFFF;
+      --line:     #E2DED4;
+      --teal:     #2E6E6E;
+      --amber:    #B7842E;
+      --rust:     #A14A3C;
+      --moss:     #4C6B3C;
+      --mono: 'JetBrains Mono', monospace;
+      --serif: 'Source Serif 4', Georgia, serif;
+    }
+    body { font-family: var(--serif); background: var(--paper); color: var(--ink); min-height: 100vh; }
+
+    /* ── Header ── */
+    .header { background: var(--ink); padding: 28px 40px 20px; border-bottom: 4px solid var(--amber); }
+    .header-eyebrow { font-size: 11px; letter-spacing: 0.22em; color: var(--amber); text-transform: uppercase; margin-bottom: 6px; font-family: var(--mono); }
+    .header h1 { font-size: clamp(20px, 3.5vw, 28px); font-weight: 600; color: var(--paper); }
+    .header-sub { font-size: 12px; color: #9AA6BC; margin-top: 5px; font-style: italic; }
+    .header-version { font-size: 10px; color: #5A7070; margin-top: 4px; font-family: var(--mono); }
+
+    /* ── Tabs ── */
+    .tab-bar { background: #111827; border-bottom: 2px solid #2E384E; display: flex; padding: 0 40px; gap: 0; }
+    .tab-btn {
+      font-family: var(--mono); font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase;
+      color: #6B7A99; background: none; border: none; padding: 14px 22px; cursor: pointer;
+      border-bottom: 3px solid transparent; margin-bottom: -2px; transition: all 0.2s;
+    }
+    .tab-btn:hover { color: #9AA6BC; }
+    .tab-btn.active { color: var(--amber); border-bottom-color: var(--amber); }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* ── Layout ── */
+    .main { padding: 28px 40px 48px; max-width: 1180px; margin: 0 auto; }
+
+    /* ── Slider card ── */
+    .slider-card { border-radius: 10px; padding: 24px 28px; margin-bottom: 22px; border: 3px solid var(--teal); background: var(--ink); transition: border-color 0.25s; }
+    .dual-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+    .slider-top { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 10px; flex-wrap: wrap; gap: 8px; }
+    .slider-label { font-size: 11px; color: #9AA6BC; letter-spacing: 0.16em; text-transform: uppercase; font-family: var(--mono); }
+    .slider-value { font-size: clamp(24px, 4vw, 36px); font-weight: 700; color: var(--paper); line-height: 1; margin-top: 4px; font-family: var(--mono); }
+    .slider-value span { font-size: 13px; color: #9AA6BC; margin-left: 5px; font-weight: 400; }
+    input[type=range] { width: 100%; height: 6px; accent-color: var(--amber); cursor: pointer; margin-top: 10px; }
+    .status-row { display: flex; justify-content: space-between; align-items: center; margin-top: 16px; padding-top: 14px; border-top: 1px solid #2E384E; }
+    .status-badge { border-radius: 6px; padding: 7px 14px; font-size: 12px; font-weight: 700; border: 2px solid; white-space: nowrap; font-family: var(--mono); }
+    .status-context { font-size: 12px; color: #9AA6BC; text-align: right; font-style: italic; }
+    .presets { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+    .preset-btn { border-radius: 5px; padding: 5px 12px; font-size: 11px; cursor: pointer; font-family: var(--mono); transition: all 0.2s; border: 1px solid; background: transparent; }
+
+    /* ── KPI grid ── */
+    .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 22px; }
+    .kpi-card { border-radius: 8px; padding: 16px 18px; border: 1px solid; background: var(--panel); }
+    .kpi-label { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-soft); margin-bottom: 5px; font-family: var(--mono); }
+    .kpi-value { font-size: clamp(16px, 2.2vw, 22px); font-weight: 700; line-height: 1; font-family: var(--mono); }
+    .kpi-sub { font-size: 10px; color: #999; margin-top: 5px; font-style: italic; }
+
+    /* ── Panels ── */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 22px; }
+    .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 22px; }
+    .panel { background: var(--panel); border-radius: 8px; border: 1px solid var(--line); overflow: hidden; }
+    .panel-header { background: var(--ink); padding: 11px 16px; }
+    .panel-title { font-size: 11px; letter-spacing: 0.16em; color: var(--amber); text-transform: uppercase; font-family: var(--mono); }
+    .panel-body { padding: 14px 18px; }
+
+    .pl-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; }
+    .pl-row.border-top { border-top: 1px solid var(--line); margin-top: 3px; padding-top: 9px; }
+    .pl-row-label { font-size: 13px; color: #555; }
+    .pl-row-label.bold { font-weight: 600; color: var(--ink); }
+    .pl-row-label.italic { font-style: italic; font-size: 11px; color: #999; }
+    .pl-row-value { font-size: 13px; font-family: var(--mono); }
+    .pl-row-value.bold { font-weight: 700; }
+    .pl-row-value.big { font-size: 16px; font-weight: 700; }
+
+    .op-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #F0EEE9; }
+    .op-row:last-child { border-bottom: none; }
+    .op-label { font-size: 13px; color: #333; }
+    .op-note { font-size: 10px; color: #999; font-style: italic; margin-top: 2px; }
+    .op-row-value { font-size: 14px; font-weight: 700; color: var(--ink); font-family: var(--mono); white-space: nowrap; }
+
+    .assump-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 32px; padding: 16px 20px; }
+    .assump-top { display: flex; justify-content: space-between; margin-bottom: 5px; }
+    .assump-label { font-size: 12px; color: #555; }
+    .assump-val { font-size: 13px; font-weight: 700; color: var(--ink); font-family: var(--mono); }
+    .assump-note { font-size: 10px; color: #aaa; font-style: italic; margin-top: 2px; }
+
+    /* ── Heatmap ── */
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 11px; }
+    th { padding: 7px 9px; text-align: center; font-size: 9px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-soft); border-bottom: 1px solid var(--line); background: #F5F3EF; white-space: nowrap; font-family: var(--mono); }
+    th.corner { text-align: left; background: var(--ink); color: var(--amber); }
+    td { padding: 7px 9px; text-align: center; border-bottom: 1px solid #F0EEE9; white-space: nowrap; font-family: var(--mono); font-size: 11px; }
+    td.rowhead { text-align: left; font-weight: 700; background: #F5F3EF; color: var(--ink); }
+    .table-note { padding: 9px 14px; font-size: 11px; color: #999; font-style: italic; border-top: 1px solid var(--line); }
+
+    /* ── Insight ── */
+    .insight { margin-top: 20px; padding: 16px 22px; background: var(--ink); border-radius: 8px; border-left: 4px solid var(--teal); }
+    .insight-label { font-size: 11px; color: var(--amber); letter-spacing: 0.16em; text-transform: uppercase; margin-bottom: 7px; font-family: var(--mono); }
+    .insight-text { font-size: 13px; color: var(--paper); line-height: 1.75; }
+    .insight-text strong { color: var(--amber); }
+
+    /* ── Summary tab specific ── */
+    .summary-hero { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 22px; }
+    .hero-card {
+      border-radius: 10px; padding: 22px 20px; text-align: center; border: 1px solid;
+    }
+    .hero-label { font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; font-family: var(--mono); margin-bottom: 8px; opacity: 0.8; }
+    .hero-value { font-size: clamp(22px, 3vw, 32px); font-weight: 700; font-family: var(--mono); line-height: 1; }
+    .hero-sub { font-size: 11px; margin-top: 6px; opacity: 0.7; font-style: italic; }
+
+    .metric-section { margin-bottom: 22px; }
+    .metric-section-title {
+      font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; font-family: var(--mono);
+      color: var(--ink-soft); border-bottom: 1px solid var(--line); padding-bottom: 8px; margin-bottom: 14px;
+    }
+    .metric-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .metric-card { background: var(--panel); border-radius: 8px; border: 1px solid var(--line); padding: 14px 16px; }
+    .metric-name { font-size: 11px; color: var(--ink-soft); margin-bottom: 4px; font-family: var(--mono); }
+    .metric-val { font-size: 18px; font-weight: 700; font-family: var(--mono); color: var(--ink); }
+    .metric-def { font-size: 10px; color: #aaa; margin-top: 5px; font-style: italic; line-height: 1.5; }
+
+    .callout-strip {
+      background: var(--ink); border-radius: 8px; border-left: 4px solid var(--amber);
+      padding: 16px 22px; margin-bottom: 22px;
+    }
+    .callout-strip-label { font-size: 10px; color: var(--amber); letter-spacing: 0.14em; text-transform: uppercase; font-family: var(--mono); margin-bottom: 6px; }
+    .callout-strip-text { font-size: 13px; color: #C8D0DE; line-height: 1.75; }
+    .callout-strip-text strong { color: #F0C670; }
+
+    .warn-strip {
+      background: #2A1E0E; border-radius: 8px; border-left: 4px solid var(--amber);
+      padding: 14px 20px; margin-bottom: 14px;
+    }
+    .warn-strip-label { font-size: 10px; color: var(--amber); letter-spacing: 0.12em; text-transform: uppercase; font-family: var(--mono); margin-bottom: 5px; }
+    .warn-strip-text { font-size: 12px; color: #C8A87A; line-height: 1.65; }
+
+
+
+    @media (max-width: 800px) {
+      .main, .header, .changelog-toggle, .changelog-body, .tab-bar { padding-left: 16px; padding-right: 16px; }
+      .dual-grid, .two-col, .three-col, .summary-hero, .metric-grid { grid-template-columns: 1fr; }
+      .kpi-grid { grid-template-columns: 1fr 1fr; }
+      .assump-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 440px) { .kpi-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-eyebrow">Mortuary Transport · Operating Model</div>
+  <h1>Cash Flow, Break-Even &amp; Financial Summary</h1>
+  <div class="header-sub">Simulator + key financial metrics — all figures update live with the sliders</div>
+  <div class="header-version">v3 · Corrected BD method · Runway includes loan · DSCR · Summary tab with ARR, ROI, payback, margins</div>
+</div>
+
+<!-- Limitations banner -->
+<div style="background:#1A1F2E;border-bottom:1px solid #2E384E;padding:10px 40px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+  <span style="font-family:var(--mono);font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--amber);white-space:nowrap;">Model scope</span>
+  <span style="font-family:var(--mono);font-size:11px;color:#6B7A99;">
+    Assumes mature steady-state volume — does not model the 6-month ramp curve &nbsp;·&nbsp;
+    WA State taxes (~$3,419/yr) excluded from cash flow &nbsp;·&nbsp;
+    COGS is blended avg — residential bariatric calls shift it higher &nbsp;·&nbsp;
+    Depreciation ($1,583/yr) excluded (cash-basis view)
+  </span>
+</div>
+
+<!-- Tab bar -->
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="switchTab('simulator')">Cash Flow Simulator</button>
+  <button class="tab-btn" onclick="switchTab('summary')">Financial Summary</button>
+</div>
+
+<!-- ═══════════════════════════════════════════════ TAB 1: SIMULATOR ═══ -->
+<div id="tab-simulator" class="tab-content active">
+<div class="main">
+
+  <div class="slider-card" id="sliderCard">
+    <div class="dual-grid">
+      <div>
+        <div class="slider-top">
+          <div><div class="slider-label">Calls per Day</div>
+          <div class="slider-value" id="callsDisplay">2.00<span>calls/day</span></div></div>
+        </div>
+        <input type="range" id="callsSlider" min="0.25" max="4" step="0.05" value="2">
+      </div>
+      <div>
+        <div class="slider-top">
+          <div><div class="slider-label">Blended Price per Call</div>
+          <div class="slider-value" id="priceDisplay">$631<span>/call</span></div></div>
+        </div>
+        <input type="range" id="priceSlider" min="300" max="900" step="5" value="631">
+      </div>
+    </div>
+    <div class="status-row">
+      <div class="status-badge" id="statusBadge"></div>
+      <div class="status-context" id="statusContext"></div>
+    </div>
+    <div class="presets" id="presets"></div>
+  </div>
+
+  <div class="kpi-grid" id="kpiGrid"></div>
+
+  <div class="two-col">
+    <div class="panel">
+      <div class="panel-header"><div class="panel-title">Monthly P&amp;L at Current Settings</div></div>
+      <div class="panel-body" id="plBody"></div>
+    </div>
+    <div class="panel">
+      <div class="panel-header"><div class="panel-title">Break-Even, Runway &amp; DSCR</div></div>
+      <div class="panel-body" id="opBody"></div>
+    </div>
+  </div>
+
+  <div class="panel" style="margin-bottom:20px;">
+    <div class="panel-header"><div class="panel-title">Assumptions — Adjust to Test Scenarios</div></div>
+    <div class="assump-grid" id="assumpGrid"></div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-header"><div class="panel-title">Monthly Cash Flow Heatmap — Calls/Day × Price/Call</div></div>
+    <div class="table-wrap"><table id="heatmap"></table></div>
+    <div class="table-note">Click any cell to set sliders. Green = profitable. Red = burning cash.</div>
+  </div>
+
+  <div class="insight" id="insightBar">
+    <div class="insight-label">Current Reading</div>
+    <div class="insight-text" id="insightText"></div>
+  </div>
+
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ TAB 2: SUMMARY ═══ -->
+<div id="tab-summary" class="tab-content">
+<div class="main">
+
+  <div class="callout-strip">
+    <div class="callout-strip-label">About This Summary</div>
+    <div class="callout-strip-text">
+      All figures below reflect the <strong>mature, steady-state business</strong> at current slider settings — 
+      not the ramp period. During the 6-month ramp, revenue starts at ~10% of these figures and builds to 100%. 
+      The model is structured as an <strong>LLC filing as an S-Corp</strong>: no entity-level federal income tax. 
+      Net income shown is pre-owner personal tax (owner pays individually on distributions).
+    </div>
+  </div>
+
+  <!-- Hero row -->
+  <div class="summary-hero" id="heroRow"></div>
+
+  <!-- Revenue metrics -->
+  <div class="metric-section">
+    <div class="metric-section-title">Revenue</div>
+    <div class="metric-grid" id="revenueMetrics"></div>
+  </div>
+
+  <!-- Margin metrics -->
+  <div class="metric-section">
+    <div class="metric-section-title">Margins</div>
+    <div class="metric-grid" id="marginMetrics"></div>
+  </div>
+
+  <!-- Profitability metrics -->
+  <div class="metric-section">
+    <div class="metric-section-title">Profitability &amp; Returns</div>
+    <div class="metric-grid" id="profitMetrics"></div>
+  </div>
+
+  <!-- Efficiency metrics -->
+  <div class="metric-section">
+    <div class="metric-section-title">Operational Efficiency</div>
+    <div class="metric-grid" id="effMetrics"></div>
+  </div>
+
+  <!-- Liquidity metrics -->
+  <div class="metric-section">
+    <div class="metric-section-title">Liquidity &amp; Debt</div>
+    <div class="metric-grid" id="liqMetrics"></div>
+  </div>
+
+  <!-- Caveats -->
+  <div class="warn-strip">
+    <div class="warn-strip-label">What isn't in these numbers</div>
+    <div class="warn-strip-text">
+      <strong>WA State taxes:</strong> B&O (~$461/yr) and Public Utility Tax (~$2,958/yr) are not deducted here — subtract ~$3,419/yr from net income for a more conservative view.<br>
+      <strong>Owner personal taxes:</strong> S-Corp distributions are taxed on the owner's personal return. The advisory estimate is ~$40–50K/year in personal tax obligation on distributions — this is not a business expense and doesn't appear in the model.<br>
+      <strong>Ramp period:</strong> All figures assume full mature volume. In months 1–6, expect significantly lower revenue and negative monthly cash flow covered by the operating cushion.<br>
+      <strong>Call mix risk:</strong> COGS shown is blended. A shift toward residential bariatric calls (which cost ~$268/call in COGS vs. $66 institutional) will compress margins.
+    </div>
+  </div>
+
+</div>
+</div>
+
+<script>
+  // ── State ──────────────────────────────────────────────────────────────
+  let S = {
+    calls: 2.0, price: 631,
+    cogsPct: 17.58,       // COGS % of revenue (blended weighted avg)
+    bdPerCall: 38.99,     // BD cost per call — FLAT, not % of revenue
+    monthlyOpex: 11086,   // fixed monthly OpEx
+    debtService: 1201,    // monthly loan payment (Banner Bank, 10% APR, 5yr)
+    equityRaised: 110000,
+    loanPrincipal: 56532, // Banner Bank principal
+    startupCapital: 122117,
+    hoursPerCall: 3.978,  // avg operational hours per call
+    waStateTax: 3419,     // WA B&O + Public Utility Tax annual (from Revenue Calculator)
+  };
+
+  const PRESETS = [
+    { label: "Break-Even",             calls: 0.84, price: 631, color: "#B7842E" },
+    { label: "Baseline (2/day)",       calls: 2.00, price: 631, color: "#2E6E6E" },
+    { label: "Lean Pricing ($500)",    calls: 2.00, price: 500, color: "#A14A3C" },
+    { label: "Premium Mix ($750)",     calls: 2.00, price: 750, color: "#4C6B3C" },
+    { label: "Two-Van Pace (3.5/day)", calls: 3.50, price: 631, color: "#5B6478" },
+  ];
+
+  const CALL_ROWS  = [0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0, 2.25, 2.5, 2.75, 3.0];
+  const PRICE_COLS = [400, 500, 550, 600, 631, 650, 700, 750, 800];
+  const DPM = 30.4; // days per month
+
+  // ── Formatters ─────────────────────────────────────────────────────────
+  const $ = n => { const a = Math.abs(n).toLocaleString("en-US",{style:"currency",currency:"USD",maximumFractionDigits:0}); return n<0?`(${a})`:a; };
+  const $d = (n,d=0) => { const a = Math.abs(n).toLocaleString("en-US",{style:"currency",currency:"USD",minimumFractionDigits:d,maximumFractionDigits:d}); return n<0?`(${a})`:a; };
+  const N = (n,d=2) => n.toFixed(d);
+  const P = n => (n*100).toFixed(1)+"%";
+  const Px = (n,d=1) => (n*100).toFixed(d)+"%";
+
+  // ── Core calc ──────────────────────────────────────────────────────────
+  function calc(s) {
+    const cpm = s.calls * DPM;
+    const rev = cpm * s.price;
+    const cogs = -rev * (s.cogsPct/100);
+    const ge = rev + cogs;
+    const bd = -(s.bdPerCall * cpm);
+    const opex = -s.monthlyOpex;
+    const ebitda = ge + bd + opex;
+    const ds = -s.debtService;
+    const cf = ebitda + ds;
+    const annDS = s.debtService * 12;
+    const dscr = ebitda > 0 ? ebitda / annDS : 0;
+
+    // Net income estimate (cf minus WA state taxes, annualized)
+    const annCF = cf * 12;
+    const netIncome = annCF - s.waStateTax;
+
+    // Margins
+    const gm = (1 - s.cogsPct/100);
+    const ebitdaMargin = ebitda / rev;
+    const cfMargin = cf / rev;
+    const netMargin = (cf - s.waStateTax/12) / rev;
+
+    // Break-even (per-call contribution method)
+    const gePerCall = s.price * gm;
+    const contribPerCall = gePerCall - s.bdPerCall;
+    const fixedMo = s.monthlyOpex + s.debtService;
+    const beCPM = contribPerCall > 0 ? fixedMo / contribPerCall : Infinity;
+    const beCPD = beCPM / DPM;
+    const bePrice = cpm > 0 ? (fixedMo + s.bdPerCall*cpm) / (gm*cpm) : Infinity;
+
+    // Cushion & runway
+    const cushion = s.equityRaised + s.loanPrincipal - s.startupCapital;
+    const runway = cf < 0 ? (cushion > 0 ? cushion / Math.abs(cf) : 0) : Infinity;
+
+    // Returns
+    const roi = annCF / s.equityRaised;
+    const totalInvest = s.equityRaised + s.loanPrincipal;
+    const paybackMonths = cf > 0 ? totalInvest / cf : Infinity;
+    const revPerHour = s.price / s.hoursPerCall;
+
+    // ARR
+    const arr = rev * 12;
+    const annEBITDA = ebitda * 12;
+
+    return {
+      cpm, rev, cogs, ge, bd, opex, ebitda, ds, cf,
+      annDS, dscr, annCF, netIncome, arr, annEBITDA,
+      gm, ebitdaMargin, cfMargin, netMargin,
+      beCPD, bePrice, contribPerCall,
+      cushion, runway,
+      roi, paybackMonths, revPerHour, totalInvest
+    };
+  }
+
+  function statusFor(cf) {
+    if (cf>=5000)  return {label:"✓ Strong Cash Flow",  c:"#4C6B3C",bg:"#EEF4EE"};
+    if (cf>=0)     return {label:"✓ Cash Flow Positive", c:"#2E6E6E",bg:"#EBF6F8"};
+    if (cf>=-3000) return {label:"⚠ Near Break-Even",   c:"#B7842E",bg:"#FDF6E3"};
+    return               {label:"✗ Cash Flow Negative", c:"#A14A3C",bg:"#FDF0F2"};
+  }
+  function dscrColor(v) {
+    if (v>=1.5)  return {c:"#4C6B3C",bg:"#EEF4EE"};
+    if (v>=1.25) return {c:"#2E6E6E",bg:"#EBF6F8"};
+    if (v>=1.0)  return {c:"#B7842E",bg:"#FDF6E3"};
+    return              {c:"#A14A3C",bg:"#FDF0F2"};
+  }
+
+  // ── Render simulator tab ───────────────────────────────────────────────
+  function renderSim() {
+    const s = S, d = calc(s);
+    const st = statusFor(d.cf);
+    const dc = dscrColor(d.dscr);
+
+    document.getElementById("sliderCard").style.borderColor = st.c;
+    document.getElementById("callsDisplay").innerHTML = `${N(s.calls)}<span>calls/day</span>`;
+    document.getElementById("priceDisplay").innerHTML = `${$(s.price)}<span>/call</span>`;
+
+    const badge = document.getElementById("statusBadge");
+    badge.textContent = st.label; badge.style.color=st.c; badge.style.background=st.bg; badge.style.borderColor=st.c;
+    document.getElementById("statusContext").textContent =
+      `${d.cpm.toFixed(0)} calls/month · ${$(d.rev)} revenue/month`;
+
+    // Presets
+    const pel = document.getElementById("presets"); pel.innerHTML="";
+    PRESETS.forEach(p => {
+      const b = document.createElement("button"); b.className="preset-btn"; b.textContent=p.label;
+      b.style.borderColor=p.color;
+      const active = Math.abs(s.calls-p.calls)<0.001 && Math.abs(s.price-p.price)<0.5;
+      b.style.color=active?"#FAF7F2":p.color; b.style.background=active?p.color:"transparent";
+      b.addEventListener("click",()=>{S.calls=p.calls;S.price=p.price;
+        document.getElementById("callsSlider").value=p.calls;
+        document.getElementById("priceSlider").value=p.price; render();});
+      pel.appendChild(b);
+    });
+
+    // KPIs
+    const kpis = [
+      {label:"Monthly Cash Flow", value:$(d.cf), sub:"EBITDA − debt service",
+       c:d.cf>=0?"#4C6B3C":"#A14A3C", bg:d.cf>=0?"#EEF4EE":"#FDF0F2"},
+      {label:"Annual Cash Flow",  value:$(d.annCF), sub:"Monthly × 12", c:"#2E6E6E", bg:"#EBF6F8"},
+      {label:"Break-Even Calls/Day", value:N(d.beCPD),
+       sub:`at ${$(s.price)}/call`,
+       c:s.calls>=d.beCPD?"#4C6B3C":"#A14A3C", bg:s.calls>=d.beCPD?"#EEF4EE":"#FDF0F2"},
+      {label:"DSCR", value:N(d.dscr,2)+"x", sub:"covenant: ≥ 1.25x (Banner Bank)",
+       c:dc.c, bg:dc.bg},
+    ];
+    document.getElementById("kpiGrid").innerHTML = kpis.map(k=>
+      `<div class="kpi-card" style="background:${k.bg};border-color:${k.c}30">
+        <div class="kpi-label">${k.label}</div>
+        <div class="kpi-value" style="color:${k.c}">${k.value}</div>
+        <div class="kpi-sub">${k.sub}</div></div>`).join("");
+
+    // P&L
+    const pl = [
+      {l:"Gross Revenue",                   v:$(d.rev),  c:"#1A2233"},
+      {l:`COGS (${N(s.cogsPct,1)}% of rev)`,v:$(d.cogs), c:"#A14A3C"},
+      {l:"Gross Earnings", v:$(d.ge), c:"#4C6B3C", b:true, bt:true},
+      {l:`Gross Margin = ${Px(d.gm)}`,      v:"", c:"#999", i:true},
+      {l:`BD Spend ($${N(s.bdPerCall,2)}/call × ${d.cpm.toFixed(0)})`, v:$(d.bd), c:"#A14A3C"},
+      {l:"Fixed OpEx",                       v:$(d.opex), c:"#A14A3C"},
+      {l:"EBITDA", v:$(d.ebitda), c:d.ebitda>=0?"#4C6B3C":"#A14A3C", b:true, bt:true},
+      {l:"Monthly Debt Service",             v:$(d.ds),   c:"#A14A3C"},
+      {l:"Cash Flow", v:$(d.cf), c:d.cf>=0?"#2E6E6E":"#A14A3C", b:true, bt:true, big:true},
+    ];
+    document.getElementById("plBody").innerHTML = pl.map(r=>
+      `<div class="pl-row${r.bt?" border-top":""}">
+        <span class="pl-row-label${r.b?" bold":""}${r.i?" italic":""}">${r.l}</span>
+        <span class="pl-row-value${r.big?" big":""}${r.b?" bold":""}" style="color:${r.c}">${r.v}</span>
+      </div>`).join("");
+
+    // Break-even / runway panel
+    const gap = s.calls - d.beCPD, pgap = s.price - d.bePrice;
+    const runway = d.runway===Infinity ? "Self-funding" :
+      d.cushion<=0 ? "No cushion" : `${N(d.runway,1)} months`;
+    const dscrLabel = d.dscr>=1.5 ? `${N(d.dscr,2)}x ✓ Strong` :
+      d.dscr>=1.25 ? `${N(d.dscr,2)}x ✓ Met` :
+      d.dscr>=1.0  ? `${N(d.dscr,2)}x ⚠ Below 1.25x` : `${N(d.dscr,2)}x ✗ Breach`;
+    const opRows = [
+      {l:"Break-Even Calls/Day",    v:N(d.beCPD),                note:`at ${$(s.price)}/call`},
+      {l:"Calls vs. Break-Even",    v:(gap>=0?"+":"")+N(gap),    note:gap>=0?"✓ above":"⚠ below"},
+      {l:"Break-Even Price/Call",   v:$(d.bePrice),              note:`at ${N(s.calls)} calls/day`},
+      {l:"Price vs. Break-Even",    v:(pgap>=0?"+":"")+$(pgap),  note:pgap>=0?"✓ above":"⚠ below"},
+      {l:"Contribution per Call",   v:$(d.contribPerCall),       note:"after COGS and BD per call"},
+      {l:"Operating Cushion",       v:$(Math.max(d.cushion,0)),  note:`equity+loan−startup`},
+      {l:"Runway at Burn Rate",     v:runway,                    note:d.cf<0?"months of cushion":"generating positive cash"},
+      {l:"DSCR",                    v:dscrLabel,                 note:"covenant ≥ 1.25x · Banner Bank", dscrC:dc.c, dscrBg:dc.bg},
+    ];
+    document.getElementById("opBody").innerHTML = opRows.map(r=>
+      `<div class="op-row"><div class="op-row-left">
+        <div class="op-label">${r.l}</div>
+        <div class="op-note">${r.note}</div>
+       </div>
+       <div class="op-row-value" ${r.dscrC?`style="color:${r.dscrC};background:${r.dscrBg};border-radius:4px;padding:2px 8px;font-size:11px;"`:""}>${r.v}</div>
+      </div>`).join("");
+
+    // Assumptions
+    const assps = [
+      {key:"cogsPct",     label:"COGS % of Revenue",  min:5,   max:35,   step:0.5, fmt:v=>N(v,1)+"%",
+       note:"Model blended: 17.58%. Shifts higher if residential bariatric call mix increases."},
+      {key:"bdPerCall",   label:"BD Cost per Call ($)", min:0,  max:120,  step:1,   fmt:v=>"$"+N(v,0),
+       note:"Mature rate: $38.99/call. Ramp rate is ~$77.98/call (2× mature per model)."},
+      {key:"monthlyOpex", label:"Fixed Monthly OpEx",  min:5000,max:20000,step:250, fmt:v=>"$"+v.toLocaleString(),
+       note:"Current: $11,086/mo. Add $1,655/mo when second van is deployed."},
+      {key:"debtService", label:"Monthly Debt Service",min:0,   max:3000, step:50,  fmt:v=>"$"+v.toLocaleString(),
+       note:"Banner Bank: $1,201/mo · 10% APR · 5-year term · $56,532 principal."},
+    ];
+    document.getElementById("assumpGrid").innerHTML = assps.map(a=>
+      `<div><div class="assump-top">
+        <span class="assump-label">${a.label}</span>
+        <span class="assump-val" id="av_${a.key}">${a.fmt(s[a.key])}</span>
+       </div>
+       <input type="range" min="${a.min}" max="${a.max}" step="${a.step}" value="${s[a.key]}" data-key="${a.key}" class="asl">
+       <div class="assump-note">${a.note}</div></div>`).join("");
+    document.querySelectorAll(".asl").forEach(sl=>sl.addEventListener("input",e=>{
+      S[e.target.dataset.key]=+e.target.value; render();
+    }));
+
+    // Heatmap
+    const tbl = document.getElementById("heatmap");
+    let h = `<tr><th class="corner">Calls↓ Price→</th>`;
+    PRICE_COLS.forEach(p=>{h+=`<th>${$(p)}</th>`;});
+    h+=`</tr>`;
+    let b="";
+    CALL_ROWS.forEach(c=>{
+      b+=`<tr><td class="rowhead">${N(c,2)}</td>`;
+      PRICE_COLS.forEach(p=>{
+        const cf=calc({...s,calls:c,price:p}).cf;
+        const active=Math.abs(c-s.calls)<0.001&&Math.abs(p-s.price)<0.5;
+        const bg=active?"#1A2233":cf>=0?"#EEF4EE":"#FDF0F2";
+        const fg=active?"#F6F4EF":cf>=0?"#4C6B3C":"#A14A3C";
+        b+=`<td style="background:${bg};color:${fg};font-weight:${active?700:400};cursor:pointer" data-c="${c}" data-p="${p}">${$(cf)}</td>`;
+      });
+      b+=`</tr>`;
+    });
+    tbl.innerHTML=`<thead>${h}</thead><tbody>${b}</tbody>`;
+    tbl.querySelectorAll("td[data-c]").forEach(cell=>cell.addEventListener("click",()=>{
+      S.calls=+cell.dataset.c; S.price=+cell.dataset.p;
+      document.getElementById("callsSlider").value=S.calls;
+      document.getElementById("priceSlider").value=S.price;
+      render();
+    }));
+
+    // Insight
+    document.getElementById("insightBar").style.borderLeftColor=st.c;
+    const cfd = d.cf>=0
+      ? `<strong style="color:#7FD99B">${$(d.cf)} positive</strong> per month`
+      : `<strong style="color:#E89A8C">${$(d.cf)} negative</strong> per month`;
+    const ben = s.calls>=d.beCPD
+      ? `<strong style="color:#7FD99B">${N(s.calls-d.beCPD)} calls/day above</strong> break-even (${N(d.beCPD)}/day).`
+      : `<strong style="color:#E89A8C">${N(d.beCPD-s.calls)} calls/day short</strong> of break-even (${N(d.beCPD)}/day).`;
+    const dscrn = d.dscr>=1.25
+      ? `DSCR <strong style="color:#7FD99B">${N(d.dscr,2)}x</strong> — Banner Bank covenant satisfied.`
+      : `DSCR <strong style="color:#F5C870">${N(d.dscr,2)}x</strong> — below 1.25x covenant threshold.`;
+    const rwn = d.cf<0
+      ? `Operating cushion of ${$(d.cushion)} covers <strong style="color:#E89A8C">${N(d.runway,1)} months</strong> at this burn.`
+      : `Business is self-funding at this pace.`;
+    document.getElementById("insightText").innerHTML =
+      `At <strong>${N(s.calls)} calls/day</strong> and <strong>${$(s.price)}/call</strong>, ` +
+      `cash flow runs ${cfd}. You're ${ben} ${dscrn} ${rwn}`;
+  }
+
+  // ── Render summary tab ─────────────────────────────────────────────────
+  function renderSummary() {
+    const s = S, d = calc(s);
+
+    // Hero row
+    const heroes = [
+      {label:"Annual Revenue (ARR)", value:$(d.arr), sub:"at current pace — mature state",
+       c:"#2E6E6E", bg:"#EBF6F8", bc:"#2E6E6E"},
+      {label:"Annual Cash Flow", value:$(d.annCF), sub:"after OpEx, BD, and debt service",
+       c:d.cf>=0?"#4C6B3C":"#A14A3C", bg:d.cf>=0?"#EEF4EE":"#FDF0F2", bc:d.cf>=0?"#4C6B3C":"#A14A3C"},
+      {label:"Est. Net Income (after WA tax)", value:$(d.netIncome),
+       sub:"excludes owner personal tax on distributions",
+       c:"#5B6478", bg:"#F4F5F8", bc:"#C8CDD8"},
+    ];
+    document.getElementById("heroRow").innerHTML = heroes.map(h=>
+      `<div class="hero-card" style="background:${h.bg};border-color:${h.bc};color:${h.c}">
+        <div class="hero-label" style="color:${h.c}">${h.label}</div>
+        <div class="hero-value">${h.value}</div>
+        <div class="hero-sub">${h.sub}</div>
+      </div>`).join("");
+
+    // Revenue metrics
+    const revM = [
+      {name:"ARR", val:$(d.arr),
+       def:"Annual Recurring Revenue — total annualized gross revenue at current call volume and price. This is your top-line number."},
+      {name:"Monthly Revenue", val:$(d.rev),
+       def:"Gross billed revenue per month at current settings. Target at maturity: $38K+ (2 calls/day)."},
+      {name:"Revenue per Op Hour", val:$d(d.revPerHour,2),
+       def:`At ${N(s.hoursPerCall,2)} hrs/call avg. Model target: $175–225/hr at maturity. Currently: ${$d(d.revPerHour,0)}/hr.`},
+      {name:"Calls per Month", val:N(d.cpm,1),
+       def:`${N(s.calls,2)} calls/day × 30.4 days. Break-even is ${N(d.beCPD,2)} calls/day (${N(d.beCPD*DPM,1)}/month).`},
+      {name:"Revenue per Call", val:$(s.price),
+       def:"Blended weighted average across all call types: institutional, residential, bariatric, after-hours. Model baseline: $630.72."},
+      {name:"Break-Even Price", val:$(d.bePrice),
+       def:`Minimum blended price needed at ${N(s.calls,2)} calls/day to cover all fixed costs and debt. Below this, the business loses money regardless of volume.`},
+    ];
+
+    // Margin metrics
+    const marM = [
+      {name:"Gross Margin", val:Px(d.gm),
+       def:"(Revenue − COGS) / Revenue. Model blended: 82.4%. Strong for a service business. Drops if residential bariatric call mix increases."},
+      {name:"EBITDA Margin", val:Px(d.ebitdaMargin),
+       def:"EBITDA / Revenue. Measures operating profitability before financing. Target at maturity: 40%+. Industry benchmark for similar services: 25–40%."},
+      {name:"Net Cash Margin", val:Px(d.cfMargin),
+       def:"Cash Flow / Revenue. What percentage of each revenue dollar becomes free cash after all obligations. At baseline: ~44%."},
+      {name:"COGS % of Revenue", val:N(s.cogsPct,1)+"%",
+       def:"Direct variable cost per call as % of revenue. Model blended: 17.58%. Watch if call mix shifts — bariatric residential COGS is ~30.7%."},
+      {name:"BD % of Revenue", val:Px(d.bd*-1/d.rev),
+       def:`Business development spend as % of revenue. Currently ${Px(d.bd*-1/d.rev)} — mature target is ~6%. During ramp it runs ~12% (double) as you build the account base.`},
+      {name:"Contribution Margin per Call", val:$(d.contribPerCall),
+       def:`Gross earnings per call ($${N(s.price*(1-s.cogsPct/100),0)}) minus BD per call ($${N(s.bdPerCall,2)}). Each call above break-even contributes ${$(d.contribPerCall)} toward fixed cost coverage.`},
+    ];
+
+    // Profitability & returns
+    const profM = [
+      {name:"ROI on Equity", val:Px(d.roi),
+       def:`Annual cash flow (${$(d.annCF)}) ÷ equity raised (${$(S.equityRaised)}). Measures return on the capital investors actually put in — not total investment including debt.`},
+      {name:"Payback Period", val:d.paybackMonths===Infinity?"N/A":N(d.paybackMonths,1)+" mo",
+       def:`Months to recover total invested capital (equity + loan = ${$(d.totalInvest)}) at current cash flow rate. Does not account for ramp — actual payback is longer.`},
+      {name:"DSCR", val:N(d.dscr,2)+"x",
+       def:"EBITDA ÷ annual debt service. Banner Bank covenant requires ≥ 1.25x. Below 1.0x means operating cash flow cannot cover loan payments."},
+      {name:"Annual EBITDA", val:$(d.annEBITDA),
+       def:"Earnings Before Interest, Taxes, Depreciation, and Amortization — annual. The standard measure lenders and acquirers use to value the business."},
+      {name:"Est. Annual Net Income", val:$(d.netIncome),
+       def:`Annual cash flow minus WA State taxes (~$3,419/yr). Does not include owner personal income/SE tax on S-Corp distributions (~$40–50K estimated per advisory).`},
+      {name:"EV/EBITDA (implied)", val:d.annEBITDA>0?N(110000/(d.annEBITDA),1)+"x":"N/A",
+       def:`Current equity valuation ($110K) divided by annual EBITDA (${$(d.annEBITDA)}). At maturity with stronger EBITDA, this compresses significantly — suggesting the business is currently undervalued relative to its earning power.`},
+    ];
+
+    // Efficiency
+    const effM = [
+      {name:"Break-Even Calls/Day", val:N(d.beCPD,3),
+       def:"The minimum daily call volume needed to cover all fixed costs and debt service at the current blended price. Below this = burning equity."},
+      {name:"Gross Earnings/Call", val:$d(s.price*(1-s.cogsPct/100),2),
+       def:"Revenue per call after direct variable costs (COGS). This is what each completed call contributes before fixed overhead. Model: $519.86/call."},
+      {name:"Fixed Cost per Call", val:$(S.monthlyOpex/d.cpm),
+       def:`Monthly fixed OpEx ($${S.monthlyOpex.toLocaleString()}) spread across ${N(d.cpm,1)} calls. Falls as volume increases — this is the core leverage of the business model.`},
+      {name:"Total Cost per Call", val:$((-d.cogs + -d.bd + -d.opex + -d.ds) / d.cpm),
+       def:"All costs (COGS + BD + OpEx + debt service) per call. Below this = losing money per call."},
+      {name:"Revenue per Op Hour", val:$d(d.revPerHour,2),
+       def:`Based on ${N(s.hoursPerCall,3)} hrs/call average. Model target at maturity: $175–225/hr. Current: ${$d(d.revPerHour,0)}/hr.`},
+      {name:"Van Utilization (est.)", val:Px(Math.min(s.calls*s.hoursPerCall/8,1)),
+       def:`Estimated % of an 8-hour shift the van is active. Expansion signal: > 75% sustained. Current: ${Px(Math.min(s.calls*s.hoursPerCall/8,1))} (${N(s.calls*s.hoursPerCall,1)} hrs/day active).`},
+    ];
+
+    // Liquidity
+    const liqM = [
+      {name:"Operating Cushion", val:$(Math.max(d.cushion,0)),
+       def:`Cash available to absorb burn during ramp: equity ($${(S.equityRaised/1000).toFixed(0)}K) + loan ($${(S.loanPrincipal/1000).toFixed(0)}K) − startup costs ($${(S.startupCapital/1000).toFixed(0)}K). This is not profit — it's the buffer.`},
+      {name:"Runway at Current Burn", val:d.runway===Infinity?"Self-funding":d.cushion<=0?"No cushion":N(d.runway,1)+" months",
+       def:"How many months the operating cushion covers negative cash flow at current burn rate. Assumes steady-state burn — actual ramp burn is lower in early months."},
+      {name:"Min Working Capital Target", val:"$15,000",
+       def:"Per the model's liquidity targets: maintain minimum $15K cash buffer at all times to absorb slow months or one-off expenses."},
+      {name:"Total Debt Outstanding", val:$(S.loanPrincipal),
+       def:`Banner Bank Issaquah startup loan. $56,532 principal · 10% APR · 5-year term · $1,201/month. Total interest over life of loan: $14,941.`},
+      {name:"Annual Debt Service", val:$(d.annDS),
+       def:"Total loan payments per year ($1,201 × 12). DSCR = annual EBITDA / this number. Must stay ≥ 1.25x per Banner Bank covenant."},
+      {name:"DSCR Covenant", val:"≥ 1.25x (Banner Bank)",
+       def:`Current DSCR: ${N(d.dscr,2)}x. ${d.dscr>=1.25?"✓ Covenant satisfied at current settings.":"⚠ Below threshold at current settings — increase volume or price."}`},
+    ];
+
+    const renderMetrics = (id, metrics) => {
+      document.getElementById(id).innerHTML = metrics.map(m=>
+        `<div class="metric-card">
+          <div class="metric-name">${m.name}</div>
+          <div class="metric-val">${m.val}</div>
+          <div class="metric-def">${m.def}</div>
+        </div>`).join("");
+    };
+    renderMetrics("revenueMetrics", revM);
+    renderMetrics("marginMetrics",  marM);
+    renderMetrics("profitMetrics",  profM);
+    renderMetrics("effMetrics",     effM);
+    renderMetrics("liqMetrics",     liqM);
+  }
+
+  // ── Master render ──────────────────────────────────────────────────────
+  function render() { renderSim(); renderSummary(); }
+
+  // ── Wire sliders ──────────────────────────────────────────────────────
+  document.getElementById("callsSlider").addEventListener("input",e=>{S.calls=+e.target.value;render();});
+  document.getElementById("priceSlider").addEventListener("input",e=>{S.price=+e.target.value;render();});
+
+  // ── Tabs ──────────────────────────────────────────────────────────────
+  function switchTab(id) {
+    document.querySelectorAll(".tab-content").forEach(t=>t.classList.remove("active"));
+    document.querySelectorAll(".tab-btn").forEach(b=>b.classList.remove("active"));
+    document.getElementById("tab-"+id).classList.add("active");
+    event.target.classList.add("active");
+  }
+
+  render();
+</script>
+</body>
+</html>
