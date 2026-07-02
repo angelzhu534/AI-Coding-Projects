@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Repotting Field Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --moss:#2C3B2E;
+    --sage-bg:#EAF0E4;
+    --sage-panel:#DCE6D3;
+    --terracotta:#B8623D;
+    --dusty-blue:#6E97A0;
+    --gold:#B98A25;
+    --cream:#F8F6EF;
+    --line:#c3d0b8;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    background:var(--sage-bg);
+    color:var(--moss);
+    font-family:'Work Sans', sans-serif;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:760px; margin:0 auto; padding:0 20px 80px;}
+
+  /* HERO */
+  .hero{
+    padding:64px 20px 40px;
+    text-align:center;
+    border-bottom:1px solid var(--line);
+    margin-bottom:48px;
+  }
+  .eyebrow{
+    font-family:'JetBrains Mono', monospace;
+    font-size:12px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--terracotta);
+    margin-bottom:18px;
+  }
+  h1{
+    font-family:'Fraunces', serif;
+    font-optical-sizing:auto;
+    font-weight:600;
+    font-size:clamp(2.1rem, 6vw, 3.2rem);
+    line-height:1.05;
+    letter-spacing:-0.01em;
+    margin-bottom:16px;
+  }
+  .hero p{
+    max-width:480px;
+    margin:0 auto;
+    font-size:16px;
+    color:#4a5a4c;
+  }
+
+  /* SECTION HEADERS */
+  h2{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:1.5rem;
+    margin-bottom:6px;
+  }
+  .section{margin-bottom:56px;}
+  .section-tag{
+    font-family:'JetBrains Mono', monospace;
+    font-size:11px;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    color:var(--dusty-blue);
+    margin-bottom:8px;
+    display:block;
+  }
+  .lede{color:#4a5a4c; margin-bottom:24px; font-size:15px;}
+
+  /* CHECKLIST - signs it's time */
+  .signs-grid{
+    display:grid;
+    grid-template-columns:repeat(2, 1fr);
+    gap:12px;
+  }
+  .sign-card{
+    background:var(--cream);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:16px;
+    font-size:13.5px;
+  }
+  .sign-card .icon{font-size:20px; display:block; margin-bottom:8px;}
+
+  /* DRAINAGE DIAGRAM - signature element */
+  .diagram-box{
+    background:var(--cream);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:32px 24px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+  }
+  .pot-svg{width:100%; max-width:320px; height:auto;}
+  .diagram-caption{
+    font-family:'JetBrains Mono', monospace;
+    font-size:12px;
+    color:#6a7a6c;
+    text-align:center;
+    margin-top:16px;
+    max-width:340px;
+  }
+  .myth-callout{
+    margin-top:20px;
+    background:#F1E2D3;
+    border-left:3px solid var(--terracotta);
+    padding:12px 16px;
+    border-radius:6px;
+    font-size:13.5px;
+  }
+  .myth-callout strong{color:var(--terracotta);}
+
+  /* ALTERNATIVES ROW */
+  .alt-row{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    margin-top:16px;
+  }
+  .alt-chip{
+    background:var(--sage-panel);
+    border-radius:100px;
+    padding:8px 14px;
+    font-size:13px;
+    font-weight:500;
+  }
+
+  /* STEPS - real sequence, numbering justified */
+  .step{
+    display:grid;
+    grid-template-columns:56px 1fr;
+    gap:16px;
+    padding:20px 0;
+    border-bottom:1px solid var(--line);
+  }
+  .step:last-child{border-bottom:none;}
+  .step-num{
+    font-family:'Fraunces', serif;
+    font-size:28px;
+    font-weight:600;
+    color:var(--sage-panel);
+    -webkit-text-stroke:1.5px var(--moss);
+    color:transparent;
+  }
+  .step h3{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:17px;
+    margin-bottom:6px;
+  }
+  .step p{font-size:14px; color:#4a5a4c;}
+  .step .tip{
+    margin-top:8px;
+    font-size:12.5px;
+    color:var(--dusty-blue);
+    font-style:italic;
+  }
+
+  /* SOIL TABLE */
+  table{
+    width:100%;
+    border-collapse:collapse;
+    font-size:13.5px;
+    background:var(--cream);
+    border-radius:10px;
+    overflow:hidden;
+  }
+  th, td{
+    text-align:left;
+    padding:12px 14px;
+    border-bottom:1px solid var(--line);
+  }
+  th{
+    font-family:'JetBrains Mono', monospace;
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:0.06em;
+    color:var(--dusty-blue);
+    background:var(--sage-panel);
+  }
+  tr:last-child td{border-bottom:none;}
+
+  /* TROUBLESHOOT */
+  .trouble{
+    display:flex;
+    gap:14px;
+    padding:14px 0;
+    border-bottom:1px solid var(--line);
+  }
+  .trouble:last-child{border-bottom:none;}
+  .trouble .flag{color:var(--terracotta); font-weight:600; font-size:14px; min-width:150px;}
+  .trouble .fix{font-size:13.5px; color:#4a5a4c;}
+
+  .footer-note{
+    text-align:center;
+    font-family:'JetBrains Mono', monospace;
+    font-size:12px;
+    color:#6a7a6c;
+    margin-top:40px;
+  }
+
+  @media (max-width:520px){
+    .signs-grid{grid-template-columns:1fr;}
+    .step{grid-template-columns:40px 1fr;}
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <span class="eyebrow">A First-Time Plant Parent's Guide</span>
+  <h1>Repotting,<br>Without the Guesswork</h1>
+  <p>Everything you need to move a plant into a bigger home — what to look for, what drainage actually requires, and how to do it without hurting the roots.</p>
+</div>
+
+<div class="wrap">
+
+  <div class="section">
+    <span class="section-tag">01 — Timing</span>
+    <h2>Is it actually time?</h2>
+    <p class="lede">Most plants prefer being a little snug. Only repot if you spot two or more of these.</p>
+    <div class="signs-grid">
+      <div class="sign-card"><span class="icon">🪴</span>Roots poking out of the drainage holes</div>
+      <div class="sign-card"><span class="icon">🌀</span>Roots circling tightly at the soil surface</div>
+      <div class="sign-card"><span class="icon">💧</span>Water runs straight through, soil stays dry</div>
+      <div class="sign-card"><span class="icon">🌱</span>Growth has stalled or leaves are shrinking</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <span class="section-tag">02 — Drainage</span>
+    <h2>What's actually happening at the bottom</h2>
+    <p class="lede">Here's the part most guides get wrong — the layer at the bottom doesn't need to be pebbles. It just needs to let water out and keep soil in.</p>
+
+    <div class="diagram-box">
+      <svg class="pot-svg" viewBox="0 0 300 260" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- pot outline (cross-section trapezoid) -->
+        <path d="M60 30 L240 30 L215 220 L85 220 Z" stroke="#2C3B2E" stroke-width="3" fill="#F1EEE3"/>
+        <!-- soil -->
+        <path d="M70 60 L230 60 L212 195 L88 195 Z" fill="#8B6F4E" opacity="0.85"/>
+        <!-- root ball -->
+        <ellipse cx="150" cy="150" rx="55" ry="38" fill="#5A4531" opacity="0.6"/>
+        <!-- stem + leaves -->
+        <line x1="150" y1="112" x2="150" y2="30" stroke="#3E5641" stroke-width="4"/>
+        <ellipse cx="150" cy="15" rx="34" ry="16" fill="#4C6B4E"/>
+        <ellipse cx="115" cy="35" rx="26" ry="12" fill="#5C7E5E" transform="rotate(-20 115 35)"/>
+        <ellipse cx="188" cy="35" rx="26" ry="12" fill="#5C7E5E" transform="rotate(20 188 35)"/>
+        <!-- drainage cover layer (mesh/paper) -->
+        <rect x="95" y="200" width="110" height="8" rx="2" fill="var(--dusty-blue)" opacity="0.7"/>
+        <!-- drainage hole -->
+        <rect x="130" y="218" width="40" height="10" rx="2" fill="none" stroke="#2C3B2E" stroke-width="3"/>
+        <!-- water drops -->
+        <circle cx="140" cy="240" r="3" fill="var(--dusty-blue)"/>
+        <circle cx="160" cy="248" r="3" fill="var(--dusty-blue)"/>
+        <circle cx="150" cy="255" r="2.5" fill="var(--dusty-blue)"/>
+      </svg>
+      <p class="diagram-caption">POT CROSS-SECTION — soil sits directly on a thin cover (paper towel, mesh, or nothing) placed only over the hole itself, not the whole base.</p>
+
+      <div class="myth-callout">
+        <strong>Skip the pebbles.</strong> A gravel layer doesn't improve drainage — it raises the water table closer to the roots, so soil can actually stay wetter longer. The hole is what matters, not what's above it.
+      </div>
+    </div>
+
+    <p class="lede" style="margin-top:24px;">No coffee filter on hand? Any of these work just as well:</p>
+    <div class="alt-row">
+      <span class="alt-chip">Paper towel</span>
+      <span class="alt-chip">Window screen scrap</span>
+      <span class="alt-chip">Mesh produce bag</span>
+      <span class="alt-chip">Folded newspaper</span>
+      <span class="alt-chip">A single dry leaf</span>
+      <span class="alt-chip">Nothing at all</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <span class="section-tag">03 — Process</span>
+    <h2>The repotting sequence</h2>
+    <p class="lede">Do these in order — each step protects the roots for the next one.</p>
+
+    <div class="step">
+      <div class="step-num">1</div>
+      <div>
+        <h3>Water the day before</h3>
+        <p>Hydrated soil holds together better and slides out of the pot with less root damage.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div>
+        <h3>Prep the new pot</h3>
+        <p>Only 1–2 inches larger in diameter than the current one. Add your drainage cover, then a base layer of fresh soil.</p>
+        <p class="tip">Too big a jump in pot size means excess soil holds water the roots can't reach yet.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div>
+        <h3>Ease the plant out</h3>
+        <p>Tip the pot sideways, gently squeeze plastic pots, and lift from the base of the stem — never by the leaves.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div>
+        <h3>Loosen and trim roots</h3>
+        <p>Gently tease apart any circling roots. Snip mushy, black, or clearly dead roots with clean scissors.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">5</div>
+      <div>
+        <h3>Set and fill</h3>
+        <p>Place the plant so the stem base sits at the same depth as before. Fill in around it, pressing gently — not packed tight.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">6</div>
+      <div>
+        <h3>Water it in</h3>
+        <p>Water until it runs from the drainage hole. This settles soil around the roots and closes air gaps.</p>
+        <p class="tip">Hold off on fertilizer for 2–4 weeks while the plant recovers.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <span class="section-tag">04 — Soil</span>
+    <h2>Soil by plant type</h2>
+    <table>
+      <tr><th>Plant type</th><th>Mix</th></tr>
+      <tr><td>Pothos, philodendron, Pilea</td><td>Standard well-draining potting mix</td></tr>
+      <tr><td>Succulents & cacti</td><td>Fast-draining cactus mix, or regular mix + perlite</td></tr>
+      <tr><td>Ferns, calatheas</td><td>Extra peat or coco coir for moisture retention</td></tr>
+      <tr><td>Orchids</td><td>Orchid bark — regular soil suffocates the roots</td></tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <span class="section-tag">05 — After Care</span>
+    <h2>If something looks off</h2>
+    <div class="trouble">
+      <div class="flag">Yellowing leaves</div>
+      <div class="fix">Likely overwatering during recovery — let the soil dry out more between waterings.</div>
+    </div>
+    <div class="trouble">
+      <div class="flag">Wilting badly</div>
+      <div class="fix">Possible root damage from the move. Keep in low light and stable humidity for a few days.</div>
+    </div>
+    <div class="trouble">
+      <div class="flag">Soil staying wet</div>
+      <div class="fix">Pot may be oversized for the root system, or the drainage hole is blocked.</div>
+    </div>
+    <div class="trouble">
+      <div class="flag">A few dropped leaves</div>
+      <div class="fix">Normal stress response. Give it 1–2 weeks before worrying.</div>
+    </div>
+  </div>
+
+  <p class="footer-note">WHEN IN DOUBT — UNDER-POT AND UNDER-WATER A RECOVERING PLANT, NOT THE OTHER WAY AROUND</p>
+
+</div>
+
+</body>
+</html>
