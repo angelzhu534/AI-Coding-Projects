@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aurora First Call — Financial Contingency Playbook</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1B2A38;--paper:#FBFAF7;--slate:#46586B;--muted:#7C8894;
+    --sage:#3F7059;--sage-bg:#EDF3EF;--amber:#9A6A1F;--amber-bg:#FAF3E4;
+    --brick:#96382C;--brick-bg:#FAEDEA;--rule:#E2DED5;--rule-strong:#CFCABE;
+    --sans:"IBM Plex Sans",system-ui,sans-serif;--serif:"Newsreader",Georgia,serif;--mono:"IBM Plex Mono",monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.65}
+  .wrap{max-width:880px;margin:0 auto;padding:0 28px 96px}
+  .masthead{padding:64px 0 36px;border-bottom:2px solid var(--ink);margin-bottom:8px}
+  .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:0 0 18px}
+  .masthead h1{font-family:var(--serif);font-weight:500;font-size:clamp(34px,5.5vw,52px);line-height:1.04;letter-spacing:-.02em;margin:0 0 16px}
+  .masthead h1 em{font-style:italic;color:var(--slate)}
+  .standfirst{font-family:var(--serif);font-size:19px;line-height:1.5;color:var(--slate);max-width:64ch;margin:0}
+  .meta{display:flex;flex-wrap:wrap;gap:26px;margin-top:28px;font-family:var(--mono);font-size:12px;color:var(--muted)}
+  .meta b{display:block;color:var(--ink);font-weight:500;font-size:13px;margin-top:3px}
+  section{padding-top:52px}
+  .sec-label{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);border-top:1px solid var(--rule-strong);padding-top:12px;margin:0 0 20px}
+  h2{font-family:var(--serif);font-weight:500;font-size:clamp(25px,3.2vw,33px);line-height:1.15;letter-spacing:-.015em;margin:0 0 18px;max-width:26ch}
+  h3{font-family:var(--sans);font-weight:600;font-size:17px;margin:34px 0 12px}
+  h4{font-family:var(--mono);font-weight:500;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:26px 0 10px}
+  p{margin:0 0 16px;max-width:72ch}
+  strong{font-weight:600}
+  .lead{font-family:var(--serif);font-size:20px;line-height:1.5;color:var(--ink);border-left:3px solid var(--ink);padding:2px 0 2px 22px;margin:26px 0;max-width:60ch}
+  .plain{border-left:3px solid var(--sage);background:var(--sage-bg);padding:18px 22px;margin:22px 0}
+  .plain .tag{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--sage);font-weight:500;margin:0 0 8px}
+  .plain p{margin:0 0 10px;font-size:15.5px;color:#26443A}.plain p:last-child{margin:0}
+  .note{padding:16px 20px;margin:22px 0;font-size:15.5px}
+  .note .tag{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;font-weight:500;margin:0 0 7px}
+  .note p{margin:0 0 9px}.note p:last-child{margin:0}
+  .warn{background:var(--amber-bg);border-left:3px solid var(--amber)}.warn .tag{color:var(--amber)}
+  .danger{background:var(--brick-bg);border-left:3px solid var(--brick)}.danger .tag{color:var(--brick)}
+  .tbl-wrap{overflow-x:auto;margin:22px 0}
+  table{border-collapse:collapse;width:100%;font-size:14px}
+  caption{text-align:left;font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding-bottom:10px}
+  th{font-family:var(--mono);font-weight:500;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);text-align:left;padding:0 12px 9px 0;border-bottom:1px solid var(--rule-strong);white-space:nowrap}
+  th.num,td.num{text-align:right;font-variant-numeric:tabular-nums;font-family:var(--mono);font-size:13px;padding-right:0}
+  td{padding:10px 12px 10px 0;border-bottom:1px solid var(--rule);vertical-align:top}
+  tr.hi td{background:#F3F1EA;font-weight:500}
+  td.pos{color:var(--sage)}td.neg{color:var(--brick)}td.cau{color:var(--amber)}
+  .rowlabel{font-weight:500}
+  .flow{margin:24px 0}
+  .step{display:grid;grid-template-columns:44px 1fr;gap:16px;margin-bottom:4px;position:relative}
+  .step-badge{font-family:var(--serif);font-size:22px;font-weight:600;color:#fff;background:var(--ink);width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;line-height:1}
+  .step.sage .step-badge{background:var(--sage)}.step.amber .step-badge{background:var(--amber)}.step.brick .step-badge{background:var(--brick)}
+  .step-body{padding-bottom:22px;border-left:1px solid var(--rule);margin-left:-28px;padding-left:44px;margin-top:-38px;padding-top:2px}
+  .step:last-child .step-body{border-left:none}
+  .step-body h5{font-size:16px;font-weight:600;margin:6px 0 4px}
+  .step-body p{font-size:14.5px;color:var(--slate);margin:0 0 6px;max-width:64ch}
+  .connector{margin-left:19px;border-left:1px solid var(--rule);height:14px}
+  .gauge{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:var(--rule);border:1px solid var(--rule);margin:22px 0}
+  .g{background:var(--paper);padding:16px 16px}
+  .g .n{font-family:var(--serif);font-size:26px;line-height:1;font-variant-numeric:tabular-nums}
+  .g .l{font-size:12px;color:var(--muted);margin-top:6px;line-height:1.35}
+  .g.green .n{color:var(--sage)}.g.amber .n{color:var(--amber)}.g.red .n{color:var(--brick)}
+  ol.recs{counter-reset:r;list-style:none;padding:0;margin:22px 0}
+  ol.recs li{counter-increment:r;position:relative;padding:0 0 18px 48px;margin-bottom:18px;border-bottom:1px solid var(--rule)}
+  ol.recs li:last-child{border-bottom:none}
+  ol.recs li::before{content:counter(r);position:absolute;left:0;top:-2px;font-family:var(--serif);font-size:25px;color:var(--rule-strong)}
+  ol.recs b{display:block;margin-bottom:4px;font-size:15.5px}
+  ol.recs p{margin:0;color:var(--slate);font-size:14.5px}
+  ul.pl{padding-left:20px;margin:14px 0}ul.pl li{margin-bottom:8px;max-width:68ch}
+  footer{margin-top:64px;padding-top:22px;border-top:2px solid var(--ink);font-size:13px;color:var(--muted)}
+  @media(max-width:640px){.wrap{padding:0 18px 60px}.step-body{padding-left:38px}}
+  @media print{body{background:#fff}section{page-break-inside:avoid}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="masthead">
+  <p class="eyebrow">Internal — Founders Only · Draft for discussion</p>
+  <h1>Financial Contingency<br><em>Playbook</em></h1>
+  <p class="standfirst">The rules we agree to now, while it's calm, so that if cash gets tight in the first six months we're reading numbers against pre-agreed lines instead of deciding under pressure.</p>
+  <div class="meta">
+    <div>Prepared by<b>Angel Zhu</b></div>
+    <div>Status<b>Draft — numbers to confirm</b></div>
+    <div>Horizon<b>First 6 months of operations</b></div>
+  </div>
+</header>
+
+<div class="plain" style="margin-top:8px">
+  <p class="tag">What this document is for</p>
+  <p>A cash problem and a failing business look identical on a bank statement. This playbook exists to tell them apart — and to decide, in advance, what we do about each. It turns the founder's contingency plan into something with numbers attached, so the hardest call of the startup phase is mostly made before we ever face it.</p>
+</div>
+
+<section>
+  <p class="sec-label">The idea</p>
+  <h2>Why decide any of this now?</h2>
+  <p>The quality of a decision made calmly, in advance, against defined criteria is high. The quality of the same decision made under pressure — cash draining, emotions up, the founder's own money on the line — is low. That's true for everyone, however capable.</p>
+  <p>So the way we make a good decision in month four is to make most of it now. This playbook is that work. When a cash-danger moment arrives, we shouldn't be debating what "healthy" means or whether to keep going — we should be looking at the dashboard, comparing to lines we already drew, and executing a response we already agreed to.</p>
+  <p class="lead">The goal isn't to be wise in the crisis. It's to make sure that by the time the crisis comes, the decision has already been made.</p>
+</section>
+
+<section>
+  <p class="sec-label">Structure</p>
+  <h2>The five layers</h2>
+  <p>A contingency system isn't just a list of warning signs. It's five connected layers, and skipping any of them is why most contingency plans fail when they're actually needed.</p>
+
+  <div class="tbl-wrap">
+  <table>
+    <thead><tr><th>Layer</th><th>What it answers</th><th>Where it lives</th></tr></thead>
+    <tbody>
+      <tr><td class="rowlabel">1 · Metrics</td><td>What we measure, defined precisely enough that two people agree on the number</td><td>Section: The three vital signs</td></tr>
+      <tr><td class="rowlabel">2 · Thresholds</td><td>The lines that mean something — target, warning, breach</td><td>Section: Where the lines are</td></tr>
+      <tr><td class="rowlabel">3 · Triggers</td><td>What combination of breaches fires which response</td><td>Section: The decision tree</td></tr>
+      <tr><td class="rowlabel">4 · Responses</td><td>What actually happens, who owns it, how fast</td><td>Sections: Decision tree + Bridge loan</td></tr>
+      <tr><td class="rowlabel">5 · Governance</td><td>Who decides, and what happens if we disagree</td><td>Section: Governance</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="note warn">
+    <p class="tag">The most common mistake</p>
+    <p>Most plans build layer 3 — a list of "if this bad thing happens" — and skip the rest. Without precise metrics (layer 1) two people argue about whether the number is even bad. Without a warning line short of the breach line (layer 2) there's no time to react. And without governance (layer 5) the plan gets ignored the moment someone disagrees with it. All five or it doesn't hold.</p>
+  </div>
+</section>
+
+<section>
+  <p class="sec-label">Layer 1 — Metrics</p>
+  <h2>The three vital signs</h2>
+  <p>Three things can independently sink this business. Each has a different failure signature and a different fix, so each is tracked separately.</p>
+
+  <h3>Volume — can we get the calls?</h3>
+  <p>The master metric. If this fails, nothing else matters. But the level alone isn't enough — a business at 1.1 calls/day and climbing is healthy; at 1.4 and flat is in trouble. So volume is tracked as two numbers: <strong>level</strong> and <strong>trajectory</strong>.</p>
+  <ul class="pl">
+    <li><strong>Definition:</strong> trailing 28-day average of completed, billed calls ÷ operating days.</li>
+    <li><strong>Trajectory:</strong> week-over-week change in that average, over a rolling 4-week window.</li>
+    <li><strong>Source:</strong> dispatch log / job record. <strong>Cadence:</strong> weekly.</li>
+  </ul>
+
+  <h3>Price — is each call profitable?</h3>
+  <p>This is the pricing-power risk: as a new entrant we may have to undersell to win accounts. The subtlety is <strong>mix</strong> — if we start winning cheaper call types and losing premium ones, average revenue-per-call falls even if we never discounted a single job. So we watch revenue-per-call <em>and</em>, where possible, split it by call type so we can tell "we're underpricing" from "our mix shifted."</p>
+  <ul class="pl">
+    <li><strong>Definition:</strong> total billed revenue ÷ completed calls, monthly. Ideally also per call type.</li>
+    <li><strong>Reference:</strong> $530.63/call blended, $383.41 gross profit/call in the model.</li>
+    <li><strong>Source:</strong> invoicing. <strong>Cadence:</strong> monthly.</li>
+  </ul>
+
+  <h3>Runway — do we run out before either resolves?</h3>
+  <p>This is the trigger for the whole plan, not a viability question itself. The level ($25K floor) matters, but so does the <strong>rate</strong> — $30K holding flat is fine; $30K falling $8K/month is a countdown. Burn coverage turns a cash level into that countdown.</p>
+  <ul class="pl">
+    <li><strong>Definition:</strong> closing cash balance, and burn coverage = cash ÷ average monthly recurring outflow.</li>
+    <li><strong>Floor:</strong> $25,000 (roughly one month of running costs).</li>
+    <li><strong>Source:</strong> bank + the cash flow model. <strong>Cadence:</strong> weekly.</li>
+  </ul>
+</section>
+
+<section>
+  <p class="sec-label">Layer 2 — Thresholds</p>
+  <h2>Where the lines are</h2>
+  <p>These come from the model — they're not round numbers, they're the points where the business actually changes behavior. Every threshold is <strong>time-indexed</strong>, because a given call rate means something different in month 2 (ramp) than in month 5 (mature). Applying a mature-state line to a ramping business is how you either panic early or miss a real problem late.</p>
+
+  <h3>The planned ramp — what "on track" looks like</h3>
+  <div class="tbl-wrap">
+  <table>
+    <caption>Model's assumed volume by month</caption>
+    <thead><tr><th>Month</th><th class="num">Plan calls/day</th><th class="num">% of mature</th><th>Read</th></tr></thead>
+    <tbody>
+      <tr><td class="rowlabel">0</td><td class="num">0.20</td><td class="num">10%</td><td>launch</td></tr>
+      <tr><td class="rowlabel">1</td><td class="num">0.50</td><td class="num">25%</td><td>early</td></tr>
+      <tr><td class="rowlabel">2</td><td class="num">0.93</td><td class="num">47%</td><td>building</td></tr>
+      <tr><td class="rowlabel">3</td><td class="num">1.37</td><td class="num">68%</td><td>near break-even</td></tr>
+      <tr><td class="rowlabel">4</td><td class="num">1.80</td><td class="num">90%</td><td>approaching plan</td></tr>
+      <tr class="hi"><td class="rowlabel">5+</td><td class="num">2.00</td><td class="num">100%</td><td>mature</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>Volume thresholds — the resilience is remarkable</h3>
+  <p>The model says the single-van business survives far more shortfall than instinct suggests. This is the "fat in the planning" made concrete:</p>
+
+  <div class="gauge">
+    <div class="g green"><div class="n">2.00</div><div class="l">Target — full plan, calls/day</div></div>
+    <div class="g green"><div class="n">1.27</div><div class="l">Break-even — covers all costs</div></div>
+    <div class="g amber"><div class="n">1.38</div><div class="l">Warning — cash dips below $25K floor below this</div></div>
+    <div class="g red"><div class="n">1.25</div><div class="l">Breach — cash goes negative below this</div></div>
+  </div>
+
+  <div class="tbl-wrap">
+  <table>
+    <caption>Sustained volume vs outcome — single van, no expansion</caption>
+    <thead><tr><th>Calls/day</th><th class="num">% of target</th><th class="num">Cash trough</th><th class="num">Months below $25K</th><th>Zone</th></tr></thead>
+    <tbody>
+      <tr><td class="rowlabel">2.00</td><td class="num">100%</td><td class="num pos">$63,590</td><td class="num">0</td><td>Healthy</td></tr>
+      <tr><td class="rowlabel">1.70</td><td class="num">85%</td><td class="num pos">$59,874</td><td class="num">0</td><td>Healthy</td></tr>
+      <tr><td class="rowlabel">1.50</td><td class="num">75%</td><td class="num pos">$46,338</td><td class="num">0</td><td>Healthy</td></tr>
+      <tr class="hi"><td class="rowlabel">1.38</td><td class="num">69%</td><td class="num cau">~$25,000</td><td class="num">warning line</td><td>Warning</td></tr>
+      <tr><td class="rowlabel">1.30</td><td class="num">65%</td><td class="num cau">$9,401</td><td class="num">6</td><td>Warning</td></tr>
+      <tr class="hi"><td class="rowlabel">1.25</td><td class="num">62%</td><td class="num neg">$0</td><td class="num">breach line</td><td>Breach</td></tr>
+      <tr><td class="rowlabel">1.20</td><td class="num">60%</td><td class="num neg">−$9,471</td><td class="num">10</td><td>Breach</td></tr>
+      <tr><td class="rowlabel">1.00</td><td class="num">50%</td><td class="num neg">−$51,514</td><td class="num">15</td><td>Failure</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="plain">
+    <p class="tag">What this means</p>
+    <p>The single van holds up all the way down to <b>1.25 calls/day</b> — 38% below target — before cash goes negative. That's a huge margin of safety, and it's the strongest argument for the conservative approach: not over-borrowing, keeping the operation lean, letting the business prove demand before we add capacity.</p>
+    <p>It also tells us the warning line worth watching is <b>1.38 calls/day sustained</b>. Above it, we're fine. Between 1.25 and 1.38, we're eating into the floor and the contingency plan is live. Below 1.25, we're in real trouble.</p>
+  </div>
+
+  <h3>Price threshold</h3>
+  <p>Holding volume at plan, the model shows revenue-per-call can fall meaningfully before the floor is breached — but this is the metric to watch most closely, because a discount is permanent in a way a slow month isn't. The founder should set the hard floor here; the model gives the outer bound, but the commercial judgment of "the lowest rate we'll accept to win an account" is his call.</p>
+
+  <h4>Suggested price lines — to confirm with founder</h4>
+  <div class="tbl-wrap">
+  <table>
+    <thead><tr><th>Line</th><th class="num">Revenue/call</th><th class="num">GP/call</th><th>Meaning</th></tr></thead>
+    <tbody>
+      <tr><td class="rowlabel">Target</td><td class="num">$530</td><td class="num">$383</td><td>model rate</td></tr>
+      <tr><td class="rowlabel">Warning</td><td class="num">~$475</td><td class="num">~$328</td><td>10% concession — investigate</td></tr>
+      <tr><td class="rowlabel">Floor</td><td class="num">founder-set</td><td class="num">—</td><td>lowest acceptable — below this the margin thesis breaks</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>Runway thresholds</h3>
+  <div class="gauge">
+    <div class="g green"><div class="n">$50K+</div><div class="l">Healthy — comfortable buffer pre-expansion</div></div>
+    <div class="g amber"><div class="n">$25K</div><div class="l">Warning / floor — contingency plan goes live</div></div>
+    <div class="g red"><div class="n">&lt;2 mo</div><div class="l">Breach — burn coverage under two months</div></div>
+  </div>
+</section>
+
+<section>
+  <p class="sec-label">Layer 3 &amp; 4 — Triggers and responses</p>
+  <h2>The decision tree</h2>
+  <p>Cash falling below the $25K floor inside the first six months starts the process. From there, the response depends on what the vital signs say — and critically, it's usually the <em>combination</em> that tells the story, not any single metric.</p>
+
+  <div class="flow">
+    <div class="step">
+      <div class="step-badge">A</div>
+      <div class="step-body">
+        <h5>Diagnose — what do the vital signs say?</h5>
+        <p>Cash hit the floor. Before any money moves, read the three vital signs against their lines. Is volume climbing or flat? Is revenue-per-call holding or eroding? Is this a runway problem or a viability problem?</p>
+      </div>
+    </div>
+    <div class="connector"></div>
+    <div class="step sage">
+      <div class="step-badge">B</div>
+      <div class="step-body">
+        <h5>Decide — do the economics justify more money?</h5>
+        <p>The core judgment. If unit economics are sound and volume is trending up, the shortfall is a runway problem, not a failure — safe to add capital. This is Angel's call, made against the pre-agreed lines above. Green light only if: contribution margin within range of model <strong>and</strong> volume trajectory positive over trailing 4 weeks.</p>
+      </div>
+    </div>
+    <div class="connector"></div>
+    <div class="step sage">
+      <div class="step-badge">C</div>
+      <div class="step-body">
+        <h5>Fund — founder bridge loan</h5>
+        <p>If B is green: board vote → corporate resolution → founder makes a bridge loan on the same terms as the existing personal loan (deferred, rate-capped, paused interest capitalization). Sized per the bridge analysis in the next section.</p>
+      </div>
+    </div>
+    <div class="connector"></div>
+    <div class="step amber">
+      <div class="step-badge">E</div>
+      <div class="step-body">
+        <h5>If it's a time problem — bridge only, reassess in 1 month</h5>
+        <p>Van isn't full yet, we just need time to keep filling it or win better-priced work. Deploy the bridge, hold, reassess in one month. Still unhealthy? Escalate to F.</p>
+      </div>
+    </div>
+    <div class="connector"></div>
+    <div class="step amber">
+      <div class="step-badge">F</div>
+      <div class="step-body">
+        <h5>If it's a capacity problem — scale</h5>
+        <p>Van is already full but revenue still isn't enough. That's a scale signal: take the Banner equipment loan for a second van (the van is collateral) and cut OpEx hard. This is the only branch that adds fixed cost, so it requires the demand to be genuinely proven first.</p>
+      </div>
+    </div>
+    <div class="connector"></div>
+    <div class="step brick">
+      <div class="step-badge">D</div>
+      <div class="step-body">
+        <h5>If the economics are broken — cut hard or wind down</h5>
+        <p>If B is red — volume flat and below breach, revenue-per-call below floor — no bridge. Execute deep cost cuts or an orderly wind-down. This is the branch everyone avoids emotionally, which is exactly why its trigger is defined in advance.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="note danger">
+    <p class="tag">The kill line — define this now</p>
+    <p>D is the mirror of B, and it needs a pre-agreed trigger just as much. Suggested, to confirm: <strong>if by month 4 calls/day is below 1.25 and not growing over the trailing 4 weeks, and revenue-per-call is below the founder's floor, we execute D.</strong> Naming this now — while it's abstract — is what stops the business from dying slowly by bridge loan, one justified-in-the-moment decision at a time.</p>
+  </div>
+</section>
+
+<section>
+  <p class="sec-label">Layer 4 — The bridge loan</p>
+  <h2>What a bridge actually buys</h2>
+  <p>The bridge is a bet that time fixes the problem. The modeling question is precise: how much runway does a bridge of size X buy, and does its structure help or hurt the trough?</p>
+
+  <h3>The deferral is what makes it work</h3>
+  <p>Because the bridge matches the personal loan's deferred structure, it adds cash <em>without</em> adding a monthly payment during the danger window. That's the whole point — an amortizing loan would deepen the very trough it's meant to fix.</p>
+
+  <div class="tbl-wrap">
+  <table>
+    <caption>$50K bridge deployed month 3, at 75% revenue</caption>
+    <thead><tr><th>Structure</th><th class="num">Cash trough</th><th class="num">Cash at Mo 24</th></tr></thead>
+    <tbody>
+      <tr class="hi"><td class="rowlabel">Deferred (recommended)</td><td class="num pos">$61,508</td><td class="num">$96,338</td></tr>
+      <tr><td class="rowlabel">Amortizing</td><td class="num pos">$61,508</td><td class="num">$75,671</td></tr>
+    </tbody>
+    <tfoot></tfoot>
+  </table>
+  </div>
+  <p style="font-size:14px;color:var(--muted);margin-top:-8px">Same trough (the deferral means no payments hit during the window either way at this horizon), but the deferred version leaves ~$20K more at month 24 because less interest is paid inside the window.</p>
+
+  <h3>Sizing — a menu, not a guess</h3>
+  <p>At 75% revenue — a real underperformance scenario — the single van already survives without a bridge (trough $46,338). So the bridge is insurance for the <em>worse</em> cases, or a cushion to remove the danger months entirely. Here's what each size does, deployed at month 3:</p>
+
+  <div class="tbl-wrap">
+  <table>
+    <caption>Bridge size vs outcome — 75% revenue, deployed month 3</caption>
+    <thead><tr><th>Bridge</th><th class="num">Cash trough</th><th class="num">Cash at Mo 24</th><th>First month below $25K</th></tr></thead>
+    <tbody>
+      <tr><td class="rowlabel">None</td><td class="num pos">$46,338</td><td class="num">$46,338</td><td>never</td></tr>
+      <tr><td class="rowlabel">$25,000</td><td class="num pos">$61,508</td><td class="num">$71,338</td><td>never</td></tr>
+      <tr class="hi"><td class="rowlabel">$50,000</td><td class="num pos">$61,508</td><td class="num">$96,338</td><td>never</td></tr>
+      <tr><td class="rowlabel">$75,000</td><td class="num pos">$61,508</td><td class="num">$121,338</td><td>never</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="plain">
+    <p class="tag">The honest read on the bridge</p>
+    <p>At 75% revenue the business doesn't actually need a bridge to survive — that's the resilience showing again. The bridge matters in the <b>worse</b> scenarios (below ~1.3 calls/day sustained) and as a way to buy diagnosis time without panic.</p>
+    <p>The number that keeps the bridge honest isn't what it buys — it's what it risks. A bridge deployed into a business that <b>doesn't</b> recover just deepens the hole by its own size. That's why the bridge only fires after B is green: the diagnosis has to say "working but slow," or the bridge is throwing good money after bad.</p>
+  </div>
+</section>
+
+<section>
+  <p class="sec-label">Layer 5 — Governance</p>
+  <h2>Who decides, and what if we disagree</h2>
+  <p>This is the layer that makes the plan real rather than a document nobody follows. Two things need settling now, while they're hypothetical and collegial — because in month 4 they won't be either.</p>
+
+  <h3>The impartial seat</h3>
+  <p>The step-B call is handed to Angel deliberately, because the founder-lender is conflicted — every bias (sunk cost, optimism, ego) pushes a conflicted party toward funding one more month. That's not a character flaw, it's the predictable psychology of having your own money and your own thesis on the line.</p>
+  <p>But the impartiality has a limit worth naming: Angel holds equity too, so she also wants the business to live. Her discipline is a single question, applied to every fund/don't-fund call — and to herself:</p>
+  <p class="lead">Would someone with no stake in this business — not a founder, not an owner, a stranger with capital — put money in right now, on these exact numbers?</p>
+  <p>If the honest answer is no, funding it is attachment talking, not merit.</p>
+
+  <h3>The disagreement rule — the gap in the current plan</h3>
+  <p>The plan says Angel is the impartial advisor but never says what governs if Angel and the founder read step B differently. That's the exact scenario the seat exists for. It needs a decision, now:</p>
+  <ul class="pl">
+    <li><strong>Option 1:</strong> Angel's assessment is binding on the fund/don't-fund decision. Clean, but concentrates the call in one person.</li>
+    <li><strong>Option 2:</strong> A pre-agreed tiebreaker — a third read, or a specific metric that breaks the tie (e.g. "if calls/day trajectory is negative over 4 weeks, don't fund, regardless").</li>
+  </ul>
+  <p>Either works. What doesn't work is leaving it undefined, because then the founder's read simply overrides Angel's by default and the impartial seat is decorative.</p>
+
+  <h3>Review cadence</h3>
+  <ul class="pl">
+    <li><strong>Weekly:</strong> volume (level + trajectory) and cash. The fast-moving vital signs.</li>
+    <li><strong>Monthly:</strong> revenue-per-call and cost variance against budget.</li>
+    <li><strong>At any floor breach:</strong> the full A–F process convenes.</li>
+  </ul>
+</section>
+
+<section>
+  <p class="sec-label">Before launch</p>
+  <h2>What we need to lock down</h2>
+  <ol class="recs">
+    <li><b>Confirm the three make/break numbers.</b><p>Minimum calls/day by month 3 (model suggests 1.3+), the revenue-per-call floor (founder-set), and the cash floor ($25K). Everything keys off these.</p></li>
+    <li><b>Set the kill line for D.</b><p>The specific combination — volume below breach and not growing, price below floor — that triggers a wind-down or deep cuts. Define it while it's abstract.</p></li>
+    <li><b>Settle the disagreement rule.</b><p>Binding Angel call, or a defined tiebreaker. Pick one now.</p></li>
+    <li><b>Confirm the expense-tracking tool.</b><p>So variance tracking is live day one, not reconstructed later.</p></li>
+    <li><b>Get the cuttable line-item list.</b><p>From the founder — which OpEx comes out, in what order, if D or F requires cuts. Needed to model D properly.</p></li>
+    <li><b>Define demand KPIs.</b><p>Working with Ansley's research now, and with live data as it comes. The leading indicator that moves before call volume.</p></li>
+  </ol>
+</section>
+
+<footer>
+  Aurora First Call — Financial Contingency Playbook · Draft for founder discussion · All thresholds subject to confirmation
+</footer>
+
+</div>
+</body>
+</html>
